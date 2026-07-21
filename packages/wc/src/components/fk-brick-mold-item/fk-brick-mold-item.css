@@ -1,18 +1,17 @@
 :host {
   display: block;
   cursor: grab;
+  min-width: 0;
 }
 
 .fk-mold {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--fk-spacing);
-  padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
+  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
   border: 1px solid var(--fk-color-border);
-  border-radius: var(--fk-radius);
+  border-radius: calc(var(--fk-radius) / 1.5);
   background: var(--fk-color-surface);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
@@ -28,9 +27,7 @@
 .fk-mold__name {
   font-weight: 500;
   color: var(--fk-color-text);
-}
-
-.fk-mold__category {
-  font-size: 0.7rem;
-  color: var(--fk-color-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

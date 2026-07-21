@@ -35,11 +35,11 @@ export class FkBrickMoldItem {
 
   render() {
     return (
-      <div class={{ 'fk-mold': true, 'fk-mold--dragging': this.isDragging }}>
+      <div
+        class={{ 'fk-mold': true, 'fk-mold--dragging': this.isDragging }}
+        title={this.brickMold.name}
+      >
         <span class="fk-mold__name">{this.brickMold.name}</span>
-        {this.brickMold.category ? (
-          <span class="fk-mold__category">{this.brickMold.category}</span>
-        ) : null}
       </div>
     );
   }
