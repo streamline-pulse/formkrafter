@@ -49,4 +49,5 @@ export interface SpecChangeDetail {
 export interface DataChangeDetail {
   data: Record<string, unknown>;
   isValid: boolean;
+  errors: Record<string, string>;
 }

@@ -1,7 +1,11 @@
 import { Component, Event, Listen, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
-import { validateBrickSpecData } from '@streamline-pulse/formkrafter-core';
-import type { BrickSpec, Utils } from '@streamline-pulse/formkrafter-core';
+import { validateBrickSpecDataDetailed } from '@streamline-pulse/formkrafter-core';
+import type {
+  BrickSpec,
+  Utils,
+  ValidationResult,
+} from '@streamline-pulse/formkrafter-core';
 import type { DataChangeDetail } from '../../utils/events';
 
 @Component({
@@ -18,6 +22,7 @@ export class FkFormRender {
   @Event() formDataChange!: EventEmitter<DataChangeDetail>;
 
   @State() currentData: Record<string, unknown> = {};
+  @State() touched: Record<string, boolean> = {};
 
   componentWillLoad() {
     this.currentData = { ...this.data };
@@ -33,15 +38,42 @@ export class FkFormRender {
     event.stopPropagation();
 
     this.currentData = { ...this.currentData, ...event.detail };
+    const touched = { ...this.touched };
+    for (const key of Object.keys(event.detail)) touched[key] = true;
+    this.touched = touched;
+
+    const { valid, errors } = this.validate();
     this.formDataChange.emit({
       data: this.currentData,
-      isValid: validateBrickSpecData(this.spec, this.currentData),
+      isValid: valid,
+      errors,
     });
+  }
+
+  private validate(): ValidationResult {
+    const presentData = Object.fromEntries(
+      Object.entries(this.currentData).filter(
+        ([, value]) => value !== '' && value !== null && value !== undefined
+      )
+    );
+
+    return validateBrickSpecDataDetailed(this.spec, presentData);
+  }
+
+  private visibleErrors(): Record<string, string> {
+    if (this.editable) return {};
+
+    const errors: Record<string, string> = {};
+    for (const [key, message] of Object.entries(this.validate().errors)) {
+      if (this.touched[key]) errors[key] = message;
+    }
+
+    return errors;
   }
 
   private utils: Utils = {
     validateForm: () => ({
-      isValid: validateBrickSpecData(this.spec, this.currentData),
+      isValid: this.validate().valid,
     }),
   };
 
@@ -54,6 +86,7 @@ export class FkFormRender {
           brickSpec={this.spec}
           data={this.currentData}
           dataMap={this.currentData}
+          errors={this.visibleErrors()}
           path="0"
           editable={this.editable}
           selectedUid={this.selectedUid}

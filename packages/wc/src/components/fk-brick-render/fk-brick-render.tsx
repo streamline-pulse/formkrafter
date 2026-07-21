@@ -30,6 +30,7 @@ export class FkBrickRender {
   @Prop() path: string = '0';
   @Prop() editable: boolean = false;
   @Prop() selectedUid?: string;
+  @Prop() errors: Record<string, string> = {};
   @Prop() utils!: Utils;
 
   @Event() brickDataChange!: EventEmitter<Record<string, unknown>>;
@@ -62,6 +63,7 @@ export class FkBrickRender {
         brickSpec={childSpec}
         data={this.data}
         dataMap={this.dataMap}
+        errors={this.errors}
         path={`${this.path}.${index}`}
         editable={this.editable}
         selectedUid={this.selectedUid}
@@ -80,6 +82,7 @@ export class FkBrickRender {
       styles: spec.styles ?? {},
       data: getBrickData(spec, this.data),
       dataMap: this.dataMap,
+      error: spec.configs?.key ? this.errors[spec.configs.key] : undefined,
       path: this.path,
       editable: editing,
       children: childNodes,

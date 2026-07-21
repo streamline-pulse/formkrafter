@@ -31,7 +31,12 @@ export {
 export { Rule } from "./rules/rule";
 export { Effect } from "./rules/effect";
 // Validators
-export { Validator, validateBrickSpecData } from "./validators/validator";
+export {
+    Validator,
+    ValidationResult,
+    validateBrickSpecData,
+    validateBrickSpecDataDetailed
+} from "./validators/validator";
 export { Validation } from "./validators/validation";
 export { JSONSchemaType } from "./validators/json-schema-type";
 

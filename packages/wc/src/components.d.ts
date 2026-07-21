@@ -33,6 +33,10 @@ export namespace Components {
          */
         "editable": boolean;
         /**
+          * @default {}
+         */
+        "errors": Record<string, string>;
+        /**
           * @default '0'
          */
         "path": string;
@@ -330,6 +334,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "editable"?: boolean;
+        /**
+          * @default {}
+         */
+        "errors"?: Record<string, string>;
         "onBrickConfigsChange"?: (event: FkBrickRenderCustomEvent<BrickConfigsChangeDetail>) => void;
         "onBrickDataChange"?: (event: FkBrickRenderCustomEvent<Record<string, unknown>>) => void;
         "onBrickDuplicate"?: (event: FkBrickRenderCustomEvent<BrickPathDetail>) => void;
