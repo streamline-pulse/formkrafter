@@ -18,7 +18,9 @@ import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/for
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
+import { defineCustomElement as defineFkSignatureInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-signature-input.js';
 import { defineCustomElement as defineFkStepper } from '@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js';
+import { defineCustomElement as defineFkTabs } from '@streamline-pulse/formkrafter-wc/dist/components/fk-tabs.js';
 
 
 
@@ -148,8 +150,23 @@ export const FkSelectInput: StencilVueComponent<JSX.FkSelectInput> = /*@__PURE__
 ]);
 
 
+export const FkSignatureInput: StencilVueComponent<JSX.FkSignatureInput> = /*@__PURE__*/ defineContainer<JSX.FkSignatureInput>('fk-signature-input', defineFkSignatureInput, [
+  'value',
+  'disabled',
+  'signatureChange'
+], [
+  'signatureChange'
+]);
+
+
 export const FkStepper: StencilVueComponent<JSX.FkStepper> = /*@__PURE__*/ defineContainer<JSX.FkStepper>('fk-stepper', defineFkStepper, [
   'stepLabels',
+  'editable'
+]);
+
+
+export const FkTabs: StencilVueComponent<JSX.FkTabs> = /*@__PURE__*/ defineContainer<JSX.FkTabs>('fk-tabs', defineFkTabs, [
+  'tabLabels',
   'editable'
 ]);
 

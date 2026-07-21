@@ -5,6 +5,28 @@
   font-family: var(--fk-font);
 }
 
+.fk-palette__search {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  border: 1px solid var(--fk-color-border);
+  border-radius: calc(var(--fk-radius) / 1.5);
+  background: var(--fk-color-surface);
+  color: var(--fk-color-text);
+}
+
+.fk-palette__search:focus {
+  outline: none;
+  border-color: var(--fk-color-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fk-color-primary) 20%, transparent);
+}
+
+.fk-palette__empty {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--fk-color-muted);
+}
+
 .fk-palette__category {
   margin: 0 0 var(--fk-spacing);
   font-size: 0.7rem;

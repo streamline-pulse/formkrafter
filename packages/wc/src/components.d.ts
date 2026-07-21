@@ -94,6 +94,13 @@ export namespace Components {
         "disabled": boolean;
         "value"?: string;
     }
+    interface FkSignatureInput {
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        "value"?: string;
+    }
     interface FkStepper {
         /**
           * @default false
@@ -103,6 +110,16 @@ export namespace Components {
           * @default []
          */
         "stepLabels": string[];
+    }
+    interface FkTabs {
+        /**
+          * @default false
+         */
+        "editable": boolean;
+        /**
+          * @default []
+         */
+        "tabLabels": string[];
     }
 }
 export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
@@ -140,6 +157,10 @@ export interface FkRulesEditorCustomEvent<T> extends CustomEvent<T> {
 export interface FkSelectInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkSelectInputElement;
+}
+export interface FkSignatureInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkSignatureInputElement;
 }
 declare global {
     interface HTMLFkBrickActionsElementEventMap {
@@ -330,11 +351,34 @@ declare global {
         prototype: HTMLFkSelectInputElement;
         new (): HTMLFkSelectInputElement;
     };
+    interface HTMLFkSignatureInputElementEventMap {
+        "signatureChange": string | undefined;
+    }
+    interface HTMLFkSignatureInputElement extends Components.FkSignatureInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkSignatureInputElementEventMap>(type: K, listener: (this: HTMLFkSignatureInputElement, ev: FkSignatureInputCustomEvent<HTMLFkSignatureInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkSignatureInputElementEventMap>(type: K, listener: (this: HTMLFkSignatureInputElement, ev: FkSignatureInputCustomEvent<HTMLFkSignatureInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkSignatureInputElement: {
+        prototype: HTMLFkSignatureInputElement;
+        new (): HTMLFkSignatureInputElement;
+    };
     interface HTMLFkStepperElement extends Components.FkStepper, HTMLStencilElement {
     }
     var HTMLFkStepperElement: {
         prototype: HTMLFkStepperElement;
         new (): HTMLFkStepperElement;
+    };
+    interface HTMLFkTabsElement extends Components.FkTabs, HTMLStencilElement {
+    }
+    var HTMLFkTabsElement: {
+        prototype: HTMLFkTabsElement;
+        new (): HTMLFkTabsElement;
     };
     interface HTMLElementTagNameMap {
         "fk-brick-actions": HTMLFkBrickActionsElement;
@@ -350,7 +394,9 @@ declare global {
         "fk-property-panel": HTMLFkPropertyPanelElement;
         "fk-rules-editor": HTMLFkRulesEditorElement;
         "fk-select-input": HTMLFkSelectInputElement;
+        "fk-signature-input": HTMLFkSignatureInputElement;
         "fk-stepper": HTMLFkStepperElement;
+        "fk-tabs": HTMLFkTabsElement;
     }
 }
 declare namespace LocalJSX {
@@ -460,6 +506,14 @@ declare namespace LocalJSX {
         "onSelectValueChange"?: (event: FkSelectInputCustomEvent<string | undefined>) => void;
         "value"?: string;
     }
+    interface FkSignatureInput {
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        "onSignatureChange"?: (event: FkSignatureInputCustomEvent<string | undefined>) => void;
+        "value"?: string;
+    }
     interface FkStepper {
         /**
           * @default false
@@ -469,6 +523,16 @@ declare namespace LocalJSX {
           * @default []
          */
         "stepLabels"?: string[];
+    }
+    interface FkTabs {
+        /**
+          * @default false
+         */
+        "editable"?: boolean;
+        /**
+          * @default []
+         */
+        "tabLabels"?: string[];
     }
 
     interface FkBrickActionsAttributes {
@@ -495,7 +559,14 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface FkSignatureInputAttributes {
+        "value": string;
+        "disabled": boolean;
+    }
     interface FkStepperAttributes {
+        "editable": boolean;
+    }
+    interface FkTabsAttributes {
         "editable": boolean;
     }
 
@@ -513,7 +584,9 @@ declare namespace LocalJSX {
         "fk-property-panel": FkPropertyPanel;
         "fk-rules-editor": FkRulesEditor;
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
+        "fk-signature-input": Omit<FkSignatureInput, keyof FkSignatureInputAttributes> & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes]?: FkSignatureInput[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `attr:${K}`]?: FkSignatureInputAttributes[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `prop:${K}`]?: FkSignatureInput[K] };
         "fk-stepper": Omit<FkStepper, keyof FkStepperAttributes> & { [K in keyof FkStepper & keyof FkStepperAttributes]?: FkStepper[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `attr:${K}`]?: FkStepperAttributes[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `prop:${K}`]?: FkStepper[K] };
+        "fk-tabs": Omit<FkTabs, keyof FkTabsAttributes> & { [K in keyof FkTabs & keyof FkTabsAttributes]?: FkTabs[K] } & { [K in keyof FkTabs & keyof FkTabsAttributes as `attr:${K}`]?: FkTabsAttributes[K] } & { [K in keyof FkTabs & keyof FkTabsAttributes as `prop:${K}`]?: FkTabs[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -533,7 +606,9 @@ declare module "@stencil/core" {
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
             "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;
+            "fk-signature-input": LocalJSX.IntrinsicElements["fk-signature-input"] & JSXBase.HTMLAttributes<HTMLFkSignatureInputElement>;
             "fk-stepper": LocalJSX.IntrinsicElements["fk-stepper"] & JSXBase.HTMLAttributes<HTMLFkStepperElement>;
+            "fk-tabs": LocalJSX.IntrinsicElements["fk-tabs"] & JSXBase.HTMLAttributes<HTMLFkTabsElement>;
         }
     }
 }

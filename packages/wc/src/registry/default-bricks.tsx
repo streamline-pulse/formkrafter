@@ -171,6 +171,190 @@ export const selectBrick = createBrick({
     ),
 });
 
+export const timeBrick = createTextVariant({
+  id: 'time',
+  name: 'Time',
+  inputType: 'time',
+});
+export const datetimeBrick = createTextVariant({
+  id: 'datetime',
+  name: 'Date / Time',
+  inputType: 'datetime-local',
+});
+
+export const currencyBrick = createBrick({
+  type: 'input',
+  dataType: 'number',
+  id: 'currency',
+  name: 'Currency',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Currency', currency: 'XOF' },
+  render: (props) =>
+    field(
+      props,
+      'Currency',
+      <div class="fk-currency">
+        <span class="fk-currency__symbol">
+          {String(props.configs?.currency ?? '')}
+        </span>
+        <input
+          class="fk-field__input fk-currency__input"
+          type="number"
+          step="0.01"
+          value={props.data == null ? '' : String(props.data)}
+          placeholder={props.configs?.placeholder as string}
+          disabled={props.editable || props.disabled}
+          onInput={(event) => {
+            const raw = (event.target as HTMLInputElement).value;
+            props.onDataChange?.(raw === '' ? undefined : Number(raw));
+          }}
+        />
+      </div>
+    ),
+});
+
+const staticOptions = (raw: unknown): string[] =>
+  String(raw ?? '')
+    .split('\n')
+    .map((option) => option.trim())
+    .filter(Boolean);
+
+export const selectBoxesBrick = createBrick({
+  type: 'input',
+  dataType: 'array',
+  id: 'select-boxes',
+  name: 'Select boxes',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Select boxes', options: 'Option 1\nOption 2\nOption 3' },
+  render: (props) => {
+    const selected = Array.isArray(props.data) ? (props.data as string[]) : [];
+
+    return (
+      <div class="fk-field" style={asInlineStyle(props.styles)}>
+        <span class="fk-field__label">{labelOf(props, 'Select boxes')}</span>
+        <div class="fk-radio-group">
+          {staticOptions(props.configs?.options).map((option) => (
+            <label class="fk-radio" key={option}>
+              <input
+                type="checkbox"
+                checked={selected.includes(option)}
+                disabled={props.editable || props.disabled}
+                onChange={(event) => {
+                  const checked = (event.target as HTMLInputElement).checked;
+                  const next = checked
+                    ? [...selected, option]
+                    : selected.filter((value) => value !== option);
+                  props.onDataChange?.(next.length ? next : undefined);
+                }}
+              />
+              <span>{option}</span>
+            </label>
+          ))}
+        </div>
+        {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+      </div>
+    );
+  },
+});
+
+export const tagsBrick = createBrick({
+  type: 'input',
+  dataType: 'array',
+  id: 'tags',
+  name: 'Tags',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Tags' },
+  render: (props) => {
+    const tags = Array.isArray(props.data) ? (props.data as string[]) : [];
+
+    return field(
+      props,
+      'Tags',
+      <div class="fk-tags">
+        {tags.map((tag) => (
+          <span class="fk-tags__chip" key={tag}>
+            {tag}
+            <button
+              type="button"
+              class="fk-tags__remove"
+              disabled={props.editable || props.disabled}
+              onClick={() => {
+                const next = tags.filter((value) => value !== tag);
+                props.onDataChange?.(next.length ? next : undefined);
+              }}
+            >
+              ✕
+            </button>
+          </span>
+        ))}
+        <input
+          class="fk-tags__input"
+          type="text"
+          placeholder="Add a tag…"
+          disabled={props.editable || props.disabled}
+          onKeyDown={(event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+
+            const input = event.target as HTMLInputElement;
+            const value = input.value.trim();
+            if (!value || tags.includes(value)) return;
+
+            props.onDataChange?.([...tags, value]);
+            input.value = '';
+          }}
+        />
+      </div>
+    );
+  },
+});
+
+export const signatureBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'signature',
+  name: 'Signature',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Signature' },
+  render: (props) =>
+    field(
+      props,
+      'Signature',
+      <fk-signature-input
+        value={(props.data as string) ?? undefined}
+        disabled={props.editable || props.disabled}
+        onSignatureChange={(event: CustomEvent<string | undefined>) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
+        }}
+      />
+    ),
+});
+
+export const tabsBrick = createBrick({
+  type: 'panel',
+  dataType: 'void',
+  id: 'tabs',
+  name: 'Tabs',
+  category: 'Layout',
+  render: (props) => {
+    const labels = (props.brickSpec?.children ?? []).map(
+      (child, index) =>
+        (child.configs?.label as string) ?? child.name ?? `Tab ${index + 1}`
+    );
+
+    return (
+      <fk-tabs
+        tabLabels={labels}
+        editable={props.editable}
+        style={asInlineStyle(props.styles)}
+      >
+        {props.children as VNode}
+      </fk-tabs>
+    );
+  },
+});
+
 export const radioBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -336,15 +520,22 @@ export function registerDefaultBricks(): void {
     phoneBrick,
     textareaBrick,
     numberBrick,
+    currencyBrick,
     dateBrick,
+    timeBrick,
+    datetimeBrick,
     selectBrick,
     radioBrick,
+    selectBoxesBrick,
     checkboxBrick,
+    tagsBrick,
+    signatureBrick,
     hiddenBrick,
     contentBrick,
     groupBrick,
     rowBrick,
     columnBrick,
     stepperBrick,
+    tabsBrick,
   ]);
 }

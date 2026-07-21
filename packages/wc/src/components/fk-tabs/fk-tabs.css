@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.fk-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fk-spacing);
+}
+
+.fk-tabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-bottom: 1px solid var(--fk-color-border);
+}
+
+.fk-tabs__tab {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--fk-color-muted);
+  cursor: pointer;
+}
+
+.fk-tabs__tab:hover {
+  color: var(--fk-color-text);
+}
+
+.fk-tabs__tab--active {
+  color: var(--fk-color-primary);
+  border-bottom-color: var(--fk-color-primary);
+  font-weight: 600;
+}

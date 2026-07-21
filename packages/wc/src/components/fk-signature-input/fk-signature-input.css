@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.fk-signature {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+  align-items: flex-start;
+}
+
+.fk-signature__canvas {
+  width: 100%;
+  max-width: 480px;
+  border: 1px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  background: var(--fk-color-surface);
+  color: var(--fk-color-text);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.fk-signature--disabled .fk-signature__canvas {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.fk-signature__clear {
+  font: inherit;
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border: 1px solid var(--fk-color-border);
+  border-radius: calc(var(--fk-radius) / 2);
+  background: transparent;
+  color: var(--fk-color-muted);
+  cursor: pointer;
+}
+
+.fk-signature__clear:hover:not(:disabled) {
+  color: var(--fk-color-danger);
+  border-color: var(--fk-color-danger);
+}

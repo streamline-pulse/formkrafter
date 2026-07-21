@@ -129,26 +129,31 @@ export class FkPropertyPanel {
       return [];
     }
 
-    const source = (configs.optionsSource as string) ?? 'static';
-    const nodes: VNode[] = [
-      <label class="fk-props__field">
-        <span class="fk-props__label">Options source</span>
-        <select
-          class="fk-props__input"
-          onChange={(event) =>
-            this.emitConfigs({
-              optionsSource: (event.target as HTMLSelectElement).value,
-            })
-          }
-        >
-          {['static', 'dataMap', 'remote', 'js'].map((candidate) => (
-            <option value={candidate} selected={candidate === source}>
-              {candidate}
-            </option>
-          ))}
-        </select>
-      </label>,
-    ];
+    const supportsSources = 'optionsSource' in configs;
+    const source = supportsSources
+      ? ((configs.optionsSource as string) ?? 'static')
+      : 'static';
+    const nodes: VNode[] = supportsSources
+      ? [
+          <label class="fk-props__field">
+            <span class="fk-props__label">Options source</span>
+            <select
+              class="fk-props__input"
+              onChange={(event) =>
+                this.emitConfigs({
+                  optionsSource: (event.target as HTMLSelectElement).value,
+                })
+              }
+            >
+              {['static', 'dataMap', 'remote', 'js'].map((candidate) => (
+                <option value={candidate} selected={candidate === source}>
+                  {candidate}
+                </option>
+              ))}
+            </select>
+          </label>,
+        ]
+      : [];
 
     if (source === 'static') {
       nodes.push(
