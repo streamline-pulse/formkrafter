@@ -47,6 +47,7 @@ export class FkFormBuilder {
   @State() currentData: Record<string, unknown> = {};
   @State() selectedUid?: string;
   @State() copied = false;
+  @State() importError?: string;
   @State() editLocale?: string;
 
   private history = new SpecHistory();
@@ -180,6 +181,65 @@ export class FkFormBuilder {
   @Listen('formDataChange')
   handleDataChange(event: CustomEvent<DataChangeDetail>) {
     this.currentData = event.detail.data;
+  }
+
+  @Listen('paste', { target: 'document' })
+  handlePaste(event: ClipboardEvent) {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('input, textarea, select, [contenteditable]')) return;
+
+    this.importSpec(event.clipboardData?.getData('text/plain'), true);
+  }
+
+  private importFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      this.importSpec(text, false);
+    } catch {
+      this.flashImportError(fkT('builder.pasteHint'));
+    }
+  };
+
+  private importSpec(text: string | undefined, silent: boolean) {
+    if (!text) {
+      if (!silent) this.flashImportError(fkT('builder.importInvalid'));
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(text) as BrickSpec;
+      if (
+        typeof parsed !== 'object' ||
+        parsed === null ||
+        typeof parsed.type !== 'string' ||
+        typeof parsed.id !== 'string'
+      ) {
+        throw new Error('not a brick spec');
+      }
+
+      this.selectedUid = undefined;
+      this.importError = undefined;
+      this.setRootSpec(this.ensureUids(parsed));
+    } catch {
+      if (!silent) this.flashImportError(fkT('builder.importInvalid'));
+    }
+  }
+
+  private ensureUids(spec: BrickSpec): BrickSpec {
+    const clone = structuredClone(spec);
+
+    for (const { brick } of iterateBricks(clone)) {
+      if (!brick.configs?.uid) {
+        brick.configs = { ...brick.configs, uid: crypto.randomUUID() };
+      }
+    }
+
+    return clone;
+  }
+
+  private flashImportError(message: string) {
+    this.importError = message;
+    setTimeout(() => (this.importError = undefined), 4000);
   }
 
   @Listen('brickSelect')
@@ -321,6 +381,17 @@ export class FkFormBuilder {
               </select>
             ) : null}
 
+            {this.importError ? (
+              <span class="fk-builder__import-error">{this.importError}</span>
+            ) : null}
+
+            <button
+              type="button"
+              class="fk-builder__tool"
+              onClick={this.importFromClipboard}
+            >
+              ⤓ {fkT('builder.importJson')}
+            </button>
             <button
               type="button"
               class="fk-builder__tool"
