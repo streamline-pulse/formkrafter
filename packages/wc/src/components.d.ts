@@ -137,10 +137,13 @@ export namespace Components {
         "value"?: string;
     }
     interface FkStepper {
+        "dataMap"?: Record<string, unknown>;
         /**
           * @default false
          */
         "editable": boolean;
+        "locale"?: string;
+        "spec"?: BrickSpec;
         /**
           * @default []
          */
@@ -204,6 +207,10 @@ export interface FkSelectInputCustomEvent<T> extends CustomEvent<T> {
 export interface FkSignatureInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkSignatureInputElement;
+}
+export interface FkStepperCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkStepperElement;
 }
 declare global {
     interface HTMLFkBrickActionsElementEventMap {
@@ -360,6 +367,7 @@ declare global {
     };
     interface HTMLFkFormRenderElementEventMap {
         "formDataChange": DataChangeDetail;
+        "formSubmit": DataChangeDetail;
     }
     interface HTMLFkFormRenderElement extends Components.FkFormRender, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkFormRenderElementEventMap>(type: K, listener: (this: HTMLFkFormRenderElement, ev: FkFormRenderCustomEvent<HTMLFkFormRenderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -445,7 +453,19 @@ declare global {
         prototype: HTMLFkSignatureInputElement;
         new (): HTMLFkSignatureInputElement;
     };
+    interface HTMLFkStepperElementEventMap {
+        "stepTouch": { keys: string[] };
+        "stepperSubmit": void;
+    }
     interface HTMLFkStepperElement extends Components.FkStepper, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkStepperElementEventMap>(type: K, listener: (this: HTMLFkStepperElement, ev: FkStepperCustomEvent<HTMLFkStepperElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkStepperElementEventMap>(type: K, listener: (this: HTMLFkStepperElement, ev: FkStepperCustomEvent<HTMLFkStepperElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLFkStepperElement: {
         prototype: HTMLFkStepperElement;
@@ -580,6 +600,7 @@ declare namespace LocalJSX {
         "editable"?: boolean;
         "locale"?: string;
         "onFormDataChange"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
+        "onFormSubmit"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "selectedUid"?: string;
         "spec": BrickSpec;
     }
@@ -629,10 +650,15 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface FkStepper {
+        "dataMap"?: Record<string, unknown>;
         /**
           * @default false
          */
         "editable"?: boolean;
+        "locale"?: string;
+        "onStepTouch"?: (event: FkStepperCustomEvent<{ keys: string[] }>) => void;
+        "onStepperSubmit"?: (event: FkStepperCustomEvent<void>) => void;
+        "spec"?: BrickSpec;
         /**
           * @default []
          */
@@ -693,6 +719,7 @@ declare namespace LocalJSX {
     }
     interface FkStepperAttributes {
         "editable": boolean;
+        "locale": string;
     }
     interface FkTabsAttributes {
         "editable": boolean;

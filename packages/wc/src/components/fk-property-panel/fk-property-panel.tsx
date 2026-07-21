@@ -273,6 +273,24 @@ export class FkPropertyPanel {
             ]
           : null}
         {this.optionsFields()}
+        {Object.entries(configs ?? {})
+          .filter(([, value]) => typeof value === 'boolean')
+          .map(([key, value]) => (
+            <label class="fk-props__field fk-props__field--inline" key={key}>
+              <input
+                type="checkbox"
+                checked={value === true}
+                onChange={(event) =>
+                  this.emitConfigs({
+                    [key]: (event.target as HTMLInputElement).checked,
+                  })
+                }
+              />
+              <span class="fk-props__label">
+                {fkTOr(`panel.cfg.${key}`, key)}
+              </span>
+            </label>
+          ))}
         {configs && 'content' in configs ? (
           <label class="fk-props__field">
             <span class="fk-props__label">{fkT('panel.content')}</span>

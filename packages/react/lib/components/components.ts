@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type SpecChangeDetail, type UploadedFile } from "@streamline-pulse/formkrafter-wc";
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type SpecChangeDetail, type UploadedFile } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
@@ -179,14 +179,20 @@ export const FkFormBuilder: StencilReactComponent<FkFormBuilderElement, FkFormBu
     defineCustomElement: defineFkFormBuilder
 });
 
-export type FkFormRenderEvents = { onFormDataChange: EventName<FkFormRenderCustomEvent<DataChangeDetail>> };
+export type FkFormRenderEvents = {
+    onFormDataChange: EventName<FkFormRenderCustomEvent<DataChangeDetail>>,
+    onFormSubmit: EventName<FkFormRenderCustomEvent<DataChangeDetail>>
+};
 
 export const FkFormRender: StencilReactComponent<FkFormRenderElement, FkFormRenderEvents, Components.FkFormRender, 'spec'> = /*@__PURE__*/ createComponent<FkFormRenderElement, FkFormRenderEvents, Components.FkFormRender, 'spec'>({
     tagName: 'fk-form-render',
     elementClass: FkFormRenderElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: { onFormDataChange: 'formDataChange' } as FkFormRenderEvents,
+    events: {
+        onFormDataChange: 'formDataChange',
+        onFormSubmit: 'formSubmit'
+    } as FkFormRenderEvents,
     defineCustomElement: defineFkFormRender
 });
 
@@ -242,14 +248,20 @@ export const FkSignatureInput: StencilReactComponent<FkSignatureInputElement, Fk
     defineCustomElement: defineFkSignatureInput
 });
 
-export type FkStepperEvents = NonNullable<unknown>;
+export type FkStepperEvents = {
+    onStepTouch: EventName<FkStepperCustomEvent<{ keys: string[] }>>,
+    onStepperSubmit: EventName<FkStepperCustomEvent<void>>
+};
 
 export const FkStepper: StencilReactComponent<FkStepperElement, FkStepperEvents, Components.FkStepper> = /*@__PURE__*/ createComponent<FkStepperElement, FkStepperEvents, Components.FkStepper>({
     tagName: 'fk-stepper',
     elementClass: FkStepperElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as FkStepperEvents,
+    events: {
+        onStepTouch: 'stepTouch',
+        onStepperSubmit: 'stepperSubmit'
+    } as FkStepperEvents,
     defineCustomElement: defineFkStepper
 });
 

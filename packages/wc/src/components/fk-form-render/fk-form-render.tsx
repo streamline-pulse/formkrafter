@@ -27,6 +27,7 @@ export class FkFormRender {
   @Prop() locale?: string;
 
   @Event() formDataChange!: EventEmitter<DataChangeDetail>;
+  @Event() formSubmit!: EventEmitter<DataChangeDetail>;
 
   @State() currentData: Record<string, unknown> = {};
   @State() touched: Record<string, boolean> = {};
@@ -109,6 +110,27 @@ export class FkFormRender {
     });
 
     return result;
+  }
+
+  @Listen('stepTouch')
+  handleStepTouch(event: CustomEvent<{ keys: string[] }>) {
+    event.stopPropagation();
+
+    const touched = { ...this.touched };
+    for (const key of event.detail.keys) touched[key] = true;
+    this.touched = touched;
+  }
+
+  @Listen('stepperSubmit')
+  async handleStepperSubmit(event: CustomEvent<void>) {
+    event.stopPropagation();
+
+    const result = await this.validate();
+    this.formSubmit.emit({
+      data: this.currentData,
+      isValid: result.valid,
+      errors: result.errors,
+    });
   }
 
   private runValidation(): ValidationResult {

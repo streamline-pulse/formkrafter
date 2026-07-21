@@ -138,9 +138,11 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'editable',
   'selectedUid',
   'locale',
-  'formDataChange'
+  'formDataChange',
+  'formSubmit'
 ], [
-  'formDataChange'
+  'formDataChange',
+  'formSubmit'
 ]);
 
 
@@ -191,7 +193,15 @@ export const FkSignatureInput: StencilVueComponent<JSX.FkSignatureInput> = /*@__
 
 export const FkStepper: StencilVueComponent<JSX.FkStepper> = /*@__PURE__*/ defineContainer<JSX.FkStepper>('fk-stepper', defineFkStepper, [
   'stepLabels',
-  'editable'
+  'editable',
+  'spec',
+  'dataMap',
+  'locale',
+  'stepTouch',
+  'stepperSubmit'
+], [
+  'stepTouch',
+  'stepperSubmit'
 ]);
 
 

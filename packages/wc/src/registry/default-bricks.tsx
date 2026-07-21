@@ -572,6 +572,11 @@ export const stepperBrick = createBrick({
   id: 'stepper',
   name: 'Stepper',
   category: 'Layout',
+  defaultConfigs: {
+    validateSteps: false,
+    allowStepClick: true,
+    showSubmit: false,
+  },
   render: (props) => {
     const labels = (props.brickSpec?.children ?? []).map((child, index) => {
       const resolved = resolveLocalizedText(child.configs?.label, props.locale);
@@ -584,6 +589,9 @@ export const stepperBrick = createBrick({
       <fk-stepper
         stepLabels={labels}
         editable={props.editable}
+        spec={props.brickSpec}
+        dataMap={props.dataMap}
+        locale={props.locale}
         style={asInlineStyle(props.styles)}
       >
         {props.children as VNode}
