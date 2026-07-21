@@ -1,0 +1,53 @@
+{
+  "name": "@streamline-pulse/formkrafter-wc",
+  "version": "0.0.1",
+  "description": "FormKrafter web components (Stencil)",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/formkrafter-wc/formkrafter-wc.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/formkrafter-wc/formkrafter-wc.esm.js",
+      "require": "./dist/formkrafter-wc/formkrafter-wc.cjs.js"
+    },
+    "./dist/components": {
+      "import": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./dist/components/*.js": {
+      "import": "./dist/components/*.js",
+      "types": "./dist/components/*.d.ts"
+    },
+    "./dist/*": {
+      "import": "./dist/*",
+      "types": "./dist/*"
+    },
+    "./components/*": {
+      "import": "./dist/components/*.js",
+      "types": "./dist/components/*.d.ts"
+    },
+    "./loader": {
+      "import": "./loader/index.js",
+      "require": "./loader/index.cjs",
+      "types": "./loader/index.d.ts"
+    }
+  },
+  "files": ["dist/", "loader/"],
+  "scripts": {
+    "build": "stencil build",
+    "start": "stencil build --dev --watch --serve",
+    "generate": "stencil generate"
+  },
+  "dependencies": {
+    "@streamline-pulse/formkrafter-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@stencil/core": "^4.27.1",
+    "@stencil/react-output-target": "^1.2.0",
+    "@stencil/vue-output-target": "^0.11.8"
+  }
+}

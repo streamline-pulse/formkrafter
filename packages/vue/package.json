@@ -1,0 +1,23 @@
+{
+  "name": "@streamline-pulse/formkrafter-vue",
+  "version": "0.0.1",
+  "description": "Vue bindings for FormKrafter web components",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "dependencies": {
+    "@stencil/vue-output-target": "^0.11.8",
+    "@streamline-pulse/formkrafter-wc": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vue": "catalog:"
+  }
+}

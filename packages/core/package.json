@@ -1,0 +1,15 @@
+{
+  "name": "@streamline-pulse/formkrafter-core",
+  "version": "0.0.1",
+  "description": "Framework-agnostic core for FormKrafter",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}
