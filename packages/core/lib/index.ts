@@ -8,11 +8,8 @@ export { BrickStyles } from "./utils/brick-styles";
 export { BrickBaseConfigs, CommonBrickProps, WithBrickBaseConfigs } from "./utils/common-brick-props";
 export {
     BrickSpec,
-    PositionedBrickSpec,
     buildValidationSchema,
-    flattenBricks,
-    flattenBricksWithChildren,
-    unflattenBricks
+    iterateBricks
 } from "./utils/brick-spec";
 
 // Brick
@@ -37,4 +34,20 @@ export { Effect } from "./rules/effect";
 export { Validator, validateBrickSpecData } from "./validators/validator";
 export { Validation } from "./validators/validation";
 export { JSONSchemaType } from "./validators/json-schema-type";
+
+// Spec operations
+export { pointerFromPath, pointerOfUid, getBrickAt } from "./ops/pointer";
+export {
+    SpecUpdate,
+    addBrick,
+    removeBrick,
+    moveBrick,
+    duplicateBrick,
+    updateBrickConfigs,
+    updateBrickStyles,
+    updateBrickValidations,
+    updateBrickRules
+} from "./ops/ops";
+export { SpecHistory } from "./ops/history";
+export type { Operation } from "fast-json-patch";
 

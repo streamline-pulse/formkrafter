@@ -9,13 +9,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "test": "bun test"
   },
   "dependencies": {
     "acorn": "catalog:",
     "ajv": "catalog:",
     "ajv-errors": "catalog:",
-    "json-logic-js": "catalog:"
+    "json-logic-js": "catalog:",
+    "fast-json-patch": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:",
