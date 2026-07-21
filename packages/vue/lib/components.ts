@@ -15,6 +15,7 @@ import { defineCustomElement as defineFkEmptyForm } from '@streamline-pulse/form
 import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js';
 import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js';
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
+import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 
 
 
@@ -103,11 +104,21 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
 
 export const FkPropertyPanel: StencilVueComponent<JSX.FkPropertyPanel> = /*@__PURE__*/ defineContainer<JSX.FkPropertyPanel>('fk-property-panel', defineFkPropertyPanel, [
   'brick',
+  'fields',
   'brickConfigsChange',
   'brickValidationsChange'
 ], [
   'brickConfigsChange',
   'brickValidationsChange'
+]);
+
+
+export const FkRulesEditor: StencilVueComponent<JSX.FkRulesEditor> = /*@__PURE__*/ defineContainer<JSX.FkRulesEditor>('fk-rules-editor', defineFkRulesEditor, [
+  'brick',
+  'fields',
+  'brickRulesChange'
+], [
+  'brickRulesChange'
 ]);
 
 

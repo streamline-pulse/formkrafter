@@ -195,6 +195,17 @@ export class FkFormBuilder {
     return undefined;
   }
 
+  private inputFieldKeys(): string[] {
+    const keys: string[] = [];
+
+    for (const { brick } of iterateBricks(this.currentSpec)) {
+      const key = brick.configs?.key;
+      if (brick.type === 'input' && key) keys.push(key);
+    }
+
+    return keys;
+  }
+
   private wrapInRootGroup(brickSpec: BrickSpec): BrickSpec {
     const root = newBrickSpec('panel', 'group');
     if (!root) return brickSpec;
@@ -283,7 +294,7 @@ export class FkFormBuilder {
           {(() => {
             const selected = this.findSelected();
             return selected ? (
-              <fk-property-panel brick={selected.brick} />
+              <fk-property-panel brick={selected.brick} fields={this.inputFieldKeys()} />
             ) : (
               <p class="fk-builder__hint">Select a brick to edit its properties</p>
             );

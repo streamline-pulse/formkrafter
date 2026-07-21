@@ -13,6 +13,7 @@ import type {
 })
 export class FkPropertyPanel {
   @Prop() brick!: BrickSpec;
+  @Prop() fields: string[] = [];
 
   @Event() brickConfigsChange!: EventEmitter<BrickConfigsChangeDetail>;
   @Event() brickValidationsChange!: EventEmitter<BrickValidationsChangeDetail>;
@@ -141,6 +142,11 @@ export class FkPropertyPanel {
               : null}
           </section>
         ) : null}
+
+        <section class="fk-props__section">
+          <h5 class="fk-props__section-title">Rules</h5>
+          <fk-rules-editor brick={this.brick} fields={this.fields} />
+        </section>
       </div>
     );
   }

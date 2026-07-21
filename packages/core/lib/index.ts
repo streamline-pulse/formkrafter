@@ -35,6 +35,10 @@ export { Validator, validateBrickSpecData } from "./validators/validator";
 export { Validation } from "./validators/validation";
 export { JSONSchemaType } from "./validators/json-schema-type";
 
+// Services
+export { services } from "./services";
+export { JsRunnerService } from "./services/js_runner_service";
+
 // Spec operations
 export { pointerFromPath, pointerOfUid, getBrickAt } from "./ops/pointer";
 export {

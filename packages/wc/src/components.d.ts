@@ -59,6 +59,17 @@ export namespace Components {
     }
     interface FkPropertyPanel {
         "brick": BrickSpec;
+        /**
+          * @default []
+         */
+        "fields": string[];
+    }
+    interface FkRulesEditor {
+        "brick": BrickSpec;
+        /**
+          * @default []
+         */
+        "fields": string[];
     }
 }
 export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
@@ -84,6 +95,10 @@ export interface FkFormRenderCustomEvent<T> extends CustomEvent<T> {
 export interface FkPropertyPanelCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkPropertyPanelElement;
+}
+export interface FkRulesEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkRulesEditorElement;
 }
 declare global {
     interface HTMLFkBrickActionsElementEventMap {
@@ -222,6 +237,23 @@ declare global {
         prototype: HTMLFkPropertyPanelElement;
         new (): HTMLFkPropertyPanelElement;
     };
+    interface HTMLFkRulesEditorElementEventMap {
+        "brickRulesChange": BrickRulesChangeDetail;
+    }
+    interface HTMLFkRulesEditorElement extends Components.FkRulesEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkRulesEditorElementEventMap>(type: K, listener: (this: HTMLFkRulesEditorElement, ev: FkRulesEditorCustomEvent<HTMLFkRulesEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkRulesEditorElementEventMap>(type: K, listener: (this: HTMLFkRulesEditorElement, ev: FkRulesEditorCustomEvent<HTMLFkRulesEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkRulesEditorElement: {
+        prototype: HTMLFkRulesEditorElement;
+        new (): HTMLFkRulesEditorElement;
+    };
     interface HTMLElementTagNameMap {
         "fk-brick-actions": HTMLFkBrickActionsElement;
         "fk-brick-list": HTMLFkBrickListElement;
@@ -233,6 +265,7 @@ declare global {
         "fk-form-builder": HTMLFkFormBuilderElement;
         "fk-form-render": HTMLFkFormRenderElement;
         "fk-property-panel": HTMLFkPropertyPanelElement;
+        "fk-rules-editor": HTMLFkRulesEditorElement;
     }
 }
 declare namespace LocalJSX {
@@ -301,8 +334,20 @@ declare namespace LocalJSX {
     }
     interface FkPropertyPanel {
         "brick": BrickSpec;
+        /**
+          * @default []
+         */
+        "fields"?: string[];
         "onBrickConfigsChange"?: (event: FkPropertyPanelCustomEvent<BrickConfigsChangeDetail>) => void;
         "onBrickValidationsChange"?: (event: FkPropertyPanelCustomEvent<BrickValidationsChangeDetail>) => void;
+    }
+    interface FkRulesEditor {
+        "brick": BrickSpec;
+        /**
+          * @default []
+         */
+        "fields"?: string[];
+        "onBrickRulesChange"?: (event: FkRulesEditorCustomEvent<BrickRulesChangeDetail>) => void;
     }
 
     interface FkBrickActionsAttributes {
@@ -333,6 +378,7 @@ declare namespace LocalJSX {
         "fk-form-builder": FkFormBuilder;
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-property-panel": FkPropertyPanel;
+        "fk-rules-editor": FkRulesEditor;
     }
 }
 export { LocalJSX as JSX };
@@ -349,6 +395,7 @@ declare module "@stencil/core" {
             "fk-form-builder": LocalJSX.IntrinsicElements["fk-form-builder"] & JSXBase.HTMLAttributes<HTMLFkFormBuilderElement>;
             "fk-form-render": LocalJSX.IntrinsicElements["fk-form-render"] & JSXBase.HTMLAttributes<HTMLFkFormRenderElement>;
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
+            "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
         }
     }
 }
