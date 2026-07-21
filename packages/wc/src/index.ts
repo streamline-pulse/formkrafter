@@ -13,8 +13,13 @@ export type { WcBrickConfigs, WcBrickProps, BrickRenderFn } from './registry/cre
 export {
   registerDefaultBricks,
   textInputBrick,
+  textareaBrick,
+  numberBrick,
+  dateBrick,
+  selectBrick,
   checkboxBrick,
   groupBrick,
+  rowBrick,
 } from './registry/default-bricks';
 export type {
   BrickDropDetail,

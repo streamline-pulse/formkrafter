@@ -52,8 +52,15 @@ export function newBrickSpec(type: BrickType, id: string): BrickSpec | undefined
   const brick = getBrick(type, id);
   if (!brick) return undefined;
 
+  const empty = brick.getBrickEmptySpec();
+  const uid = crypto.randomUUID();
+
   return {
-    ...brick.getBrickEmptySpec(),
-    configs: { uid: crypto.randomUUID() },
+    ...empty,
+    configs: {
+      ...empty.configs,
+      uid,
+      key: empty.configs?.key ?? `${id}_${uid.slice(0, 6)}`,
+    },
   };
 }

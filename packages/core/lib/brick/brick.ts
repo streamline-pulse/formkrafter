@@ -53,6 +53,7 @@ export abstract class Brick<
   readonly isPrivate: boolean;
 
   readonly validators: Validator[];
+  readonly defaultConfigs?: Record<string, unknown>;
 
   constructor(params: {
     type: BrickType;
@@ -65,6 +66,7 @@ export abstract class Brick<
     unWrapData?: boolean;
     isPrivate?: boolean;
     validators?: Validator[];
+    defaultConfigs?: Record<string, unknown>;
   }) {
     this.type = params.type;
     this.dataType = params.dataType;
@@ -76,6 +78,7 @@ export abstract class Brick<
     this.unWrapData = params.unWrapData ?? false;
     this.isPrivate = params.isPrivate ?? false;
     this.validators = params.validators ?? [];
+    this.defaultConfigs = params.defaultConfigs;
   }
 
   abstract render(props: BrickProps<DataType, Configs, Styles>): unknown;
@@ -95,6 +98,9 @@ export abstract class Brick<
       ...(this.category !== undefined ? { category: this.category } : {}),
       ...(this.configsForm !== undefined ? { configsForm: this.configsForm } : {}),
       ...(this.styles !== undefined ? { styles: this.styles } : {}),
+      ...(this.defaultConfigs !== undefined
+        ? { configs: { ...this.defaultConfigs } }
+        : {}),
       validators: this.validators,
     };
   }

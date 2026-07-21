@@ -81,3 +81,23 @@
   font-weight: 600;
   color: var(--fk-color-muted);
 }
+
+.fk-field__input--textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+select.fk-field__input {
+  appearance: auto;
+}
+
+.fk-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--fk-spacing);
+}
+
+.fk-row > * {
+  flex: 1;
+  min-width: 0;
+}

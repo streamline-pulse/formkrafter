@@ -24,6 +24,7 @@ export function createBrick(params: {
   validators?: Validator[];
   unWrapData?: boolean;
   isPrivate?: boolean;
+  defaultConfigs?: Record<string, unknown>;
   render: BrickRenderFn;
   renderBuilder?: BrickRenderFn;
 }) {
@@ -40,6 +41,7 @@ export function createBrick(params: {
         validators: params.validators,
         unWrapData: params.unWrapData,
         isPrivate: params.isPrivate,
+        defaultConfigs: params.defaultConfigs,
       });
     }
 
