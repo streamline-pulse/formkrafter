@@ -24,7 +24,8 @@ export {
     CollectionUtils,
     ActionUtils,
     Utils,
-    getAffectedProperties
+    getAffectedProperties,
+    evalBrickCode
 } from "./brick/utils";
 
 // Rules
@@ -43,6 +44,7 @@ export { JSONSchemaType } from "./validators/json-schema-type";
 // Services
 export { services } from "./services";
 export { JsRunnerService } from "./services/js_runner_service";
+export { DataSourceService, FetchDataSourceService } from "./services/data_source_service";
 
 // Spec operations
 export { pointerFromPath, pointerOfUid, getBrickAt } from "./ops/pointer";

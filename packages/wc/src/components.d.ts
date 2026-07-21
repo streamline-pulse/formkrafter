@@ -85,6 +85,15 @@ export namespace Components {
          */
         "fields": string[];
     }
+    interface FkSelectInput {
+        "configs"?: Record<string, unknown>;
+        "dataMap"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        "value"?: string;
+    }
 }
 export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -117,6 +126,10 @@ export interface FkPropertyPanelCustomEvent<T> extends CustomEvent<T> {
 export interface FkRulesEditorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkRulesEditorElement;
+}
+export interface FkSelectInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkSelectInputElement;
 }
 declare global {
     interface HTMLFkBrickActionsElementEventMap {
@@ -290,6 +303,23 @@ declare global {
         prototype: HTMLFkRulesEditorElement;
         new (): HTMLFkRulesEditorElement;
     };
+    interface HTMLFkSelectInputElementEventMap {
+        "selectValueChange": string | undefined;
+    }
+    interface HTMLFkSelectInputElement extends Components.FkSelectInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkSelectInputElementEventMap>(type: K, listener: (this: HTMLFkSelectInputElement, ev: FkSelectInputCustomEvent<HTMLFkSelectInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkSelectInputElementEventMap>(type: K, listener: (this: HTMLFkSelectInputElement, ev: FkSelectInputCustomEvent<HTMLFkSelectInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkSelectInputElement: {
+        prototype: HTMLFkSelectInputElement;
+        new (): HTMLFkSelectInputElement;
+    };
     interface HTMLElementTagNameMap {
         "fk-brick-actions": HTMLFkBrickActionsElement;
         "fk-brick-list": HTMLFkBrickListElement;
@@ -303,6 +333,7 @@ declare global {
         "fk-form-render": HTMLFkFormRenderElement;
         "fk-property-panel": HTMLFkPropertyPanelElement;
         "fk-rules-editor": HTMLFkRulesEditorElement;
+        "fk-select-input": HTMLFkSelectInputElement;
     }
 }
 declare namespace LocalJSX {
@@ -402,6 +433,16 @@ declare namespace LocalJSX {
         "fields"?: string[];
         "onBrickRulesChange"?: (event: FkRulesEditorCustomEvent<BrickRulesChangeDetail>) => void;
     }
+    interface FkSelectInput {
+        "configs"?: Record<string, unknown>;
+        "dataMap"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        "onSelectValueChange"?: (event: FkSelectInputCustomEvent<string | undefined>) => void;
+        "value"?: string;
+    }
 
     interface FkBrickActionsAttributes {
         "path": string;
@@ -423,6 +464,10 @@ declare namespace LocalJSX {
         "editable": boolean;
         "selectedUid": string;
     }
+    interface FkSelectInputAttributes {
+        "value": string;
+        "disabled": boolean;
+    }
 
     interface IntrinsicElements {
         "fk-brick-actions": Omit<FkBrickActions, keyof FkBrickActionsAttributes> & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes]?: FkBrickActions[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `attr:${K}`]?: FkBrickActionsAttributes[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `prop:${K}`]?: FkBrickActions[K] } & OneOf<"path", FkBrickActions["path"], FkBrickActionsAttributes["path"]>;
@@ -437,6 +482,7 @@ declare namespace LocalJSX {
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-property-panel": FkPropertyPanel;
         "fk-rules-editor": FkRulesEditor;
+        "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -455,6 +501,7 @@ declare module "@stencil/core" {
             "fk-form-render": LocalJSX.IntrinsicElements["fk-form-render"] & JSXBase.HTMLAttributes<HTMLFkFormRenderElement>;
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
+            "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;
         }
     }
 }

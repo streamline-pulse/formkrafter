@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDropAreaCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type SpecChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDropAreaCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type SpecChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
@@ -25,6 +25,7 @@ import { FkFormBuilder as FkFormBuilderElement, defineCustomElement as defineFkF
 import { FkFormRender as FkFormRenderElement, defineCustomElement as defineFkFormRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js";
 import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defineFkPropertyPanel } from "@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js";
 import { FkRulesEditor as FkRulesEditorElement, defineCustomElement as defineFkRulesEditor } from "@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js";
+import { FkSelectInput as FkSelectInputElement, defineCustomElement as defineFkSelectInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js";
 
 export type FkBrickActionsEvents = {
     onBrickRemove: EventName<FkBrickActionsCustomEvent<BrickPathDetail>>,
@@ -190,4 +191,15 @@ export const FkRulesEditor: StencilReactComponent<FkRulesEditorElement, FkRulesE
     react: React,
     events: { onBrickRulesChange: 'brickRulesChange' } as FkRulesEditorEvents,
     defineCustomElement: defineFkRulesEditor
+});
+
+export type FkSelectInputEvents = { onSelectValueChange: EventName<FkSelectInputCustomEvent<string | undefined>> };
+
+export const FkSelectInput: StencilReactComponent<FkSelectInputElement, FkSelectInputEvents, Components.FkSelectInput> = /*@__PURE__*/ createComponent<FkSelectInputElement, FkSelectInputEvents, Components.FkSelectInput>({
+    tagName: 'fk-select-input',
+    elementClass: FkSelectInputElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onSelectValueChange: 'selectValueChange' } as FkSelectInputEvents,
+    defineCustomElement: defineFkSelectInput
 });

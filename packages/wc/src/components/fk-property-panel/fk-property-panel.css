@@ -33,7 +33,33 @@
   flex-direction: column;
   gap: var(--fk-spacing);
   padding-top: var(--fk-spacing);
-  border-top: 1px solid var(--fk-color-border);
+}
+
+.fk-props__tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--fk-color-border);
+}
+
+.fk-props__tab {
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 9px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--fk-color-muted);
+  cursor: pointer;
+}
+
+.fk-props__tab:hover {
+  color: var(--fk-color-text);
+}
+
+.fk-props__tab--active {
+  color: var(--fk-color-primary);
+  border-bottom-color: var(--fk-color-primary);
 }
 
 .fk-props__section-title {

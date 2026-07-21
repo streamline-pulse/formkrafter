@@ -1,6 +1,10 @@
 import { Component, Event, Listen, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
-import { validateBrickSpecDataDetailed } from '@streamline-pulse/formkrafter-core';
+import {
+  getAffectedProperties,
+  iterateBricks,
+  validateBrickSpecDataDetailed,
+} from '@streamline-pulse/formkrafter-core';
 import type {
   BrickSpec,
   Utils,
@@ -37,7 +41,10 @@ export class FkFormRender {
   handleBrickDataChange(event: CustomEvent<Record<string, unknown>>) {
     event.stopPropagation();
 
-    this.currentData = { ...this.currentData, ...event.detail };
+    this.currentData = this.applyValueEffects({
+      ...this.currentData,
+      ...event.detail,
+    });
     const touched = { ...this.touched };
     for (const key of Object.keys(event.detail)) touched[key] = true;
     this.touched = touched;
@@ -48,6 +55,24 @@ export class FkFormRender {
       isValid: valid,
       errors,
     });
+  }
+
+  private applyValueEffects(
+    data: Record<string, unknown>
+  ): Record<string, unknown> {
+    let result = data;
+
+    for (const { brick } of iterateBricks(this.spec)) {
+      const key = brick.configs?.key;
+      if (!key || !brick.rules?.length) continue;
+
+      const affected = getAffectedProperties(brick.rules, result);
+      if (affected.value !== undefined && result[key] !== affected.value) {
+        result = { ...result, [key]: affected.value };
+      }
+    }
+
+    return result;
   }
 
   private validate(): ValidationResult {

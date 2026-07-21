@@ -27,6 +27,7 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   onAddBrick?: (brickMold: BrickMoldDropType, path: string) => void;
   path: string;
   error?: string;
+  disabled?: boolean;
   children?: unknown;
   brickSpec?: BrickSpec;
   editable?: boolean;

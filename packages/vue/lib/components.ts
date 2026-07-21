@@ -17,6 +17,7 @@ import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/fo
 import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js';
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
+import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
 
 
 
@@ -132,6 +133,17 @@ export const FkRulesEditor: StencilVueComponent<JSX.FkRulesEditor> = /*@__PURE__
   'brickRulesChange'
 ], [
   'brickRulesChange'
+]);
+
+
+export const FkSelectInput: StencilVueComponent<JSX.FkSelectInput> = /*@__PURE__*/ defineContainer<JSX.FkSelectInput>('fk-select-input', defineFkSelectInput, [
+  'configs',
+  'value',
+  'disabled',
+  'dataMap',
+  'selectValueChange'
+], [
+  'selectValueChange'
 ]);
 
 

@@ -18,7 +18,7 @@ export type ActionUtils = {
 
 export type Utils = InputUtils & PanelUtils & CollectionUtils & ActionUtils;
 
-const evalBrickCode = (code: string, data?: Record<string, unknown>) => {
+export const evalBrickCode = (code: string, data?: Record<string, unknown>) => {
   const customFunction = `
       const dataMap = ${JSON.stringify(data)};
 

@@ -83,6 +83,7 @@ export class FkBrickRender {
       data: getBrickData(spec, this.data),
       dataMap: this.dataMap,
       error: spec.configs?.key ? this.errors[spec.configs.key] : undefined,
+      disabled: editing ? false : affected.disabled === true,
       path: this.path,
       editable: editing,
       children: childNodes,

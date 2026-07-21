@@ -32,7 +32,7 @@ export const textInputBrick = createBrick({
         type="text"
         value={(props.data as string) ?? ''}
         placeholder={props.configs?.placeholder as string}
-        disabled={props.editable}
+        disabled={props.editable || props.disabled}
         onInput={(event) =>
           props.onDataChange?.((event.target as HTMLInputElement).value)
         }
@@ -55,7 +55,7 @@ export const textareaBrick = createBrick({
         class="fk-field__input fk-field__input--textarea"
         value={(props.data as string) ?? ''}
         placeholder={props.configs?.placeholder as string}
-        disabled={props.editable}
+        disabled={props.editable || props.disabled}
         onInput={(event) =>
           props.onDataChange?.((event.target as HTMLTextAreaElement).value)
         }
@@ -79,7 +79,7 @@ export const numberBrick = createBrick({
         type="number"
         value={props.data == null ? '' : String(props.data)}
         placeholder={props.configs?.placeholder as string}
-        disabled={props.editable}
+        disabled={props.editable || props.disabled}
         onInput={(event) => {
           const raw = (event.target as HTMLInputElement).value;
           props.onDataChange?.(raw === '' ? undefined : Number(raw));
@@ -103,7 +103,7 @@ export const dateBrick = createBrick({
         class="fk-field__input"
         type="date"
         value={(props.data as string) ?? ''}
-        disabled={props.editable}
+        disabled={props.editable || props.disabled}
         onInput={(event) => {
           const raw = (event.target as HTMLInputElement).value;
           props.onDataChange?.(raw === '' ? undefined : raw);
@@ -112,41 +112,31 @@ export const dateBrick = createBrick({
     ),
 });
 
-const selectOptions = (raw: unknown): string[] => {
-  if (Array.isArray(raw)) return raw.map(String);
-
-  return String(raw ?? '')
-    .split('\n')
-    .map((option) => option.trim())
-    .filter(Boolean);
-};
-
 export const selectBrick = createBrick({
   type: 'input',
   dataType: 'string',
   id: 'select',
   name: 'Select',
   category: 'Inputs',
-  defaultConfigs: { label: 'Select', options: 'Option 1\nOption 2' },
+  defaultConfigs: {
+    label: 'Select',
+    optionsSource: 'static',
+    options: 'Option 1\nOption 2',
+  },
   render: (props) =>
     field(
       props,
       'Select',
-      <select
-        class="fk-field__input"
-        disabled={props.editable}
-        onInput={(event) => {
-          const raw = (event.target as HTMLSelectElement).value;
-          props.onDataChange?.(raw === '' ? undefined : raw);
+      <fk-select-input
+        configs={props.configs}
+        value={(props.data as string) ?? ''}
+        disabled={props.editable || props.disabled}
+        dataMap={props.dataMap}
+        onSelectValueChange={(event: CustomEvent<string | undefined>) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
         }}
-      >
-        <option value="" selected={props.data == null || props.data === ''}></option>
-        {selectOptions(props.configs?.options).map((option) => (
-          <option value={option} selected={props.data === option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      />
     ),
 });
 
@@ -163,7 +153,7 @@ export const checkboxBrick = createBrick({
         class="fk-field__checkbox"
         type="checkbox"
         checked={props.data === true}
-        disabled={props.editable}
+        disabled={props.editable || props.disabled}
         onChange={(event) =>
           props.onDataChange?.((event.target as HTMLInputElement).checked)
         }
