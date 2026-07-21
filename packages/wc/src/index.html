@@ -78,7 +78,10 @@
   <body>
     <div class="toolbar">
       <h1>FormKrafter — builder</h1>
-      <button type="button" id="theme-toggle">🌓 Theme</button>
+      <div>
+        <button type="button" id="lang-toggle">🌐 EN</button>
+        <button type="button" id="theme-toggle">🌓 Theme</button>
+      </div>
     </div>
     <fk-form-builder></fk-form-builder>
 
@@ -94,32 +97,66 @@
     <h1>Spec</h1>
     <pre id="spec-output">(empty)</pre>
 
-    <script>
-      const builder = document.querySelector('fk-form-builder');
+    <script type="module">
+      import {
+        setFkTranslations,
+        frFkTranslations,
+      } from '/build/index.esm.js';
+
       const preview = document.querySelector('#preview');
       const previewHint = document.querySelector('#preview-hint');
       const specOutput = document.querySelector('#spec-output');
       const dataOutput = document.querySelector('#data-output');
+      const langToggle = document.querySelector('#lang-toggle');
 
-      builder.addEventListener('specChange', (event) => {
-        const spec = event.detail.spec;
+      const state = {
+        spec: undefined,
+        locale: localStorage.getItem('fk-locale') ?? 'en',
+      };
 
-        specOutput.textContent = spec ? JSON.stringify(spec, null, 2) : '(empty)';
+      function handleSpecChange(event) {
+        state.spec = event.detail.spec;
+
+        specOutput.textContent = state.spec
+          ? JSON.stringify(state.spec, null, 2)
+          : '(empty)';
         console.log('patches', event.detail.patches);
 
-        preview.spec = spec ? structuredClone(spec) : undefined;
-        preview.hidden = !spec;
-        previewHint.hidden = !!spec;
-      });
+        preview.spec = state.spec ? structuredClone(state.spec) : undefined;
+        preview.hidden = !state.spec;
+        previewHint.hidden = !!state.spec;
+      }
+
+      function applyLocale() {
+        setFkTranslations(state.locale === 'fr' ? frFkTranslations : {});
+
+        const old = document.querySelector('fk-form-builder');
+        const fresh = document.createElement('fk-form-builder');
+        fresh.locales = ['en', 'fr'];
+        if (state.spec) fresh.spec = structuredClone(state.spec);
+        fresh.addEventListener('specChange', handleSpecChange);
+        old.replaceWith(fresh);
+
+        preview.locale = state.locale;
+        langToggle.textContent = `🌐 ${state.locale.toUpperCase()}`;
+      }
 
       preview.addEventListener('formDataChange', (event) => {
         dataOutput.textContent = JSON.stringify(event.detail, null, 2);
+      });
+
+      langToggle.addEventListener('click', () => {
+        state.locale = state.locale === 'en' ? 'fr' : 'en';
+        localStorage.setItem('fk-locale', state.locale);
+        applyLocale();
       });
 
       document.querySelector('#theme-toggle').addEventListener('click', () => {
         const dark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('fk-theme', dark ? 'dark' : 'light');
       });
+
+      applyLocale();
     </script>
   </body>
 </html>
