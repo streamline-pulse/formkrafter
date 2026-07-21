@@ -141,3 +141,64 @@ export const validateBrickSpecData = (
     data: unknown,
     locale?: string
 ): boolean => validateBrickSpecDataDetailed(brickSpec, data, locale).valid;
+
+const stripEmpty = (data: unknown): Record<string, unknown> => {
+    if (typeof data !== "object" || data === null) return {};
+
+    return Object.fromEntries(
+        Object.entries(data as Record<string, unknown>).filter(
+            ([, value]) => value !== "" && value !== null && value !== undefined
+        )
+    );
+};
+
+const rowSpecCache = new WeakMap<BrickSpec, BrickSpec>();
+
+const rowSpecOf = (collection: BrickSpec): BrickSpec => {
+    let rowSpec = rowSpecCache.get(collection);
+
+    if (!rowSpec) {
+        rowSpec = {
+            type: "panel",
+            id: "collection-row",
+            name: "Row",
+            configs: { key: `${collection.configs?.key ?? "collection"}_row` },
+            children: collection.children ?? [],
+        };
+        rowSpecCache.set(collection, rowSpec);
+    }
+
+    return rowSpec;
+};
+
+export const validateFormData = (
+    brickSpec: BrickSpec,
+    data: unknown,
+    locale?: string
+): ValidationResult => {
+    const present = stripEmpty(data);
+    const errors = {
+        ...validateBrickSpecDataDetailed(brickSpec, present, locale).errors,
+    };
+
+    for (const brick of iterateSchemaBricks(brickSpec)) {
+        if (brick.type !== "collection") continue;
+
+        const key = brick.configs?.key;
+        if (!key) continue;
+
+        const rows = present[key];
+        if (!Array.isArray(rows)) continue;
+
+        const rowSpec = rowSpecOf(brick);
+        rows.forEach((row, index) => {
+            const rowResult = validateFormData(rowSpec, row, locale);
+            for (const [field, message] of Object.entries(rowResult.errors)) {
+                const prefixed = `${key}[${index}].${field}`;
+                if (!(prefixed in errors)) errors[prefixed] = message;
+            }
+        });
+    }
+
+    return { valid: Object.keys(errors).length === 0, errors };
+};

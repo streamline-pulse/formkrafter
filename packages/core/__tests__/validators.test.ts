@@ -3,6 +3,7 @@ import type { BrickSpec } from "../lib/utils/brick-spec";
 import {
   validateBrickSpecData,
   validateBrickSpecDataDetailed,
+  validateFormData,
 } from "../lib/validators/validator";
 
 const form = (): BrickSpec => ({
@@ -219,6 +220,66 @@ describe("validateBrickSpecDataDetailed", () => {
     expect(validateBrickSpecDataDetailed(spec(), {}).errors).toEqual({
       name: "Name is required",
     });
+  });
+
+  test("validateFormData gives backends the full frontend verdict", () => {
+    const spec: BrickSpec = {
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Name",
+          configs: { uid: "a", key: "name" },
+          validations: [{ validator: "required" }],
+        },
+        {
+          type: "collection",
+          dataType: "array",
+          id: "data-grid",
+          name: "Contacts",
+          configs: { uid: "g", key: "contacts" },
+          validations: [{ validator: "minItems", value: 1 }],
+          children: [
+            {
+              type: "input",
+              dataType: "string",
+              id: "email",
+              name: "Email",
+              configs: { uid: "c1", key: "email" },
+              validations: [
+                { validator: "required" },
+                { validator: "email", message: "Email invalide" },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    const result = validateFormData(
+      spec,
+      { name: "", contacts: [{ email: "nope" }, {}] },
+      "fr"
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toEqual({
+      name: "Ce champ est obligatoire",
+      "contacts[0].email": "Email invalide",
+      "contacts[1].email": "Ce champ est obligatoire",
+    });
+
+    expect(
+      validateFormData(spec, {
+        name: "Ada",
+        contacts: [{ email: "a@b.co" }],
+      }).valid
+    ).toBe(true);
   });
 
   test("an invalid regex pattern does not crash validation", () => {

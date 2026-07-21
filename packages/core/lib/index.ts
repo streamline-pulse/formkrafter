@@ -37,7 +37,8 @@ export {
     Validator,
     ValidationResult,
     validateBrickSpecData,
-    validateBrickSpecDataDetailed
+    validateBrickSpecDataDetailed,
+    validateFormData
 } from "./validators/validator";
 export {
     defaultValidationMessage,
