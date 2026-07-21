@@ -46,8 +46,8 @@
     "@streamline-pulse/formkrafter-core": "workspace:*"
   },
   "devDependencies": {
-    "@stencil/core": "^4.27.1",
-    "@stencil/react-output-target": "^1.2.0",
-    "@stencil/vue-output-target": "^0.11.8"
+    "@stencil/core": "^4.43.5",
+    "@stencil/react-output-target": "^1.6.1",
+    "@stencil/vue-output-target": "^0.14.1"
   }
 }

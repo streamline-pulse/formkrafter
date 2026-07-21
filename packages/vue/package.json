@@ -10,7 +10,7 @@
     "build": "tsc -p ."
   },
   "dependencies": {
-    "@stencil/vue-output-target": "^0.11.8",
+    "@stencil/vue-output-target": "^0.14.1",
     "@streamline-pulse/formkrafter-wc": "workspace:*"
   },
   "peerDependencies": {

@@ -5,16 +5,16 @@
   "workspaces": {
     "packages": ["packages/*", "examples/*"],
     "catalog": {
-      "typescript": "^5.9.2",
-      "acorn": "^8.15.0",
-      "ajv": "^8.17.1",
+      "typescript": "^6.0.3",
+      "acorn": "^8.17.0",
+      "ajv": "^8.20.0",
       "ajv-errors": "^3.0.0",
-      "awilix": "^12.0.5",
-      "uuid": "^11.1.0",
-      "react": "^19.2.0",
-      "react-dom": "^19.2.0",
-      "@types/react": "^19.2.0",
-      "vue": "^3.5.18"
+      "awilix": "^13.0.5",
+      "uuid": "^14.0.1",
+      "react": "^19.2.7",
+      "react-dom": "^19.2.7",
+      "@types/react": "^19.2.17",
+      "vue": "^3.5.40"
     }
   },
   "scripts": {
@@ -27,7 +27,7 @@
     "release": "bun run build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.0",
+    "@changesets/cli": "^2.31.1",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.7.0",
     "globals": "^17.7.0",

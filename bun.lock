@@ -5,7 +5,7 @@
     "": {
       "name": "formkrafter",
       "devDependencies": {
-        "@changesets/cli": "^2.29.0",
+        "@changesets/cli": "^2.31.1",
         "@eslint/js": "^10.0.1",
         "eslint": "^10.7.0",
         "globals": "^17.7.0",
@@ -24,7 +24,7 @@
       "name": "@streamline-pulse/formkrafter-react",
       "version": "0.0.1",
       "dependencies": {
-        "@stencil/react-output-target": "^1.2.0",
+        "@stencil/react-output-target": "^1.6.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
       },
       "devDependencies": {
@@ -40,7 +40,7 @@
       "name": "@streamline-pulse/formkrafter-vue",
       "version": "0.0.1",
       "dependencies": {
-        "@stencil/vue-output-target": "^0.11.8",
+        "@stencil/vue-output-target": "^0.14.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
       },
       "devDependencies": {
@@ -58,23 +58,23 @@
         "@streamline-pulse/formkrafter-core": "workspace:*",
       },
       "devDependencies": {
-        "@stencil/core": "^4.27.1",
-        "@stencil/react-output-target": "^1.2.0",
-        "@stencil/vue-output-target": "^0.11.8",
+        "@stencil/core": "^4.43.5",
+        "@stencil/react-output-target": "^1.6.1",
+        "@stencil/vue-output-target": "^0.14.1",
       },
     },
   },
   "catalog": {
-    "@types/react": "^19.2.0",
-    "acorn": "^8.15.0",
-    "ajv": "^8.17.1",
+    "@types/react": "^19.2.17",
+    "acorn": "^8.17.0",
+    "ajv": "^8.20.0",
     "ajv-errors": "^3.0.0",
-    "awilix": "^12.0.5",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "typescript": "^5.9.2",
-    "uuid": "^11.1.0",
-    "vue": "^3.5.18",
+    "awilix": "^13.0.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "typescript": "^6.0.3",
+    "uuid": "^14.0.1",
+    "vue": "^3.5.40",
   },
   "packages": {
     "@babel/helper-string-parser": ["@babel/helper-string-parser@7.29.7", "", {}, "sha512-Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw=="],
@@ -185,7 +185,7 @@
 
     "@stencil/react-output-target": ["@stencil/react-output-target@1.6.1", "", { "dependencies": { "@lit/react": "^1.0.8", "html-react-parser": "^5.2.17", "react-style-stringify": "^1.2.0", "ts-morph": "^28.0.0" }, "peerDependencies": { "@stencil/core": ">=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-alpha.17 <5.0.0-next.0", "react": "^18 || ^19", "react-dom": "^18 || ^19" } }, "sha512-QcIZ7tKC9ZsZ+tZiyMljIRCTDOxMi2XfyPOk8ae4VLJKmBxqcoh2paKYiqCx8n0QNlPaPrtWmVrvalN3+aihhg=="],
 
-    "@stencil/vue-output-target": ["@stencil/vue-output-target@0.11.8", "", { "peerDependencies": { "@stencil/core": ">=2.0.0 || >=3 || >= 4.0.0-beta.0 || >= 4.0.0", "vue": "^3.4.38", "vue-router": "^4.5.0" }, "optionalPeers": ["@stencil/core", "vue-router"] }, "sha512-R/kQoN15irgL7NJxWaUNSmwDLfoDBZjlYaXNnW3LHlF30TYfyez6pRgD7ZglSSTVktMtCXz6ZPhg0uq59VkhOw=="],
+    "@stencil/vue-output-target": ["@stencil/vue-output-target@0.14.1", "", { "peerDependencies": { "@stencil/core": ">=2.0.0 || >=3 || >=4.0.0 || ^5.0.0 || >=5.0.0-alpha.17 <5.0.0-next.0", "vue": "^3.4.38", "vue-router": "^4.5.0 || ^5.0.0" }, "optionalPeers": ["@stencil/core", "vue-router"] }, "sha512-mtqpYVsdopTbMK0eAmyNa2+MuuhiZgJcrBt1hihEERyG0vtDqcaYkqNz+sYSvA0iK3tTGs5vOUPOd1HU1w9D7w=="],
 
     "@streamline-pulse/formkrafter-core": ["@streamline-pulse/formkrafter-core@workspace:packages/core"],
 
@@ -511,7 +511,7 @@
 
     "type-check": ["type-check@0.4.0", "", { "dependencies": { "prelude-ls": "^1.2.1" } }, "sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew=="],
 
-    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+    "typescript": ["typescript@6.0.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
 
     "typescript-eslint": ["typescript-eslint@8.65.0", "", { "dependencies": { "@typescript-eslint/eslint-plugin": "8.65.0", "@typescript-eslint/parser": "8.65.0", "@typescript-eslint/typescript-estree": "8.65.0", "@typescript-eslint/utils": "8.65.0" }, "peerDependencies": { "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0", "typescript": ">=4.8.4 <6.1.0" } }, "sha512-/ggrHAwyjENDusvyxbuqxAC2dTnZg/Z8F+fgQtYIz+L6n/9HfSlEZcFGV/NsMNa6CkGk0xUjUAFwC0vHOflvIA=="],
 

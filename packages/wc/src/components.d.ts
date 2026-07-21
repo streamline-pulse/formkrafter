@@ -6,11 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    /**
-     * Temporary sample component validating the build pipeline
-     * (Stencil build + React/Vue wrapper generation).
-     * Delete it once real components are migrated.
-     */
     interface FkSample {
         /**
           * @default 'FormKrafter'
@@ -19,11 +14,6 @@ export namespace Components {
     }
 }
 declare global {
-    /**
-     * Temporary sample component validating the build pipeline
-     * (Stencil build + React/Vue wrapper generation).
-     * Delete it once real components are migrated.
-     */
     interface HTMLFkSampleElement extends Components.FkSample, HTMLStencilElement {
     }
     var HTMLFkSampleElement: {
@@ -35,11 +25,6 @@ declare global {
     }
 }
 declare namespace LocalJSX {
-    /**
-     * Temporary sample component validating the build pipeline
-     * (Stencil build + React/Vue wrapper generation).
-     * Delete it once real components are migrated.
-     */
     interface FkSample {
         /**
           * @default 'FormKrafter'
@@ -59,11 +44,6 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            /**
-             * Temporary sample component validating the build pipeline
-             * (Stencil build + React/Vue wrapper generation).
-             * Delete it once real components are migrated.
-             */
             "fk-sample": LocalJSX.IntrinsicElements["fk-sample"] & JSXBase.HTMLAttributes<HTMLFkSampleElement>;
         }
     }

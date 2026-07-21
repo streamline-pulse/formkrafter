@@ -10,7 +10,7 @@
     "build": "tsc -p ."
   },
   "dependencies": {
-    "@stencil/react-output-target": "^1.2.0",
+    "@stencil/react-output-target": "^1.6.1",
     "@streamline-pulse/formkrafter-wc": "workspace:*"
   },
   "peerDependencies": {

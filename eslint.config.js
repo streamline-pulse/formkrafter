@@ -12,6 +12,9 @@ export default tseslint.config(
       '**/.stencil/',
       '**/*.gen.ts',
       '**/paraglide/',
+      'packages/react/lib/components/',
+      'packages/vue/lib/components.ts',
+      'packages/wc/src/components.d.ts',
     ],
   },
   eslint.configs.recommended,
@@ -28,6 +31,13 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
-  // Per-package overrides go here, scoped with `files`, e.g.:
-  // { files: ['packages/react/**'], plugins: { ... } }
+  {
+    files: ['packages/wc/**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^(_|h$|Fragment$)' },
+      ],
+    },
+  },
 )
