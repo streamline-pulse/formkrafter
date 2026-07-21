@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  cursor: grab;
+}
+
+.fk-mold {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fk-spacing);
+  padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  background: var(--fk-color-surface);
+  font-size: 0.875rem;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.fk-mold:hover {
+  border-color: var(--fk-color-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.fk-mold--dragging {
+  opacity: 0.5;
+}
+
+.fk-mold__name {
+  font-weight: 500;
+  color: var(--fk-color-text);
+}
+
+.fk-mold__category {
+  font-size: 0.7rem;
+  color: var(--fk-color-muted);
+}

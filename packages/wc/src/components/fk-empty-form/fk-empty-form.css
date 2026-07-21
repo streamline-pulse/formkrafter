@@ -1,0 +1,22 @@
+.fk-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--fk-spacing) / 2);
+  min-height: 160px;
+  border: 2px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  color: var(--fk-color-muted);
+  text-align: center;
+}
+
+.fk-empty__title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.fk-empty__hint {
+  margin: 0;
+  font-size: 0.875rem;
+}

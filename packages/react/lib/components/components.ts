@@ -7,20 +7,161 @@
 
 /* eslint-disable */
 
-import type { StencilReactComponent } from '@stencil/react-output-target/runtime';
+import type { EventName, StencilReactComponent } from '@stencil/react-output-target/runtime';
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkDropAreaCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type SpecChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
-import { FkSample as FkSampleElement, defineCustomElement as defineFkSample } from "@streamline-pulse/formkrafter-wc/dist/components/fk-sample.js";
+import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
+import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
+import { FkBrickMoldItem as FkBrickMoldItemElement, defineCustomElement as defineFkBrickMoldItem } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-mold-item.js";
+import { FkBrickNotFound as FkBrickNotFoundElement, defineCustomElement as defineFkBrickNotFound } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-not-found.js";
+import { FkBrickRender as FkBrickRenderElement, defineCustomElement as defineFkBrickRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-render.js";
+import { FkDropArea as FkDropAreaElement, defineCustomElement as defineFkDropArea } from "@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js";
+import { FkEmptyForm as FkEmptyFormElement, defineCustomElement as defineFkEmptyForm } from "@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js";
+import { FkFormBuilder as FkFormBuilderElement, defineCustomElement as defineFkFormBuilder } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js";
+import { FkFormRender as FkFormRenderElement, defineCustomElement as defineFkFormRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js";
+import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defineFkPropertyPanel } from "@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js";
 
-export type FkSampleEvents = NonNullable<unknown>;
+export type FkBrickActionsEvents = {
+    onBrickRemove: EventName<FkBrickActionsCustomEvent<BrickPathDetail>>,
+    onBrickDuplicate: EventName<FkBrickActionsCustomEvent<BrickPathDetail>>,
+    onBrickDrop: EventName<FkBrickActionsCustomEvent<BrickDropDetail>>,
+    onBrickSelect: EventName<FkBrickActionsCustomEvent<BrickPathDetail>>
+};
 
-export const FkSample: StencilReactComponent<FkSampleElement, FkSampleEvents, Components.FkSample> = /*@__PURE__*/ createComponent<FkSampleElement, FkSampleEvents, Components.FkSample>({
-    tagName: 'fk-sample',
-    elementClass: FkSampleElement,
+export const FkBrickActions: StencilReactComponent<FkBrickActionsElement, FkBrickActionsEvents, Components.FkBrickActions, 'path'> = /*@__PURE__*/ createComponent<FkBrickActionsElement, FkBrickActionsEvents, Components.FkBrickActions, 'path'>({
+    tagName: 'fk-brick-actions',
+    elementClass: FkBrickActionsElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: {} as FkSampleEvents,
-    defineCustomElement: defineFkSample
+    events: {
+        onBrickRemove: 'brickRemove',
+        onBrickDuplicate: 'brickDuplicate',
+        onBrickDrop: 'brickDrop',
+        onBrickSelect: 'brickSelect'
+    } as FkBrickActionsEvents,
+    defineCustomElement: defineFkBrickActions
+});
+
+export type FkBrickListEvents = NonNullable<unknown>;
+
+export const FkBrickList: StencilReactComponent<FkBrickListElement, FkBrickListEvents, Components.FkBrickList> = /*@__PURE__*/ createComponent<FkBrickListElement, FkBrickListEvents, Components.FkBrickList>({
+    tagName: 'fk-brick-list',
+    elementClass: FkBrickListElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as FkBrickListEvents,
+    defineCustomElement: defineFkBrickList
+});
+
+export type FkBrickMoldItemEvents = NonNullable<unknown>;
+
+export const FkBrickMoldItem: StencilReactComponent<FkBrickMoldItemElement, FkBrickMoldItemEvents, Components.FkBrickMoldItem, 'brickMold'> = /*@__PURE__*/ createComponent<FkBrickMoldItemElement, FkBrickMoldItemEvents, Components.FkBrickMoldItem, 'brickMold'>({
+    tagName: 'fk-brick-mold-item',
+    elementClass: FkBrickMoldItemElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as FkBrickMoldItemEvents,
+    defineCustomElement: defineFkBrickMoldItem
+});
+
+export type FkBrickNotFoundEvents = NonNullable<unknown>;
+
+export const FkBrickNotFound: StencilReactComponent<FkBrickNotFoundElement, FkBrickNotFoundEvents, Components.FkBrickNotFound> = /*@__PURE__*/ createComponent<FkBrickNotFoundElement, FkBrickNotFoundEvents, Components.FkBrickNotFound>({
+    tagName: 'fk-brick-not-found',
+    elementClass: FkBrickNotFoundElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as FkBrickNotFoundEvents,
+    defineCustomElement: defineFkBrickNotFound
+});
+
+export type FkBrickRenderEvents = {
+    onBrickDataChange: EventName<FkBrickRenderCustomEvent<Record<string, unknown>>>,
+    onBrickConfigsChange: EventName<FkBrickRenderCustomEvent<BrickConfigsChangeDetail>>,
+    onBrickStylesChange: EventName<FkBrickRenderCustomEvent<BrickStylesChangeDetail>>,
+    onBrickValidationsChange: EventName<FkBrickRenderCustomEvent<BrickValidationsChangeDetail>>,
+    onBrickRulesChange: EventName<FkBrickRenderCustomEvent<BrickRulesChangeDetail>>,
+    onBrickRemove: EventName<FkBrickRenderCustomEvent<BrickPathDetail>>,
+    onBrickDuplicate: EventName<FkBrickRenderCustomEvent<BrickPathDetail>>
+};
+
+export const FkBrickRender: StencilReactComponent<FkBrickRenderElement, FkBrickRenderEvents, Components.FkBrickRender, 'brickSpec' | 'utils'> = /*@__PURE__*/ createComponent<FkBrickRenderElement, FkBrickRenderEvents, Components.FkBrickRender, 'brickSpec' | 'utils'>({
+    tagName: 'fk-brick-render',
+    elementClass: FkBrickRenderElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {
+        onBrickDataChange: 'brickDataChange',
+        onBrickConfigsChange: 'brickConfigsChange',
+        onBrickStylesChange: 'brickStylesChange',
+        onBrickValidationsChange: 'brickValidationsChange',
+        onBrickRulesChange: 'brickRulesChange',
+        onBrickRemove: 'brickRemove',
+        onBrickDuplicate: 'brickDuplicate'
+    } as FkBrickRenderEvents,
+    defineCustomElement: defineFkBrickRender
+});
+
+export type FkDropAreaEvents = { onBrickDrop: EventName<FkDropAreaCustomEvent<BrickDropDetail>> };
+
+export const FkDropArea: StencilReactComponent<FkDropAreaElement, FkDropAreaEvents, Components.FkDropArea, 'path'> = /*@__PURE__*/ createComponent<FkDropAreaElement, FkDropAreaEvents, Components.FkDropArea, 'path'>({
+    tagName: 'fk-drop-area',
+    elementClass: FkDropAreaElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onBrickDrop: 'brickDrop' } as FkDropAreaEvents,
+    defineCustomElement: defineFkDropArea
+});
+
+export type FkEmptyFormEvents = NonNullable<unknown>;
+
+export const FkEmptyForm: StencilReactComponent<FkEmptyFormElement, FkEmptyFormEvents, Components.FkEmptyForm> = /*@__PURE__*/ createComponent<FkEmptyFormElement, FkEmptyFormEvents, Components.FkEmptyForm>({
+    tagName: 'fk-empty-form',
+    elementClass: FkEmptyFormElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as FkEmptyFormEvents,
+    defineCustomElement: defineFkEmptyForm
+});
+
+export type FkFormBuilderEvents = { onSpecChange: EventName<FkFormBuilderCustomEvent<SpecChangeDetail>> };
+
+export const FkFormBuilder: StencilReactComponent<FkFormBuilderElement, FkFormBuilderEvents, Components.FkFormBuilder> = /*@__PURE__*/ createComponent<FkFormBuilderElement, FkFormBuilderEvents, Components.FkFormBuilder>({
+    tagName: 'fk-form-builder',
+    elementClass: FkFormBuilderElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onSpecChange: 'specChange' } as FkFormBuilderEvents,
+    defineCustomElement: defineFkFormBuilder
+});
+
+export type FkFormRenderEvents = { onFormDataChange: EventName<FkFormRenderCustomEvent<DataChangeDetail>> };
+
+export const FkFormRender: StencilReactComponent<FkFormRenderElement, FkFormRenderEvents, Components.FkFormRender, 'spec'> = /*@__PURE__*/ createComponent<FkFormRenderElement, FkFormRenderEvents, Components.FkFormRender, 'spec'>({
+    tagName: 'fk-form-render',
+    elementClass: FkFormRenderElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onFormDataChange: 'formDataChange' } as FkFormRenderEvents,
+    defineCustomElement: defineFkFormRender
+});
+
+export type FkPropertyPanelEvents = {
+    onBrickConfigsChange: EventName<FkPropertyPanelCustomEvent<BrickConfigsChangeDetail>>,
+    onBrickValidationsChange: EventName<FkPropertyPanelCustomEvent<BrickValidationsChangeDetail>>
+};
+
+export const FkPropertyPanel: StencilReactComponent<FkPropertyPanelElement, FkPropertyPanelEvents, Components.FkPropertyPanel, 'brick'> = /*@__PURE__*/ createComponent<FkPropertyPanelElement, FkPropertyPanelEvents, Components.FkPropertyPanel, 'brick'>({
+    tagName: 'fk-property-panel',
+    elementClass: FkPropertyPanelElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {
+        onBrickConfigsChange: 'brickConfigsChange',
+        onBrickValidationsChange: 'brickValidationsChange'
+    } as FkPropertyPanelEvents,
+    defineCustomElement: defineFkPropertyPanel
 });

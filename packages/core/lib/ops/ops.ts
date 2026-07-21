@@ -43,6 +43,8 @@ const requireBrickByUid = (
   return { pointer, brick };
 };
 
+const toJsonValue = <T>(value: T): T => JSON.parse(JSON.stringify(value));
+
 export function addBrick(
   spec: BrickSpec,
   brick: BrickSpec,
@@ -51,12 +53,13 @@ export function addBrick(
 ): SpecUpdate {
   const parent = requireBrickAt(spec, parentPath);
   const parentPointer = pointerFromPath(parentPath);
+  const value = toJsonValue(brick);
 
   if (!parent.children) {
     const pointer = `${parentPointer}/children`;
     return apply(
       spec,
-      [{ op: "add", path: pointer, value: [brick] }],
+      [{ op: "add", path: pointer, value: [value] }],
       [{ op: "remove", path: pointer }]
     );
   }
@@ -66,7 +69,7 @@ export function addBrick(
 
   return apply(
     spec,
-    [{ op: "add", path: pointer, value: brick }],
+    [{ op: "add", path: pointer, value }],
     [{ op: "remove", path: pointer }]
   );
 }
@@ -88,8 +91,26 @@ export function moveBrick(spec: BrickSpec, from: string, to: string): SpecUpdate
   if (from === "0" || to === "0") throw new Error("Cannot move the root brick");
 
   const brick = requireBrickAt(spec, from);
+
+  const fromSegments = from.split(".").map(Number);
+  const toSegments = to.split(".").map(Number);
+  const parentLength = fromSegments.length - 1;
+  const fromIndex = fromSegments[parentLength];
+
+  const sharesFromParent =
+    toSegments.length > parentLength &&
+    fromSegments.slice(0, parentLength).every((segment, i) => segment === toSegments[i]);
+
+  const adjusted = [...toSegments];
+  if (sharesFromParent) {
+    if (adjusted[parentLength] === fromIndex && adjusted.length > fromSegments.length) {
+      throw new Error(`Cannot move a brick into its own subtree ("${from}" → "${to}")`);
+    }
+    if (adjusted[parentLength] > fromIndex) adjusted[parentLength] -= 1;
+  }
+
   const fromPointer = pointerFromPath(from);
-  const toPointer = pointerFromPath(to);
+  const toPointer = pointerFromPath(adjusted.join("."));
 
   return apply(
     spec,
@@ -122,7 +143,7 @@ export function duplicateBrick(spec: BrickSpec, path: string): SpecUpdate {
     [...segments.slice(0, -1), String(nextIndex)].join(".")
   );
 
-  const copy = withFreshUids(structuredClone(brick));
+  const copy = withFreshUids(toJsonValue(brick));
 
   return apply(
     spec,

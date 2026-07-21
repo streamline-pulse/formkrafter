@@ -5,46 +5,350 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
+import { BrickMold, BrickSpec, Utils } from "@streamline-pulse/formkrafter-core";
+export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
+export { BrickMold, BrickSpec, Utils } from "@streamline-pulse/formkrafter-core";
 export namespace Components {
-    interface FkSample {
+    interface FkBrickActions {
+        "path": string;
         /**
-          * @default 'FormKrafter'
+          * @default false
          */
-        "name": string;
+        "selected": boolean;
+    }
+    interface FkBrickList {
+    }
+    interface FkBrickMoldItem {
+        "brickMold": BrickMold;
+    }
+    interface FkBrickNotFound {
+    }
+    interface FkBrickRender {
+        "brickSpec": BrickSpec;
+        "data"?: Record<string, unknown>;
+        "dataMap"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "editable": boolean;
+        /**
+          * @default '0'
+         */
+        "path": string;
+        "selectedUid"?: string;
+        "utils": Utils;
+    }
+    interface FkDropArea {
+        "path": string;
+    }
+    interface FkEmptyForm {
+    }
+    interface FkFormBuilder {
+        "data"?: Record<string, unknown>;
+        "spec"?: BrickSpec;
+    }
+    interface FkFormRender {
+        "data"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "editable": boolean;
+        "selectedUid"?: string;
+        "spec": BrickSpec;
+    }
+    interface FkPropertyPanel {
+        "brick": BrickSpec;
     }
 }
+export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkBrickActionsElement;
+}
+export interface FkBrickRenderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkBrickRenderElement;
+}
+export interface FkDropAreaCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkDropAreaElement;
+}
+export interface FkFormBuilderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkFormBuilderElement;
+}
+export interface FkFormRenderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkFormRenderElement;
+}
+export interface FkPropertyPanelCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkPropertyPanelElement;
+}
 declare global {
-    interface HTMLFkSampleElement extends Components.FkSample, HTMLStencilElement {
+    interface HTMLFkBrickActionsElementEventMap {
+        "brickRemove": BrickPathDetail;
+        "brickDuplicate": BrickPathDetail;
+        "brickDrop": BrickDropDetail;
+        "brickSelect": BrickPathDetail;
     }
-    var HTMLFkSampleElement: {
-        prototype: HTMLFkSampleElement;
-        new (): HTMLFkSampleElement;
+    interface HTMLFkBrickActionsElement extends Components.FkBrickActions, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkBrickActionsElementEventMap>(type: K, listener: (this: HTMLFkBrickActionsElement, ev: FkBrickActionsCustomEvent<HTMLFkBrickActionsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkBrickActionsElementEventMap>(type: K, listener: (this: HTMLFkBrickActionsElement, ev: FkBrickActionsCustomEvent<HTMLFkBrickActionsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkBrickActionsElement: {
+        prototype: HTMLFkBrickActionsElement;
+        new (): HTMLFkBrickActionsElement;
+    };
+    interface HTMLFkBrickListElement extends Components.FkBrickList, HTMLStencilElement {
+    }
+    var HTMLFkBrickListElement: {
+        prototype: HTMLFkBrickListElement;
+        new (): HTMLFkBrickListElement;
+    };
+    interface HTMLFkBrickMoldItemElement extends Components.FkBrickMoldItem, HTMLStencilElement {
+    }
+    var HTMLFkBrickMoldItemElement: {
+        prototype: HTMLFkBrickMoldItemElement;
+        new (): HTMLFkBrickMoldItemElement;
+    };
+    interface HTMLFkBrickNotFoundElement extends Components.FkBrickNotFound, HTMLStencilElement {
+    }
+    var HTMLFkBrickNotFoundElement: {
+        prototype: HTMLFkBrickNotFoundElement;
+        new (): HTMLFkBrickNotFoundElement;
+    };
+    interface HTMLFkBrickRenderElementEventMap {
+        "brickDataChange": Record<string, unknown>;
+        "brickConfigsChange": BrickConfigsChangeDetail;
+        "brickStylesChange": BrickStylesChangeDetail;
+        "brickValidationsChange": BrickValidationsChangeDetail;
+        "brickRulesChange": BrickRulesChangeDetail;
+        "brickRemove": BrickPathDetail;
+        "brickDuplicate": BrickPathDetail;
+    }
+    interface HTMLFkBrickRenderElement extends Components.FkBrickRender, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkBrickRenderElementEventMap>(type: K, listener: (this: HTMLFkBrickRenderElement, ev: FkBrickRenderCustomEvent<HTMLFkBrickRenderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkBrickRenderElementEventMap>(type: K, listener: (this: HTMLFkBrickRenderElement, ev: FkBrickRenderCustomEvent<HTMLFkBrickRenderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkBrickRenderElement: {
+        prototype: HTMLFkBrickRenderElement;
+        new (): HTMLFkBrickRenderElement;
+    };
+    interface HTMLFkDropAreaElementEventMap {
+        "brickDrop": BrickDropDetail;
+    }
+    interface HTMLFkDropAreaElement extends Components.FkDropArea, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkDropAreaElementEventMap>(type: K, listener: (this: HTMLFkDropAreaElement, ev: FkDropAreaCustomEvent<HTMLFkDropAreaElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkDropAreaElementEventMap>(type: K, listener: (this: HTMLFkDropAreaElement, ev: FkDropAreaCustomEvent<HTMLFkDropAreaElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkDropAreaElement: {
+        prototype: HTMLFkDropAreaElement;
+        new (): HTMLFkDropAreaElement;
+    };
+    interface HTMLFkEmptyFormElement extends Components.FkEmptyForm, HTMLStencilElement {
+    }
+    var HTMLFkEmptyFormElement: {
+        prototype: HTMLFkEmptyFormElement;
+        new (): HTMLFkEmptyFormElement;
+    };
+    interface HTMLFkFormBuilderElementEventMap {
+        "specChange": SpecChangeDetail;
+    }
+    interface HTMLFkFormBuilderElement extends Components.FkFormBuilder, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkFormBuilderElementEventMap>(type: K, listener: (this: HTMLFkFormBuilderElement, ev: FkFormBuilderCustomEvent<HTMLFkFormBuilderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkFormBuilderElementEventMap>(type: K, listener: (this: HTMLFkFormBuilderElement, ev: FkFormBuilderCustomEvent<HTMLFkFormBuilderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkFormBuilderElement: {
+        prototype: HTMLFkFormBuilderElement;
+        new (): HTMLFkFormBuilderElement;
+    };
+    interface HTMLFkFormRenderElementEventMap {
+        "formDataChange": DataChangeDetail;
+    }
+    interface HTMLFkFormRenderElement extends Components.FkFormRender, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkFormRenderElementEventMap>(type: K, listener: (this: HTMLFkFormRenderElement, ev: FkFormRenderCustomEvent<HTMLFkFormRenderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkFormRenderElementEventMap>(type: K, listener: (this: HTMLFkFormRenderElement, ev: FkFormRenderCustomEvent<HTMLFkFormRenderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkFormRenderElement: {
+        prototype: HTMLFkFormRenderElement;
+        new (): HTMLFkFormRenderElement;
+    };
+    interface HTMLFkPropertyPanelElementEventMap {
+        "brickConfigsChange": BrickConfigsChangeDetail;
+        "brickValidationsChange": BrickValidationsChangeDetail;
+    }
+    interface HTMLFkPropertyPanelElement extends Components.FkPropertyPanel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkPropertyPanelElementEventMap>(type: K, listener: (this: HTMLFkPropertyPanelElement, ev: FkPropertyPanelCustomEvent<HTMLFkPropertyPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkPropertyPanelElementEventMap>(type: K, listener: (this: HTMLFkPropertyPanelElement, ev: FkPropertyPanelCustomEvent<HTMLFkPropertyPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkPropertyPanelElement: {
+        prototype: HTMLFkPropertyPanelElement;
+        new (): HTMLFkPropertyPanelElement;
     };
     interface HTMLElementTagNameMap {
-        "fk-sample": HTMLFkSampleElement;
+        "fk-brick-actions": HTMLFkBrickActionsElement;
+        "fk-brick-list": HTMLFkBrickListElement;
+        "fk-brick-mold-item": HTMLFkBrickMoldItemElement;
+        "fk-brick-not-found": HTMLFkBrickNotFoundElement;
+        "fk-brick-render": HTMLFkBrickRenderElement;
+        "fk-drop-area": HTMLFkDropAreaElement;
+        "fk-empty-form": HTMLFkEmptyFormElement;
+        "fk-form-builder": HTMLFkFormBuilderElement;
+        "fk-form-render": HTMLFkFormRenderElement;
+        "fk-property-panel": HTMLFkPropertyPanelElement;
     }
 }
 declare namespace LocalJSX {
-    interface FkSample {
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
+
+    interface FkBrickActions {
+        "onBrickDrop"?: (event: FkBrickActionsCustomEvent<BrickDropDetail>) => void;
+        "onBrickDuplicate"?: (event: FkBrickActionsCustomEvent<BrickPathDetail>) => void;
+        "onBrickRemove"?: (event: FkBrickActionsCustomEvent<BrickPathDetail>) => void;
+        "onBrickSelect"?: (event: FkBrickActionsCustomEvent<BrickPathDetail>) => void;
+        "path": string;
         /**
-          * @default 'FormKrafter'
+          * @default false
          */
-        "name"?: string;
+        "selected"?: boolean;
+    }
+    interface FkBrickList {
+    }
+    interface FkBrickMoldItem {
+        "brickMold": BrickMold;
+    }
+    interface FkBrickNotFound {
+    }
+    interface FkBrickRender {
+        "brickSpec": BrickSpec;
+        "data"?: Record<string, unknown>;
+        "dataMap"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "editable"?: boolean;
+        "onBrickConfigsChange"?: (event: FkBrickRenderCustomEvent<BrickConfigsChangeDetail>) => void;
+        "onBrickDataChange"?: (event: FkBrickRenderCustomEvent<Record<string, unknown>>) => void;
+        "onBrickDuplicate"?: (event: FkBrickRenderCustomEvent<BrickPathDetail>) => void;
+        "onBrickRemove"?: (event: FkBrickRenderCustomEvent<BrickPathDetail>) => void;
+        "onBrickRulesChange"?: (event: FkBrickRenderCustomEvent<BrickRulesChangeDetail>) => void;
+        "onBrickStylesChange"?: (event: FkBrickRenderCustomEvent<BrickStylesChangeDetail>) => void;
+        "onBrickValidationsChange"?: (event: FkBrickRenderCustomEvent<BrickValidationsChangeDetail>) => void;
+        /**
+          * @default '0'
+         */
+        "path"?: string;
+        "selectedUid"?: string;
+        "utils": Utils;
+    }
+    interface FkDropArea {
+        "onBrickDrop"?: (event: FkDropAreaCustomEvent<BrickDropDetail>) => void;
+        "path": string;
+    }
+    interface FkEmptyForm {
+    }
+    interface FkFormBuilder {
+        "data"?: Record<string, unknown>;
+        "onSpecChange"?: (event: FkFormBuilderCustomEvent<SpecChangeDetail>) => void;
+        "spec"?: BrickSpec;
+    }
+    interface FkFormRender {
+        "data"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "editable"?: boolean;
+        "onFormDataChange"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
+        "selectedUid"?: string;
+        "spec": BrickSpec;
+    }
+    interface FkPropertyPanel {
+        "brick": BrickSpec;
+        "onBrickConfigsChange"?: (event: FkPropertyPanelCustomEvent<BrickConfigsChangeDetail>) => void;
+        "onBrickValidationsChange"?: (event: FkPropertyPanelCustomEvent<BrickValidationsChangeDetail>) => void;
     }
 
-    interface FkSampleAttributes {
-        "name": string;
+    interface FkBrickActionsAttributes {
+        "path": string;
+        "selected": boolean;
+    }
+    interface FkBrickRenderAttributes {
+        "path": string;
+        "editable": boolean;
+        "selectedUid": string;
+    }
+    interface FkDropAreaAttributes {
+        "path": string;
+    }
+    interface FkFormRenderAttributes {
+        "editable": boolean;
+        "selectedUid": string;
     }
 
     interface IntrinsicElements {
-        "fk-sample": Omit<FkSample, keyof FkSampleAttributes> & { [K in keyof FkSample & keyof FkSampleAttributes]?: FkSample[K] } & { [K in keyof FkSample & keyof FkSampleAttributes as `attr:${K}`]?: FkSampleAttributes[K] } & { [K in keyof FkSample & keyof FkSampleAttributes as `prop:${K}`]?: FkSample[K] };
+        "fk-brick-actions": Omit<FkBrickActions, keyof FkBrickActionsAttributes> & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes]?: FkBrickActions[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `attr:${K}`]?: FkBrickActionsAttributes[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `prop:${K}`]?: FkBrickActions[K] } & OneOf<"path", FkBrickActions["path"], FkBrickActionsAttributes["path"]>;
+        "fk-brick-list": FkBrickList;
+        "fk-brick-mold-item": FkBrickMoldItem;
+        "fk-brick-not-found": FkBrickNotFound;
+        "fk-brick-render": Omit<FkBrickRender, keyof FkBrickRenderAttributes> & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes]?: FkBrickRender[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `attr:${K}`]?: FkBrickRenderAttributes[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `prop:${K}`]?: FkBrickRender[K] };
+        "fk-drop-area": Omit<FkDropArea, keyof FkDropAreaAttributes> & { [K in keyof FkDropArea & keyof FkDropAreaAttributes]?: FkDropArea[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `attr:${K}`]?: FkDropAreaAttributes[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `prop:${K}`]?: FkDropArea[K] } & OneOf<"path", FkDropArea["path"], FkDropAreaAttributes["path"]>;
+        "fk-empty-form": FkEmptyForm;
+        "fk-form-builder": FkFormBuilder;
+        "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
+        "fk-property-panel": FkPropertyPanel;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "fk-sample": LocalJSX.IntrinsicElements["fk-sample"] & JSXBase.HTMLAttributes<HTMLFkSampleElement>;
+            "fk-brick-actions": LocalJSX.IntrinsicElements["fk-brick-actions"] & JSXBase.HTMLAttributes<HTMLFkBrickActionsElement>;
+            "fk-brick-list": LocalJSX.IntrinsicElements["fk-brick-list"] & JSXBase.HTMLAttributes<HTMLFkBrickListElement>;
+            "fk-brick-mold-item": LocalJSX.IntrinsicElements["fk-brick-mold-item"] & JSXBase.HTMLAttributes<HTMLFkBrickMoldItemElement>;
+            "fk-brick-not-found": LocalJSX.IntrinsicElements["fk-brick-not-found"] & JSXBase.HTMLAttributes<HTMLFkBrickNotFoundElement>;
+            "fk-brick-render": LocalJSX.IntrinsicElements["fk-brick-render"] & JSXBase.HTMLAttributes<HTMLFkBrickRenderElement>;
+            "fk-drop-area": LocalJSX.IntrinsicElements["fk-drop-area"] & JSXBase.HTMLAttributes<HTMLFkDropAreaElement>;
+            "fk-empty-form": LocalJSX.IntrinsicElements["fk-empty-form"] & JSXBase.HTMLAttributes<HTMLFkEmptyFormElement>;
+            "fk-form-builder": LocalJSX.IntrinsicElements["fk-form-builder"] & JSXBase.HTMLAttributes<HTMLFkFormBuilderElement>;
+            "fk-form-render": LocalJSX.IntrinsicElements["fk-form-render"] & JSXBase.HTMLAttributes<HTMLFkFormRenderElement>;
+            "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
         }
     }
 }

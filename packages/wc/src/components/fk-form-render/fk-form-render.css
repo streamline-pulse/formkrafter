@@ -1,0 +1,7 @@
+.fk-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fk-spacing);
+  font-family: var(--fk-font);
+  color: var(--fk-color-text);
+}

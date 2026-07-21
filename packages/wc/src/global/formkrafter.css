@@ -1,0 +1,71 @@
+:root {
+  --fk-color-primary: #328f97;
+  --fk-color-surface: #ffffff;
+  --fk-color-border: #d5dde2;
+  --fk-color-text: #1c2b33;
+  --fk-color-muted: #64748b;
+  --fk-color-danger: #dc2626;
+  --fk-radius: 8px;
+  --fk-font: system-ui, -apple-system, sans-serif;
+  --fk-spacing: 8px;
+}
+
+.fk-field {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+  font-family: var(--fk-font);
+}
+
+.fk-field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--fk-spacing);
+}
+
+.fk-field__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fk-color-text);
+}
+
+.fk-field__input {
+  padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  background: var(--fk-color-surface);
+  color: var(--fk-color-text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.fk-field__input:focus {
+  outline: 2px solid color-mix(in srgb, var(--fk-color-primary) 40%, transparent);
+  border-color: var(--fk-color-primary);
+}
+
+.fk-field__checkbox {
+  accent-color: var(--fk-color-primary);
+}
+
+.fk-field__error {
+  font-size: 0.75rem;
+  color: var(--fk-color-danger);
+}
+
+.fk-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fk-spacing);
+  margin: 0;
+  padding: calc(var(--fk-spacing) * 1.5);
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+}
+
+.fk-group__legend {
+  padding: 0 calc(var(--fk-spacing) / 2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fk-color-muted);
+}

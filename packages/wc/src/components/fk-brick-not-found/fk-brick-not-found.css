@@ -1,0 +1,8 @@
+.fk-not-found {
+  margin: 0;
+  padding: calc(var(--fk-spacing) * 1.5);
+  border: 1px dashed var(--fk-color-danger);
+  border-radius: var(--fk-radius);
+  color: var(--fk-color-danger);
+  font-size: 0.875rem;
+}

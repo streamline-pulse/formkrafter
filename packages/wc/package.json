@@ -36,14 +36,18 @@
       "types": "./loader/index.d.ts"
     }
   },
-  "files": ["dist/", "loader/"],
+  "files": [
+    "dist/",
+    "loader/"
+  ],
   "scripts": {
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@streamline-pulse/formkrafter-core": "workspace:*"
+    "@streamline-pulse/formkrafter-core": "workspace:*",
+    "@atlaskit/pragmatic-drag-and-drop": "catalog:"
   },
   "devDependencies": {
     "@stencil/core": "^4.43.5",

@@ -1,0 +1,18 @@
+.fk-drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  margin-top: calc(var(--fk-spacing) / 2);
+  border: 1px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  color: var(--fk-color-muted);
+  font-size: 0.75rem;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.fk-drop--over {
+  border-color: var(--fk-color-primary);
+  background: color-mix(in srgb, var(--fk-color-primary) 8%, transparent);
+  color: var(--fk-color-primary);
+}

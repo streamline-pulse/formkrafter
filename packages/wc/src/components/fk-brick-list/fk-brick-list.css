@@ -1,0 +1,21 @@
+.fk-palette {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) * 2);
+  font-family: var(--fk-font);
+}
+
+.fk-palette__category {
+  margin: 0 0 var(--fk-spacing);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fk-color-muted);
+}
+
+.fk-palette__items {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+}

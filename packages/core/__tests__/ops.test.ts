@@ -98,6 +98,19 @@ describe("ops", () => {
     ]);
   });
 
+  test("addBrick sanitizes explicit undefined properties", () => {
+    const spec = form();
+    const dirty = {
+      ...input("email", "u-5"),
+      configsForm: undefined,
+    } as BrickSpec;
+
+    const update = addBrick(spec, dirty, "0");
+    const added = getBrickAt(update.spec, "0.3");
+    expect(added?.id).toBe("email");
+    expect("configsForm" in (added ?? {})).toBe(false);
+  });
+
   test("addBrick creates the children array when missing", () => {
     const spec = form();
     const update = addBrick(spec, input("zip", "u-5"), "0.2.0");
@@ -132,13 +145,13 @@ describe("ops", () => {
     expect(() => removeBrick(form(), "0")).toThrow();
   });
 
-  test("moveBrick reorders and its inverse restores", () => {
+  test("moveBrick uses pre-removal coordinates for both paths", () => {
     const spec = form();
     const update = moveBrick(spec, "0.0", "0.2");
     expect(update.spec.children?.map((child) => child.id)).toEqual([
       "lastname",
-      "address",
       "firstname",
+      "address",
     ]);
 
     const history = new SpecHistory();
@@ -146,10 +159,37 @@ describe("ops", () => {
     expect(history.undo(update.spec)).toEqual(spec);
   });
 
-  test("moveBrick moves across parents", () => {
-    const update = moveBrick(form(), "0.0", "0.1.0");
+  test("moveBrick appends when targeting one past the end", () => {
+    const update = moveBrick(form(), "0.0", "0.3");
+    expect(update.spec.children?.map((child) => child.id)).toEqual([
+      "lastname",
+      "address",
+      "firstname",
+    ]);
+  });
+
+  test("moveBrick moves into a later sibling container", () => {
+    const spec = form();
+    const update = moveBrick(spec, "0.0", "0.2.0");
     expect(getBrickAt(update.spec, "0.1.0")?.id).toBe("firstname");
+    expect(getBrickAt(update.spec, "0.1.1")?.id).toBe("city");
     expect(update.spec.children?.length).toBe(2);
+
+    const history = new SpecHistory();
+    history.record(update);
+    expect(history.undo(update.spec)).toEqual(spec);
+  });
+
+  test("moveBrick moves into an earlier sibling container", () => {
+    const spec = form();
+    const reordered = moveBrick(spec, "0.2", "0.0").spec;
+    const update = moveBrick(reordered, "0.2", "0.0.0");
+    expect(getBrickAt(update.spec, "0.0.0")?.id).toBe("lastname");
+    expect(update.spec.children?.length).toBe(2);
+  });
+
+  test("moveBrick rejects moving into its own subtree", () => {
+    expect(() => moveBrick(form(), "0.2", "0.2.0")).toThrow();
   });
 
   test("duplicateBrick inserts a sibling with fresh uids", () => {

@@ -5,10 +5,15 @@ import type { Config } from '@stencil/core'
 
 export const config: Config = {
   namespace: 'formkrafter-wc',
+  globalStyle: 'src/global/formkrafter.css',
   outputTargets: [
     {
       type: 'dist',
       esmLoaderPath: '../loader',
+    },
+    {
+      type: 'www',
+      serviceWorker: null,
     },
     {
       type: 'dist-custom-elements',

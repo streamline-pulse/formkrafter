@@ -90,11 +90,11 @@ export abstract class Brick<
     return {
       type: this.type,
       dataType: this.dataType,
-      category: this.category,
       id: this.id,
       name: this.name,
-      configsForm: this.configsForm,
-      styles: this.styles,
+      ...(this.category !== undefined ? { category: this.category } : {}),
+      ...(this.configsForm !== undefined ? { configsForm: this.configsForm } : {}),
+      ...(this.styles !== undefined ? { styles: this.styles } : {}),
       validators: this.validators,
     };
   }

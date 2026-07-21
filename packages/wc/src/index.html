@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>FormKrafter Playground</title>
+    <script type="module" src="/build/formkrafter-wc.esm.js"></script>
+    <link rel="stylesheet" href="/build/formkrafter-wc.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        background: #f1f5f9;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      pre {
+        max-height: 200px;
+        overflow: auto;
+        padding: 12px;
+        border-radius: 8px;
+        background: #1c2b33;
+        color: #d7ece8;
+        font-size: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>FormKrafter — builder</h1>
+    <fk-form-builder></fk-form-builder>
+
+    <h1>Spec</h1>
+    <pre id="spec-output">(empty)</pre>
+
+    <script>
+      const builder = document.querySelector('fk-form-builder');
+      const output = document.querySelector('#spec-output');
+
+      builder.addEventListener('specChange', (event) => {
+        output.textContent = JSON.stringify(event.detail.spec, null, 2);
+        console.log('patches', event.detail.patches);
+      });
+    </script>
+  </body>
+</html>
