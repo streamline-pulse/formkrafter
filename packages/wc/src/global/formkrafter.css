@@ -146,19 +146,20 @@ select.fk-field__input {
   font-size: 0.9rem;
 }
 
-.fk-currency {
+.fk-adorned {
   display: flex;
   align-items: center;
   gap: calc(var(--fk-spacing) / 2);
 }
 
-.fk-currency__symbol {
+.fk-adorned__affix {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--fk-color-muted);
+  white-space: nowrap;
 }
 
-.fk-currency__input {
+.fk-adorned__input {
   flex: 1;
   min-width: 0;
 }

@@ -45,6 +45,7 @@ export class FkFormBuilder {
   @State() currentSpec?: BrickSpec;
   @State() currentData: Record<string, unknown> = {};
   @State() selectedUid?: string;
+  @State() copied = false;
 
   private history = new SpecHistory();
 
@@ -230,6 +231,30 @@ export class FkFormBuilder {
     });
   }
 
+  private specJson(): string {
+    return JSON.stringify(this.currentSpec, null, 2);
+  }
+
+  private copySpec = async () => {
+    if (!this.currentSpec) return;
+
+    await navigator.clipboard.writeText(this.specJson());
+    this.copied = true;
+    setTimeout(() => (this.copied = false), 1500);
+  };
+
+  private downloadSpec = () => {
+    if (!this.currentSpec) return;
+
+    const blob = new Blob([this.specJson()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'form-spec.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   private undo = () => {
     if (!this.currentSpec) return;
 
@@ -274,6 +299,25 @@ export class FkFormBuilder {
               onClick={this.redo}
             >
               ↪ {fkT('builder.redo')}
+            </button>
+
+            <span class="fk-builder__spacer"></span>
+
+            <button
+              type="button"
+              class="fk-builder__tool"
+              disabled={!this.currentSpec}
+              onClick={this.copySpec}
+            >
+              ⧉ {this.copied ? fkT('builder.copied') : fkT('builder.copyJson')}
+            </button>
+            <button
+              type="button"
+              class="fk-builder__tool"
+              disabled={!this.currentSpec}
+              onClick={this.downloadSpec}
+            >
+              ⬇ {fkT('builder.downloadJson')}
             </button>
           </div>
 

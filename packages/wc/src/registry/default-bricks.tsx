@@ -8,6 +8,20 @@ import type { WcBrickProps } from './create-brick';
 const labelOf = (props: WcBrickProps, fallback: string): string =>
   (props.configs?.label as string) ?? props.configs?.key ?? fallback;
 
+const adorned = (props: WcBrickProps, control: VNode): VNode => {
+  const prefix = props.configs?.prefix as string | undefined;
+  const suffix = props.configs?.suffix as string | undefined;
+  if (!prefix && !suffix) return control;
+
+  return (
+    <div class="fk-adorned">
+      {prefix ? <span class="fk-adorned__affix">{prefix}</span> : null}
+      {control}
+      {suffix ? <span class="fk-adorned__affix">{suffix}</span> : null}
+    </div>
+  );
+};
+
 const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
   <label class="fk-field" style={asInlineStyle(props.styles)}>
     <span class="fk-field__label">{labelOf(props, fallback)}</span>
@@ -32,8 +46,10 @@ const createTextVariant = (params: {
       field(
         props,
         params.name,
-        <input
-          class="fk-field__input"
+        adorned(
+          props,
+          <input
+          class="fk-field__input fk-adorned__input"
           type={params.inputType}
           value={(props.data as string) ?? ''}
           placeholder={props.configs?.placeholder as string}
@@ -41,7 +57,8 @@ const createTextVariant = (params: {
           onInput={(event) =>
             props.onDataChange?.((event.target as HTMLInputElement).value)
           }
-        />
+          />
+        )
       ),
   });
 
@@ -105,8 +122,10 @@ export const numberBrick = createBrick({
     field(
       props,
       'Number',
-      <input
-        class="fk-field__input"
+      adorned(
+        props,
+        <input
+        class="fk-field__input fk-adorned__input"
         type="number"
         value={props.data == null ? '' : String(props.data)}
         placeholder={props.configs?.placeholder as string}
@@ -115,7 +134,8 @@ export const numberBrick = createBrick({
           const raw = (event.target as HTMLInputElement).value;
           props.onDataChange?.(raw === '' ? undefined : Number(raw));
         }}
-      />
+        />
+      )
     ),
 });
 
@@ -180,37 +200,6 @@ export const datetimeBrick = createTextVariant({
   id: 'datetime',
   name: 'Date / Time',
   inputType: 'datetime-local',
-});
-
-export const currencyBrick = createBrick({
-  type: 'input',
-  dataType: 'number',
-  id: 'currency',
-  name: 'Currency',
-  category: 'Inputs',
-  defaultConfigs: { label: 'Currency', currency: 'XOF' },
-  render: (props) =>
-    field(
-      props,
-      'Currency',
-      <div class="fk-currency">
-        <span class="fk-currency__symbol">
-          {String(props.configs?.currency ?? '')}
-        </span>
-        <input
-          class="fk-field__input fk-currency__input"
-          type="number"
-          step="0.01"
-          value={props.data == null ? '' : String(props.data)}
-          placeholder={props.configs?.placeholder as string}
-          disabled={props.editable || props.disabled}
-          onInput={(event) => {
-            const raw = (event.target as HTMLInputElement).value;
-            props.onDataChange?.(raw === '' ? undefined : Number(raw));
-          }}
-        />
-      </div>
-    ),
 });
 
 const staticOptions = (raw: unknown): string[] =>
@@ -520,7 +509,6 @@ export function registerDefaultBricks(): void {
     phoneBrick,
     textareaBrick,
     numberBrick,
-    currencyBrick,
     dateBrick,
     timeBrick,
     datetimeBrick,

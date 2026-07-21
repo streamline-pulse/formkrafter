@@ -228,9 +228,17 @@ export class FkPropertyPanel {
           this.emitConfigs({ label: value })
         )}
         {isInput
-          ? this.textField(fkT('panel.placeholder'), configs?.placeholder, (value) =>
-              this.emitConfigs({ placeholder: value })
-            )
+          ? [
+              this.textField(fkT('panel.placeholder'), configs?.placeholder, (value) =>
+                this.emitConfigs({ placeholder: value })
+              ),
+              this.textField(fkT('panel.prefix'), configs?.prefix, (value) =>
+                this.emitConfigs({ prefix: value || undefined })
+              ),
+              this.textField(fkT('panel.suffix'), configs?.suffix, (value) =>
+                this.emitConfigs({ suffix: value || undefined })
+              ),
+            ]
           : null}
         {this.optionsFields()}
       </section>

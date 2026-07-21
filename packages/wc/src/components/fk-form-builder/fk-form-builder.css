@@ -25,7 +25,12 @@
 
 .fk-builder__toolbar {
   display: flex;
+  align-items: center;
   gap: calc(var(--fk-spacing) / 2);
+}
+
+.fk-builder__spacer {
+  flex: 1;
 }
 
 .fk-builder__tool {

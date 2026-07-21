@@ -19,7 +19,6 @@ export {
   phoneBrick,
   textareaBrick,
   numberBrick,
-  currencyBrick,
   dateBrick,
   timeBrick,
   datetimeBrick,
