@@ -104,7 +104,11 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
-        "value"?: string;
+        /**
+          * @default false
+         */
+        "multiple": boolean;
+        "value"?: string | string[];
     }
     interface FkSignatureInput {
         /**
@@ -347,7 +351,7 @@ declare global {
         new (): HTMLFkRulesEditorElement;
     };
     interface HTMLFkSelectInputElementEventMap {
-        "selectValueChange": string | undefined;
+        "selectValueChange": string | string[] | undefined;
     }
     interface HTMLFkSelectInputElement extends Components.FkSelectInput, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkSelectInputElementEventMap>(type: K, listener: (this: HTMLFkSelectInputElement, ev: FkSelectInputCustomEvent<HTMLFkSelectInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -526,8 +530,12 @@ declare namespace LocalJSX {
           * @default false
          */
         "disabled"?: boolean;
-        "onSelectValueChange"?: (event: FkSelectInputCustomEvent<string | undefined>) => void;
-        "value"?: string;
+        /**
+          * @default false
+         */
+        "multiple"?: boolean;
+        "onSelectValueChange"?: (event: FkSelectInputCustomEvent<string | string[] | undefined>) => void;
+        "value"?: string | string[];
     }
     interface FkSignatureInput {
         /**
@@ -584,8 +592,9 @@ declare namespace LocalJSX {
         "editLocale": string;
     }
     interface FkSelectInputAttributes {
-        "value": string;
+        "value": string | string[];
         "disabled": boolean;
+        "multiple": boolean;
     }
     interface FkSignatureInputAttributes {
         "value": string;

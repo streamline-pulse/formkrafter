@@ -196,7 +196,7 @@ export const FkRulesEditor: StencilReactComponent<FkRulesEditorElement, FkRulesE
     defineCustomElement: defineFkRulesEditor
 });
 
-export type FkSelectInputEvents = { onSelectValueChange: EventName<FkSelectInputCustomEvent<string | undefined>> };
+export type FkSelectInputEvents = { onSelectValueChange: EventName<FkSelectInputCustomEvent<string | string[] | undefined>> };
 
 export const FkSelectInput: StencilReactComponent<FkSelectInputElement, FkSelectInputEvents, Components.FkSelectInput> = /*@__PURE__*/ createComponent<FkSelectInputElement, FkSelectInputEvents, Components.FkSelectInput>({
     tagName: 'fk-select-input',

@@ -23,6 +23,7 @@ export {
   timeBrick,
   datetimeBrick,
   selectBrick,
+  multiSelectBrick,
   radioBrick,
   selectBoxesBrick,
   checkboxBrick,

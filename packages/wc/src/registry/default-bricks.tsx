@@ -184,7 +184,40 @@ export const selectBrick = createBrick({
         value={(props.data as string) ?? ''}
         disabled={props.editable || props.disabled}
         dataMap={props.dataMap}
-        onSelectValueChange={(event: CustomEvent<string | undefined>) => {
+        onSelectValueChange={(
+          event: CustomEvent<string | string[] | undefined>
+        ) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
+        }}
+      />
+    ),
+});
+
+export const multiSelectBrick = createBrick({
+  type: 'input',
+  dataType: 'array',
+  id: 'multi-select',
+  name: 'Multi select',
+  category: 'Inputs',
+  defaultConfigs: {
+    label: 'Multi select',
+    optionsSource: 'static',
+    options: 'Option 1\nOption 2\nOption 3',
+  },
+  render: (props) =>
+    field(
+      props,
+      'Multi select',
+      <fk-select-input
+        configs={props.configs}
+        value={Array.isArray(props.data) ? (props.data as string[]) : []}
+        multiple={true}
+        disabled={props.editable || props.disabled}
+        dataMap={props.dataMap}
+        onSelectValueChange={(
+          event: CustomEvent<string | string[] | undefined>
+        ) => {
           event.stopPropagation();
           props.onDataChange?.(event.detail);
         }}
@@ -518,6 +551,7 @@ export function registerDefaultBricks(): void {
     timeBrick,
     datetimeBrick,
     selectBrick,
+    multiSelectBrick,
     radioBrick,
     selectBoxesBrick,
     checkboxBrick,
