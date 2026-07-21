@@ -9,15 +9,48 @@
     <title>FormKrafter Playground</title>
     <script type="module" src="/build/formkrafter-wc.esm.js"></script>
     <link rel="stylesheet" href="/build/formkrafter-wc.css" />
+    <script>
+      ;(() => {
+        try {
+          const stored = localStorage.getItem('fk-theme')
+          if (
+            stored === 'dark' ||
+            (!stored && matchMedia('(prefers-color-scheme: dark)').matches)
+          ) {
+            document.documentElement.classList.add('dark')
+          }
+        } catch {}
+      })()
+    </script>
     <style>
       body {
         margin: 0;
         padding: 24px;
         font-family: system-ui, sans-serif;
         background: #f1f5f9;
+        color: #1c2b33;
+      }
+      .dark body {
+        background: #0b141a;
+        color: #e2ecf2;
       }
       h1 {
         font-size: 1.2rem;
+      }
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #theme-toggle {
+        font: inherit;
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
       }
       pre {
         max-height: 200px;
@@ -30,9 +63,9 @@
       }
       .preview {
         padding: 16px;
-        border: 1px solid #cbd5e1;
+        border: 1px solid var(--fk-color-border, #cbd5e1);
         border-radius: 8px;
-        background: #ffffff;
+        background: var(--fk-color-surface, #ffffff);
         max-width: 640px;
       }
       #preview-hint {
@@ -43,7 +76,10 @@
     </style>
   </head>
   <body>
-    <h1>FormKrafter — builder</h1>
+    <div class="toolbar">
+      <h1>FormKrafter — builder</h1>
+      <button type="button" id="theme-toggle">🌓 Theme</button>
+    </div>
     <fk-form-builder></fk-form-builder>
 
     <h1>Preview</h1>
@@ -78,6 +114,11 @@
 
       preview.addEventListener('formDataChange', (event) => {
         dataOutput.textContent = JSON.stringify(event.detail, null, 2);
+      });
+
+      document.querySelector('#theme-toggle').addEventListener('click', () => {
+        const dark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('fk-theme', dark ? 'dark' : 'light');
       });
     </script>
   </body>

@@ -2,6 +2,8 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "types": ["node"],
     "declaration": false,
     "experimentalDecorators": true,
     "lib": ["dom", "es2017"],
@@ -14,6 +16,6 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment"
   },
-  "include": ["src"],
+  "include": ["src", "stencil.config.ts"],
   "exclude": ["node_modules"]
 }

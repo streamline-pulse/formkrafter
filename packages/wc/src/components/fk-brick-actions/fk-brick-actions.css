@@ -41,7 +41,7 @@
   border: 1px solid var(--fk-color-border);
   border-radius: calc(var(--fk-radius) / 2);
   background: var(--fk-color-surface);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px var(--fk-color-shadow);
 }
 
 .fk-actions:hover > .fk-actions__toolbar {

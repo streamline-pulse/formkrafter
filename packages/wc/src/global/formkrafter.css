@@ -5,9 +5,21 @@
   --fk-color-text: #1c2b33;
   --fk-color-muted: #64748b;
   --fk-color-danger: #dc2626;
+  --fk-color-shadow: rgba(0, 0, 0, 0.12);
   --fk-radius: 8px;
   --fk-font: system-ui, -apple-system, sans-serif;
   --fk-spacing: 8px;
+}
+
+.dark,
+[data-fk-theme='dark'] {
+  --fk-color-primary: #4fb8b2;
+  --fk-color-surface: #111c24;
+  --fk-color-border: #2d3f4b;
+  --fk-color-text: #e2ecf2;
+  --fk-color-muted: #8fa4b0;
+  --fk-color-danger: #f87171;
+  --fk-color-shadow: rgba(0, 0, 0, 0.5);
 }
 
 .fk-field {

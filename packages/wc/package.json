@@ -58,6 +58,7 @@
   "devDependencies": {
     "@stencil/core": "^4.43.5",
     "@stencil/react-output-target": "^1.6.1",
-    "@stencil/vue-output-target": "^0.14.1"
+    "@stencil/vue-output-target": "^0.14.1",
+    "@types/node": "catalog:"
   }
 }
