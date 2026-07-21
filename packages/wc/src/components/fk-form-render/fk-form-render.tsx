@@ -1,4 +1,4 @@
-import { Component, Event, Listen, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Event, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import {
   getAffectedProperties,
@@ -50,7 +50,7 @@ export class FkFormRender {
     for (const key of Object.keys(event.detail)) touched[key] = true;
     this.touched = touched;
 
-    const { valid, errors } = this.validate();
+    const { valid, errors } = this.runValidation();
     this.formDataChange.emit({
       data: this.currentData,
       isValid: valid,
@@ -76,7 +76,26 @@ export class FkFormRender {
     return result;
   }
 
-  private validate(): ValidationResult {
+  @Method()
+  async validate(): Promise<ValidationResult> {
+    const touched: Record<string, boolean> = {};
+    for (const { brick } of iterateBricks(this.spec)) {
+      const key = brick.configs?.key;
+      if (key) touched[key] = true;
+    }
+    this.touched = touched;
+
+    const result = this.runValidation();
+    this.formDataChange.emit({
+      data: this.currentData,
+      isValid: result.valid,
+      errors: result.errors,
+    });
+
+    return result;
+  }
+
+  private runValidation(): ValidationResult {
     const presentData = Object.fromEntries(
       Object.entries(this.currentData).filter(
         ([, value]) => value !== '' && value !== null && value !== undefined
@@ -90,7 +109,7 @@ export class FkFormRender {
     if (this.editable) return {};
 
     const errors: Record<string, string> = {};
-    for (const [key, message] of Object.entries(this.validate().errors)) {
+    for (const [key, message] of Object.entries(this.runValidation().errors)) {
       if (this.touched[key]) errors[key] = message;
     }
 
@@ -99,7 +118,7 @@ export class FkFormRender {
 
   private utils: Utils = {
     validateForm: () => ({
-      isValid: this.validate().valid,
+      isValid: this.runValidation().valid,
     }),
   };
 

@@ -17,5 +17,8 @@
   "playground_preview_hint": "Construisez un formulaire ci-dessus pour l'afficher ici.",
   "playground_data": "Données",
   "playground_spec": "Spec",
-  "loading": "Chargement du builder…"
+  "loading": "Chargement du builder…",
+  "playground_validate": "Valider le formulaire",
+  "playground_valid": "Le formulaire est valide ✓",
+  "playground_invalid": "{count} erreur(s) de validation"
 }

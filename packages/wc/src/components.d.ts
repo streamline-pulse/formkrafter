@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
-import { BrickMold, BrickSpec, Utils } from "@streamline-pulse/formkrafter-core";
+import { BrickMold, BrickSpec, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
-export { BrickMold, BrickSpec, Utils } from "@streamline-pulse/formkrafter-core";
+export { BrickMold, BrickSpec, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export namespace Components {
     interface FkBrickActions {
         "path": string;
@@ -76,6 +76,7 @@ export namespace Components {
         "locale"?: string;
         "selectedUid"?: string;
         "spec": BrickSpec;
+        "validate": () => Promise<ValidationResult>;
     }
     interface FkPropertyPanel {
         "brick": BrickSpec;

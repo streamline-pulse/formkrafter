@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import type { ComponentRef } from 'react'
 import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
 import {
   frFkTranslations,
@@ -9,7 +10,10 @@ import '@streamline-pulse/formkrafter-wc/styles.css'
 import { m } from '#/paraglide/messages'
 import { useLocale } from '#/components/LocaleProvider'
 
-import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+import type {
+  BrickSpec,
+  ValidationResult,
+} from '@streamline-pulse/formkrafter-core'
 import type { DataChangeDetail, SpecChangeDetail } from '@streamline-pulse/formkrafter-wc'
 
 export default function FormKrafterPlayground() {
@@ -18,6 +22,14 @@ export default function FormKrafterPlayground() {
 
   const [spec, setSpec] = useState<BrickSpec | undefined>(undefined)
   const [result, setResult] = useState<DataChangeDetail | undefined>(undefined)
+  const [validity, setValidity] = useState<ValidationResult | undefined>(undefined)
+  const renderRef = useRef<ComponentRef<typeof FkFormRender>>(null)
+
+  async function validateForm() {
+    const element = renderRef.current
+    if (!element) return
+    setValidity(await element.validate())
+  }
 
   function handleSpecChange(event: CustomEvent<SpecChangeDetail>) {
     setSpec(event.detail.spec ? structuredClone(event.detail.spec) : undefined)
@@ -31,11 +43,38 @@ export default function FormKrafterPlayground() {
         <h2 className="text-lg font-semibold">{m.playground_preview()}</h2>
         <div className="border-border bg-card rounded-lg border p-4">
           {spec ? (
-            <FkFormRender
-              spec={spec}
-              locale={locale}
-              onFormDataChange={(event) => setResult(event.detail)}
-            />
+            <>
+              <FkFormRender
+                ref={renderRef}
+                spec={spec}
+                locale={locale}
+                onFormDataChange={(event) => setResult(event.detail)}
+              />
+              <div className="border-border mt-4 flex items-center gap-3 border-t pt-4">
+                <button
+                  type="button"
+                  onClick={validateForm}
+                  className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm font-semibold hover:opacity-90"
+                >
+                  {m.playground_validate()}
+                </button>
+                {validity ? (
+                  <p
+                    className={
+                      validity.valid
+                        ? 'text-sm font-medium text-emerald-600 dark:text-emerald-400'
+                        : 'text-destructive text-sm font-medium'
+                    }
+                  >
+                    {validity.valid
+                      ? m.playground_valid()
+                      : m.playground_invalid({
+                          count: Object.keys(validity.errors).length,
+                        })}
+                  </p>
+                ) : null}
+              </div>
+            </>
           ) : (
             <p className="text-muted-foreground text-sm">
               {m.playground_preview_hint()}

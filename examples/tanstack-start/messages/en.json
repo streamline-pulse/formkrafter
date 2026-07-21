@@ -17,5 +17,8 @@
   "playground_preview_hint": "Build a form above to preview it here.",
   "playground_data": "Data",
   "playground_spec": "Spec",
-  "loading": "Loading the builder…"
+  "loading": "Loading the builder…",
+  "playground_validate": "Validate the form",
+  "playground_valid": "The form is valid ✓",
+  "playground_invalid": "{count} validation error(s)"
 }
