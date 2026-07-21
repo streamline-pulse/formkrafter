@@ -19,16 +19,10 @@ export type ActionUtils = {
 export type Utils = InputUtils & PanelUtils & CollectionUtils & ActionUtils;
 
 export const evalBrickCode = (code: string, data?: Record<string, unknown>) => {
-  const customFunction = `
-      const dataMap = ${JSON.stringify(data)};
-
-      ${code}
-    `;
-
   try {
-    return services.jsRunnerService.eval(customFunction);
+    return services.jsRunnerService.eval(code, { dataMap: data ?? {} });
   } catch (error) {
-    return error;
+    return error instanceof Error ? error : new Error(String(error));
   }
 };
 

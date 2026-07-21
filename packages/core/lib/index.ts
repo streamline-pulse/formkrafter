@@ -49,7 +49,13 @@ export { JSONSchemaType } from "./validators/json-schema-type";
 
 // Services
 export { services } from "./services";
-export { JsRunnerService } from "./services/js_runner_service";
+export {
+    JsRunnerService,
+    SandboxJsRunnerService,
+    JsRunnerServiceImplementation
+} from "./services/js_runner_service";
+export { UnsafeEvalJsRunnerService } from "./services/unsafe_js_runner_service";
+export { runSandboxed } from "./services/sandbox_interpreter";
 export { DataSourceService, FetchDataSourceService } from "./services/data_source_service";
 export {
     FileLike,

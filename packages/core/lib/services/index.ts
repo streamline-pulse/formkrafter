@@ -1,5 +1,5 @@
 import {
-  JsRunnerServiceImplementation,
+  SandboxJsRunnerService,
   type JsRunnerService,
 } from "./js_runner_service";
 import {
@@ -11,7 +11,7 @@ import {
   type FileUploadService,
 } from "./file_upload_service";
 
-const jsRunnerService: JsRunnerService = new JsRunnerServiceImplementation();
+const jsRunnerService: JsRunnerService = new SandboxJsRunnerService();
 const dataSourceService: DataSourceService = new FetchDataSourceService();
 const fileUploadService: FileUploadService = new Base64FileUploadService();
 
