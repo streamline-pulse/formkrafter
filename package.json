@@ -1,6 +1,7 @@
 {
   "name": "formkrafter",
   "private": true,
+  "type": "module",
   "workspaces": {
     "packages": ["packages/*", "examples/*"],
     "catalog": {
@@ -19,12 +20,18 @@
   "scripts": {
     "build": "bun run --filter '@streamline-pulse/*' build",
     "test": "bun run --filter '@streamline-pulse/*' test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "bun run build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.0",
-    "typescript": "catalog:"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.65.0"
   }
 }
