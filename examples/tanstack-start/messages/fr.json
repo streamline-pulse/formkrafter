@@ -1,0 +1,21 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "app_title": "FormKrafter",
+  "nav_home": "Accueil",
+  "nav_playground": "Playground",
+  "language_label": "Langue",
+  "current_locale": "Langue actuelle : {locale}",
+  "theme_toggle": "Changer de thème",
+  "home_kicker": "Exemples",
+  "home_title": "Exemples FormKrafter",
+  "home_intro": "Cette app montre la pile FormKrafter consommée depuis React via les wrappers générés : le builder en glisser-déposer, le rendu de formulaire, les règles et la validation.",
+  "home_cta": "Ouvrir le playground",
+  "playground_kicker": "Playground",
+  "playground_title": "Constructeur de formulaire",
+  "playground_intro": "Composez un formulaire avec la palette, configurez les briques dans le panneau de propriétés, puis testez-le en direct dans l'aperçu ci-dessous.",
+  "playground_preview": "Aperçu",
+  "playground_preview_hint": "Construisez un formulaire ci-dessus pour l'afficher ici.",
+  "playground_data": "Données",
+  "playground_spec": "Spec",
+  "loading": "Chargement du builder…"
+}

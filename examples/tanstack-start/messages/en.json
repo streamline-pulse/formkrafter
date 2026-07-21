@@ -1,9 +1,21 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "home_page": "Home page",
-  "about_page": "About page",
-  "example_message": "Welcome to your i18n app.",
+  "app_title": "FormKrafter",
+  "nav_home": "Home",
+  "nav_playground": "Playground",
   "language_label": "Language",
   "current_locale": "Current locale: {locale}",
-  "learn_router": "Learn Paraglide JS"
+  "theme_toggle": "Toggle theme",
+  "home_kicker": "Examples",
+  "home_title": "FormKrafter examples",
+  "home_intro": "This app demonstrates the FormKrafter stack consumed from React through the generated wrappers: the drag & drop builder, the form renderer, rules and validation.",
+  "home_cta": "Open the playground",
+  "playground_kicker": "Playground",
+  "playground_title": "Form builder",
+  "playground_intro": "Build a form with the palette, configure bricks in the property panel, then try it live in the preview below.",
+  "playground_preview": "Preview",
+  "playground_preview_hint": "Build a form above to preview it here.",
+  "playground_data": "Data",
+  "playground_spec": "Spec",
+  "loading": "Loading the builder…"
 }

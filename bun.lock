@@ -17,6 +17,9 @@
       "name": "tanstack-start",
       "dependencies": {
         "@faker-js/faker": "^10.3.0",
+        "@streamline-pulse/formkrafter-core": "workspace:*",
+        "@streamline-pulse/formkrafter-react": "workspace:*",
+        "@streamline-pulse/formkrafter-wc": "workspace:*",
         "@tailwindcss/vite": "^4.1.18",
         "@tanstack/match-sorter-utils": "latest",
         "@tanstack/react-devtools": "latest",
