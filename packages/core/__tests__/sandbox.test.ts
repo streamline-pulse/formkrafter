@@ -29,6 +29,33 @@ describe("FetchDataSourceService", () => {
       globalThis.fetch = originalFetch;
     }
   });
+
+  test("instance defaults add credentials and base headers", async () => {
+    const calls: Array<{ init?: Record<string, unknown> }> = [];
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = (async (_url: string, init?: Record<string, unknown>) => {
+      calls.push({ init });
+      return { ok: true, json: async () => [] };
+    }) as unknown as typeof fetch;
+
+    try {
+      const service = new FetchDataSourceService({
+        credentials: "include",
+        headers: { "X-Tenant": "kora" },
+      });
+
+      await service.fetchOptions("/api/opts", {
+        headers: { "Accept-Language": "fr" },
+      });
+
+      expect(calls[0].init).toEqual({
+        headers: { "X-Tenant": "kora", "Accept-Language": "fr" },
+        credentials: "include",
+      });
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
 });
 
 describe("runSandboxed", () => {

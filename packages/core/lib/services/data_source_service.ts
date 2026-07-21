@@ -2,6 +2,11 @@ export interface DataSourceRequestOptions {
   headers?: Record<string, string>;
 }
 
+export interface DataSourceServiceDefaults {
+  credentials?: "omit" | "same-origin" | "include";
+  headers?: Record<string, string>;
+}
+
 export interface DataSourceService {
   fetchOptions(
     url: string,
@@ -12,18 +17,22 @@ export interface DataSourceService {
 export class FetchDataSourceService implements DataSourceService {
   private cache = new Map<string, Promise<unknown[]>>();
 
+  constructor(private readonly defaults: DataSourceServiceDefaults = {}) {}
+
   fetchOptions(
     url: string,
     options?: DataSourceRequestOptions
   ): Promise<unknown[]> {
-    const key = `${url}|${JSON.stringify(options?.headers ?? {})}`;
+    const headers = { ...this.defaults.headers, ...options?.headers };
+    const init: Record<string, unknown> = {};
+    if (Object.keys(headers).length) init.headers = headers;
+    if (this.defaults.credentials) init.credentials = this.defaults.credentials;
+
+    const key = `${url}|${JSON.stringify(init)}`;
     let pending = this.cache.get(key);
 
     if (!pending) {
-      pending = fetch(
-        url,
-        options?.headers ? { headers: options.headers } : undefined
-      )
+      pending = fetch(url, Object.keys(init).length ? (init as never) : undefined)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Data source request failed (${response.status}): ${url}`);

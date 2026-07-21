@@ -41,6 +41,12 @@ export class FkFormRender {
     this.currentData = { ...next };
   }
 
+  private publicData(): Record<string, unknown> {
+    return Object.fromEntries(
+      Object.entries(this.currentData).filter(([key]) => !key.startsWith('_'))
+    );
+  }
+
   @Listen('brickDataChange')
   handleBrickDataChange(event: CustomEvent<Record<string, unknown>>) {
     event.stopPropagation();
@@ -55,7 +61,7 @@ export class FkFormRender {
 
     const { valid, errors } = this.runValidation();
     this.formDataChange.emit({
-      data: this.currentData,
+      data: this.publicData(),
       isValid: valid,
       errors,
     });
@@ -104,7 +110,7 @@ export class FkFormRender {
 
     const result = { valid, errors };
     this.formDataChange.emit({
-      data: this.currentData,
+      data: this.publicData(),
       isValid: result.valid,
       errors: result.errors,
     });
@@ -127,7 +133,7 @@ export class FkFormRender {
 
     const result = await this.validate();
     this.formSubmit.emit({
-      data: this.currentData,
+      data: this.publicData(),
       isValid: result.valid,
       errors: result.errors,
     });
