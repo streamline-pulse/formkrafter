@@ -207,7 +207,13 @@ export const FkStepper: StencilVueComponent<JSX.FkStepper> = /*@__PURE__*/ defin
 
 export const FkTabs: StencilVueComponent<JSX.FkTabs> = /*@__PURE__*/ defineContainer<JSX.FkTabs>('fk-tabs', defineFkTabs, [
   'tabLabels',
-  'editable'
+  'editable',
+  'spec',
+  'dataMap',
+  'locale',
+  'stepTouch'
+], [
+  'stepTouch'
 ]);
 
 

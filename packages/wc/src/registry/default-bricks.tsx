@@ -369,6 +369,7 @@ export const tabsBrick = createBrick({
   id: 'tabs',
   name: 'Tabs',
   category: 'Layout',
+  defaultConfigs: { validateTabs: false },
   render: (props) => {
     const labels = (props.brickSpec?.children ?? []).map((child, index) => {
       const resolved = resolveLocalizedText(child.configs?.label, props.locale);
@@ -381,6 +382,9 @@ export const tabsBrick = createBrick({
       <fk-tabs
         tabLabels={labels}
         editable={props.editable}
+        spec={props.brickSpec}
+        dataMap={props.dataMap}
+        locale={props.locale}
         style={asInlineStyle(props.styles)}
       >
         {props.children as VNode}

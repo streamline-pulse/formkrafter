@@ -150,10 +150,13 @@ export namespace Components {
         "stepLabels": string[];
     }
     interface FkTabs {
+        "dataMap"?: Record<string, unknown>;
         /**
           * @default false
          */
         "editable": boolean;
+        "locale"?: string;
+        "spec"?: BrickSpec;
         /**
           * @default []
          */
@@ -211,6 +214,10 @@ export interface FkSignatureInputCustomEvent<T> extends CustomEvent<T> {
 export interface FkStepperCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkStepperElement;
+}
+export interface FkTabsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkTabsElement;
 }
 declare global {
     interface HTMLFkBrickActionsElementEventMap {
@@ -471,7 +478,18 @@ declare global {
         prototype: HTMLFkStepperElement;
         new (): HTMLFkStepperElement;
     };
+    interface HTMLFkTabsElementEventMap {
+        "stepTouch": { keys: string[] };
+    }
     interface HTMLFkTabsElement extends Components.FkTabs, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkTabsElementEventMap>(type: K, listener: (this: HTMLFkTabsElement, ev: FkTabsCustomEvent<HTMLFkTabsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkTabsElementEventMap>(type: K, listener: (this: HTMLFkTabsElement, ev: FkTabsCustomEvent<HTMLFkTabsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLFkTabsElement: {
         prototype: HTMLFkTabsElement;
@@ -665,10 +683,14 @@ declare namespace LocalJSX {
         "stepLabels"?: string[];
     }
     interface FkTabs {
+        "dataMap"?: Record<string, unknown>;
         /**
           * @default false
          */
         "editable"?: boolean;
+        "locale"?: string;
+        "onStepTouch"?: (event: FkTabsCustomEvent<{ keys: string[] }>) => void;
+        "spec"?: BrickSpec;
         /**
           * @default []
          */
@@ -723,6 +745,7 @@ declare namespace LocalJSX {
     }
     interface FkTabsAttributes {
         "editable": boolean;
+        "locale": string;
     }
 
     interface IntrinsicElements {
