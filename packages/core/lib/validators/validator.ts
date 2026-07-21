@@ -4,6 +4,7 @@ import addFormats from "ajv-formats";
 import type { BrickSpec } from "../utils/brick-spec";
 import { buildValidationSchema, iterateBricks } from "../utils/brick-spec";
 import { resolveLocalizedText } from "../utils/localized-text";
+import { defaultValidationMessage } from "./default-messages";
 import { evalBrickCode } from "../brick/utils";
 
 const ajv = new Ajv({ allErrors: true });
@@ -86,7 +87,9 @@ const customErrors = (
             else {
                 const resolved = resolveLocalizedText(validation.message, locale);
                 errors[key] =
-                    typeof resolved === "string" ? resolved : "Invalid value";
+                    typeof resolved === "string"
+                        ? resolved
+                        : defaultValidationMessage("custom", locale);
             }
         }
     }

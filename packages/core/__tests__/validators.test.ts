@@ -42,7 +42,7 @@ describe("validateBrickSpecDataDetailed", () => {
       age: "abc",
     });
     expect(result.valid).toBe(false);
-    expect(result.errors.age).toBe("must be number");
+    expect(result.errors.age).toBe("Invalid value");
     expect(result.errors.email).toBeUndefined();
   });
 
@@ -150,6 +150,41 @@ describe("validateBrickSpecDataDetailed", () => {
       code: "Doit commencer par BJ-",
     });
     expect(validateBrickSpecDataDetailed(spec, { code: "BJ-1" }).valid).toBe(true);
+  });
+
+  test("missing messages fall back to localized defaults", () => {
+    const spec = (): BrickSpec => ({
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Pseudo",
+          configs: { uid: "a", key: "pseudo" },
+          validations: [
+            { validator: "required" },
+            { validator: "minLength", value: 3 },
+          ],
+        },
+      ],
+    });
+
+    expect(validateBrickSpecDataDetailed(spec(), {}).errors).toEqual({
+      pseudo: "This field is required",
+    });
+    expect(validateBrickSpecDataDetailed(spec(), {}, "fr").errors).toEqual({
+      pseudo: "Ce champ est obligatoire",
+    });
+    expect(validateBrickSpecDataDetailed(spec(), { pseudo: "ab" }, "fr").errors).toEqual({
+      pseudo: "Minimum 3 caractères",
+    });
+    expect(validateBrickSpecDataDetailed(spec(), { pseudo: "ab" }).errors).toEqual({
+      pseudo: "Must be at least 3 characters",
+    });
   });
 
   test("localized validation messages resolve per locale", () => {

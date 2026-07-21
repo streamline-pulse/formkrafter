@@ -38,6 +38,10 @@ export {
     validateBrickSpecData,
     validateBrickSpecDataDetailed
 } from "./validators/validator";
+export {
+    defaultValidationMessage,
+    registerValidationMessages
+} from "./validators/default-messages";
 export { Validation } from "./validators/validation";
 export { JSONSchemaType } from "./validators/json-schema-type";
 

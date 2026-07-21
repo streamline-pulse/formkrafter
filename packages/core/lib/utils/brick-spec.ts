@@ -1,5 +1,6 @@
 import type { JSONSchemaType } from "../validators/json-schema-type";
 import { resolveLocalizedText } from "./localized-text";
+import { defaultValidationMessage } from "../validators/default-messages";
 import type { Validator } from "../validators/validator";
 import type { Validation } from "../validators/validation";
 import type { Rule } from "../rules/rule";
@@ -68,43 +69,49 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
             type: dataType,
             nullable: !isRequired,
         };
-        const messages: Record<string, string> = {};
+        const messages: Record<string, string> = {
+            type: defaultValidationMessage("type", locale),
+        };
 
         for (const validation of brick.validations ?? []) {
             const { validator, value } = validation;
-            const message = messageOf(validation.message);
+            const message =
+                messageOf(validation.message) ??
+                defaultValidationMessage(validator, locale, value);
 
             if (validator === "minLength" && value != null) {
                 property.minLength = Number(value);
-                if (message) messages.minLength = message;
+                messages.minLength = message;
             } else if (validator === "maxLength" && value != null) {
                 property.maxLength = Number(value);
-                if (message) messages.maxLength = message;
+                messages.maxLength = message;
             } else if (validator === "min" && value != null) {
                 property.minimum = Number(value);
-                if (message) messages.minimum = message;
+                messages.minimum = message;
             } else if (validator === "max" && value != null) {
                 property.maximum = Number(value);
-                if (message) messages.maximum = message;
+                messages.maximum = message;
             } else if (validator === "pattern" && typeof value === "string" && value) {
                 property.pattern = value;
-                if (message) messages.pattern = message;
+                messages.pattern = message;
             } else if (validator === "email") {
                 property.format = "email";
-                if (message) messages.format = message;
+                messages.format = message;
             } else if (validator === "url") {
                 property.format = "uri";
-                if (message) messages.format = message;
+                messages.format = message;
             }
         }
 
-        if (Object.keys(messages).length) property.errorMessage = messages;
+        property.errorMessage = messages;
 
         properties[key] = property;
 
         if (isRequired) {
             required.push(key);
-            requiredErrorMessage[key] = messageOf(isRequired.message);
+            requiredErrorMessage[key] =
+                messageOf(isRequired.message) ??
+                defaultValidationMessage("required", locale);
         }
     }
 
