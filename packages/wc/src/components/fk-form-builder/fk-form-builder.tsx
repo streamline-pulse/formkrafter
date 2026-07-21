@@ -207,10 +207,10 @@ export class FkFormBuilder {
   }
 
   private wrapInRootGroup(brickSpec: BrickSpec): BrickSpec {
-    const root = newBrickSpec('panel', 'group');
+    const root = newBrickSpec('panel', 'column');
     if (!root) return brickSpec;
 
-    return { ...root, children: [brickSpec] };
+    return { ...root, name: 'Form', children: [brickSpec] };
   }
 
   private setRootSpec(spec?: BrickSpec) {

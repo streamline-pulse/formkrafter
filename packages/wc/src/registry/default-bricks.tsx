@@ -203,6 +203,19 @@ export const rowBrick = createBrick({
   ),
 });
 
+export const columnBrick = createBrick({
+  type: 'panel',
+  dataType: 'void',
+  id: 'column',
+  name: 'Column',
+  category: 'Layout',
+  render: (props) => (
+    <div class="fk-column" style={asInlineStyle(props.styles)}>
+      {props.children as VNode}
+    </div>
+  ),
+});
+
 export function registerDefaultBricks(): void {
   registerBricks([
     textInputBrick,
@@ -213,5 +226,6 @@ export function registerDefaultBricks(): void {
     checkboxBrick,
     groupBrick,
     rowBrick,
+    columnBrick,
   ]);
 }

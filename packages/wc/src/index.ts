@@ -20,6 +20,7 @@ export {
   checkboxBrick,
   groupBrick,
   rowBrick,
+  columnBrick,
 } from './registry/default-bricks';
 export type {
   BrickDropDetail,

@@ -101,3 +101,10 @@ select.fk-field__input {
   flex: 1;
   min-width: 0;
 }
+
+.fk-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fk-spacing);
+  min-width: 0;
+}
