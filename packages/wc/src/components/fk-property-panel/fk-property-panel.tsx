@@ -1,5 +1,6 @@
 import { Component, Event, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter, VNode } from '@stencil/core';
+import { isLocalizedObject } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickSpec,
   Validation,
@@ -22,6 +23,8 @@ type PanelTab = 'config' | 'validation' | 'styles' | 'rules';
 export class FkPropertyPanel {
   @Prop() brick!: BrickSpec;
   @Prop() fields: string[] = [];
+  @Prop() locales: string[] = [];
+  @Prop() editLocale?: string;
 
   @Event() brickConfigsChange!: EventEmitter<BrickConfigsChangeDetail>;
   @Event() brickValidationsChange!: EventEmitter<BrickValidationsChangeDetail>;
@@ -52,6 +55,32 @@ export class FkPropertyPanel {
     );
 
     return tabs;
+  }
+
+  private localized(current: unknown, value: string): unknown {
+    if (this.locales.length <= 1) return value || undefined;
+
+    const map: Record<string, string> = isLocalizedObject(current)
+      ? { ...current }
+      : {};
+    if (typeof current === 'string' && current && !isLocalizedObject(current)) {
+      map[this.locales[0]] = current;
+    }
+    map[this.editLocale ?? this.locales[0]] = value;
+
+    return map;
+  }
+
+  private readLocalized(current: unknown): string {
+    if (isLocalizedObject(current)) {
+      return current[this.editLocale ?? this.locales[0]] ?? '';
+    }
+
+    return (current as string) ?? '';
+  }
+
+  private writeTextConfig(key: string, value: string) {
+    this.emitConfigs({ [key]: this.localized(this.brick.configs?.[key], value) });
   }
 
   private emitConfigs(patch: Record<string, unknown>) {
@@ -161,12 +190,13 @@ export class FkPropertyPanel {
           <textarea
             class="fk-props__input fk-props__input--textarea"
             onChange={(event) =>
-              this.emitConfigs({
-                options: (event.target as HTMLTextAreaElement).value,
-              })
+              this.writeTextConfig(
+                'options',
+                (event.target as HTMLTextAreaElement).value
+              )
             }
           >
-            {(configs.options as string) ?? ''}
+            {this.readLocalized(configs.options)}
           </textarea>
         </label>
       );
@@ -224,13 +254,15 @@ export class FkPropertyPanel {
         {this.textField(fkT('panel.key'), configs?.key, (value) =>
           this.emitConfigs({ key: value })
         )}
-        {this.textField(fkT('panel.label'), configs?.label, (value) =>
-          this.emitConfigs({ label: value })
+        {this.textField(fkT('panel.label'), this.readLocalized(configs?.label), (value) =>
+          this.writeTextConfig('label', value)
         )}
         {isInput
           ? [
-              this.textField(fkT('panel.placeholder'), configs?.placeholder, (value) =>
-                this.emitConfigs({ placeholder: value })
+              this.textField(
+                fkT('panel.placeholder'),
+                this.readLocalized(configs?.placeholder),
+                (value) => this.writeTextConfig('placeholder', value)
               ),
               this.textField(fkT('panel.prefix'), configs?.prefix, (value) =>
                 this.emitConfigs({ prefix: value || undefined })
@@ -241,6 +273,22 @@ export class FkPropertyPanel {
             ]
           : null}
         {this.optionsFields()}
+        {configs && 'content' in configs ? (
+          <label class="fk-props__field">
+            <span class="fk-props__label">{fkT('panel.content')}</span>
+            <textarea
+              class="fk-props__input fk-props__input--textarea"
+              onChange={(event) =>
+                this.writeTextConfig(
+                  'content',
+                  (event.target as HTMLTextAreaElement).value
+                )
+              }
+            >
+              {this.readLocalized(configs.content)}
+            </textarea>
+          </label>
+        ) : null}
       </section>
     );
   }
@@ -287,10 +335,13 @@ export class FkPropertyPanel {
           />
         ) : null}
         {rule
-          ? this.textField(fkT('panel.errorMessage'), rule.message, (value) =>
-              this.setValidation(validator, true, {
-                message: value || undefined,
-              })
+          ? this.textField(
+              fkT('panel.errorMessage'),
+              this.readLocalized(rule.message),
+              (value) =>
+                this.setValidation(validator, true, {
+                  message: this.localized(rule.message, value) as Validation['message'],
+                })
             )
           : null}
       </div>
@@ -347,10 +398,13 @@ export class FkPropertyPanel {
             />
           ) : null}
           {custom
-            ? this.textField(fkT('panel.fallbackMessage'), custom.message, (value) =>
-                this.setValidation('custom', true, {
-                  message: value || undefined,
-                })
+            ? this.textField(
+                fkT('panel.fallbackMessage'),
+                this.readLocalized(custom.message),
+                (value) =>
+                  this.setValidation('custom', true, {
+                    message: this.localized(custom.message, value) as Validation['message'],
+                  })
               )
             : null}
         </div>

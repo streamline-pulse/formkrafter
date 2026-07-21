@@ -22,6 +22,7 @@ export class FkFormRender {
   @Prop() data?: Record<string, unknown>;
   @Prop() editable: boolean = false;
   @Prop() selectedUid?: string;
+  @Prop() locale?: string;
 
   @Event() formDataChange!: EventEmitter<DataChangeDetail>;
 
@@ -82,7 +83,7 @@ export class FkFormRender {
       )
     );
 
-    return validateBrickSpecDataDetailed(this.spec, presentData);
+    return validateBrickSpecDataDetailed(this.spec, presentData, this.locale);
   }
 
   private visibleErrors(): Record<string, string> {
@@ -112,6 +113,7 @@ export class FkFormRender {
           data={this.currentData}
           dataMap={this.currentData}
           errors={this.visibleErrors()}
+          locale={this.locale}
           path="0"
           editable={this.editable}
           selectedUid={this.selectedUid}

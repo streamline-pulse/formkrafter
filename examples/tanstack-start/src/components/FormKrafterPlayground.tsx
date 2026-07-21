@@ -25,7 +25,7 @@ export default function FormKrafterPlayground() {
 
   return (
     <div className="space-y-8">
-      <FkFormBuilder onSpecChange={handleSpecChange} />
+      <FkFormBuilder onSpecChange={handleSpecChange} locales={['en', 'fr']} />
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">{m.playground_preview()}</h2>
@@ -33,6 +33,7 @@ export default function FormKrafterPlayground() {
           {spec ? (
             <FkFormRender
               spec={spec}
+              locale={locale}
               onFormDataChange={(event) => setResult(event.detail)}
             />
           ) : (

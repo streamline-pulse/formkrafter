@@ -3,13 +3,14 @@ import ajvErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 import type { BrickSpec } from "../utils/brick-spec";
 import { buildValidationSchema, iterateBricks } from "../utils/brick-spec";
+import { resolveLocalizedText } from "../utils/localized-text";
 import { evalBrickCode } from "../brick/utils";
 
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv, ["email", "uri"]);
 ajvErrors(ajv);
 
-const validatorCache = new WeakMap<BrickSpec, ValidateFunction>();
+const validatorCache = new WeakMap<BrickSpec, Map<string, ValidateFunction>>();
 
 export type Validator =
     | "required"
@@ -27,11 +28,21 @@ export type ValidationResult = {
     errors: Record<string, string>;
 };
 
-const compiledValidator = (brickSpec: BrickSpec): ValidateFunction | undefined => {
-    let validate = validatorCache.get(brickSpec);
+const compiledValidator = (
+    brickSpec: BrickSpec,
+    locale?: string
+): ValidateFunction | undefined => {
+    let byLocale = validatorCache.get(brickSpec);
+    if (!byLocale) {
+        byLocale = new Map();
+        validatorCache.set(brickSpec, byLocale);
+    }
+
+    const cacheKey = locale ?? "";
+    let validate = byLocale.get(cacheKey);
 
     if (!validate) {
-        const schema = buildValidationSchema(brickSpec);
+        const schema = buildValidationSchema(brickSpec, locale);
         if (!schema) return undefined;
 
         try {
@@ -39,7 +50,7 @@ const compiledValidator = (brickSpec: BrickSpec): ValidateFunction | undefined =
         } catch {
             return undefined;
         }
-        validatorCache.set(brickSpec, validate);
+        byLocale.set(cacheKey, validate);
     }
 
     return validate;
@@ -47,7 +58,8 @@ const compiledValidator = (brickSpec: BrickSpec): ValidateFunction | undefined =
 
 const customErrors = (
     brickSpec: BrickSpec,
-    data: unknown
+    data: unknown,
+    locale?: string
 ): Record<string, string> => {
     const errors: Record<string, string> = {};
     const dataMap = (data ?? {}) as Record<string, unknown>;
@@ -71,7 +83,11 @@ const customErrors = (
 
             if (typeof result === "string") errors[key] = result;
             else if (result instanceof Error) errors[key] = result.message;
-            else errors[key] = validation.message ?? "Invalid value";
+            else {
+                const resolved = resolveLocalizedText(validation.message, locale);
+                errors[key] =
+                    typeof resolved === "string" ? resolved : "Invalid value";
+            }
         }
     }
 
@@ -93,10 +109,11 @@ const keyOfError = (error: ErrorObject): string | undefined => {
 
 export const validateBrickSpecDataDetailed = (
     brickSpec: BrickSpec,
-    data: unknown
+    data: unknown,
+    locale?: string
 ): ValidationResult => {
     const errors: Record<string, string> = {};
-    const validate = compiledValidator(brickSpec);
+    const validate = compiledValidator(brickSpec, locale);
 
     if (validate && !validate(data)) {
         for (const error of validate.errors ?? []) {
@@ -107,12 +124,15 @@ export const validateBrickSpecDataDetailed = (
         }
     }
 
-    for (const [key, message] of Object.entries(customErrors(brickSpec, data))) {
+    for (const [key, message] of Object.entries(customErrors(brickSpec, data, locale))) {
         if (!(key in errors)) errors[key] = message;
     }
 
     return { valid: Object.keys(errors).length === 0, errors };
 };
 
-export const validateBrickSpecData = (brickSpec: BrickSpec, data: unknown): boolean =>
-    validateBrickSpecDataDetailed(brickSpec, data).valid;
+export const validateBrickSpecData = (
+    brickSpec: BrickSpec,
+    data: unknown,
+    locale?: string
+): boolean => validateBrickSpecDataDetailed(brickSpec, data, locale).valid;

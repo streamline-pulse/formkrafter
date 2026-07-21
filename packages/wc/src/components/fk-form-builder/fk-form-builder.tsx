@@ -39,6 +39,7 @@ import type {
 export class FkFormBuilder {
   @Prop() spec?: BrickSpec;
   @Prop() data?: Record<string, unknown>;
+  @Prop() locales: string[] = [];
 
   @Event() specChange!: EventEmitter<SpecChangeDetail>;
 
@@ -46,11 +47,13 @@ export class FkFormBuilder {
   @State() currentData: Record<string, unknown> = {};
   @State() selectedUid?: string;
   @State() copied = false;
+  @State() editLocale?: string;
 
   private history = new SpecHistory();
 
   componentWillLoad() {
     if (getBrickMolds().length === 0) registerDefaultBricks();
+    this.editLocale = this.locales[0];
 
     this.currentSpec = this.spec;
     this.currentData = { ...this.data };
@@ -303,6 +306,21 @@ export class FkFormBuilder {
 
             <span class="fk-builder__spacer"></span>
 
+            {this.locales.length > 1 ? (
+              <select
+                class="fk-builder__tool"
+                onChange={(event) =>
+                  (this.editLocale = (event.target as HTMLSelectElement).value)
+                }
+              >
+                {this.locales.map((locale) => (
+                  <option value={locale} selected={locale === this.editLocale}>
+                    {locale.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            ) : null}
+
             <button
               type="button"
               class="fk-builder__tool"
@@ -328,6 +346,7 @@ export class FkFormBuilder {
                 data={this.currentData}
                 editable={true}
                 selectedUid={this.selectedUid}
+                locale={this.editLocale}
               />
             ) : (
               [<fk-empty-form />, <fk-drop-area path="0" />]
@@ -339,7 +358,12 @@ export class FkFormBuilder {
           {(() => {
             const selected = this.findSelected();
             return selected ? (
-              <fk-property-panel brick={selected.brick} fields={this.inputFieldKeys()} />
+              <fk-property-panel
+                brick={selected.brick}
+                fields={this.inputFieldKeys()}
+                locales={this.locales}
+                editLocale={this.editLocale}
+              />
             ) : (
               <p class="fk-builder__hint">{fkT('builder.hint')}</p>
             );

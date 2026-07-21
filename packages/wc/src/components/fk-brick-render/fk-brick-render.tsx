@@ -2,6 +2,7 @@ import { Component, Event, Prop, h } from '@stencil/core';
 import type { EventEmitter, VNode } from '@stencil/core';
 import {
   getAffectedProperties,
+  resolveLocalizedRecord,
 } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickSpec,
@@ -31,6 +32,7 @@ export class FkBrickRender {
   @Prop() editable: boolean = false;
   @Prop() selectedUid?: string;
   @Prop() errors: Record<string, string> = {};
+  @Prop() locale?: string;
   @Prop() utils!: Utils;
 
   @Event() brickDataChange!: EventEmitter<Record<string, unknown>>;
@@ -64,6 +66,7 @@ export class FkBrickRender {
         data={this.data}
         dataMap={this.dataMap}
         errors={this.errors}
+        locale={this.locale}
         path={`${this.path}.${index}`}
         editable={this.editable}
         selectedUid={this.selectedUid}
@@ -78,7 +81,8 @@ export class FkBrickRender {
     const props: WcBrickProps = {
       brickSpec: spec,
       configsForm: spec.configsForm,
-      configs: spec.configs,
+      configs: resolveLocalizedRecord(spec.configs, this.locale),
+      locale: this.locale,
       styles: spec.styles ?? {},
       data: getBrickData(spec, this.data),
       dataMap: this.dataMap,

@@ -1,4 +1,5 @@
 import type { JSONSchemaType } from "../validators/json-schema-type";
+import { resolveLocalizedText } from "./localized-text";
 import type { Validator } from "../validators/validator";
 import type { Validation } from "../validators/validation";
 import type { Rule } from "../rules/rule";
@@ -42,12 +43,16 @@ export function* iterateBricks(
     }
 }
 
-export function buildValidationSchema(brickSpecs?: BrickSpec) {
+export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
     if (!brickSpecs) return;
 
     const properties: Record<string, unknown> = {};
     const required: string[] = [];
     const requiredErrorMessage: Record<string, string | undefined> = {};
+    const messageOf = (raw: unknown): string | undefined => {
+        const resolved = resolveLocalizedText(raw, locale);
+        return typeof resolved === "string" ? resolved : undefined;
+    };
 
     for (const { brick } of iterateBricks(brickSpecs)) {
         const key = brick.configs?.key;
@@ -66,7 +71,8 @@ export function buildValidationSchema(brickSpecs?: BrickSpec) {
         const messages: Record<string, string> = {};
 
         for (const validation of brick.validations ?? []) {
-            const { validator, value, message } = validation;
+            const { validator, value } = validation;
+            const message = messageOf(validation.message);
 
             if (validator === "minLength" && value != null) {
                 property.minLength = Number(value);
@@ -98,7 +104,7 @@ export function buildValidationSchema(brickSpecs?: BrickSpec) {
 
         if (isRequired) {
             required.push(key);
-            requiredErrorMessage[key] = isRequired.message;
+            requiredErrorMessage[key] = messageOf(isRequired.message);
         }
     }
 

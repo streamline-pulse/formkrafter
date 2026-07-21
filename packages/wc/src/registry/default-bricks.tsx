@@ -3,6 +3,7 @@ import type { VNode } from '@stencil/core';
 import { createBrick } from './create-brick';
 import { registerBricks } from './registry';
 import { asInlineStyle } from '../utils/style';
+import { resolveLocalizedText } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
 const labelOf = (props: WcBrickProps, fallback: string): string =>
@@ -327,10 +328,12 @@ export const tabsBrick = createBrick({
   name: 'Tabs',
   category: 'Layout',
   render: (props) => {
-    const labels = (props.brickSpec?.children ?? []).map(
-      (child, index) =>
-        (child.configs?.label as string) ?? child.name ?? `Tab ${index + 1}`
-    );
+    const labels = (props.brickSpec?.children ?? []).map((child, index) => {
+      const resolved = resolveLocalizedText(child.configs?.label, props.locale);
+      return typeof resolved === 'string'
+        ? resolved
+        : (child.name ?? `Tab ${index + 1}`);
+    });
 
     return (
       <fk-tabs
@@ -417,10 +420,12 @@ export const stepperBrick = createBrick({
   name: 'Stepper',
   category: 'Layout',
   render: (props) => {
-    const labels = (props.brickSpec?.children ?? []).map(
-      (child, index) =>
-        (child.configs?.label as string) ?? child.name ?? `Step ${index + 1}`
-    );
+    const labels = (props.brickSpec?.children ?? []).map((child, index) => {
+      const resolved = resolveLocalizedText(child.configs?.label, props.locale);
+      return typeof resolved === 'string'
+        ? resolved
+        : (child.name ?? `Step ${index + 1}`);
+    });
 
     return (
       <fk-stepper

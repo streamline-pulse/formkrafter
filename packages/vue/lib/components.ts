@@ -58,6 +58,7 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'editable',
   'selectedUid',
   'errors',
+  'locale',
   'utils',
   'brickDataChange',
   'brickConfigsChange',
@@ -100,6 +101,7 @@ export const FkEmptyForm: StencilVueComponent<JSX.FkEmptyForm> = /*@__PURE__*/ d
 export const FkFormBuilder: StencilVueComponent<JSX.FkFormBuilder> = /*@__PURE__*/ defineContainer<JSX.FkFormBuilder>('fk-form-builder', defineFkFormBuilder, [
   'spec',
   'data',
+  'locales',
   'specChange'
 ], [
   'specChange'
@@ -111,6 +113,7 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'data',
   'editable',
   'selectedUid',
+  'locale',
   'formDataChange'
 ], [
   'formDataChange'
@@ -120,6 +123,8 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
 export const FkPropertyPanel: StencilVueComponent<JSX.FkPropertyPanel> = /*@__PURE__*/ defineContainer<JSX.FkPropertyPanel>('fk-property-panel', defineFkPropertyPanel, [
   'brick',
   'fields',
+  'locales',
+  'editLocale',
   'brickConfigsChange',
   'brickValidationsChange',
   'brickStylesChange'

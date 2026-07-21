@@ -46,6 +46,14 @@ export { services } from "./services";
 export { JsRunnerService } from "./services/js_runner_service";
 export { DataSourceService, FetchDataSourceService } from "./services/data_source_service";
 
+// Localized content
+export {
+    LocalizedText,
+    isLocalizedObject,
+    resolveLocalizedText,
+    resolveLocalizedRecord
+} from "./utils/localized-text";
+
 // Spec operations
 export { pointerFromPath, pointerOfUid, getBrickAt } from "./ops/pointer";
 export {

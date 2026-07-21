@@ -152,6 +152,40 @@ describe("validateBrickSpecDataDetailed", () => {
     expect(validateBrickSpecDataDetailed(spec, { code: "BJ-1" }).valid).toBe(true);
   });
 
+  test("localized validation messages resolve per locale", () => {
+    const spec = (): BrickSpec => ({
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Name",
+          configs: { uid: "a", key: "name" },
+          validations: [
+            {
+              validator: "required",
+              message: { en: "Name is required", fr: "Le nom est obligatoire" },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(validateBrickSpecDataDetailed(spec(), {}, "fr").errors).toEqual({
+      name: "Le nom est obligatoire",
+    });
+    expect(validateBrickSpecDataDetailed(spec(), {}, "en").errors).toEqual({
+      name: "Name is required",
+    });
+    expect(validateBrickSpecDataDetailed(spec(), {}).errors).toEqual({
+      name: "Name is required",
+    });
+  });
+
   test("an invalid regex pattern does not crash validation", () => {
     const spec: BrickSpec = {
       type: "panel",
