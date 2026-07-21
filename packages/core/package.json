@@ -5,11 +5,20 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p ."
   },
+  "dependencies": {
+    "acorn": "catalog:",
+    "ajv": "catalog:",
+    "ajv-errors": "catalog:",
+    "json-logic-js": "catalog:"
+  },
   "devDependencies": {
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@types/json-logic-js": "catalog:"
   }
 }
