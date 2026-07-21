@@ -19,6 +19,7 @@ import {
   newBrickSpec,
 } from '../../registry/registry';
 import { registerDefaultBricks } from '../../registry/default-bricks';
+import { fkT } from '../../i18n/i18n';
 import type {
   BrickConfigsChangeDetail,
   BrickDropDetail,
@@ -264,7 +265,7 @@ export class FkFormBuilder {
               disabled={!this.history.canUndo}
               onClick={this.undo}
             >
-              ↩ Undo
+              ↩ {fkT('builder.undo')}
             </button>
             <button
               type="button"
@@ -272,7 +273,7 @@ export class FkFormBuilder {
               disabled={!this.history.canRedo}
               onClick={this.redo}
             >
-              ↪ Redo
+              ↪ {fkT('builder.redo')}
             </button>
           </div>
 
@@ -296,7 +297,7 @@ export class FkFormBuilder {
             return selected ? (
               <fk-property-panel brick={selected.brick} fields={this.inputFieldKeys()} />
             ) : (
-              <p class="fk-builder__hint">Select a brick to edit its properties</p>
+              <p class="fk-builder__hint">{fkT('builder.hint')}</p>
             );
           })()}
         </aside>

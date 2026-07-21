@@ -6,6 +6,7 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { toBrickDropDetail } from '../../utils/drop';
 import type { BrickDropDetail, BrickPathDetail } from '../../utils/events';
+import { fkT } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-brick-actions',
@@ -89,14 +90,14 @@ export class FkBrickActions {
             type="button"
             class="fk-actions__button fk-actions__handle"
             ref={(el) => (this.handleEl = el)}
-            title="Move"
+            title={fkT('actions.move')}
           >
             ⠿
           </button>
           <button
             type="button"
             class="fk-actions__button"
-            title="Duplicate"
+            title={fkT('actions.duplicate')}
             onClick={(event) => {
               event.stopPropagation();
               this.brickDuplicate.emit({ path: this.path });
@@ -107,7 +108,7 @@ export class FkBrickActions {
           <button
             type="button"
             class="fk-actions__button fk-actions__button--danger"
-            title="Delete"
+            title={fkT('actions.delete')}
             onClick={(event) => {
               event.stopPropagation();
               this.brickRemove.emit({ path: this.path });

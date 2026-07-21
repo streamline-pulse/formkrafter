@@ -1,4 +1,5 @@
 import { Component, Host, h } from '@stencil/core';
+import { fkT } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-empty-form',
@@ -10,8 +11,8 @@ export class FkEmptyForm {
     return (
       <Host>
         <div class="fk-empty">
-          <p class="fk-empty__title">Your form is empty</p>
-          <p class="fk-empty__hint">Drag a brick from the palette to get started</p>
+          <p class="fk-empty__title">{fkT('empty.title')}</p>
+          <p class="fk-empty__hint">{fkT('empty.hint')}</p>
         </div>
       </Host>
     );

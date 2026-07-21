@@ -1,5 +1,6 @@
 import { Component, Host, State, h } from '@stencil/core';
 import { getBrickMoldsGroupedByCategory } from '../../registry/registry';
+import { fkT, fkTOr } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-brick-list',
@@ -25,11 +26,14 @@ export class FkBrickList {
       .map(([category, molds]) => ({
         category,
         molds: query
-          ? molds.filter(
-              (mold) =>
-                mold.name.toLowerCase().includes(query) ||
-                mold.id.toLowerCase().includes(query) ||
-                category.toLowerCase().includes(query)
+          ? molds.filter((mold) =>
+              [
+                mold.name,
+                fkTOr(`brick.${mold.id}.name`, mold.name),
+                mold.id,
+                category,
+                fkTOr(`category.${category}`, category),
+              ].some((candidate) => candidate.toLowerCase().includes(query))
             )
           : molds,
       }))
@@ -41,7 +45,7 @@ export class FkBrickList {
           <input
             class="fk-palette__search"
             type="search"
-            placeholder="Search bricks…"
+            placeholder={fkT('palette.search')}
             value={this.query}
             onInput={(event) =>
               (this.query = (event.target as HTMLInputElement).value)
@@ -66,7 +70,7 @@ export class FkBrickList {
                   >
                     ▾
                   </span>
-                  {category}
+                  {fkTOr(`category.${category}`, category)}
                   <span class="fk-palette__count">{molds.length}</span>
                 </button>
                 {!isCollapsed ? (
@@ -84,7 +88,7 @@ export class FkBrickList {
           })}
 
           {filtered.length === 0 ? (
-            <p class="fk-palette__empty">No brick matches “{this.query}”</p>
+            <p class="fk-palette__empty">{fkT('palette.empty', { query: this.query })}</p>
           ) : null}
         </div>
       </Host>

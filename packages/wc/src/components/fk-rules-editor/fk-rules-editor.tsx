@@ -11,6 +11,7 @@ import {
 } from '../../utils/rule-condition';
 import type { OperatorId } from '../../utils/rule-condition';
 import type { BrickRulesChangeDetail } from '../../utils/events';
+import { fkT } from '../../i18n/i18n';
 
 const EFFECT_TARGETS = ['hidden', 'disabled', 'required', 'value'] as const;
 
@@ -169,7 +170,7 @@ export class FkRulesEditor {
 
     return (
       <div class="fk-rule__condition">
-        <span class="fk-rule__keyword">When</span>
+        <span class="fk-rule__keyword">{fkT('rules.when')}</span>
         <select
           class="fk-rule__control"
           onChange={(event) =>
@@ -290,7 +291,7 @@ export class FkRulesEditor {
         <button
           type="button"
           class="fk-rule__remove"
-          title="Remove effect"
+          title={fkT('rules.removeEffect')}
           onClick={() => this.removeEffect(ruleIndex, effectIndex)}
         >
           ✕
@@ -321,7 +322,7 @@ export class FkRulesEditor {
                 <button
                   type="button"
                   class="fk-rule__remove"
-                  title="Remove rule"
+                  title={fkT('rules.removeRule')}
                   onClick={() => this.removeRule(index)}
                 >
                   ✕
@@ -338,7 +339,7 @@ export class FkRulesEditor {
                     }}
                     onClick={() => this.setMode(index, rule, candidate)}
                   >
-                    {candidate === 'javaScript' ? 'JS' : candidate}
+                    {fkT(`rules.mode.${candidate === 'javaScript' ? 'js' : candidate}`)}
                   </button>
                 ))}
               </div>
@@ -375,7 +376,7 @@ export class FkRulesEditor {
               ) : null}
 
               <div class="fk-rule__effects">
-                <span class="fk-rule__keyword">Then</span>
+                <span class="fk-rule__keyword">{fkT('rules.then')}</span>
                 {(rule.effects ?? []).map((effect, effectIndex) =>
                   this.renderEffect(index, effect, effectIndex)
                 )}
@@ -384,7 +385,7 @@ export class FkRulesEditor {
                   class="fk-rule__add"
                   onClick={() => this.addEffect(index)}
                 >
-                  + Effect
+                  {fkT('rules.addEffect')}
                 </button>
               </div>
             </article>
@@ -392,7 +393,7 @@ export class FkRulesEditor {
         })}
 
         <button type="button" class="fk-rule__add" onClick={this.addRule}>
-          + Add rule
+          {fkT('rules.addRule')}
         </button>
       </div>
     );

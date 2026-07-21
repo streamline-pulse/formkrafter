@@ -1,13 +1,21 @@
 import { useState } from 'react'
 import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
+import {
+  frFkTranslations,
+  setFkTranslations,
+} from '@streamline-pulse/formkrafter-wc'
 import '@streamline-pulse/formkrafter-wc/styles.css'
 
 import { m } from '#/paraglide/messages'
+import { useLocale } from '#/components/LocaleProvider'
 
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
 import type { DataChangeDetail, SpecChangeDetail } from '@streamline-pulse/formkrafter-wc'
 
 export default function FormKrafterPlayground() {
+  const { locale } = useLocale()
+  setFkTranslations(locale === 'fr' ? frFkTranslations : {})
+
   const [spec, setSpec] = useState<BrickSpec | undefined>(undefined)
   const [result, setResult] = useState<DataChangeDetail | undefined>(undefined)
 

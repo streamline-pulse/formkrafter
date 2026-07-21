@@ -1,5 +1,6 @@
 import { Component, Event, Prop, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
+import { fkT } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-signature-input',
@@ -112,7 +113,7 @@ export class FkSignatureInput {
           disabled={this.disabled}
           onClick={this.clear}
         >
-          Clear
+          {fkT('signature.clear')}
         </button>
       </div>
     );

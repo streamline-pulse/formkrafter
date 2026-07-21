@@ -1,6 +1,7 @@
 import { Component, Element, Prop, State, h } from '@stencil/core';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import type { BrickMold } from '@streamline-pulse/formkrafter-core';
+import { fkTOr } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-brick-mold-item',
@@ -37,9 +38,9 @@ export class FkBrickMoldItem {
     return (
       <div
         class={{ 'fk-mold': true, 'fk-mold--dragging': this.isDragging }}
-        title={this.brickMold.name}
+        title={fkTOr(`brick.${this.brickMold.id}.name`, this.brickMold.name)}
       >
-        <span class="fk-mold__name">{this.brickMold.name}</span>
+        <span class="fk-mold__name">{fkTOr(`brick.${this.brickMold.id}.name`, this.brickMold.name)}</span>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import type {
   BrickStylesChangeDetail,
   BrickValidationsChangeDetail,
 } from '../../utils/events';
+import { fkT, fkTOr } from '../../i18n/i18n';
 
 type PanelTab = 'config' | 'validation' | 'styles' | 'rules';
 
@@ -38,14 +39,17 @@ export class FkPropertyPanel {
 
   private availableTabs(): Array<{ id: PanelTab; label: string }> {
     const tabs: Array<{ id: PanelTab; label: string }> = [
-      { id: 'config', label: 'Config' },
+      { id: 'config', label: fkT('panel.tab.config') },
     ];
 
     if (this.brick.type === 'input') {
-      tabs.push({ id: 'validation', label: 'Validation' });
+      tabs.push({ id: 'validation', label: fkT('panel.tab.validation') });
     }
 
-    tabs.push({ id: 'styles', label: 'Styles' }, { id: 'rules', label: 'Rules' });
+    tabs.push(
+      { id: 'styles', label: fkT('panel.tab.styles') },
+      { id: 'rules', label: fkT('panel.tab.rules') }
+    );
 
     return tabs;
   }
@@ -131,7 +135,7 @@ export class FkPropertyPanel {
     const nodes: VNode[] = supportsSources
       ? [
           <label class="fk-props__field">
-            <span class="fk-props__label">Options source</span>
+            <span class="fk-props__label">{fkT('panel.optionsSource')}</span>
             <select
               class="fk-props__input"
               onChange={(event) =>
@@ -153,7 +157,7 @@ export class FkPropertyPanel {
     if (source === 'static') {
       nodes.push(
         <label class="fk-props__field">
-          <span class="fk-props__label">Options (one per line)</span>
+          <span class="fk-props__label">{fkT('panel.options')}</span>
           <textarea
             class="fk-props__input fk-props__input--textarea"
             onChange={(event) =>
@@ -170,7 +174,7 @@ export class FkPropertyPanel {
 
     if (source === 'dataMap') {
       nodes.push(
-        this.textField('Data key', configs.optionsPath, (value) =>
+        this.textField(fkT('panel.dataKey'), configs.optionsPath, (value) =>
           this.emitConfigs({ optionsPath: value })
         )
       );
@@ -178,7 +182,7 @@ export class FkPropertyPanel {
 
     if (source === 'remote') {
       nodes.push(
-        this.textField('URL', configs.optionsUrl, (value) =>
+        this.textField(fkT('panel.url'), configs.optionsUrl, (value) =>
           this.emitConfigs({ optionsUrl: value })
         )
       );
@@ -199,10 +203,10 @@ export class FkPropertyPanel {
 
     if (source === 'remote' || source === 'js') {
       nodes.push(
-        this.textField('Label key', configs.labelKey, (value) =>
+        this.textField(fkT('panel.labelKey'), configs.labelKey, (value) =>
           this.emitConfigs({ labelKey: value })
         ),
-        this.textField('Value key', configs.valueKey, (value) =>
+        this.textField(fkT('panel.valueKey'), configs.valueKey, (value) =>
           this.emitConfigs({ valueKey: value })
         )
       );
@@ -217,14 +221,14 @@ export class FkPropertyPanel {
 
     return (
       <section class="fk-props__section">
-        {this.textField('Key', configs?.key, (value) =>
+        {this.textField(fkT('panel.key'), configs?.key, (value) =>
           this.emitConfigs({ key: value })
         )}
-        {this.textField('Label', configs?.label, (value) =>
+        {this.textField(fkT('panel.label'), configs?.label, (value) =>
           this.emitConfigs({ label: value })
         )}
         {isInput
-          ? this.textField('Placeholder', configs?.placeholder, (value) =>
+          ? this.textField(fkT('panel.placeholder'), configs?.placeholder, (value) =>
               this.emitConfigs({ placeholder: value })
             )
           : null}
@@ -275,7 +279,7 @@ export class FkPropertyPanel {
           />
         ) : null}
         {rule
-          ? this.textField('Error message', rule.message, (value) =>
+          ? this.textField(fkT('panel.errorMessage'), rule.message, (value) =>
               this.setValidation(validator, true, {
                 message: value || undefined,
               })
@@ -291,20 +295,20 @@ export class FkPropertyPanel {
 
     return (
       <section class="fk-props__section">
-        {this.validationRow('required', 'Required')}
+        {this.validationRow('required', fkT('panel.required'))}
         {dataType === 'string'
           ? [
-              this.validationRow('minLength', 'Min length', 'number'),
-              this.validationRow('maxLength', 'Max length', 'number'),
-              this.validationRow('pattern', 'Pattern (regex)', 'text'),
-              this.validationRow('email', 'Email format'),
-              this.validationRow('url', 'URL format'),
+              this.validationRow('minLength', fkT('panel.minLength'), 'number'),
+              this.validationRow('maxLength', fkT('panel.maxLength'), 'number'),
+              this.validationRow('pattern', fkT('panel.pattern'), 'text'),
+              this.validationRow('email', fkT('panel.emailFormat')),
+              this.validationRow('url', fkT('panel.urlFormat')),
             ]
           : null}
         {dataType === 'number'
           ? [
-              this.validationRow('min', 'Min', 'number'),
-              this.validationRow('max', 'Max', 'number'),
+              this.validationRow('min', fkT('panel.min'), 'number'),
+              this.validationRow('max', fkT('panel.max'), 'number'),
             ]
           : null}
 
@@ -321,7 +325,7 @@ export class FkPropertyPanel {
                 )
               }
             />
-            <span class="fk-props__label">Custom (JavaScript)</span>
+            <span class="fk-props__label">{fkT('panel.custom')}</span>
           </label>
           {custom ? (
             <fk-code-editor
@@ -335,7 +339,7 @@ export class FkPropertyPanel {
             />
           ) : null}
           {custom
-            ? this.textField('Fallback message', custom.message, (value) =>
+            ? this.textField(fkT('panel.fallbackMessage'), custom.message, (value) =>
                 this.setValidation('custom', true, {
                   message: value || undefined,
                 })
@@ -376,7 +380,7 @@ export class FkPropertyPanel {
           <input
             class="fk-props__input"
             type="text"
-            placeholder="property"
+            placeholder={fkT('panel.styleProperty')}
             value={this.newStyleKey}
             onInput={(event) =>
               (this.newStyleKey = (event.target as HTMLInputElement).value)
@@ -385,7 +389,7 @@ export class FkPropertyPanel {
           <input
             class="fk-props__input fk-props__input--grow"
             type="text"
-            placeholder="value"
+            placeholder={fkT('panel.styleValue')}
             onChange={(event) => {
               const target = event.target as HTMLInputElement;
               this.addStyle(target.value);
@@ -402,7 +406,7 @@ export class FkPropertyPanel {
       <div class="fk-props">
         <header class="fk-props__header">
           <span class="fk-props__type">{this.brick.type}</span>
-          <h4 class="fk-props__title">{this.brick.name}</h4>
+          <h4 class="fk-props__title">{fkTOr(`brick.${this.brick.id}.name`, this.brick.name)}</h4>
         </header>
 
         <div class="fk-props__tabs">

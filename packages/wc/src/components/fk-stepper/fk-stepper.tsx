@@ -1,4 +1,5 @@
 import { Component, Element, Prop, State, Watch, h } from '@stencil/core';
+import { fkT } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-stepper',
@@ -66,7 +67,7 @@ export class FkStepper {
               disabled={this.active === 0}
               onClick={() => (this.active = Math.max(this.active - 1, 0))}
             >
-              ← Back
+              {fkT('stepper.back')}
             </button>
             <button
               type="button"
@@ -74,7 +75,7 @@ export class FkStepper {
               hidden={this.active === lastStep}
               onClick={() => (this.active = Math.min(this.active + 1, lastStep))}
             >
-              Next →
+              {fkT('stepper.next')}
             </button>
           </div>
         ) : null}

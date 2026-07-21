@@ -3,6 +3,7 @@ import type { EventEmitter } from '@stencil/core';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { toBrickDropDetail } from '../../utils/drop';
 import type { BrickDropDetail } from '../../utils/events';
+import { fkT } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-drop-area',
@@ -43,7 +44,7 @@ export class FkDropArea {
   render() {
     return (
       <div class={{ 'fk-drop': true, 'fk-drop--over': this.isOver }}>
-        <span class="fk-drop__hint">Drop a brick here</span>
+        <span class="fk-drop__hint">{fkT('drop.hint')}</span>
       </div>
     );
   }

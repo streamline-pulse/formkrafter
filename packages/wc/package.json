@@ -11,8 +11,8 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/formkrafter-wc/formkrafter-wc.esm.js",
-      "require": "./dist/formkrafter-wc/formkrafter-wc.cjs.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
     },
     "./styles.css": "./dist/formkrafter-wc/formkrafter-wc.css",
     "./dist/components": {
