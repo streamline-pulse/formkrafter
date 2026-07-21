@@ -3,6 +3,7 @@ import type { VNode } from '@stencil/core';
 import { createBrick } from './create-brick';
 import { registerBricks } from './registry';
 import { asInlineStyle } from '../utils/style';
+import { fkT } from '../i18n/i18n';
 import { resolveLocalizedText } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
@@ -421,6 +422,44 @@ export const radioBrick = createBrick({
   ),
 });
 
+export const dataGridBrick = createBrick({
+  type: 'collection',
+  dataType: 'array',
+  id: 'data-grid',
+  name: 'Data grid',
+  category: 'Data',
+  defaultConfigs: { label: 'Data grid' },
+  render: (props) =>
+    props.editable || !props.brickSpec ? (
+      fieldBlock(
+        props,
+        'Data grid',
+        <div class="fk-grid-template">
+          <span class="fk-grid-template__hint">{fkT('grid.columns')}</span>
+          {props.children as VNode}
+        </div>
+      )
+    ) : (
+      fieldBlock(
+        props,
+        'Data grid',
+        <fk-data-grid
+          spec={props.brickSpec}
+          value={props.data}
+          disabled={props.disabled}
+          locale={props.locale}
+          utils={props.utils}
+          onGridValueChange={(
+            event: CustomEvent<Array<Record<string, unknown>> | undefined>
+          ) => {
+            event.stopPropagation();
+            props.onDataChange?.(event.detail);
+          }}
+        />
+      )
+    ),
+});
+
 export const hiddenBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -565,6 +604,7 @@ export function registerDefaultBricks(): void {
     checkboxBrick,
     tagsBrick,
     signatureBrick,
+    dataGridBrick,
     hiddenBrick,
     contentBrick,
     groupBrick,

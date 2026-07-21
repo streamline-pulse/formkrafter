@@ -29,6 +29,7 @@ export {
   checkboxBrick,
   tagsBrick,
   signatureBrick,
+  dataGridBrick,
   hiddenBrick,
   contentBrick,
   groupBrick,

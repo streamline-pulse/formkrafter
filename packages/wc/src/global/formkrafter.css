@@ -146,6 +146,23 @@ select.fk-field__input {
   font-size: 0.9rem;
 }
 
+.fk-grid-template {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+  padding: var(--fk-spacing);
+  border: 1px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+}
+
+.fk-grid-template__hint {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fk-color-muted);
+}
+
 .fk-adorned {
   display: flex;
   align-items: center;

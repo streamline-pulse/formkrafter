@@ -2,7 +2,7 @@ import { Ajv, type ErrorObject, type ValidateFunction } from "ajv";
 import ajvErrors from "ajv-errors";
 import addFormats from "ajv-formats";
 import type { BrickSpec } from "../utils/brick-spec";
-import { buildValidationSchema, iterateBricks } from "../utils/brick-spec";
+import { buildValidationSchema, iterateSchemaBricks } from "../utils/brick-spec";
 import { resolveLocalizedText } from "../utils/localized-text";
 import { defaultValidationMessage } from "./default-messages";
 import { evalBrickCode } from "../brick/utils";
@@ -65,7 +65,7 @@ const customErrors = (
     const errors: Record<string, string> = {};
     const dataMap = (data ?? {}) as Record<string, unknown>;
 
-    for (const { brick } of iterateBricks(brickSpec)) {
+    for (const brick of iterateSchemaBricks(brickSpec)) {
         const key = brick.configs?.key;
         if (!key) continue;
 

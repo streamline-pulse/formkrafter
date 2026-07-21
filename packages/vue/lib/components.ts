@@ -11,6 +11,7 @@ import { defineCustomElement as defineFkBrickMoldItem } from '@streamline-pulse/
 import { defineCustomElement as defineFkBrickNotFound } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-not-found.js';
 import { defineCustomElement as defineFkBrickRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-render.js';
 import { defineCustomElement as defineFkCodeEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-code-editor.js';
+import { defineCustomElement as defineFkDataGrid } from '@streamline-pulse/formkrafter-wc/dist/components/fk-data-grid.js';
 import { defineCustomElement as defineFkDropArea } from '@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js';
 import { defineCustomElement as defineFkEmptyForm } from '@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js';
 import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js';
@@ -84,6 +85,18 @@ export const FkCodeEditor: StencilVueComponent<JSX.FkCodeEditor> = /*@__PURE__*/
   'codeChange'
 ], [
   'codeChange'
+]);
+
+
+export const FkDataGrid: StencilVueComponent<JSX.FkDataGrid> = /*@__PURE__*/ defineContainer<JSX.FkDataGrid>('fk-data-grid', defineFkDataGrid, [
+  'spec',
+  'value',
+  'disabled',
+  'locale',
+  'utils',
+  'gridValueChange'
+], [
+  'gridValueChange'
 ]);
 
 

@@ -1,4 +1,4 @@
-import { Component, Event, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Element, Event, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import {
   getAffectedProperties,
@@ -18,6 +18,8 @@ import type { DataChangeDetail } from '../../utils/events';
   scoped: true,
 })
 export class FkFormRender {
+  @Element() host!: HTMLElement;
+
   @Prop() spec!: BrickSpec;
   @Prop() data?: Record<string, unknown>;
   @Prop() editable: boolean = false;
@@ -85,7 +87,21 @@ export class FkFormRender {
     }
     this.touched = touched;
 
-    const result = this.runValidation();
+    const flat = this.runValidation();
+    const errors = { ...flat.errors };
+    let valid = flat.valid;
+
+    const grids = Array.from(
+      this.host.querySelectorAll('fk-data-grid')
+    ) as Array<HTMLElement & { validateRows: () => Promise<ValidationResult> }>;
+
+    for (const grid of grids) {
+      const rowResult = await grid.validateRows();
+      valid = valid && rowResult.valid;
+      Object.assign(errors, rowResult.errors);
+    }
+
+    const result = { valid, errors };
     this.formDataChange.emit({
       data: this.currentData,
       isValid: result.valid,

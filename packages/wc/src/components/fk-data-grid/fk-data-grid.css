@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+.fk-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fk-spacing);
+}
+
+.fk-grid__empty {
+  margin: 0;
+  padding: var(--fk-spacing);
+  border: 1px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  font-size: 0.85rem;
+  color: var(--fk-color-muted);
+  text-align: center;
+}
+
+.fk-grid__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--fk-spacing);
+  padding: var(--fk-spacing);
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  background: color-mix(in srgb, var(--fk-color-surface) 60%, transparent);
+}
+
+.fk-grid__cells {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--fk-spacing);
+  min-width: 0;
+}
+
+.fk-grid__cells > * {
+  flex: 1;
+  min-width: 160px;
+}
+
+.fk-grid__remove {
+  border: none;
+  background: transparent;
+  color: var(--fk-color-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: calc(var(--fk-radius) / 2);
+}
+
+.fk-grid__remove:hover:not(:disabled) {
+  color: var(--fk-color-danger);
+  background: color-mix(in srgb, var(--fk-color-danger) 10%, transparent);
+}
+
+.fk-grid__add {
+  align-self: flex-start;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  border: 1px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  background: transparent;
+  color: var(--fk-color-muted);
+  cursor: pointer;
+}
+
+.fk-grid__add:hover:not(:disabled) {
+  border-color: var(--fk-color-primary);
+  color: var(--fk-color-primary);
+}

@@ -9,7 +9,8 @@ export { BrickBaseConfigs, CommonBrickProps, WithBrickBaseConfigs } from "./util
 export {
     BrickSpec,
     buildValidationSchema,
-    iterateBricks
+    iterateBricks,
+    iterateSchemaBricks
 } from "./utils/brick-spec";
 
 // Brick

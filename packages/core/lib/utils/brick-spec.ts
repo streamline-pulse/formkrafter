@@ -44,6 +44,18 @@ export function* iterateBricks(
     }
 }
 
+export function* iterateSchemaBricks(spec?: BrickSpec): Generator<BrickSpec> {
+    if (!spec) return;
+
+    yield spec;
+
+    if (spec.type === "collection") return;
+
+    for (const child of spec.children ?? []) {
+        yield* iterateSchemaBricks(child);
+    }
+}
+
 export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
     if (!brickSpecs) return;
 
@@ -55,7 +67,7 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
         return typeof resolved === "string" ? resolved : undefined;
     };
 
-    for (const { brick } of iterateBricks(brickSpecs)) {
+    for (const brick of iterateSchemaBricks(brickSpecs)) {
         const key = brick.configs?.key;
         const dataType = brick.dataType;
 
