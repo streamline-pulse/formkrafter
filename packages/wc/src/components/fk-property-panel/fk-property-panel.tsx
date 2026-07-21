@@ -1,6 +1,10 @@
 import { Component, Event, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter, VNode } from '@stencil/core';
-import type { BrickSpec, Validation } from '@streamline-pulse/formkrafter-core';
+import type {
+  BrickSpec,
+  Validation,
+  Validator,
+} from '@streamline-pulse/formkrafter-core';
 import type {
   BrickConfigsChangeDetail,
   BrickStylesChangeDetail,
@@ -67,34 +71,25 @@ export class FkPropertyPanel {
     this.brickStylesChange.emit({ styles: patch, uid });
   }
 
-  private requiredValidation(): Validation | undefined {
+  private validationOf(validator: Validator): Validation | undefined {
     return this.brick.validations?.find(
-      (validation) => validation.validator === 'required'
+      (validation) => validation.validator === validator
     );
   }
 
-  private otherValidations(): Validation[] {
-    return (this.brick.validations ?? []).filter(
-      (validation) => validation.validator !== 'required'
+  private setValidation(
+    validator: Validator,
+    active: boolean,
+    patch: Partial<Validation> = {}
+  ) {
+    const current = this.validationOf(validator);
+    const others = (this.brick.validations ?? []).filter(
+      (validation) => validation.validator !== validator
     );
-  }
 
-  private setRequired(checked: boolean) {
-    const current = this.requiredValidation();
     this.emitValidations(
-      checked
-        ? [...this.otherValidations(), { validator: 'required', message: current?.message }]
-        : this.otherValidations()
+      active ? [...others, { ...current, validator, ...patch }] : others
     );
-  }
-
-  private setRequiredMessage(message: string) {
-    if (!this.requiredValidation()) return;
-
-    this.emitValidations([
-      ...this.otherValidations(),
-      { validator: 'required', message: message || undefined },
-    ]);
   }
 
   private addStyle(value: string) {
@@ -238,26 +233,115 @@ export class FkPropertyPanel {
     );
   }
 
-  private renderValidationTab() {
-    const required = this.requiredValidation();
+  private validationRow(
+    validator: Validator,
+    label: string,
+    valueType?: 'number' | 'text'
+  ) {
+    const rule = this.validationOf(validator);
 
     return (
-      <section class="fk-props__section">
+      <div class="fk-props__vrule">
         <label class="fk-props__field fk-props__field--inline">
           <input
             type="checkbox"
-            checked={!!required}
+            checked={!!rule}
             onChange={(event) =>
-              this.setRequired((event.target as HTMLInputElement).checked)
+              this.setValidation(
+                validator,
+                (event.target as HTMLInputElement).checked
+              )
             }
           />
-          <span class="fk-props__label">Required</span>
+          <span class="fk-props__label">{label}</span>
         </label>
-        {required
-          ? this.textField('Error message', required.message, (value) =>
-              this.setRequiredMessage(value)
+        {rule && valueType ? (
+          <input
+            class="fk-props__input"
+            type={valueType}
+            placeholder={valueType === 'number' ? 'value' : 'regex'}
+            value={rule.value == null ? '' : String(rule.value)}
+            onChange={(event) => {
+              const raw = (event.target as HTMLInputElement).value;
+              this.setValidation(validator, true, {
+                value:
+                  valueType === 'number'
+                    ? raw === ''
+                      ? undefined
+                      : Number(raw)
+                    : raw || undefined,
+              });
+            }}
+          />
+        ) : null}
+        {rule
+          ? this.textField('Error message', rule.message, (value) =>
+              this.setValidation(validator, true, {
+                message: value || undefined,
+              })
             )
           : null}
+      </div>
+    );
+  }
+
+  private renderValidationTab() {
+    const dataType = this.brick.dataType;
+    const custom = this.validationOf('custom');
+
+    return (
+      <section class="fk-props__section">
+        {this.validationRow('required', 'Required')}
+        {dataType === 'string'
+          ? [
+              this.validationRow('minLength', 'Min length', 'number'),
+              this.validationRow('maxLength', 'Max length', 'number'),
+              this.validationRow('pattern', 'Pattern (regex)', 'text'),
+              this.validationRow('email', 'Email format'),
+              this.validationRow('url', 'URL format'),
+            ]
+          : null}
+        {dataType === 'number'
+          ? [
+              this.validationRow('min', 'Min', 'number'),
+              this.validationRow('max', 'Max', 'number'),
+            ]
+          : null}
+
+        <div class="fk-props__vrule">
+          <label class="fk-props__field fk-props__field--inline">
+            <input
+              type="checkbox"
+              checked={!!custom}
+              onChange={(event) =>
+                this.setValidation(
+                  'custom',
+                  (event.target as HTMLInputElement).checked,
+                  { customValidator: custom?.customValidator ?? 'return true;' }
+                )
+              }
+            />
+            <span class="fk-props__label">Custom (JavaScript)</span>
+          </label>
+          {custom ? (
+            <fk-code-editor
+              value={custom.customValidator ?? ''}
+              placeholder={'return value?.startsWith("BJ-") ? true : "Must start with BJ-";'}
+              onCodeChange={(event) =>
+                this.setValidation('custom', true, {
+                  customValidator: event.detail,
+                })
+              }
+            />
+          ) : null}
+          {custom
+            ? this.textField('Fallback message', custom.message, (value) =>
+                this.setValidation('custom', true, {
+                  message: value || undefined,
+                })
+              )
+            : null}
+        </div>
       </section>
     );
   }

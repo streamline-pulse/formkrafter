@@ -17,7 +17,8 @@
     "ajv": "catalog:",
     "ajv-errors": "catalog:",
     "json-logic-js": "catalog:",
-    "fast-json-patch": "catalog:"
+    "fast-json-patch": "catalog:",
+    "ajv-formats": "catalog:"
   },
   "devDependencies": {
     "typescript": "catalog:",

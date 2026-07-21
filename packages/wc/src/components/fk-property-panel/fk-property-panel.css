@@ -110,6 +110,15 @@
   resize: vertical;
 }
 
+.fk-props__vrule {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: calc(var(--fk-spacing) / 1.5);
+  border: 1px solid var(--fk-color-border);
+  border-radius: calc(var(--fk-radius) / 1.5);
+}
+
 .fk-props__style-row {
   display: flex;
   align-items: center;

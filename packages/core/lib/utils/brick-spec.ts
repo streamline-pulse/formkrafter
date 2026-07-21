@@ -59,10 +59,42 @@ export function buildValidationSchema(brickSpecs?: BrickSpec) {
             (validation) => validation.validator === "required"
         );
 
-        properties[key] = {
+        const property: Record<string, unknown> = {
             type: dataType,
             nullable: !isRequired,
         };
+        const messages: Record<string, string> = {};
+
+        for (const validation of brick.validations ?? []) {
+            const { validator, value, message } = validation;
+
+            if (validator === "minLength" && value != null) {
+                property.minLength = Number(value);
+                if (message) messages.minLength = message;
+            } else if (validator === "maxLength" && value != null) {
+                property.maxLength = Number(value);
+                if (message) messages.maxLength = message;
+            } else if (validator === "min" && value != null) {
+                property.minimum = Number(value);
+                if (message) messages.minimum = message;
+            } else if (validator === "max" && value != null) {
+                property.maximum = Number(value);
+                if (message) messages.maximum = message;
+            } else if (validator === "pattern" && typeof value === "string" && value) {
+                property.pattern = value;
+                if (message) messages.pattern = message;
+            } else if (validator === "email") {
+                property.format = "email";
+                if (message) messages.format = message;
+            } else if (validator === "url") {
+                property.format = "uri";
+                if (message) messages.format = message;
+            }
+        }
+
+        if (Object.keys(messages).length) property.errorMessage = messages;
+
+        properties[key] = property;
 
         if (isRequired) {
             required.push(key);

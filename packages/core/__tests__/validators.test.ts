@@ -58,4 +58,118 @@ describe("validateBrickSpecDataDetailed", () => {
     expect(validateBrickSpecData(form(), {})).toBe(false);
     expect(validateBrickSpecData(form(), { email: "x" })).toBe(true);
   });
+
+  test("parameterized validators enforce bounds with custom messages", () => {
+    const spec: BrickSpec = {
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Pseudo",
+          configs: { uid: "a", key: "pseudo" },
+          validations: [
+            { validator: "minLength", value: 3, message: "Trop court" },
+            { validator: "pattern", value: "^[a-z]+$", message: "Minuscules" },
+          ],
+        },
+        {
+          type: "input",
+          dataType: "number",
+          id: "number",
+          name: "Age",
+          configs: { uid: "b", key: "age" },
+          validations: [{ validator: "min", value: 18, message: "Majeur requis" }],
+        },
+      ],
+    };
+
+    expect(validateBrickSpecDataDetailed(spec, { pseudo: "ab", age: 12 }).errors).toEqual({
+      pseudo: "Trop court",
+      age: "Majeur requis",
+    });
+    expect(validateBrickSpecDataDetailed(spec, { pseudo: "ABC", age: 20 }).errors).toEqual({
+      pseudo: "Minuscules",
+    });
+    expect(validateBrickSpecDataDetailed(spec, { pseudo: "abc", age: 20 }).valid).toBe(true);
+  });
+
+  test("email format validator uses ajv-formats", () => {
+    const spec: BrickSpec = {
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "email",
+          name: "Email",
+          configs: { uid: "a", key: "mail" },
+          validations: [{ validator: "email", message: "Email invalide" }],
+        },
+      ],
+    };
+
+    expect(validateBrickSpecDataDetailed(spec, { mail: "nope" }).errors).toEqual({
+      mail: "Email invalide",
+    });
+    expect(validateBrickSpecDataDetailed(spec, { mail: "a@b.co" }).valid).toBe(true);
+  });
+
+  test("custom JS validator returns its own message", () => {
+    const spec: BrickSpec = {
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Code",
+          configs: { uid: "a", key: "code" },
+          validations: [
+            {
+              validator: "custom",
+              customValidator:
+                'return value === undefined || value.startsWith("BJ-") ? true : "Doit commencer par BJ-";',
+            },
+          ],
+        },
+      ],
+    };
+
+    expect(validateBrickSpecDataDetailed(spec, { code: "FR-1" }).errors).toEqual({
+      code: "Doit commencer par BJ-",
+    });
+    expect(validateBrickSpecDataDetailed(spec, { code: "BJ-1" }).valid).toBe(true);
+  });
+
+  test("an invalid regex pattern does not crash validation", () => {
+    const spec: BrickSpec = {
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Broken",
+          configs: { uid: "a", key: "broken" },
+          validations: [{ validator: "pattern", value: "([" }],
+        },
+      ],
+    };
+
+    expect(validateBrickSpecDataDetailed(spec, { broken: "x" }).valid).toBe(true);
+  });
 });
