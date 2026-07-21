@@ -1,8 +1,9 @@
-import { Component, Event, Prop, h } from '@stencil/core';
+import { Component, Event, Prop, State, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import type { BrickSpec, Validation } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickConfigsChangeDetail,
+  BrickStylesChangeDetail,
   BrickValidationsChangeDetail,
 } from '../../utils/events';
 
@@ -17,6 +18,9 @@ export class FkPropertyPanel {
 
   @Event() brickConfigsChange!: EventEmitter<BrickConfigsChangeDetail>;
   @Event() brickValidationsChange!: EventEmitter<BrickValidationsChangeDetail>;
+  @Event() brickStylesChange!: EventEmitter<BrickStylesChangeDetail>;
+
+  @State() newStyleKey = '';
 
   private emitConfigs(patch: Record<string, unknown>) {
     const uid = this.brick.configs?.uid;
@@ -51,6 +55,21 @@ export class FkPropertyPanel {
         ? [...this.otherValidations(), { validator: 'required', message: current?.message }]
         : this.otherValidations()
     );
+  }
+
+  private emitStyles(patch: Record<string, unknown>) {
+    const uid = this.brick.configs?.uid;
+    if (!uid) return;
+
+    this.brickStylesChange.emit({ styles: patch, uid });
+  }
+
+  private addStyle(value: string) {
+    const key = this.newStyleKey.trim();
+    if (!key) return;
+
+    this.emitStyles({ [key]: value });
+    this.newStyleKey = '';
   }
 
   private setRequiredMessage(message: string) {
@@ -142,6 +161,54 @@ export class FkPropertyPanel {
               : null}
           </section>
         ) : null}
+
+        <section class="fk-props__section">
+          <h5 class="fk-props__section-title">Styles</h5>
+          {Object.entries(this.brick.styles ?? {}).map(([key, value]) => (
+            <div class="fk-props__style-row" key={key}>
+              <span class="fk-props__style-key">{key}</span>
+              <input
+                class="fk-props__input fk-props__input--grow"
+                type="text"
+                value={String(value ?? '')}
+                onChange={(event) =>
+                  this.emitStyles({
+                    [key]: (event.target as HTMLInputElement).value,
+                  })
+                }
+              />
+              <button
+                type="button"
+                class="fk-props__remove"
+                title="Remove style"
+                onClick={() => this.emitStyles({ [key]: undefined })}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <div class="fk-props__style-row">
+            <input
+              class="fk-props__input"
+              type="text"
+              placeholder="property"
+              value={this.newStyleKey}
+              onInput={(event) =>
+                (this.newStyleKey = (event.target as HTMLInputElement).value)
+              }
+            />
+            <input
+              class="fk-props__input fk-props__input--grow"
+              type="text"
+              placeholder="value"
+              onChange={(event) => {
+                const target = event.target as HTMLInputElement;
+                this.addStyle(target.value);
+                target.value = '';
+              }}
+            />
+          </div>
+        </section>
 
         <section class="fk-props__section">
           <h5 class="fk-props__section-title">Rules</h5>

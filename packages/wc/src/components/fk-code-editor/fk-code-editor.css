@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+:host .cm-editor {
+  min-height: 88px;
+  font-size: 0.75rem;
+  border: 1px solid var(--fk-color-border);
+  border-radius: calc(var(--fk-radius) / 2);
+  background: var(--fk-color-surface);
+}
+
+:host .cm-editor.cm-focused {
+  outline: none;
+  border-color: var(--fk-color-primary);
+}
+
+:host .cm-gutters {
+  border-right: 1px solid var(--fk-color-border);
+  background: color-mix(in srgb, var(--fk-color-surface) 70%, transparent);
+  color: var(--fk-color-muted);
+}
+
+:host .cm-content {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}

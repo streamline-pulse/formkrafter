@@ -83,3 +83,36 @@
   min-height: 72px;
   resize: vertical;
 }
+
+.fk-props__style-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fk-props__style-key {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--fk-color-text);
+  min-width: 72px;
+}
+
+.fk-props__input--grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.fk-props__remove {
+  border: none;
+  background: transparent;
+  color: var(--fk-color-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: calc(var(--fk-radius) / 2);
+}
+
+.fk-props__remove:hover {
+  color: var(--fk-color-danger);
+  background: color-mix(in srgb, var(--fk-color-danger) 10%, transparent);
+}

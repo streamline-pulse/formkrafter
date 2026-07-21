@@ -28,22 +28,56 @@
         color: #d7ece8;
         font-size: 0.75rem;
       }
+      .preview {
+        padding: 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #ffffff;
+        max-width: 640px;
+      }
+      #preview-hint {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.85rem;
+      }
     </style>
   </head>
   <body>
     <h1>FormKrafter — builder</h1>
     <fk-form-builder></fk-form-builder>
 
+    <h1>Preview</h1>
+    <section id="preview-shell" class="preview">
+      <p id="preview-hint">Build a form above to preview it here.</p>
+      <fk-form-render id="preview" hidden></fk-form-render>
+    </section>
+
+    <h1>Data</h1>
+    <pre id="data-output">(empty)</pre>
+
     <h1>Spec</h1>
     <pre id="spec-output">(empty)</pre>
 
     <script>
       const builder = document.querySelector('fk-form-builder');
-      const output = document.querySelector('#spec-output');
+      const preview = document.querySelector('#preview');
+      const previewHint = document.querySelector('#preview-hint');
+      const specOutput = document.querySelector('#spec-output');
+      const dataOutput = document.querySelector('#data-output');
 
       builder.addEventListener('specChange', (event) => {
-        output.textContent = JSON.stringify(event.detail.spec, null, 2);
+        const spec = event.detail.spec;
+
+        specOutput.textContent = spec ? JSON.stringify(spec, null, 2) : '(empty)';
         console.log('patches', event.detail.patches);
+
+        preview.spec = spec ? structuredClone(spec) : undefined;
+        preview.hidden = !spec;
+        previewHint.hidden = !!spec;
+      });
+
+      preview.addEventListener('formDataChange', (event) => {
+        dataOutput.textContent = JSON.stringify(event.detail, null, 2);
       });
     </script>
   </body>

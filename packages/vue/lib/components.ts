@@ -10,6 +10,7 @@ import { defineCustomElement as defineFkBrickList } from '@streamline-pulse/form
 import { defineCustomElement as defineFkBrickMoldItem } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-mold-item.js';
 import { defineCustomElement as defineFkBrickNotFound } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-not-found.js';
 import { defineCustomElement as defineFkBrickRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-render.js';
+import { defineCustomElement as defineFkCodeEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-code-editor.js';
 import { defineCustomElement as defineFkDropArea } from '@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js';
 import { defineCustomElement as defineFkEmptyForm } from '@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js';
 import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js';
@@ -71,6 +72,15 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
 ]);
 
 
+export const FkCodeEditor: StencilVueComponent<JSX.FkCodeEditor> = /*@__PURE__*/ defineContainer<JSX.FkCodeEditor>('fk-code-editor', defineFkCodeEditor, [
+  'value',
+  'placeholder',
+  'codeChange'
+], [
+  'codeChange'
+]);
+
+
 export const FkDropArea: StencilVueComponent<JSX.FkDropArea> = /*@__PURE__*/ defineContainer<JSX.FkDropArea>('fk-drop-area', defineFkDropArea, [
   'path',
   'brickDrop'
@@ -106,10 +116,12 @@ export const FkPropertyPanel: StencilVueComponent<JSX.FkPropertyPanel> = /*@__PU
   'brick',
   'fields',
   'brickConfigsChange',
-  'brickValidationsChange'
+  'brickValidationsChange',
+  'brickStylesChange'
 ], [
   'brickConfigsChange',
-  'brickValidationsChange'
+  'brickValidationsChange',
+  'brickStylesChange'
 ]);
 
 

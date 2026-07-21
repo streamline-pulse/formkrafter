@@ -2,6 +2,7 @@ import { h } from '@stencil/core';
 import type { VNode } from '@stencil/core';
 import { createBrick } from './create-brick';
 import { registerBricks } from './registry';
+import { asInlineStyle } from '../utils/style';
 
 export const textInputBrick = createBrick({
   type: 'input',
@@ -10,7 +11,7 @@ export const textInputBrick = createBrick({
   name: 'Text',
   category: 'Inputs',
   render: (props) => (
-    <label class="fk-field">
+    <label class="fk-field" style={asInlineStyle(props.styles)}>
       <span class="fk-field__label">
         {(props.configs?.label as string) ?? props.configs?.key ?? 'Text'}
       </span>
@@ -36,7 +37,7 @@ export const checkboxBrick = createBrick({
   name: 'Checkbox',
   category: 'Inputs',
   render: (props) => (
-    <label class="fk-field fk-field--inline">
+    <label class="fk-field fk-field--inline" style={asInlineStyle(props.styles)}>
       <input
         class="fk-field__checkbox"
         type="checkbox"
@@ -60,7 +61,7 @@ export const groupBrick = createBrick({
   name: 'Group',
   category: 'Layout',
   render: (props) => (
-    <fieldset class="fk-group">
+    <fieldset class="fk-group" style={asInlineStyle(props.styles)}>
       {props.configs?.label ? (
         <legend class="fk-group__legend">{props.configs.label as string}</legend>
       ) : null}

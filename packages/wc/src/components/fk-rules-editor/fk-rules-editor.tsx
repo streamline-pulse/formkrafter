@@ -363,15 +363,11 @@ export class FkRulesEditor {
 
               {mode === 'javaScript' ? (
                 <div class="fk-rule__advanced">
-                  <textarea
-                    class="fk-rule__code"
+                  <fk-code-editor
+                    value={rule.code ?? ''}
                     placeholder="return dataMap.country === 'BJ';"
-                    onChange={(event) =>
-                      this.commitCode(index, (event.target as HTMLTextAreaElement).value)
-                    }
-                  >
-                    {rule.code ?? ''}
-                  </textarea>
+                    onCodeChange={(event) => this.commitCode(index, event.detail)}
+                  />
                   {this.codeErrors[index] ? (
                     <p class="fk-rule__error">{this.codeErrors[index]}</p>
                   ) : null}

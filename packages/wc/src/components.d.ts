@@ -39,6 +39,16 @@ export namespace Components {
         "selectedUid"?: string;
         "utils": Utils;
     }
+    interface FkCodeEditor {
+        /**
+          * @default ''
+         */
+        "placeholder": string;
+        /**
+          * @default ''
+         */
+        "value": string;
+    }
     interface FkDropArea {
         "path": string;
     }
@@ -79,6 +89,10 @@ export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
 export interface FkBrickRenderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkBrickRenderElement;
+}
+export interface FkCodeEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkCodeEditorElement;
 }
 export interface FkDropAreaCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -162,6 +176,23 @@ declare global {
         prototype: HTMLFkBrickRenderElement;
         new (): HTMLFkBrickRenderElement;
     };
+    interface HTMLFkCodeEditorElementEventMap {
+        "codeChange": string;
+    }
+    interface HTMLFkCodeEditorElement extends Components.FkCodeEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkCodeEditorElementEventMap>(type: K, listener: (this: HTMLFkCodeEditorElement, ev: FkCodeEditorCustomEvent<HTMLFkCodeEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkCodeEditorElementEventMap>(type: K, listener: (this: HTMLFkCodeEditorElement, ev: FkCodeEditorCustomEvent<HTMLFkCodeEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkCodeEditorElement: {
+        prototype: HTMLFkCodeEditorElement;
+        new (): HTMLFkCodeEditorElement;
+    };
     interface HTMLFkDropAreaElementEventMap {
         "brickDrop": BrickDropDetail;
     }
@@ -222,6 +253,7 @@ declare global {
     interface HTMLFkPropertyPanelElementEventMap {
         "brickConfigsChange": BrickConfigsChangeDetail;
         "brickValidationsChange": BrickValidationsChangeDetail;
+        "brickStylesChange": BrickStylesChangeDetail;
     }
     interface HTMLFkPropertyPanelElement extends Components.FkPropertyPanel, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkPropertyPanelElementEventMap>(type: K, listener: (this: HTMLFkPropertyPanelElement, ev: FkPropertyPanelCustomEvent<HTMLFkPropertyPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -260,6 +292,7 @@ declare global {
         "fk-brick-mold-item": HTMLFkBrickMoldItemElement;
         "fk-brick-not-found": HTMLFkBrickNotFoundElement;
         "fk-brick-render": HTMLFkBrickRenderElement;
+        "fk-code-editor": HTMLFkCodeEditorElement;
         "fk-drop-area": HTMLFkDropAreaElement;
         "fk-empty-form": HTMLFkEmptyFormElement;
         "fk-form-builder": HTMLFkFormBuilderElement;
@@ -311,6 +344,17 @@ declare namespace LocalJSX {
         "selectedUid"?: string;
         "utils": Utils;
     }
+    interface FkCodeEditor {
+        "onCodeChange"?: (event: FkCodeEditorCustomEvent<string>) => void;
+        /**
+          * @default ''
+         */
+        "placeholder"?: string;
+        /**
+          * @default ''
+         */
+        "value"?: string;
+    }
     interface FkDropArea {
         "onBrickDrop"?: (event: FkDropAreaCustomEvent<BrickDropDetail>) => void;
         "path": string;
@@ -339,6 +383,7 @@ declare namespace LocalJSX {
          */
         "fields"?: string[];
         "onBrickConfigsChange"?: (event: FkPropertyPanelCustomEvent<BrickConfigsChangeDetail>) => void;
+        "onBrickStylesChange"?: (event: FkPropertyPanelCustomEvent<BrickStylesChangeDetail>) => void;
         "onBrickValidationsChange"?: (event: FkPropertyPanelCustomEvent<BrickValidationsChangeDetail>) => void;
     }
     interface FkRulesEditor {
@@ -359,6 +404,10 @@ declare namespace LocalJSX {
         "editable": boolean;
         "selectedUid": string;
     }
+    interface FkCodeEditorAttributes {
+        "value": string;
+        "placeholder": string;
+    }
     interface FkDropAreaAttributes {
         "path": string;
     }
@@ -373,6 +422,7 @@ declare namespace LocalJSX {
         "fk-brick-mold-item": FkBrickMoldItem;
         "fk-brick-not-found": FkBrickNotFound;
         "fk-brick-render": Omit<FkBrickRender, keyof FkBrickRenderAttributes> & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes]?: FkBrickRender[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `attr:${K}`]?: FkBrickRenderAttributes[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `prop:${K}`]?: FkBrickRender[K] };
+        "fk-code-editor": Omit<FkCodeEditor, keyof FkCodeEditorAttributes> & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes]?: FkCodeEditor[K] } & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes as `attr:${K}`]?: FkCodeEditorAttributes[K] } & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes as `prop:${K}`]?: FkCodeEditor[K] };
         "fk-drop-area": Omit<FkDropArea, keyof FkDropAreaAttributes> & { [K in keyof FkDropArea & keyof FkDropAreaAttributes]?: FkDropArea[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `attr:${K}`]?: FkDropAreaAttributes[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `prop:${K}`]?: FkDropArea[K] } & OneOf<"path", FkDropArea["path"], FkDropAreaAttributes["path"]>;
         "fk-empty-form": FkEmptyForm;
         "fk-form-builder": FkFormBuilder;
@@ -390,6 +440,7 @@ declare module "@stencil/core" {
             "fk-brick-mold-item": LocalJSX.IntrinsicElements["fk-brick-mold-item"] & JSXBase.HTMLAttributes<HTMLFkBrickMoldItemElement>;
             "fk-brick-not-found": LocalJSX.IntrinsicElements["fk-brick-not-found"] & JSXBase.HTMLAttributes<HTMLFkBrickNotFoundElement>;
             "fk-brick-render": LocalJSX.IntrinsicElements["fk-brick-render"] & JSXBase.HTMLAttributes<HTMLFkBrickRenderElement>;
+            "fk-code-editor": LocalJSX.IntrinsicElements["fk-code-editor"] & JSXBase.HTMLAttributes<HTMLFkCodeEditorElement>;
             "fk-drop-area": LocalJSX.IntrinsicElements["fk-drop-area"] & JSXBase.HTMLAttributes<HTMLFkDropAreaElement>;
             "fk-empty-form": LocalJSX.IntrinsicElements["fk-empty-form"] & JSXBase.HTMLAttributes<HTMLFkEmptyFormElement>;
             "fk-form-builder": LocalJSX.IntrinsicElements["fk-form-builder"] & JSXBase.HTMLAttributes<HTMLFkFormBuilderElement>;
