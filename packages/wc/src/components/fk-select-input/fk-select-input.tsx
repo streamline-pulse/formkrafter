@@ -176,7 +176,10 @@ export class FkSelectInput {
       <div class={{ 'fk-select': true, 'fk-select--disabled': this.disabled }}>
         <div
           class={{ 'fk-select__trigger': true, 'fk-select__trigger--open': this.open }}
-          onClick={() => this.toggleOpen()}
+          onClick={(event) => {
+            event.preventDefault();
+            this.toggleOpen();
+          }}
         >
           <div class="fk-select__values">
             {selected.length === 0 ? (
@@ -192,6 +195,7 @@ export class FkSelectInput {
                     class="fk-select__chip-remove"
                     disabled={this.disabled}
                     onClick={(event) => {
+                      event.preventDefault();
                       event.stopPropagation();
                       this.unpick(value);
                     }}
@@ -212,6 +216,7 @@ export class FkSelectInput {
               class="fk-select__clear"
               title={fkT('select.clear')}
               onClick={(event) => {
+                event.preventDefault();
                 event.stopPropagation();
                 this.selectValueChange.emit(undefined);
               }}
@@ -254,7 +259,10 @@ export class FkSelectInput {
                       'fk-select__option': true,
                       'fk-select__option--selected': isSelected,
                     }}
-                    onClick={() => this.pick(option)}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      this.pick(option);
+                    }}
                   >
                     <span class="fk-select__option-label">{option.label}</span>
                     {isSelected ? <span class="fk-select__check">✓</span> : null}

@@ -23,6 +23,14 @@ const adorned = (props: WcBrickProps, control: VNode): VNode => {
   );
 };
 
+const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
+  <div class="fk-field" style={asInlineStyle(props.styles)}>
+    <span class="fk-field__label">{labelOf(props, fallback)}</span>
+    {control}
+    {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+  </div>
+);
+
 const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
   <label class="fk-field" style={asInlineStyle(props.styles)}>
     <span class="fk-field__label">{labelOf(props, fallback)}</span>
@@ -176,7 +184,7 @@ export const selectBrick = createBrick({
     options: 'Option 1\nOption 2',
   },
   render: (props) =>
-    field(
+    fieldBlock(
       props,
       'Select',
       <fk-select-input
@@ -206,7 +214,7 @@ export const multiSelectBrick = createBrick({
     options: 'Option 1\nOption 2\nOption 3',
   },
   render: (props) =>
-    field(
+    fieldBlock(
       props,
       'Multi select',
       <fk-select-input

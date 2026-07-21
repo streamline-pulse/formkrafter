@@ -44,7 +44,8 @@
   "scripts": {
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
-    "generate": "stencil generate"
+    "generate": "stencil generate",
+    "test": "bun test"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "catalog:",
@@ -59,6 +60,7 @@
     "@stencil/core": "^4.43.5",
     "@stencil/react-output-target": "^1.6.1",
     "@stencil/vue-output-target": "^0.14.1",
-    "@types/node": "catalog:"
+    "@types/node": "catalog:",
+    "happy-dom": "^20.11.0"
   }
 }
