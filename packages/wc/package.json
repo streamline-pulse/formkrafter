@@ -14,6 +14,7 @@
       "import": "./dist/formkrafter-wc/formkrafter-wc.esm.js",
       "require": "./dist/formkrafter-wc/formkrafter-wc.cjs.js"
     },
+    "./styles.css": "./dist/formkrafter-wc/formkrafter-wc.css",
     "./dist/components": {
       "import": "./dist/components/index.js",
       "types": "./dist/components/index.d.ts"

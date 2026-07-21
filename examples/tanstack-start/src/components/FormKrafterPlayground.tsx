@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
-import '@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.css'
+import '@streamline-pulse/formkrafter-wc/styles.css'
 
 import { m } from '#/paraglide/messages'
 
