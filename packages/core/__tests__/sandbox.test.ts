@@ -1,5 +1,35 @@
 import { describe, expect, test } from "bun:test";
 import { runSandboxed } from "../lib/services/sandbox_interpreter";
+import { FetchDataSourceService } from "../lib/services/data_source_service";
+
+describe("FetchDataSourceService", () => {
+  test("passes headers and caches per url+headers", async () => {
+    const calls: Array<{ url: string; headers?: unknown }> = [];
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = (async (url: string, init?: { headers?: unknown }) => {
+      calls.push({ url: String(url), headers: init?.headers });
+      return {
+        ok: true,
+        json: async () => ["A", "B"],
+      };
+    }) as unknown as typeof fetch;
+
+    try {
+      const service = new FetchDataSourceService();
+      const withAuth = { headers: { Authorization: "Bearer x" } };
+
+      await service.fetchOptions("/api/opts", withAuth);
+      await service.fetchOptions("/api/opts", withAuth);
+      await service.fetchOptions("/api/opts");
+
+      expect(calls).toHaveLength(2);
+      expect(calls[0].headers).toEqual({ Authorization: "Bearer x" });
+      expect(calls[1].headers).toBeUndefined();
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+});
 
 describe("runSandboxed", () => {
   test("evaluates expressions, ternaries and template literals", () => {

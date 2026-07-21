@@ -214,6 +214,24 @@ export class FkPropertyPanel {
       nodes.push(
         this.textField(fkT('panel.url'), configs.optionsUrl, (value) =>
           this.emitConfigs({ optionsUrl: value })
+        ),
+        <label class="fk-props__field">
+          <span class="fk-props__label">{fkT('panel.headers')}</span>
+          <textarea
+            class="fk-props__input fk-props__input--textarea"
+            placeholder={'Authorization: Bearer {token}'}
+            onChange={(event) =>
+              this.emitConfigs({
+                optionsHeaders:
+                  (event.target as HTMLTextAreaElement).value || undefined,
+              })
+            }
+          >
+            {(configs.optionsHeaders as string) ?? ''}
+          </textarea>
+        </label>,
+        this.textField(fkT('panel.searchParam'), configs.searchParam, (value) =>
+          this.emitConfigs({ searchParam: value || undefined })
         )
       );
     }

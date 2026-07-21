@@ -2,6 +2,11 @@ import { Component, Element, Event, Prop, State, Watch, h } from '@stencil/core'
 import type { EventEmitter } from '@stencil/core';
 import { evalBrickCode, services } from '@streamline-pulse/formkrafter-core';
 import { normalizeOptions } from '../../utils/options';
+import {
+  appendSearchParam,
+  interpolateTemplate,
+  parseHeaderLines,
+} from '../../utils/remote';
 import type { SelectOption } from '../../utils/options';
 import { fkT } from '../../i18n/i18n';
 
@@ -23,6 +28,9 @@ export class FkSelectInput {
 
   @State() open = false;
   @State() query = '';
+
+  private lastRemoteSignature?: string;
+  private searchTimer?: ReturnType<typeof setTimeout>;
   @State() remoteOptions: unknown[] = [];
   @State() remoteError?: string;
 
@@ -37,6 +45,26 @@ export class FkSelectInput {
   @Watch('configs')
   onConfigsChange() {
     this.resolveRemote();
+  }
+
+  @Watch('dataMap')
+  onDataMapChange() {
+    this.resolveRemote();
+  }
+
+  private searchParam(): string | undefined {
+    return (this.configs?.searchParam as string) || undefined;
+  }
+
+  private remoteUrl(): string | undefined {
+    const raw = this.configs?.optionsUrl as string | undefined;
+    if (!raw) return undefined;
+
+    let url = interpolateTemplate(raw, this.dataMap);
+    const param = this.searchParam();
+    if (param) url = appendSearchParam(url, param, this.query.trim());
+
+    return url;
   }
 
   private outsideClick = (event: MouseEvent) => {
@@ -70,22 +98,39 @@ export class FkSelectInput {
     return (this.configs?.optionsSource as string) ?? 'static';
   }
 
-  private async resolveRemote() {
+  private async resolveRemote(force = false) {
     if (this.source() !== 'remote') return;
 
-    const url = this.configs?.optionsUrl as string | undefined;
+    const url = this.remoteUrl();
     if (!url) {
       this.remoteOptions = [];
       return;
     }
 
+    const headers = parseHeaderLines(this.configs?.optionsHeaders, this.dataMap);
+    const signature = `${url}|${JSON.stringify(headers ?? {})}`;
+    if (!force && signature === this.lastRemoteSignature) return;
+    this.lastRemoteSignature = signature;
+
     try {
       this.remoteError = undefined;
-      this.remoteOptions = await services.dataSourceService.fetchOptions(url);
+      this.remoteOptions = await services.dataSourceService.fetchOptions(
+        url,
+        headers ? { headers } : undefined
+      );
     } catch (error) {
       this.remoteOptions = [];
       this.remoteError = error instanceof Error ? error.message : String(error);
     }
+  }
+
+  private onSearchInput(value: string) {
+    this.query = value;
+
+    if (this.source() !== 'remote' || !this.searchParam()) return;
+
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => this.resolveRemote(), 250);
   }
 
   private resolve(): { options: SelectOption[]; error?: string } {
@@ -159,6 +204,8 @@ export class FkSelectInput {
   }
 
   private filteredOptions(options: SelectOption[]): SelectOption[] {
+    if (this.source() === 'remote' && this.searchParam()) return options;
+
     const query = this.query.trim().toLowerCase();
     if (!query) return options;
 
@@ -236,7 +283,7 @@ export class FkSelectInput {
               value={this.query}
               ref={(element) => setTimeout(() => element?.focus(), 0)}
               onInput={(event) =>
-                (this.query = (event.target as HTMLInputElement).value)
+                this.onSearchInput((event.target as HTMLInputElement).value)
               }
               onKeyDown={(event) => {
                 if (event.key === 'Escape') this.close();
