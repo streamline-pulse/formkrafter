@@ -108,3 +108,40 @@ select.fk-field__input {
   gap: var(--fk-spacing);
   min-width: 0;
 }
+
+.fk-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+}
+
+.fk-radio {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--fk-spacing) / 2);
+  font-size: 0.9rem;
+  color: var(--fk-color-text);
+}
+
+.fk-radio input {
+  accent-color: var(--fk-color-primary);
+}
+
+.fk-hidden-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px dashed var(--fk-color-border);
+  border-radius: 999px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  color: var(--fk-color-muted);
+}
+
+.fk-content {
+  color: var(--fk-color-text);
+}
+
+.fk-content__line {
+  margin: 0 0 calc(var(--fk-spacing) / 2);
+  font-size: 0.9rem;
+}

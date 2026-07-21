@@ -16,28 +16,59 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
   </label>
 );
 
-export const textInputBrick = createBrick({
-  type: 'input',
-  dataType: 'string',
+const createTextVariant = (params: {
+  id: string;
+  name: string;
+  inputType: string;
+}) =>
+  createBrick({
+    type: 'input',
+    dataType: 'string',
+    id: params.id,
+    name: params.name,
+    category: 'Inputs',
+    defaultConfigs: { label: params.name },
+    render: (props) =>
+      field(
+        props,
+        params.name,
+        <input
+          class="fk-field__input"
+          type={params.inputType}
+          value={(props.data as string) ?? ''}
+          placeholder={props.configs?.placeholder as string}
+          disabled={props.editable || props.disabled}
+          onInput={(event) =>
+            props.onDataChange?.((event.target as HTMLInputElement).value)
+          }
+        />
+      ),
+  });
+
+export const textInputBrick = createTextVariant({
   id: 'text',
   name: 'Text',
-  category: 'Inputs',
-  defaultConfigs: { label: 'Text' },
-  render: (props) =>
-    field(
-      props,
-      'Text',
-      <input
-        class="fk-field__input"
-        type="text"
-        value={(props.data as string) ?? ''}
-        placeholder={props.configs?.placeholder as string}
-        disabled={props.editable || props.disabled}
-        onInput={(event) =>
-          props.onDataChange?.((event.target as HTMLInputElement).value)
-        }
-      />
-    ),
+  inputType: 'text',
+});
+export const emailBrick = createTextVariant({
+  id: 'email',
+  name: 'Email',
+  inputType: 'email',
+});
+export const passwordBrick = createTextVariant({
+  id: 'password',
+  name: 'Password',
+  inputType: 'password',
+});
+export const urlBrick = createTextVariant({
+  id: 'url',
+  name: 'URL',
+  inputType: 'url',
+});
+export const phoneBrick = createTextVariant({
+  id: 'phone',
+  name: 'Phone',
+  inputType: 'tel',
 });
 
 export const textareaBrick = createBrick({
@@ -140,6 +171,96 @@ export const selectBrick = createBrick({
     ),
 });
 
+export const radioBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'radio',
+  name: 'Radio',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Radio', options: 'Option 1\nOption 2' },
+  render: (props) => (
+    <div class="fk-field" style={asInlineStyle(props.styles)}>
+      <span class="fk-field__label">{labelOf(props, 'Radio')}</span>
+      <div class="fk-radio-group" role="radiogroup">
+        {String(props.configs?.options ?? '')
+          .split('\n')
+          .map((option) => option.trim())
+          .filter(Boolean)
+          .map((option) => (
+            <label class="fk-radio" key={option}>
+              <input
+                type="radio"
+                name={props.configs?.key ?? props.path}
+                checked={props.data === option}
+                disabled={props.editable || props.disabled}
+                onChange={() => props.onDataChange?.(option)}
+              />
+              <span>{option}</span>
+            </label>
+          ))}
+      </div>
+      {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+    </div>
+  ),
+});
+
+export const hiddenBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'hidden',
+  name: 'Hidden',
+  category: 'Data',
+  defaultConfigs: {},
+  render: (props) =>
+    props.editable ? (
+      <div class="fk-hidden-chip">hidden: {props.configs?.key}</div>
+    ) : (
+      <input type="hidden" value={(props.data as string) ?? ''} />
+    ),
+});
+
+export const contentBrick = createBrick({
+  type: 'output',
+  dataType: 'void',
+  id: 'content',
+  name: 'Content',
+  category: 'Layout',
+  defaultConfigs: { content: 'Some text…' },
+  render: (props) => (
+    <div class="fk-content" style={asInlineStyle(props.styles)}>
+      {String(props.configs?.content ?? '')
+        .split('\n')
+        .map((line) => (
+          <p class="fk-content__line">{line}</p>
+        ))}
+    </div>
+  ),
+});
+
+export const stepperBrick = createBrick({
+  type: 'panel',
+  dataType: 'void',
+  id: 'stepper',
+  name: 'Stepper',
+  category: 'Layout',
+  render: (props) => {
+    const labels = (props.brickSpec?.children ?? []).map(
+      (child, index) =>
+        (child.configs?.label as string) ?? child.name ?? `Step ${index + 1}`
+    );
+
+    return (
+      <fk-stepper
+        stepLabels={labels}
+        editable={props.editable}
+        style={asInlineStyle(props.styles)}
+      >
+        {props.children as VNode}
+      </fk-stepper>
+    );
+  },
+});
+
 export const checkboxBrick = createBrick({
   type: 'input',
   dataType: 'boolean',
@@ -209,13 +330,21 @@ export const columnBrick = createBrick({
 export function registerDefaultBricks(): void {
   registerBricks([
     textInputBrick,
+    emailBrick,
+    passwordBrick,
+    urlBrick,
+    phoneBrick,
     textareaBrick,
     numberBrick,
     dateBrick,
     selectBrick,
+    radioBrick,
     checkboxBrick,
+    hiddenBrick,
+    contentBrick,
     groupBrick,
     rowBrick,
     columnBrick,
+    stepperBrick,
   ]);
 }

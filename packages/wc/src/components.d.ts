@@ -94,6 +94,16 @@ export namespace Components {
         "disabled": boolean;
         "value"?: string;
     }
+    interface FkStepper {
+        /**
+          * @default false
+         */
+        "editable": boolean;
+        /**
+          * @default []
+         */
+        "stepLabels": string[];
+    }
 }
 export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -320,6 +330,12 @@ declare global {
         prototype: HTMLFkSelectInputElement;
         new (): HTMLFkSelectInputElement;
     };
+    interface HTMLFkStepperElement extends Components.FkStepper, HTMLStencilElement {
+    }
+    var HTMLFkStepperElement: {
+        prototype: HTMLFkStepperElement;
+        new (): HTMLFkStepperElement;
+    };
     interface HTMLElementTagNameMap {
         "fk-brick-actions": HTMLFkBrickActionsElement;
         "fk-brick-list": HTMLFkBrickListElement;
@@ -334,6 +350,7 @@ declare global {
         "fk-property-panel": HTMLFkPropertyPanelElement;
         "fk-rules-editor": HTMLFkRulesEditorElement;
         "fk-select-input": HTMLFkSelectInputElement;
+        "fk-stepper": HTMLFkStepperElement;
     }
 }
 declare namespace LocalJSX {
@@ -443,6 +460,16 @@ declare namespace LocalJSX {
         "onSelectValueChange"?: (event: FkSelectInputCustomEvent<string | undefined>) => void;
         "value"?: string;
     }
+    interface FkStepper {
+        /**
+          * @default false
+         */
+        "editable"?: boolean;
+        /**
+          * @default []
+         */
+        "stepLabels"?: string[];
+    }
 
     interface FkBrickActionsAttributes {
         "path": string;
@@ -468,6 +495,9 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface FkStepperAttributes {
+        "editable": boolean;
+    }
 
     interface IntrinsicElements {
         "fk-brick-actions": Omit<FkBrickActions, keyof FkBrickActionsAttributes> & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes]?: FkBrickActions[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `attr:${K}`]?: FkBrickActionsAttributes[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `prop:${K}`]?: FkBrickActions[K] } & OneOf<"path", FkBrickActions["path"], FkBrickActionsAttributes["path"]>;
@@ -483,6 +513,7 @@ declare namespace LocalJSX {
         "fk-property-panel": FkPropertyPanel;
         "fk-rules-editor": FkRulesEditor;
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
+        "fk-stepper": Omit<FkStepper, keyof FkStepperAttributes> & { [K in keyof FkStepper & keyof FkStepperAttributes]?: FkStepper[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `attr:${K}`]?: FkStepperAttributes[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `prop:${K}`]?: FkStepper[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -502,6 +533,7 @@ declare module "@stencil/core" {
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
             "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;
+            "fk-stepper": LocalJSX.IntrinsicElements["fk-stepper"] & JSXBase.HTMLAttributes<HTMLFkStepperElement>;
         }
     }
 }

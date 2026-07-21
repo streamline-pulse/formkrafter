@@ -26,6 +26,7 @@ import { FkFormRender as FkFormRenderElement, defineCustomElement as defineFkFor
 import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defineFkPropertyPanel } from "@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js";
 import { FkRulesEditor as FkRulesEditorElement, defineCustomElement as defineFkRulesEditor } from "@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js";
 import { FkSelectInput as FkSelectInputElement, defineCustomElement as defineFkSelectInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js";
+import { FkStepper as FkStepperElement, defineCustomElement as defineFkStepper } from "@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js";
 
 export type FkBrickActionsEvents = {
     onBrickRemove: EventName<FkBrickActionsCustomEvent<BrickPathDetail>>,
@@ -202,4 +203,15 @@ export const FkSelectInput: StencilReactComponent<FkSelectInputElement, FkSelect
     react: React,
     events: { onSelectValueChange: 'selectValueChange' } as FkSelectInputEvents,
     defineCustomElement: defineFkSelectInput
+});
+
+export type FkStepperEvents = NonNullable<unknown>;
+
+export const FkStepper: StencilReactComponent<FkStepperElement, FkStepperEvents, Components.FkStepper> = /*@__PURE__*/ createComponent<FkStepperElement, FkStepperEvents, Components.FkStepper>({
+    tagName: 'fk-stepper',
+    elementClass: FkStepperElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: {} as FkStepperEvents,
+    defineCustomElement: defineFkStepper
 });

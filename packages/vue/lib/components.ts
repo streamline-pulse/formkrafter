@@ -18,6 +18,7 @@ import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/for
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
+import { defineCustomElement as defineFkStepper } from '@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js';
 
 
 
@@ -144,6 +145,12 @@ export const FkSelectInput: StencilVueComponent<JSX.FkSelectInput> = /*@__PURE__
   'selectValueChange'
 ], [
   'selectValueChange'
+]);
+
+
+export const FkStepper: StencilVueComponent<JSX.FkStepper> = /*@__PURE__*/ defineContainer<JSX.FkStepper>('fk-stepper', defineFkStepper, [
+  'stepLabels',
+  'editable'
 ]);
 
 

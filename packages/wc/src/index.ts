@@ -13,14 +13,22 @@ export type { WcBrickConfigs, WcBrickProps, BrickRenderFn } from './registry/cre
 export {
   registerDefaultBricks,
   textInputBrick,
+  emailBrick,
+  passwordBrick,
+  urlBrick,
+  phoneBrick,
   textareaBrick,
   numberBrick,
   dateBrick,
   selectBrick,
+  radioBrick,
   checkboxBrick,
+  hiddenBrick,
+  contentBrick,
   groupBrick,
   rowBrick,
   columnBrick,
+  stepperBrick,
 } from './registry/default-bricks';
 export type {
   BrickDropDetail,
