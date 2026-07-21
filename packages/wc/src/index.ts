@@ -29,6 +29,8 @@ export {
   checkboxBrick,
   tagsBrick,
   signatureBrick,
+  addressBrick,
+  fileBrick,
   dataGridBrick,
   hiddenBrick,
   contentBrick,

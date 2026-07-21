@@ -6,9 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
-import { BrickMold, BrickSpec, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
-export { BrickMold, BrickSpec, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export namespace Components {
     interface FkBrickActions {
         "path": string;
@@ -69,6 +69,14 @@ export namespace Components {
         "path": string;
     }
     interface FkEmptyForm {
+    }
+    interface FkFileInput {
+        "accept"?: string;
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        "value"?: UploadedFile;
     }
     interface FkFormBuilder {
         "data"?: Record<string, unknown>;
@@ -168,6 +176,10 @@ export interface FkDataGridCustomEvent<T> extends CustomEvent<T> {
 export interface FkDropAreaCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkDropAreaElement;
+}
+export interface FkFileInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkFileInputElement;
 }
 export interface FkFormBuilderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -312,6 +324,23 @@ declare global {
         prototype: HTMLFkEmptyFormElement;
         new (): HTMLFkEmptyFormElement;
     };
+    interface HTMLFkFileInputElementEventMap {
+        "fileValueChange": UploadedFile | undefined;
+    }
+    interface HTMLFkFileInputElement extends Components.FkFileInput, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkFileInputElementEventMap>(type: K, listener: (this: HTMLFkFileInputElement, ev: FkFileInputCustomEvent<HTMLFkFileInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkFileInputElementEventMap>(type: K, listener: (this: HTMLFkFileInputElement, ev: FkFileInputCustomEvent<HTMLFkFileInputElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkFileInputElement: {
+        prototype: HTMLFkFileInputElement;
+        new (): HTMLFkFileInputElement;
+    };
     interface HTMLFkFormBuilderElementEventMap {
         "specChange": SpecChangeDetail;
     }
@@ -438,6 +467,7 @@ declare global {
         "fk-data-grid": HTMLFkDataGridElement;
         "fk-drop-area": HTMLFkDropAreaElement;
         "fk-empty-form": HTMLFkEmptyFormElement;
+        "fk-file-input": HTMLFkFileInputElement;
         "fk-form-builder": HTMLFkFormBuilderElement;
         "fk-form-render": HTMLFkFormRenderElement;
         "fk-property-panel": HTMLFkPropertyPanelElement;
@@ -523,6 +553,15 @@ declare namespace LocalJSX {
         "path": string;
     }
     interface FkEmptyForm {
+    }
+    interface FkFileInput {
+        "accept"?: string;
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        "onFileValueChange"?: (event: FkFileInputCustomEvent<UploadedFile | undefined>) => void;
+        "value"?: UploadedFile;
     }
     interface FkFormBuilder {
         "data"?: Record<string, unknown>;
@@ -631,6 +670,10 @@ declare namespace LocalJSX {
     interface FkDropAreaAttributes {
         "path": string;
     }
+    interface FkFileInputAttributes {
+        "disabled": boolean;
+        "accept": string;
+    }
     interface FkFormRenderAttributes {
         "editable": boolean;
         "selectedUid": string;
@@ -665,6 +708,7 @@ declare namespace LocalJSX {
         "fk-data-grid": Omit<FkDataGrid, keyof FkDataGridAttributes> & { [K in keyof FkDataGrid & keyof FkDataGridAttributes]?: FkDataGrid[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `attr:${K}`]?: FkDataGridAttributes[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `prop:${K}`]?: FkDataGrid[K] };
         "fk-drop-area": Omit<FkDropArea, keyof FkDropAreaAttributes> & { [K in keyof FkDropArea & keyof FkDropAreaAttributes]?: FkDropArea[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `attr:${K}`]?: FkDropAreaAttributes[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `prop:${K}`]?: FkDropArea[K] } & OneOf<"path", FkDropArea["path"], FkDropAreaAttributes["path"]>;
         "fk-empty-form": FkEmptyForm;
+        "fk-file-input": Omit<FkFileInput, keyof FkFileInputAttributes> & { [K in keyof FkFileInput & keyof FkFileInputAttributes]?: FkFileInput[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `attr:${K}`]?: FkFileInputAttributes[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `prop:${K}`]?: FkFileInput[K] };
         "fk-form-builder": FkFormBuilder;
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
@@ -688,6 +732,7 @@ declare module "@stencil/core" {
             "fk-data-grid": LocalJSX.IntrinsicElements["fk-data-grid"] & JSXBase.HTMLAttributes<HTMLFkDataGridElement>;
             "fk-drop-area": LocalJSX.IntrinsicElements["fk-drop-area"] & JSXBase.HTMLAttributes<HTMLFkDropAreaElement>;
             "fk-empty-form": LocalJSX.IntrinsicElements["fk-empty-form"] & JSXBase.HTMLAttributes<HTMLFkEmptyFormElement>;
+            "fk-file-input": LocalJSX.IntrinsicElements["fk-file-input"] & JSXBase.HTMLAttributes<HTMLFkFileInputElement>;
             "fk-form-builder": LocalJSX.IntrinsicElements["fk-form-builder"] & JSXBase.HTMLAttributes<HTMLFkFormBuilderElement>;
             "fk-form-render": LocalJSX.IntrinsicElements["fk-form-render"] & JSXBase.HTMLAttributes<HTMLFkFormRenderElement>;
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;

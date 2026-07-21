@@ -50,6 +50,12 @@ export { JSONSchemaType } from "./validators/json-schema-type";
 export { services } from "./services";
 export { JsRunnerService } from "./services/js_runner_service";
 export { DataSourceService, FetchDataSourceService } from "./services/data_source_service";
+export {
+    FileLike,
+    UploadedFile,
+    FileUploadService,
+    Base64FileUploadService
+} from "./services/file_upload_service";
 
 // Localized content
 export {

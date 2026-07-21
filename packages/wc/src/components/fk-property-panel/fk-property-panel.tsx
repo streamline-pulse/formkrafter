@@ -370,6 +370,12 @@ export class FkPropertyPanel {
               this.validationRow('max', fkT('panel.max'), 'number'),
             ]
           : null}
+        {dataType === 'array'
+          ? [
+              this.validationRow('minItems', fkT('panel.minItems'), 'number'),
+              this.validationRow('maxItems', fkT('panel.maxItems'), 'number'),
+            ]
+          : null}
 
         <div class="fk-props__vrule">
           <label class="fk-props__field fk-props__field--inline">

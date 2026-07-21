@@ -106,6 +106,12 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
             } else if (validator === "pattern" && typeof value === "string" && value) {
                 property.pattern = value;
                 messages.pattern = message;
+            } else if (validator === "minItems" && value != null) {
+                property.minItems = Number(value);
+                messages.minItems = message;
+            } else if (validator === "maxItems" && value != null) {
+                property.maxItems = Number(value);
+                messages.maxItems = message;
             } else if (validator === "email") {
                 property.format = "email";
                 messages.format = message;

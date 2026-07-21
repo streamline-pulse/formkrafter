@@ -14,6 +14,7 @@ import { defineCustomElement as defineFkCodeEditor } from '@streamline-pulse/for
 import { defineCustomElement as defineFkDataGrid } from '@streamline-pulse/formkrafter-wc/dist/components/fk-data-grid.js';
 import { defineCustomElement as defineFkDropArea } from '@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js';
 import { defineCustomElement as defineFkEmptyForm } from '@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js';
+import { defineCustomElement as defineFkFileInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-file-input.js';
 import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js';
 import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js';
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
@@ -109,6 +110,16 @@ export const FkDropArea: StencilVueComponent<JSX.FkDropArea> = /*@__PURE__*/ def
 
 
 export const FkEmptyForm: StencilVueComponent<JSX.FkEmptyForm> = /*@__PURE__*/ defineContainer<JSX.FkEmptyForm>('fk-empty-form', defineFkEmptyForm);
+
+
+export const FkFileInput: StencilVueComponent<JSX.FkFileInput> = /*@__PURE__*/ defineContainer<JSX.FkFileInput>('fk-file-input', defineFkFileInput, [
+  'value',
+  'disabled',
+  'accept',
+  'fileValueChange'
+], [
+  'fileValueChange'
+]);
 
 
 export const FkFormBuilder: StencilVueComponent<JSX.FkFormBuilder> = /*@__PURE__*/ defineContainer<JSX.FkFormBuilder>('fk-form-builder', defineFkFormBuilder, [

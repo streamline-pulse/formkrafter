@@ -146,6 +146,29 @@ select.fk-field__input {
   font-size: 0.9rem;
 }
 
+.fk-address {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--fk-spacing);
+}
+
+.fk-address__part {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fk-address__part--full {
+  grid-column: 1 / -1;
+}
+
+.fk-address__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fk-color-muted);
+}
+
 .fk-grid-template {
   display: flex;
   flex-direction: column;

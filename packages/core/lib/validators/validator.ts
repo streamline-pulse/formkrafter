@@ -20,6 +20,8 @@ export type Validator =
     | "min"
     | "max"
     | "pattern"
+    | "minItems"
+    | "maxItems"
     | "email"
     | "url"
     | "custom";

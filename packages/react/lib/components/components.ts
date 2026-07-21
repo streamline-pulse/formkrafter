@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type SpecChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type SpecChangeDetail, type UploadedFile } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
@@ -22,6 +22,7 @@ import { FkCodeEditor as FkCodeEditorElement, defineCustomElement as defineFkCod
 import { FkDataGrid as FkDataGridElement, defineCustomElement as defineFkDataGrid } from "@streamline-pulse/formkrafter-wc/dist/components/fk-data-grid.js";
 import { FkDropArea as FkDropAreaElement, defineCustomElement as defineFkDropArea } from "@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js";
 import { FkEmptyForm as FkEmptyFormElement, defineCustomElement as defineFkEmptyForm } from "@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js";
+import { FkFileInput as FkFileInputElement, defineCustomElement as defineFkFileInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-file-input.js";
 import { FkFormBuilder as FkFormBuilderElement, defineCustomElement as defineFkFormBuilder } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js";
 import { FkFormRender as FkFormRenderElement, defineCustomElement as defineFkFormRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js";
 import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defineFkPropertyPanel } from "@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js";
@@ -154,6 +155,17 @@ export const FkEmptyForm: StencilReactComponent<FkEmptyFormElement, FkEmptyFormE
     react: React,
     events: {} as FkEmptyFormEvents,
     defineCustomElement: defineFkEmptyForm
+});
+
+export type FkFileInputEvents = { onFileValueChange: EventName<FkFileInputCustomEvent<UploadedFile | undefined>> };
+
+export const FkFileInput: StencilReactComponent<FkFileInputElement, FkFileInputEvents, Components.FkFileInput> = /*@__PURE__*/ createComponent<FkFileInputElement, FkFileInputEvents, Components.FkFileInput>({
+    tagName: 'fk-file-input',
+    elementClass: FkFileInputElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onFileValueChange: 'fileValueChange' } as FkFileInputEvents,
+    defineCustomElement: defineFkFileInput
 });
 
 export type FkFormBuilderEvents = { onSpecChange: EventName<FkFormBuilderCustomEvent<SpecChangeDetail>> };

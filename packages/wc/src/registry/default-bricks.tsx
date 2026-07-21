@@ -422,6 +422,79 @@ export const radioBrick = createBrick({
   ),
 });
 
+const ADDRESS_PARTS = [
+  { key: 'street', label: () => fkT('address.street'), full: true },
+  { key: 'city', label: () => fkT('address.city'), full: false },
+  { key: 'zip', label: () => fkT('address.zip'), full: false },
+  { key: 'country', label: () => fkT('address.country'), full: false },
+];
+
+export const addressBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'address',
+  name: 'Address',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Address' },
+  render: (props) => {
+    const value = (props.data ?? {}) as Record<string, unknown>;
+
+    return fieldBlock(
+      props,
+      'Address',
+      <div class="fk-address">
+        {ADDRESS_PARTS.map((part) => (
+          <label
+            class={{ 'fk-address__part': true, 'fk-address__part--full': part.full }}
+            key={part.key}
+          >
+            <span class="fk-address__label">{part.label()}</span>
+            <input
+              class="fk-field__input"
+              type="text"
+              value={(value[part.key] as string) ?? ''}
+              disabled={props.editable || props.disabled}
+              onInput={(event) => {
+                const raw = (event.target as HTMLInputElement).value;
+                const next = { ...value, [part.key]: raw || undefined };
+                const cleaned = Object.fromEntries(
+                  Object.entries(next).filter(([, entry]) => entry !== undefined)
+                );
+                props.onDataChange?.(
+                  Object.keys(cleaned).length ? cleaned : undefined
+                );
+              }}
+            />
+          </label>
+        ))}
+      </div>
+    );
+  },
+});
+
+export const fileBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'file',
+  name: 'File',
+  category: 'Data',
+  defaultConfigs: { label: 'File' },
+  render: (props) =>
+    fieldBlock(
+      props,
+      'File',
+      <fk-file-input
+        value={props.data as never}
+        accept={props.configs?.accept as string}
+        disabled={props.editable || props.disabled}
+        onFileValueChange={(event: CustomEvent<unknown>) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
+        }}
+      />
+    ),
+});
+
 export const dataGridBrick = createBrick({
   type: 'collection',
   dataType: 'array',
@@ -604,6 +677,8 @@ export function registerDefaultBricks(): void {
     checkboxBrick,
     tagsBrick,
     signatureBrick,
+    addressBrick,
+    fileBrick,
     dataGridBrick,
     hiddenBrick,
     contentBrick,
