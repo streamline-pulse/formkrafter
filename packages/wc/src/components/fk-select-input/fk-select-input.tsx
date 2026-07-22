@@ -10,6 +10,8 @@ import {
 import type { SelectOption } from '../../utils/options';
 import { fkT } from '../../i18n/i18n';
 
+let selectInstanceCounter = 0;
+
 @Component({
   tag: 'fk-select-input',
   styleUrl: 'fk-select-input.css',
@@ -22,12 +24,17 @@ export class FkSelectInput {
   @Prop() value?: string | string[];
   @Prop() disabled = false;
   @Prop() multiple = false;
+  @Prop() invalid = false;
   @Prop() dataMap?: Record<string, unknown>;
 
   @Event() selectValueChange!: EventEmitter<string | string[] | undefined>;
 
   @State() open = false;
   @State() query = '';
+  @State() activeIndex = 0;
+
+  private instanceId = `fk-select-${++selectInstanceCounter}`;
+  private triggerEl?: HTMLElement;
 
   private lastRemoteSignature?: string;
   private searchTimer?: ReturnType<typeof setTimeout>;
@@ -82,16 +89,92 @@ export class FkSelectInput {
   private toggleOpen() {
     if (this.disabled) return;
     if (this.open) this.close();
-    else {
-      this.open = true;
-      this.query = '';
-      this.bindOutsideClick();
-    }
+    else this.openDropdown();
   }
 
-  private close() {
+  private openDropdown() {
+    if (this.disabled || this.open) return;
+
+    this.open = true;
+    this.query = '';
+
+    const { options } = this.resolve();
+    const selected = this.selectedValues();
+    const selectedIndex = options.findIndex((option) =>
+      selected.includes(option.value)
+    );
+    this.activeIndex = selectedIndex >= 0 ? selectedIndex : 0;
+
+    this.bindOutsideClick();
+  }
+
+  private close(refocusTrigger = false) {
     this.open = false;
     this.unbindOutsideClick();
+    if (refocusTrigger) this.triggerEl?.focus();
+  }
+
+  private moveActive(delta: number, count: number) {
+    if (!count) return;
+    this.activeIndex = (this.activeIndex + delta + count) % count;
+    this.scrollActiveIntoView();
+  }
+
+  private scrollActiveIntoView() {
+    requestAnimationFrame(() => {
+      const active = this.host.querySelector(
+        `#${this.instanceId}-opt-${this.activeIndex}`
+      ) as HTMLElement | null;
+      active?.scrollIntoView?.({ block: 'nearest' });
+    });
+  }
+
+  private onTriggerKeyDown = (event: KeyboardEvent) => {
+    if (this.disabled) return;
+
+    if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key)) {
+      event.preventDefault();
+      this.openDropdown();
+    } else if (event.key === 'Escape' && this.open) {
+      event.preventDefault();
+      this.close();
+    }
+  };
+
+  private onSearchKeyDown(event: KeyboardEvent, filtered: SelectOption[]) {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.moveActive(1, filtered.length);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.moveActive(-1, filtered.length);
+        break;
+      case 'Home':
+        event.preventDefault();
+        this.activeIndex = 0;
+        this.scrollActiveIntoView();
+        break;
+      case 'End':
+        event.preventDefault();
+        this.activeIndex = Math.max(filtered.length - 1, 0);
+        this.scrollActiveIntoView();
+        break;
+      case 'Enter': {
+        event.preventDefault();
+        const option = filtered[this.activeIndex] ?? filtered[0];
+        if (option) this.pick(option);
+        break;
+      }
+      case 'Escape':
+        event.preventDefault();
+        this.close(true);
+        break;
+      case 'Tab':
+        this.close();
+        break;
+    }
   }
 
   private source(): string {
@@ -195,7 +278,7 @@ export class FkSelectInput {
     }
 
     this.selectValueChange.emit(option.value);
-    this.close();
+    this.close(true);
   }
 
   private unpick(value: string) {
@@ -223,6 +306,15 @@ export class FkSelectInput {
       <div class={{ 'fk-select': true, 'fk-select--disabled': this.disabled }}>
         <div
           class={{ 'fk-select__trigger': true, 'fk-select__trigger--open': this.open }}
+          role="combobox"
+          tabIndex={this.disabled ? undefined : 0}
+          aria-expanded={this.open ? 'true' : 'false'}
+          aria-haspopup="listbox"
+          aria-controls={`${this.instanceId}-listbox`}
+          aria-disabled={this.disabled ? 'true' : undefined}
+          aria-invalid={this.invalid ? 'true' : undefined}
+          ref={(element) => (this.triggerEl = element)}
+          onKeyDown={this.onTriggerKeyDown}
           onClick={(event) => {
             event.preventDefault();
             this.toggleOpen();
@@ -240,6 +332,7 @@ export class FkSelectInput {
                   <button
                     type="button"
                     class="fk-select__chip-remove"
+                    aria-label={`${fkT('select.clear')} — ${this.labelOf(value, options)}`}
                     disabled={this.disabled}
                     onClick={(event) => {
                       event.preventDefault();
@@ -262,6 +355,7 @@ export class FkSelectInput {
               type="button"
               class="fk-select__clear"
               title={fkT('select.clear')}
+              aria-label={fkT('select.clear')}
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
@@ -281,31 +375,44 @@ export class FkSelectInput {
               type="text"
               placeholder={fkT('select.search')}
               value={this.query}
-              ref={(element) => setTimeout(() => element?.focus(), 0)}
-              onInput={(event) =>
-                this.onSearchInput((event.target as HTMLInputElement).value)
+              role="combobox"
+              aria-expanded="true"
+              aria-autocomplete="list"
+              aria-controls={`${this.instanceId}-listbox`}
+              aria-activedescendant={
+                filtered.length
+                  ? `${this.instanceId}-opt-${Math.min(this.activeIndex, filtered.length - 1)}`
+                  : undefined
               }
-              onKeyDown={(event) => {
-                if (event.key === 'Escape') this.close();
-                if (event.key === 'Enter' && filtered.length > 0) {
-                  event.preventDefault();
-                  this.pick(filtered[0]);
-                }
+              ref={(element) => setTimeout(() => element?.focus(), 0)}
+              onInput={(event) => {
+                this.activeIndex = 0;
+                this.onSearchInput((event.target as HTMLInputElement).value);
               }}
+              onKeyDown={(event) => this.onSearchKeyDown(event, filtered)}
             />
-            <div class="fk-select__options" role="listbox">
-              {filtered.map((option) => {
+            <div
+              class="fk-select__options"
+              role="listbox"
+              id={`${this.instanceId}-listbox`}
+              aria-multiselectable={this.multiple ? 'true' : undefined}
+            >
+              {filtered.map((option, index) => {
                 const isSelected = selected.includes(option.value);
+                const isActive = index === Math.min(this.activeIndex, filtered.length - 1);
 
                 return (
                   <div
                     key={option.value}
+                    id={`${this.instanceId}-opt-${index}`}
                     role="option"
                     aria-selected={isSelected ? 'true' : 'false'}
                     class={{
                       'fk-select__option': true,
                       'fk-select__option--selected': isSelected,
+                      'fk-select__option--active': isActive,
                     }}
+                    onMouseEnter={() => (this.activeIndex = index)}
                     onClick={(event) => {
                       event.preventDefault();
                       this.pick(option);

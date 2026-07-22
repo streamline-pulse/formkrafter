@@ -160,10 +160,19 @@ export class FkStepper {
                 'fk-stepper__step--active': index === this.active,
                 'fk-stepper__step--done': !this.editable && index < this.active,
               }}
-              onClick={() => this.goToStep(index)}
             >
-              <span class="fk-stepper__index">{index + 1}</span>
-              <span class="fk-stepper__label">{label}</span>
+              <button
+                type="button"
+                class="fk-stepper__step-button"
+                aria-current={index === this.active ? 'step' : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  this.goToStep(index);
+                }}
+              >
+                <span class="fk-stepper__index">{index + 1}</span>
+                <span class="fk-stepper__label">{label}</span>
+              </button>
             </li>
           ))}
         </ol>

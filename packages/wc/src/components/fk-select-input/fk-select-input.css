@@ -142,3 +142,12 @@
   font-size: 0.85rem;
   color: var(--fk-color-muted);
 }
+
+.fk-select__trigger:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--fk-color-primary) 55%, transparent);
+  outline-offset: 1px;
+}
+
+.fk-select__option--active {
+  background: color-mix(in srgb, var(--fk-color-primary) 12%, transparent);
+}

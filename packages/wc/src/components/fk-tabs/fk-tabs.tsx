@@ -113,9 +113,27 @@ export class FkTabs {
               key={`${index}-${label}`}
               type="button"
               role="tab"
+              aria-selected={index === this.active ? 'true' : 'false'}
+              tabIndex={index === this.active ? 0 : -1}
               class={{
                 'fk-tabs__tab': true,
                 'fk-tabs__tab--active': index === this.active,
+              }}
+              onKeyDown={(event) => {
+                const count = this.tabLabels.length;
+                if (!count) return;
+                if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+                  event.preventDefault();
+                  const delta = event.key === 'ArrowRight' ? 1 : -1;
+                  this.goToTab((index + delta + count) % count);
+                  requestAnimationFrame(() => {
+                    (
+                      this.host.querySelector(
+                        '.fk-tabs__tab--active'
+                      ) as HTMLElement | null
+                    )?.focus();
+                  });
+                }
               }}
               onClick={(event) => {
                 event.preventDefault();

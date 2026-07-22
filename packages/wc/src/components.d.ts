@@ -132,6 +132,10 @@ export namespace Components {
         /**
           * @default false
          */
+        "invalid": boolean;
+        /**
+          * @default false
+         */
         "multiple": boolean;
         "value"?: string | string[];
     }
@@ -667,6 +671,10 @@ declare namespace LocalJSX {
         /**
           * @default false
          */
+        "invalid"?: boolean;
+        /**
+          * @default false
+         */
         "multiple"?: boolean;
         "onSelectValueChange"?: (event: FkSelectInputCustomEvent<string | string[] | undefined>) => void;
         "value"?: string | string[];
@@ -748,6 +756,7 @@ declare namespace LocalJSX {
         "value": string | string[];
         "disabled": boolean;
         "multiple": boolean;
+        "invalid": boolean;
     }
     interface FkSignatureInputAttributes {
         "value": string;

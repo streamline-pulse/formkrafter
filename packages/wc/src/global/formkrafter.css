@@ -363,3 +363,16 @@ select.fk-field__input {
   padding-top: 0;
   border-top: none;
 }
+
+.fk-builder__tool:focus-visible,
+.fk-tabs__tab:focus-visible,
+.fk-stepper__button:focus-visible,
+.fk-file__choose:focus-visible,
+.fk-file__remove:focus-visible,
+.fk-select__chip-remove:focus-visible,
+.fk-select__clear:focus-visible,
+.fk-radio input:focus-visible,
+.fk-field__checkbox:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--fk-color-primary) 55%, transparent);
+  outline-offset: 1px;
+}
