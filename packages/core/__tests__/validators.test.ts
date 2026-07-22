@@ -376,6 +376,34 @@ describe("validateBrickSpecDataDetailed", () => {
     expect(validateBrickSpecDataDetailed(spec, { extra: true }).valid).toBe(false);
   });
 
+  test("object bricks with multiple: true validate arrays", () => {
+    const spec = (multiple: boolean): BrickSpec => ({
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "object",
+          id: "file",
+          name: "Docs",
+          configs: { uid: "a", key: "docs", multiple },
+          validations: [{ validator: "required" }],
+        },
+      ],
+    });
+
+    const files = [
+      { name: "a.pdf", type: "application/pdf", size: 1, url: "u1" },
+      { name: "b.pdf", type: "application/pdf", size: 2, url: "u2" },
+    ];
+
+    expect(validateBrickSpecDataDetailed(spec(true), { docs: files }).valid).toBe(true);
+    expect(validateBrickSpecDataDetailed(spec(true), { docs: files[0] }).valid).toBe(false);
+    expect(validateBrickSpecDataDetailed(spec(false), { docs: files[0] }).valid).toBe(true);
+  });
+
   test("an invalid regex pattern does not crash validation", () => {
     const spec: BrickSpec = {
       type: "panel",

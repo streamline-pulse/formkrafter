@@ -118,6 +118,7 @@ export const FkFileInput: StencilVueComponent<JSX.FkFileInput> = /*@__PURE__*/ d
   'disabled',
   'accept',
   'uploadUrl',
+  'multiple',
   'fileValueChange'
 ], [
   'fileValueChange'

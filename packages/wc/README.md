@@ -54,7 +54,7 @@ Underscore-prefixed keys injected via the `data` prop (e.g. `_authToken`) are av
 | Category | Bricks |
 |---|---|
 | **Inputs** (18) | text, email, password, url, phone, textarea, number, date, time, datetime, select, multi-select, radio, select-boxes, checkbox, tags, signature, address |
-| **Data** (3) | file (pluggable upload, per-brick `uploadUrl`), data-grid (repeating rows, per-row validation), hidden |
+| **Data** (3) | file (pluggable upload, per-brick `uploadUrl`, `multiple` mode), data-grid (repeating rows, per-row validation), hidden |
 | **Layout** (7) | content, recap (live summary of the whole form), group (fieldset), row, column, stepper (wizard), tabs |
 
 Notable behaviors:

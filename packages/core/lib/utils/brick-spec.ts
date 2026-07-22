@@ -69,7 +69,10 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
 
     for (const brick of iterateSchemaBricks(brickSpecs)) {
         const key = brick.configs?.key;
-        const dataType = brick.dataType;
+        const dataType =
+            brick.configs?.multiple === true && brick.dataType === "object"
+                ? "array"
+                : brick.dataType;
 
         if (!key || !dataType || dataType === "void") continue;
 

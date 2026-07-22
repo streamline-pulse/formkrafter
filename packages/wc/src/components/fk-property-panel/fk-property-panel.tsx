@@ -290,6 +290,20 @@ export class FkPropertyPanel {
               ),
             ]
           : null}
+        {configs && 'accept' in configs
+          ? this.textField(
+              fkTOr('panel.accept', 'Accepted file types'),
+              configs.accept,
+              (value) => this.emitConfigs({ accept: value })
+            )
+          : null}
+        {configs && 'uploadUrl' in configs
+          ? this.textField(
+              fkTOr('panel.uploadUrl', 'Upload URL'),
+              configs.uploadUrl,
+              (value) => this.emitConfigs({ uploadUrl: value })
+            )
+          : null}
         {this.optionsFields()}
         {Object.entries(configs ?? {})
           .filter(([, value]) => typeof value === 'boolean')
