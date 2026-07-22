@@ -1,5 +1,12 @@
 # FormKrafter
 
+[![CI](https://github.com/streamline-pulse/formkrafter/actions/workflows/ci.yml/badge.svg)](https://github.com/streamline-pulse/formkrafter/actions/workflows/ci.yml)
+[![npm core](https://img.shields.io/npm/v/@streamline-pulse/formkrafter-core?label=core)](https://www.npmjs.com/package/@streamline-pulse/formkrafter-core)
+[![npm wc](https://img.shields.io/npm/v/@streamline-pulse/formkrafter-wc?label=wc)](https://www.npmjs.com/package/@streamline-pulse/formkrafter-wc)
+[![npm react](https://img.shields.io/npm/v/@streamline-pulse/formkrafter-react?label=react)](https://www.npmjs.com/package/@streamline-pulse/formkrafter-react)
+[![npm vue](https://img.shields.io/npm/v/@streamline-pulse/formkrafter-vue?label=vue)](https://www.npmjs.com/package/@streamline-pulse/formkrafter-vue)
+[![license](https://img.shields.io/npm/l/@streamline-pulse/formkrafter-core)](./LICENSE)
+
 A framework-agnostic **drag & drop form builder** and **form renderer**, built once as Web Components and consumed natively from React, Vue, or plain HTML.
 
 Forms are described by a portable JSON **spec** — the single contract shared by the builder (authoring), the renderer (filling), and your backend (revalidation).

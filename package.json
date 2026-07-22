@@ -33,7 +33,7 @@
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
     "version-packages": "changeset version && rm -f bun.lock && bun install",
-    "release": "bun run build && changeset publish"
+    "release": "bun run build && bun publish --cwd packages/core && bun publish --cwd packages/wc && bun publish --cwd packages/react && bun publish --cwd packages/vue"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

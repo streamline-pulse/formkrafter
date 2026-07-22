@@ -76,5 +76,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamline-pulse/formkrafter.git",
+    "directory": "packages/wc"
+  },
+  "homepage": "https://github.com/streamline-pulse/formkrafter/tree/main/packages/wc#readme",
+  "bugs": {
+    "url": "https://github.com/streamline-pulse/formkrafter/issues"
   }
 }

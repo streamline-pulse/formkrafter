@@ -41,5 +41,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamline-pulse/formkrafter.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/streamline-pulse/formkrafter/tree/main/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/streamline-pulse/formkrafter/issues"
   }
 }

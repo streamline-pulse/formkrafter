@@ -40,5 +40,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamline-pulse/formkrafter.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/streamline-pulse/formkrafter/tree/main/packages/vue#readme",
+  "bugs": {
+    "url": "https://github.com/streamline-pulse/formkrafter/issues"
   }
 }
