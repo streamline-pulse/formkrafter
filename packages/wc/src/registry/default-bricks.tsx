@@ -29,11 +29,21 @@ const adorned = (props: WcBrickProps, control: VNode): VNode => {
   );
 };
 
+const fieldError = (props: WcBrickProps): VNode | null =>
+  props.error ? (
+    <span class="fk-field__error" role="alert">
+      {props.error}
+    </span>
+  ) : null;
+
+const invalidAttr = (props: WcBrickProps): { 'aria-invalid'?: string } =>
+  props.error ? { 'aria-invalid': 'true' } : {};
+
 const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
   <div class="fk-field" style={asInlineStyle(props.styles)}>
     <span class="fk-field__label">{labelOf(props, fallback)}</span>
     {control}
-    {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+    {fieldError(props)}
   </div>
 );
 
@@ -41,7 +51,7 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
   <label class="fk-field" style={asInlineStyle(props.styles)}>
     <span class="fk-field__label">{labelOf(props, fallback)}</span>
     {control}
-    {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+    {fieldError(props)}
   </label>
 );
 
@@ -64,6 +74,7 @@ const createTextVariant = (params: {
         adorned(
           props,
           <input
+          {...invalidAttr(props)}
           class="fk-field__input fk-adorned__input"
           type={params.inputType}
           value={(props.data as string) ?? ''}
@@ -115,6 +126,7 @@ export const textareaBrick = createBrick({
       props,
       'Text area',
       <textarea
+        {...invalidAttr(props)}
         class="fk-field__input fk-field__input--textarea"
         value={(props.data as string) ?? ''}
         placeholder={props.configs?.placeholder as string}
@@ -140,6 +152,7 @@ export const numberBrick = createBrick({
       adorned(
         props,
         <input
+        {...invalidAttr(props)}
         class="fk-field__input fk-adorned__input"
         type="number"
         value={props.data == null ? '' : String(props.data)}
@@ -166,6 +179,7 @@ export const dateBrick = createBrick({
       props,
       'Date',
       <input
+        {...invalidAttr(props)}
         class="fk-field__input"
         type="date"
         value={(props.data as string) ?? ''}
@@ -197,6 +211,7 @@ export const selectBrick = createBrick({
         configs={props.configs}
         value={(props.data as string) ?? ''}
         disabled={props.editable || props.disabled}
+        invalid={!!props.error}
         dataMap={props.dataMap}
         onSelectValueChange={(
           event: CustomEvent<string | string[] | undefined>
@@ -228,6 +243,7 @@ export const multiSelectBrick = createBrick({
         value={Array.isArray(props.data) ? (props.data as string[]) : []}
         multiple={true}
         disabled={props.editable || props.disabled}
+        invalid={!!props.error}
         dataMap={props.dataMap}
         onSelectValueChange={(
           event: CustomEvent<string | string[] | undefined>
@@ -411,7 +427,7 @@ export const radioBrick = createBrick({
   render: (props) => (
     <div class="fk-field" style={asInlineStyle(props.styles)}>
       <span class="fk-field__label">{labelOf(props, 'Radio')}</span>
-      <div class="fk-radio-group" role="radiogroup">
+      <div class="fk-radio-group" role="radiogroup" {...invalidAttr(props)}>
         {staticOptions(props).map((option) => (
           <label class="fk-radio" key={option.value}>
             <input
