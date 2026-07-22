@@ -157,7 +157,7 @@ export const FkEmptyForm: StencilReactComponent<FkEmptyFormElement, FkEmptyFormE
     defineCustomElement: defineFkEmptyForm
 });
 
-export type FkFileInputEvents = { onFileValueChange: EventName<FkFileInputCustomEvent<UploadedFile | undefined>> };
+export type FkFileInputEvents = { onFileValueChange: EventName<FkFileInputCustomEvent<UploadedFile | UploadedFile[] | undefined>> };
 
 export const FkFileInput: StencilReactComponent<FkFileInputElement, FkFileInputEvents, Components.FkFileInput> = /*@__PURE__*/ createComponent<FkFileInputElement, FkFileInputEvents, Components.FkFileInput>({
     tagName: 'fk-file-input',

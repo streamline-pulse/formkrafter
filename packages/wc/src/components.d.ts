@@ -77,8 +77,12 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
+        /**
+          * @default false
+         */
+        "multiple": boolean;
         "uploadUrl"?: string;
-        "value"?: UploadedFile;
+        "value"?: UploadedFile | UploadedFile[];
     }
     interface FkFormBuilder {
         "data"?: Record<string, unknown>;
@@ -341,7 +345,7 @@ declare global {
         new (): HTMLFkEmptyFormElement;
     };
     interface HTMLFkFileInputElementEventMap {
-        "fileValueChange": UploadedFile | undefined;
+        "fileValueChange": UploadedFile | UploadedFile[] | undefined;
     }
     interface HTMLFkFileInputElement extends Components.FkFileInput, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkFileInputElementEventMap>(type: K, listener: (this: HTMLFkFileInputElement, ev: FkFileInputCustomEvent<HTMLFkFileInputElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -601,9 +605,13 @@ declare namespace LocalJSX {
           * @default false
          */
         "disabled"?: boolean;
-        "onFileValueChange"?: (event: FkFileInputCustomEvent<UploadedFile | undefined>) => void;
+        /**
+          * @default false
+         */
+        "multiple"?: boolean;
+        "onFileValueChange"?: (event: FkFileInputCustomEvent<UploadedFile | UploadedFile[] | undefined>) => void;
         "uploadUrl"?: string;
-        "value"?: UploadedFile;
+        "value"?: UploadedFile | UploadedFile[];
     }
     interface FkFormBuilder {
         "data"?: Record<string, unknown>;
@@ -726,6 +734,7 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "accept": string;
         "uploadUrl": string;
+        "multiple": boolean;
     }
     interface FkFormRenderAttributes {
         "editable": boolean;

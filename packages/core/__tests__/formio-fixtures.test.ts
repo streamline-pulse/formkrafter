@@ -27,7 +27,6 @@ const EXPECTED_WARNING_PATTERNS = [
     "button",
     "skipped — only",
     "has no valueProperty",
-    "single file kept",
     "unsupported component type",
     "approximated with a date input",
     "customConditional",
@@ -119,9 +118,13 @@ describe("public Form.io fixtures", () => {
         expect(statuts.configs?.uploadUrl).toBe("https://api.example.org/uploads");
         expect(statuts.configs?.accept).toBe(".pdf");
 
+        const photos = brickByKey(spec, "photos_des_activites");
+        expect(photos.dataType).toBe("array");
+        expect(photos.configs?.multiple).toBe(true);
+
         expect(
             warnings.some((warning) => warning.includes("single file kept"))
-        ).toBe(true);
+        ).toBe(false);
 
         const grid = brickByKey(spec, "lignes_budgetaires");
         expect(grid.type).toBe("collection");

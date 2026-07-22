@@ -1,15 +1,19 @@
 import { Component, Element, Event, Prop, Watch } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
-import { EditorState } from '@codemirror/state';
-import {
-  EditorView,
-  keymap,
-  lineNumbers,
-  placeholder as cmPlaceholder,
-} from '@codemirror/view';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language';
-import { javascript } from '@codemirror/lang-javascript';
+import type { EditorView } from '@codemirror/view';
+
+const fetchCodeMirror = () =>
+  Promise.all([
+    import('@codemirror/state'),
+    import('@codemirror/view'),
+    import('@codemirror/commands'),
+    import('@codemirror/language'),
+    import('@codemirror/lang-javascript'),
+  ]);
+
+let codeMirrorModules: ReturnType<typeof fetchCodeMirror> | undefined;
+
+const loadCodeMirror = () => (codeMirrorModules ??= fetchCodeMirror());
 
 @Component({
   tag: 'fk-code-editor',
@@ -25,9 +29,20 @@ export class FkCodeEditor {
   @Event() codeChange!: EventEmitter<string>;
 
   private view?: EditorView;
+  private disconnected = false;
 
-  componentDidLoad() {
-    this.view = new EditorView({
+  async componentDidLoad() {
+    const [
+      { EditorState },
+      { EditorView: View, keymap, lineNumbers, placeholder: cmPlaceholder },
+      { defaultKeymap, history, historyKeymap },
+      { defaultHighlightStyle, syntaxHighlighting },
+      { javascript },
+    ] = await loadCodeMirror();
+
+    if (this.disconnected) return;
+
+    this.view = new View({
       parent: this.host,
       state: EditorState.create({
         doc: this.value,
@@ -38,7 +53,7 @@ export class FkCodeEditor {
           javascript(),
           syntaxHighlighting(defaultHighlightStyle),
           cmPlaceholder(this.placeholder),
-          EditorView.domEventHandlers({
+          View.domEventHandlers({
             blur: () => this.emitIfChanged(),
           }),
         ],
@@ -66,6 +81,7 @@ export class FkCodeEditor {
   }
 
   disconnectedCallback() {
+    this.disconnected = true;
     this.view?.destroy();
     this.view = undefined;
   }

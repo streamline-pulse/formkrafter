@@ -486,7 +486,7 @@ export const fileBrick = createBrick({
   id: 'file',
   name: 'File',
   category: 'Data',
-  defaultConfigs: { label: 'File' },
+  defaultConfigs: { label: 'File', accept: '', uploadUrl: '', multiple: false },
   render: (props) =>
     fieldBlock(
       props,
@@ -495,6 +495,7 @@ export const fileBrick = createBrick({
         value={props.data as never}
         accept={props.configs?.accept as string}
         uploadUrl={props.configs?.uploadUrl as string}
+        multiple={props.configs?.multiple === true}
         disabled={props.editable || props.disabled}
         onFileValueChange={(event: CustomEvent<unknown>) => {
           event.stopPropagation();

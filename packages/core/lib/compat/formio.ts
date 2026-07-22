@@ -350,11 +350,7 @@ function convertComponent(
         if (component.filePattern && component.filePattern !== "*") {
             configs.accept = component.filePattern;
         }
-        if (component.multiple) {
-            ctx.warn(
-                `file "${component.key ?? "?"}" allows multiple files — single file kept (multi-file uploads are not supported yet)`
-            );
-        }
+        configs.multiple = component.multiple === true;
         if (component.storage === "url" && component.url) {
             configs.uploadUrl = component.url;
             ctx.uploadUrls.set(
@@ -365,7 +361,7 @@ function convertComponent(
         return [
             withCommon(component, ctx, {
                 type: "input",
-                dataType: "object",
+                dataType: component.multiple ? "array" : "object",
                 id: "file",
                 name: "File",
                 configs,
