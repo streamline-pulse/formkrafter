@@ -3,6 +3,7 @@ import type { VNode } from '@stencil/core';
 import { createBrick } from './create-brick';
 import { registerBricks } from './registry';
 import { asInlineStyle } from '../utils/style';
+import { normalizeOptions } from '../utils/options';
 import { fkT } from '../i18n/i18n';
 import { resolveLocalizedText } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
@@ -245,11 +246,14 @@ export const datetimeBrick = createTextVariant({
   inputType: 'datetime-local',
 });
 
-const staticOptions = (raw: unknown): string[] =>
-  String(raw ?? '')
-    .split('\n')
-    .map((option) => option.trim())
-    .filter(Boolean);
+const staticOptions = (props: {
+  configs?: Record<string, unknown>;
+}): { label: string; value: string }[] =>
+  normalizeOptions(
+    props.configs?.options,
+    typeof props.configs?.labelKey === 'string' ? props.configs.labelKey : 'label',
+    typeof props.configs?.valueKey === 'string' ? props.configs.valueKey : 'value'
+  );
 
 export const selectBoxesBrick = createBrick({
   type: 'input',
@@ -265,21 +269,21 @@ export const selectBoxesBrick = createBrick({
       <div class="fk-field" style={asInlineStyle(props.styles)}>
         <span class="fk-field__label">{labelOf(props, 'Select boxes')}</span>
         <div class="fk-radio-group">
-          {staticOptions(props.configs?.options).map((option) => (
-            <label class="fk-radio" key={option}>
+          {staticOptions(props).map((option) => (
+            <label class="fk-radio" key={option.value}>
               <input
                 type="checkbox"
-                checked={selected.includes(option)}
+                checked={selected.includes(option.value)}
                 disabled={props.editable || props.disabled}
                 onChange={(event) => {
                   const checked = (event.target as HTMLInputElement).checked;
                   const next = checked
-                    ? [...selected, option]
-                    : selected.filter((value) => value !== option);
+                    ? [...selected, option.value]
+                    : selected.filter((value) => value !== option.value);
                   props.onDataChange?.(next.length ? next : undefined);
                 }}
               />
-              <span>{option}</span>
+              <span>{option.label}</span>
             </label>
           ))}
         </div>
@@ -404,22 +408,18 @@ export const radioBrick = createBrick({
     <div class="fk-field" style={asInlineStyle(props.styles)}>
       <span class="fk-field__label">{labelOf(props, 'Radio')}</span>
       <div class="fk-radio-group" role="radiogroup">
-        {String(props.configs?.options ?? '')
-          .split('\n')
-          .map((option) => option.trim())
-          .filter(Boolean)
-          .map((option) => (
-            <label class="fk-radio" key={option}>
-              <input
-                type="radio"
-                name={props.configs?.key ?? props.path}
-                checked={props.data === option}
-                disabled={props.editable || props.disabled}
-                onChange={() => props.onDataChange?.(option)}
-              />
-              <span>{option}</span>
-            </label>
-          ))}
+        {staticOptions(props).map((option) => (
+          <label class="fk-radio" key={option.value}>
+            <input
+              type="radio"
+              name={props.configs?.key ?? props.path}
+              checked={props.data === option.value}
+              disabled={props.editable || props.disabled}
+              onChange={() => props.onDataChange?.(option.value)}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
       </div>
       {props.error ? <span class="fk-field__error">{props.error}</span> : null}
     </div>

@@ -26,19 +26,35 @@ export interface FormioComponent {
     values?: Array<{ label?: string; value?: string }>;
     data?: {
         values?: Array<{ label?: string; value?: string }>;
+        json?: Array<Record<string, unknown>>;
         url?: string;
     };
     dataSrc?: string;
     valueProperty?: string;
     template?: string;
     searchField?: string;
+    storage?: string;
+    url?: string;
+    filePattern?: string;
+    logic?: Array<{
+        name?: string;
+        trigger?: { type?: string; javascript?: string; simple?: unknown };
+        actions?: Array<{
+            name?: string;
+            type?: string;
+            state?: boolean;
+            property?: { value?: string; type?: string };
+        }>;
+    }>;
     validate?: {
         required?: boolean;
         minLength?: number;
         maxLength?: number;
         min?: number;
         max?: number;
+        step?: number | string;
         pattern?: string;
+        custom?: string;
         customMessage?: string;
     };
     conditional?: {
@@ -90,7 +106,6 @@ const INPUT_TYPE_MAP: Record<
     radio: { id: "radio", dataType: "string", name: "Radio" },
     signature: { id: "signature", dataType: "string", name: "Signature" },
     address: { id: "address", dataType: "string", name: "Address" },
-    file: { id: "file", dataType: "array", name: "File" },
 };
 
 export function convertFormioForm(form: FormioForm): FormioConversionResult {
@@ -322,6 +337,28 @@ function convertComponent(
         ];
     }
 
+    if (type === "file") {
+        const configs = baseConfigs(component, ctx);
+        if (component.filePattern && component.filePattern !== "*") {
+            configs.accept = component.filePattern;
+        }
+        if (component.multiple) configs.multiple = true;
+        if (component.storage === "url" && component.url) {
+            ctx.warn(
+                `file "${component.key ?? "?"}" uploaded to "${component.url}" — configure services.fileUploadService to reproduce this upload`
+            );
+        }
+        return [
+            withCommon(component, ctx, {
+                type: "input",
+                dataType: "array",
+                id: "file",
+                name: "File",
+                configs,
+            }),
+        ];
+    }
+
     const mapped = INPUT_TYPE_MAP[type];
     if (mapped) {
         if (type === "day") {
@@ -366,6 +403,9 @@ function convertSelect(component: FormioComponent, ctx: Converter): BrickSpec {
         const templateKey = labelKeyFromTemplate(component.template);
         if (templateKey) configs.labelKey = templateKey;
         if (component.searchField) configs.searchParam = component.searchField;
+    } else if (component.dataSrc === "json" && Array.isArray(component.data?.json)) {
+        configs.optionsSource = "static";
+        configs.options = jsonOptions(component, ctx);
     } else {
         if (component.dataSrc && !["values", "json", ""].includes(component.dataSrc)) {
             ctx.warn(
@@ -383,6 +423,28 @@ function convertSelect(component: FormioComponent, ctx: Converter): BrickSpec {
         name: multiple ? "Multi select" : "Select",
         configs,
     });
+}
+
+function jsonOptions(
+    component: FormioComponent,
+    ctx: Converter
+): Array<{ label: string; value: string }> {
+    const items = component.data?.json ?? [];
+    const labelKey = labelKeyFromTemplate(component.template) ?? "label";
+    let valueKey = component.valueProperty;
+    if (!valueKey) {
+        const first = items[0] ?? {};
+        valueKey = "value" in first ? "value" : labelKey;
+        if (valueKey === labelKey) {
+            ctx.warn(
+                `select "${component.key ?? "?"}" has no valueProperty — option labels are used as values`
+            );
+        }
+    }
+    return items.map((item) => ({
+        label: String(item[labelKey] ?? item[valueKey!] ?? ""),
+        value: String(item[valueKey!] ?? item[labelKey] ?? ""),
+    }));
 }
 
 function labelKeyFromTemplate(template?: string): string | undefined {
@@ -414,6 +476,9 @@ function baseConfigs(
     if (component.defaultValue !== undefined && component.defaultValue !== "") {
         configs.defaultValue = component.defaultValue;
     }
+    if (component.validate?.step != null && component.validate.step !== "") {
+        configs.step = component.validate.step;
+    }
     if (component.disabled) configs.disabled = true;
     if (component.prefix) configs.prefix = component.prefix;
     if (component.suffix) configs.suffix = component.suffix;
@@ -425,30 +490,80 @@ function withCommon(
     ctx: Converter,
     brick: BrickSpec
 ): BrickSpec {
-    const validations = convertValidations(component);
+    const validations = convertValidations(component, ctx);
     if (validations.length) brick.validations = validations;
 
-    const rules = convertConditional(component, ctx);
-    if (rules.length) brick.rules = rules;
+    const rules = [...convertConditional(component, ctx)];
 
     if (component.hidden) {
-        brick.rules = [
-            ...(brick.rules ?? []),
-            {
-                name: "always hidden",
-                type: "jsonLogic",
-                logic: true,
-                effects: [
-                    { property: { target: "hidden", type: "boolean" }, boolean: true },
-                ],
-            },
-        ];
+        rules.push({
+            name: "always hidden",
+            type: "jsonLogic",
+            logic: true,
+            effects: [
+                { property: { target: "hidden", type: "boolean" }, boolean: true },
+            ],
+        });
     }
+
+    rules.push(...convertLogic(component, ctx));
+
+    if (rules.length) brick.rules = rules;
 
     return brick;
 }
 
-function convertValidations(component: FormioComponent): Validation[] {
+function convertLogic(component: FormioComponent, ctx: Converter): Rule[] {
+    const rules: Rule[] = [];
+
+    for (const logic of component.logic ?? []) {
+        const trigger = logic.trigger;
+        if (trigger?.type !== "javascript" || !trigger.javascript) {
+            ctx.warn(
+                `logic "${logic.name ?? "?"}" on "${component.key ?? "?"}" skipped — only javascript triggers are converted`
+            );
+            continue;
+        }
+
+        const effects = [];
+        for (const action of logic.actions ?? []) {
+            if (action.type === "property" && action.property?.value) {
+                effects.push({
+                    property: {
+                        target: action.property.value,
+                        type: "boolean" as const,
+                    },
+                    boolean: action.state === true,
+                });
+            } else {
+                ctx.warn(
+                    `logic action "${action.name ?? action.type ?? "?"}" on "${component.key ?? "?"}" skipped — only property actions are converted`
+                );
+            }
+        }
+        if (!effects.length) continue;
+
+        rules.push({
+            name: logic.name ?? `formio logic (${component.key ?? "?"})`,
+            type: "javaScript",
+            code: [
+                "const data = dataMap;",
+                "const row = dataMap;",
+                "let result = false;",
+                trigger.javascript,
+                "return result === true;",
+            ].join("\n"),
+            effects,
+        });
+    }
+
+    return rules;
+}
+
+function convertValidations(
+    component: FormioComponent,
+    ctx: Converter
+): Validation[] {
     const source = component.validate ?? {};
     const validations: Validation[] = [];
     const message = source.customMessage;
@@ -458,14 +573,41 @@ function convertValidations(component: FormioComponent): Validation[] {
         validations.push(validation);
     };
 
+    const bound = (raw: unknown): number | undefined => {
+        if (raw == null || raw === "" || raw === false) return undefined;
+        const parsed = Number(raw);
+        return Number.isFinite(parsed) ? parsed : undefined;
+    };
+
     if (source.required) push({ validator: "required" });
-    if (source.minLength != null) push({ validator: "minLength", value: source.minLength });
-    if (source.maxLength != null) push({ validator: "maxLength", value: source.maxLength });
-    if (source.min != null) push({ validator: "min", value: source.min });
-    if (source.max != null) push({ validator: "max", value: source.max });
+    const minLength = bound(source.minLength);
+    if (minLength !== undefined) push({ validator: "minLength", value: minLength });
+    const maxLength = bound(source.maxLength);
+    if (maxLength !== undefined) push({ validator: "maxLength", value: maxLength });
+    const min = bound(source.min);
+    if (min !== undefined) push({ validator: "min", value: min });
+    const max = bound(source.max);
+    if (max !== undefined) push({ validator: "max", value: max });
     if (source.pattern) push({ validator: "pattern", value: source.pattern });
     if (component.type === "email") push({ validator: "email" });
     if (component.type === "url") push({ validator: "url" });
+
+    if (source.custom) {
+        ctx.warn(
+            `validate.custom on "${component.key ?? "?"}" converted automatically — review the generated custom validator`
+        );
+        validations.push({
+            validator: "custom",
+            customValidator: [
+                "const input = value;",
+                "const data = dataMap;",
+                "const row = dataMap;",
+                "let valid = true;",
+                source.custom,
+                "return valid;",
+            ].join("\n"),
+        });
+    }
 
     return validations;
 }
