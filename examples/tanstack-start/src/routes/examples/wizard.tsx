@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/wizard')({
       kicker={m.navg_render}
       title={m.ex_wizard_title}
       intro={m.ex_wizard_intro}
+      templateId="wizard"
     />
   ),
 })

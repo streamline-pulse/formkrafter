@@ -2,17 +2,25 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { m } from '#/paraglide/messages'
+import { templates } from '#/examples/catalog'
 
 const FormKrafterPlayground = lazy(
   () => import('#/components/FormKrafterPlayground')
 )
 
-export const Route = createFileRoute('/playground')({ component: Playground })
+export const Route = createFileRoute('/playground')({
+  validateSearch: (search: Record<string, unknown>): { template?: string } =>
+    typeof search.template === 'string' ? { template: search.template } : {},
+  component: Playground,
+})
 
 function Playground() {
+  const { template } = Route.useSearch()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => setMounted(true), [])
+
+  const initialSpec = template ? templates[template] : undefined
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -26,7 +34,7 @@ function Playground() {
 
       {mounted ? (
         <Suspense fallback={<p className="text-muted-foreground">{m.loading()}</p>}>
-          <FormKrafterPlayground />
+          <FormKrafterPlayground key={template ?? 'blank'} initialSpec={initialSpec} />
         </Suspense>
       ) : (
         <p className="text-muted-foreground">{m.loading()}</p>

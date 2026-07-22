@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/custom-brick')({
       kicker={m.navg_advanced}
       title={m.ex_custom_title}
       intro={m.ex_custom_intro}
+      templateId="custom-brick"
     />
   ),
 })

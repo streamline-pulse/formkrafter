@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/server-validation')({
       kicker={m.navg_advanced}
       title={m.ex_server_title}
       intro={m.ex_server_intro}
+      templateId="simple-form"
     />
   ),
 })

@@ -64,5 +64,12 @@
   "demo_server": "Verdict serveur",
   "demo_run_server": "Soumettre & revalider côté serveur",
   "theming_default": "Tokens par défaut",
-  "theming_brand": "Sous-arbre de marque"
+  "theming_brand": "Sous-arbre de marque",
+  "home_examples_title": "Parcourir les exemples",
+  "home_playground_hint": "Ou partez d'une page blanche dans le playground.",
+  "ex_view_spec": "Voir la spec",
+  "ex_open_playground": "Ouvrir dans le playground",
+  "ex_copy_spec": "Copier le JSON",
+  "ex_copied_spec": "Copié !",
+  "ex_view_page": "Voir l'exemple"
 }

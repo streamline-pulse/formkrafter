@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/remote-selects')({
       kicker={m.navg_data}
       title={m.ex_remote_title}
       intro={m.ex_remote_intro}
+      templateId="remote-selects"
     />
   ),
 })

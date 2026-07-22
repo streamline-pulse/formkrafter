@@ -64,5 +64,12 @@
   "demo_server": "Server verdict",
   "demo_run_server": "Submit & revalidate on server",
   "theming_default": "Default tokens",
-  "theming_brand": "Branded dark subtree"
+  "theming_brand": "Branded dark subtree",
+  "home_examples_title": "Browse the examples",
+  "home_playground_hint": "Or start from a blank canvas in the playground.",
+  "ex_view_spec": "View the spec",
+  "ex_open_playground": "Open in the playground",
+  "ex_copy_spec": "Copy JSON",
+  "ex_copied_spec": "Copied!",
+  "ex_view_page": "View the example"
 }

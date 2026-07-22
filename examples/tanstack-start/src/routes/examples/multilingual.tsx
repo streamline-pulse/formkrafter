@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/multilingual')({
       kicker={m.navg_render}
       title={m.ex_i18nform_title}
       intro={m.ex_i18nform_intro}
+      templateId="multilingual"
     />
   ),
 })

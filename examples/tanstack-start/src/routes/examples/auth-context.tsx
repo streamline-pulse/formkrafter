@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/auth-context')({
       kicker={m.navg_data}
       title={m.ex_auth_title}
       intro={m.ex_auth_intro}
+      templateId="auth-context"
     />
   ),
 })

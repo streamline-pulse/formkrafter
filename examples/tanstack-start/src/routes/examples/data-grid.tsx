@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/data-grid')({
       kicker={m.navg_data}
       title={m.ex_grid_title}
       intro={m.ex_grid_intro}
+      templateId="data-grid"
     />
   ),
 })

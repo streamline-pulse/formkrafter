@@ -13,6 +13,7 @@ export const Route = createFileRoute('/examples/theming')({
       kicker={m.navg_advanced}
       title={m.ex_theming_title}
       intro={m.ex_theming_intro}
+      templateId="simple-form"
     />
   ),
 })

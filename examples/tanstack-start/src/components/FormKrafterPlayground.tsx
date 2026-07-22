@@ -16,11 +16,19 @@ import type {
 } from '@streamline-pulse/formkrafter-core'
 import type { DataChangeDetail, SpecChangeDetail } from '@streamline-pulse/formkrafter-wc'
 
-export default function FormKrafterPlayground() {
+interface FormKrafterPlaygroundProps {
+  initialSpec?: BrickSpec
+}
+
+export default function FormKrafterPlayground({
+  initialSpec,
+}: FormKrafterPlaygroundProps) {
   const { locale } = useLocale()
   setFkTranslations(locale === 'fr' ? frFkTranslations : {})
 
-  const [spec, setSpec] = useState<BrickSpec | undefined>(undefined)
+  const [spec, setSpec] = useState<BrickSpec | undefined>(
+    initialSpec ? structuredClone(initialSpec) : undefined
+  )
   const [result, setResult] = useState<DataChangeDetail | undefined>(undefined)
   const [validity, setValidity] = useState<ValidationResult | undefined>(undefined)
   const renderRef = useRef<ComponentRef<typeof FkFormRender>>(null)
@@ -37,7 +45,11 @@ export default function FormKrafterPlayground() {
 
   return (
     <div className="space-y-8">
-      <FkFormBuilder onSpecChange={handleSpecChange} locales={['en', 'fr']} />
+      <FkFormBuilder
+        spec={initialSpec ? structuredClone(initialSpec) : undefined}
+        onSpecChange={handleSpecChange}
+        locales={['en', 'fr']}
+      />
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">{m.playground_preview()}</h2>
