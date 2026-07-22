@@ -22,6 +22,16 @@
   --fk-color-shadow: rgba(0, 0, 0, 0.5);
 }
 
+[data-fk-theme='light'] {
+  --fk-color-primary: #328f97;
+  --fk-color-surface: #ffffff;
+  --fk-color-border: #d5dde2;
+  --fk-color-text: #1c2b33;
+  --fk-color-muted: #64748b;
+  --fk-color-danger: #dc2626;
+  --fk-color-shadow: rgba(0, 0, 0, 0.12);
+}
+
 .fk-field {
   display: flex;
   flex-direction: column;

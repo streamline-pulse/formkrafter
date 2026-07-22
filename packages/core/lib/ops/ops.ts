@@ -1,4 +1,4 @@
-import { applyPatch, type Operation } from "fast-json-patch";
+import { applyPatch, type Operation } from "../utils/fast-json-patch";
 import type { BrickSpec } from "../utils/brick-spec";
 import type { BrickBaseConfigs } from "../utils/common-brick-props";
 import type { BrickStyles } from "../utils/brick-styles";

@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { ExamplePage } from '#/components/ExamplePage'
 import { m } from '#/paraglide/messages'
+import '#/lib/server-validate'
 
 const Demo = lazy(() => import('#/components/examples/ServerValidationDemo'))
 

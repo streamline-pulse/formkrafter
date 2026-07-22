@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p .",
+    "build": "rm -rf dist && bun build lib/index.ts --outdir dist --format esm --packages external --sourcemap=linked && tsc -p . --emitDeclarationOnly",
     "test": "bun test"
   },
   "dependencies": {

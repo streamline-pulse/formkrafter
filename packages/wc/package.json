@@ -11,7 +11,7 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/components/index.js",
       "require": "./dist/index.cjs.js"
     },
     "./styles.css": "./dist/formkrafter-wc/formkrafter-wc.css",
