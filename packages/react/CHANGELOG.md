@@ -1,5 +1,13 @@
 # @streamline-pulse/formkrafter-react
 
+## 0.1.1
+
+### Patch Changes
+
+- Fix internal dependency ranges: 0.1.0 was published with workspace dependencies resolved to the non-existent 0.0.1 (stale lockfile at publish time). No code changes.
+- Updated dependencies
+  - @streamline-pulse/formkrafter-wc@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
