@@ -109,6 +109,11 @@ export const exampleCatalog: ExampleGroup[] = [
         intro: () => m.ex_theming_intro(),
         templateId: 'simple-form',
       },
+      {
+        slug: 'formio-import',
+        nav: () => m.ex_fio_nav(),
+        intro: () => m.ex_fio_intro(),
+      },
     ],
   },
 ]
