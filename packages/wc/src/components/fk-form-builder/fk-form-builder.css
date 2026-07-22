@@ -1,9 +1,38 @@
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
 .fk-builder {
   display: flex;
   gap: calc(var(--fk-spacing) * 2);
   align-items: flex-start;
   font-family: var(--fk-font);
   color: var(--fk-color-text);
+}
+
+@container (max-width: 820px) {
+  .fk-builder {
+    flex-wrap: wrap;
+  }
+
+  .fk-builder__palette,
+  .fk-builder__inspector {
+    width: 100%;
+  }
+
+  .fk-builder__main {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .fk-builder__palette {
+    order: 1;
+  }
+
+  .fk-builder__inspector {
+    order: 3;
+  }
 }
 
 .fk-builder__palette {
@@ -64,6 +93,7 @@
   border: 1px solid var(--fk-color-border);
   border-radius: var(--fk-radius);
   background: var(--fk-color-surface);
+  overflow-x: auto;
 }
 
 .fk-builder__inspector {
