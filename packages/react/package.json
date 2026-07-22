@@ -2,12 +2,27 @@
   "name": "@streamline-pulse/formkrafter-react",
   "version": "0.0.1",
   "description": "React bindings for FormKrafter web components",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
-  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "keywords": [
+    "form",
+    "form-builder",
+    "react",
+    "web-components",
+    "formkrafter"
+  ],
+  "files": ["dist", "LICENSE"],
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "prepublishOnly": "cp ../../LICENSE . && bun run build"
   },
   "dependencies": {
     "@stencil/react-output-target": "^1.6.1",

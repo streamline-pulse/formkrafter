@@ -1,15 +1,27 @@
 {
   "name": "@streamline-pulse/formkrafter-core",
   "version": "0.0.1",
-  "description": "Framework-agnostic core for FormKrafter",
+  "description": "Framework-agnostic core for FormKrafter: form specs, RFC 6902 ops with undo/redo, Ajv validation, sandboxed rules engine and injectable services",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "form",
+    "form-builder",
+    "json-schema",
+    "validation",
+    "json-patch",
+    "formkrafter"
+  ],
   "files": [
-    "dist"
+    "dist",
+    "LICENSE"
   ],
   "scripts": {
     "build": "rm -rf dist && bun build lib/index.ts --outdir dist --format esm --packages external --sourcemap=linked && tsc -p . --emitDeclarationOnly",
+    "prepublishOnly": "cp ../../LICENSE . && bun run build",
     "test": "bun test"
   },
   "dependencies": {
@@ -23,5 +35,11 @@
   "devDependencies": {
     "typescript": "catalog:",
     "@types/json-logic-js": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   }
 }

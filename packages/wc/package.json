@@ -33,18 +33,29 @@
     },
     "./loader": {
       "import": "./loader/index.js",
-      "require": "./loader/index.cjs",
+      "require": "./loader/index.cjs.js",
       "types": "./loader/index.d.ts"
     }
   },
+  "license": "MIT",
+  "keywords": [
+    "form",
+    "form-builder",
+    "drag-and-drop",
+    "web-components",
+    "stencil",
+    "formkrafter"
+  ],
   "files": [
     "dist/",
-    "loader/"
+    "loader/",
+    "LICENSE"
   ],
   "scripts": {
     "build": "stencil build",
     "start": "stencil build --dev --watch --serve",
     "generate": "stencil generate",
+    "prepublishOnly": "cp ../../LICENSE . && bun run build",
     "test": "bun test"
   },
   "dependencies": {

@@ -6,9 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
-import { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
-export { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export namespace Components {
     interface FkBrickActions {
         "path": string;
@@ -701,34 +699,50 @@ declare namespace LocalJSX {
         "path": string;
         "selected": boolean;
     }
+    interface FkBrickMoldItemAttributes {
+        "brickMold": string;
+    }
     interface FkBrickRenderAttributes {
+        "brickSpec": string;
         "path": string;
         "editable": boolean;
         "selectedUid": string;
         "locale": string;
+        "utils": string;
     }
     interface FkCodeEditorAttributes {
         "value": string;
         "placeholder": string;
     }
     interface FkDataGridAttributes {
+        "spec": string;
         "disabled": boolean;
         "locale": string;
+        "utils": string;
     }
     interface FkDropAreaAttributes {
         "path": string;
     }
     interface FkFileInputAttributes {
+        "value": string;
         "disabled": boolean;
         "accept": string;
     }
+    interface FkFormBuilderAttributes {
+        "spec": string;
+    }
     interface FkFormRenderAttributes {
+        "spec": string;
         "editable": boolean;
         "selectedUid": string;
         "locale": string;
     }
     interface FkPropertyPanelAttributes {
+        "brick": string;
         "editLocale": string;
+    }
+    interface FkRulesEditorAttributes {
+        "brick": string;
     }
     interface FkSelectInputAttributes {
         "value": string | string[];
@@ -741,28 +755,30 @@ declare namespace LocalJSX {
     }
     interface FkStepperAttributes {
         "editable": boolean;
+        "spec": string;
         "locale": string;
     }
     interface FkTabsAttributes {
         "editable": boolean;
+        "spec": string;
         "locale": string;
     }
 
     interface IntrinsicElements {
         "fk-brick-actions": Omit<FkBrickActions, keyof FkBrickActionsAttributes> & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes]?: FkBrickActions[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `attr:${K}`]?: FkBrickActionsAttributes[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `prop:${K}`]?: FkBrickActions[K] } & OneOf<"path", FkBrickActions["path"], FkBrickActionsAttributes["path"]>;
         "fk-brick-list": FkBrickList;
-        "fk-brick-mold-item": FkBrickMoldItem;
+        "fk-brick-mold-item": Omit<FkBrickMoldItem, keyof FkBrickMoldItemAttributes> & { [K in keyof FkBrickMoldItem & keyof FkBrickMoldItemAttributes]?: FkBrickMoldItem[K] } & { [K in keyof FkBrickMoldItem & keyof FkBrickMoldItemAttributes as `attr:${K}`]?: FkBrickMoldItemAttributes[K] } & { [K in keyof FkBrickMoldItem & keyof FkBrickMoldItemAttributes as `prop:${K}`]?: FkBrickMoldItem[K] } & OneOf<"brickMold", FkBrickMoldItem["brickMold"], FkBrickMoldItemAttributes["brickMold"]>;
         "fk-brick-not-found": FkBrickNotFound;
-        "fk-brick-render": Omit<FkBrickRender, keyof FkBrickRenderAttributes> & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes]?: FkBrickRender[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `attr:${K}`]?: FkBrickRenderAttributes[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `prop:${K}`]?: FkBrickRender[K] };
+        "fk-brick-render": Omit<FkBrickRender, keyof FkBrickRenderAttributes> & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes]?: FkBrickRender[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `attr:${K}`]?: FkBrickRenderAttributes[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `prop:${K}`]?: FkBrickRender[K] } & OneOf<"brickSpec", FkBrickRender["brickSpec"], FkBrickRenderAttributes["brickSpec"]> & OneOf<"utils", FkBrickRender["utils"], FkBrickRenderAttributes["utils"]>;
         "fk-code-editor": Omit<FkCodeEditor, keyof FkCodeEditorAttributes> & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes]?: FkCodeEditor[K] } & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes as `attr:${K}`]?: FkCodeEditorAttributes[K] } & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes as `prop:${K}`]?: FkCodeEditor[K] };
-        "fk-data-grid": Omit<FkDataGrid, keyof FkDataGridAttributes> & { [K in keyof FkDataGrid & keyof FkDataGridAttributes]?: FkDataGrid[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `attr:${K}`]?: FkDataGridAttributes[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `prop:${K}`]?: FkDataGrid[K] };
+        "fk-data-grid": Omit<FkDataGrid, keyof FkDataGridAttributes> & { [K in keyof FkDataGrid & keyof FkDataGridAttributes]?: FkDataGrid[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `attr:${K}`]?: FkDataGridAttributes[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `prop:${K}`]?: FkDataGrid[K] } & OneOf<"spec", FkDataGrid["spec"], FkDataGridAttributes["spec"]> & OneOf<"utils", FkDataGrid["utils"], FkDataGridAttributes["utils"]>;
         "fk-drop-area": Omit<FkDropArea, keyof FkDropAreaAttributes> & { [K in keyof FkDropArea & keyof FkDropAreaAttributes]?: FkDropArea[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `attr:${K}`]?: FkDropAreaAttributes[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `prop:${K}`]?: FkDropArea[K] } & OneOf<"path", FkDropArea["path"], FkDropAreaAttributes["path"]>;
         "fk-empty-form": FkEmptyForm;
         "fk-file-input": Omit<FkFileInput, keyof FkFileInputAttributes> & { [K in keyof FkFileInput & keyof FkFileInputAttributes]?: FkFileInput[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `attr:${K}`]?: FkFileInputAttributes[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `prop:${K}`]?: FkFileInput[K] };
-        "fk-form-builder": FkFormBuilder;
-        "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
-        "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
-        "fk-rules-editor": FkRulesEditor;
+        "fk-form-builder": Omit<FkFormBuilder, keyof FkFormBuilderAttributes> & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes]?: FkFormBuilder[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `attr:${K}`]?: FkFormBuilderAttributes[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `prop:${K}`]?: FkFormBuilder[K] };
+        "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] } & OneOf<"spec", FkFormRender["spec"], FkFormRenderAttributes["spec"]>;
+        "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] } & OneOf<"brick", FkPropertyPanel["brick"], FkPropertyPanelAttributes["brick"]>;
+        "fk-rules-editor": Omit<FkRulesEditor, keyof FkRulesEditorAttributes> & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes]?: FkRulesEditor[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `attr:${K}`]?: FkRulesEditorAttributes[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `prop:${K}`]?: FkRulesEditor[K] } & OneOf<"brick", FkRulesEditor["brick"], FkRulesEditorAttributes["brick"]>;
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
         "fk-signature-input": Omit<FkSignatureInput, keyof FkSignatureInputAttributes> & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes]?: FkSignatureInput[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `attr:${K}`]?: FkSignatureInputAttributes[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `prop:${K}`]?: FkSignatureInput[K] };
         "fk-stepper": Omit<FkStepper, keyof FkStepperAttributes> & { [K in keyof FkStepper & keyof FkStepperAttributes]?: FkStepper[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `attr:${K}`]?: FkStepperAttributes[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `prop:${K}`]?: FkStepper[K] };
