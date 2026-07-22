@@ -66,15 +66,25 @@ Notable behaviors:
 
 Register your own bricks:
 
-```tsx
-import { createBrick, registerBrick } from '@streamline-pulse/formkrafter-wc'
+```ts
+import { createBrick, h, registerBrick } from '@streamline-pulse/formkrafter-wc'
 
 registerBrick(createBrick({
-  type: 'input', dataType: 'string', id: 'rating', name: 'Rating', category: 'Inputs',
+  type: 'input', dataType: 'number', id: 'rating', name: 'Rating', category: 'Inputs',
   defaultConfigs: { label: 'Rating' },
-  render: (props) => <my-stars value={props.data} onChange={(e) => props.onDataChange?.(e.detail)} />,
+  render: (props) =>
+    h('div', { class: { 'fk-field': true } },
+      ...[1, 2, 3, 4, 5].map((star) =>
+        h('button', {
+          type: 'button',
+          onClick: () => props.onDataChange?.(star),
+        }, '★')
+      )
+    ),
 }))
 ```
+
+`h` (and the `VNode` type) are re-exported by this package — no Stencil dependency needed in your app.
 
 ## Theming
 

@@ -1,4 +1,6 @@
 export type * from './components.d.ts';
+export { h } from '@stencil/core';
+export type { VNode } from '@stencil/core';
 export {
   registerBrick,
   registerBricks,

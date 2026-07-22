@@ -8,7 +8,13 @@ import type {
 
 export type AnyBrick = Brick<unknown, BrickBaseConfigs, Record<string, unknown>>;
 
-const bricks = new Map<string, AnyBrick>();
+const GLOBAL_KEY = Symbol.for('formkrafter.wc.bricks');
+const globalStore = globalThis as unknown as Record<
+  symbol,
+  Map<string, AnyBrick> | undefined
+>;
+
+const bricks: Map<string, AnyBrick> = (globalStore[GLOBAL_KEY] ??= new Map());
 
 const keyOf = (type: BrickType, id: string) => `${type}:${id}`;
 

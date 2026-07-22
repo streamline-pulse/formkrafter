@@ -11,6 +11,16 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlaygroundRouteImport } from './routes/playground'
+import { Route as ExamplesAuthContextRouteImport } from './routes/examples/auth-context'
+import { Route as ExamplesCustomBrickRouteImport } from './routes/examples/custom-brick'
+import { Route as ExamplesDataGridRouteImport } from './routes/examples/data-grid'
+import { Route as ExamplesMultilingualRouteImport } from './routes/examples/multilingual'
+import { Route as ExamplesRemoteSelectsRouteImport } from './routes/examples/remote-selects'
+import { Route as ExamplesRulesRouteImport } from './routes/examples/rules'
+import { Route as ExamplesServerValidationRouteImport } from './routes/examples/server-validation'
+import { Route as ExamplesSimpleFormRouteImport } from './routes/examples/simple-form'
+import { Route as ExamplesThemingRouteImport } from './routes/examples/theming'
+import { Route as ExamplesWizardRouteImport } from './routes/examples/wizard'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +32,159 @@ const PlaygroundRoute = PlaygroundRouteImport.update({
   path: '/playground',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExamplesAuthContextRoute = ExamplesAuthContextRouteImport.update({
+  id: '/examples/auth-context',
+  path: '/examples/auth-context',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesCustomBrickRoute = ExamplesCustomBrickRouteImport.update({
+  id: '/examples/custom-brick',
+  path: '/examples/custom-brick',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesDataGridRoute = ExamplesDataGridRouteImport.update({
+  id: '/examples/data-grid',
+  path: '/examples/data-grid',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesMultilingualRoute = ExamplesMultilingualRouteImport.update({
+  id: '/examples/multilingual',
+  path: '/examples/multilingual',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesRemoteSelectsRoute = ExamplesRemoteSelectsRouteImport.update({
+  id: '/examples/remote-selects',
+  path: '/examples/remote-selects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesRulesRoute = ExamplesRulesRouteImport.update({
+  id: '/examples/rules',
+  path: '/examples/rules',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesServerValidationRoute =
+  ExamplesServerValidationRouteImport.update({
+    id: '/examples/server-validation',
+    path: '/examples/server-validation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ExamplesSimpleFormRoute = ExamplesSimpleFormRouteImport.update({
+  id: '/examples/simple-form',
+  path: '/examples/simple-form',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesThemingRoute = ExamplesThemingRouteImport.update({
+  id: '/examples/theming',
+  path: '/examples/theming',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesWizardRoute = ExamplesWizardRouteImport.update({
+  id: '/examples/wizard',
+  path: '/examples/wizard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/playground': typeof PlaygroundRoute
+  '/examples/auth-context': typeof ExamplesAuthContextRoute
+  '/examples/custom-brick': typeof ExamplesCustomBrickRoute
+  '/examples/data-grid': typeof ExamplesDataGridRoute
+  '/examples/multilingual': typeof ExamplesMultilingualRoute
+  '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
+  '/examples/rules': typeof ExamplesRulesRoute
+  '/examples/server-validation': typeof ExamplesServerValidationRoute
+  '/examples/simple-form': typeof ExamplesSimpleFormRoute
+  '/examples/theming': typeof ExamplesThemingRoute
+  '/examples/wizard': typeof ExamplesWizardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/playground': typeof PlaygroundRoute
+  '/examples/auth-context': typeof ExamplesAuthContextRoute
+  '/examples/custom-brick': typeof ExamplesCustomBrickRoute
+  '/examples/data-grid': typeof ExamplesDataGridRoute
+  '/examples/multilingual': typeof ExamplesMultilingualRoute
+  '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
+  '/examples/rules': typeof ExamplesRulesRoute
+  '/examples/server-validation': typeof ExamplesServerValidationRoute
+  '/examples/simple-form': typeof ExamplesSimpleFormRoute
+  '/examples/theming': typeof ExamplesThemingRoute
+  '/examples/wizard': typeof ExamplesWizardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/playground': typeof PlaygroundRoute
+  '/examples/auth-context': typeof ExamplesAuthContextRoute
+  '/examples/custom-brick': typeof ExamplesCustomBrickRoute
+  '/examples/data-grid': typeof ExamplesDataGridRoute
+  '/examples/multilingual': typeof ExamplesMultilingualRoute
+  '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
+  '/examples/rules': typeof ExamplesRulesRoute
+  '/examples/server-validation': typeof ExamplesServerValidationRoute
+  '/examples/simple-form': typeof ExamplesSimpleFormRoute
+  '/examples/theming': typeof ExamplesThemingRoute
+  '/examples/wizard': typeof ExamplesWizardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/playground'
+  fullPaths:
+    | '/'
+    | '/playground'
+    | '/examples/auth-context'
+    | '/examples/custom-brick'
+    | '/examples/data-grid'
+    | '/examples/multilingual'
+    | '/examples/remote-selects'
+    | '/examples/rules'
+    | '/examples/server-validation'
+    | '/examples/simple-form'
+    | '/examples/theming'
+    | '/examples/wizard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/playground'
-  id: '__root__' | '/' | '/playground'
+  to:
+    | '/'
+    | '/playground'
+    | '/examples/auth-context'
+    | '/examples/custom-brick'
+    | '/examples/data-grid'
+    | '/examples/multilingual'
+    | '/examples/remote-selects'
+    | '/examples/rules'
+    | '/examples/server-validation'
+    | '/examples/simple-form'
+    | '/examples/theming'
+    | '/examples/wizard'
+  id:
+    | '__root__'
+    | '/'
+    | '/playground'
+    | '/examples/auth-context'
+    | '/examples/custom-brick'
+    | '/examples/data-grid'
+    | '/examples/multilingual'
+    | '/examples/remote-selects'
+    | '/examples/rules'
+    | '/examples/server-validation'
+    | '/examples/simple-form'
+    | '/examples/theming'
+    | '/examples/wizard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PlaygroundRoute: typeof PlaygroundRoute
+  ExamplesAuthContextRoute: typeof ExamplesAuthContextRoute
+  ExamplesCustomBrickRoute: typeof ExamplesCustomBrickRoute
+  ExamplesDataGridRoute: typeof ExamplesDataGridRoute
+  ExamplesMultilingualRoute: typeof ExamplesMultilingualRoute
+  ExamplesRemoteSelectsRoute: typeof ExamplesRemoteSelectsRoute
+  ExamplesRulesRoute: typeof ExamplesRulesRoute
+  ExamplesServerValidationRoute: typeof ExamplesServerValidationRoute
+  ExamplesSimpleFormRoute: typeof ExamplesSimpleFormRoute
+  ExamplesThemingRoute: typeof ExamplesThemingRoute
+  ExamplesWizardRoute: typeof ExamplesWizardRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +203,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/examples/auth-context': {
+      id: '/examples/auth-context'
+      path: '/examples/auth-context'
+      fullPath: '/examples/auth-context'
+      preLoaderRoute: typeof ExamplesAuthContextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/custom-brick': {
+      id: '/examples/custom-brick'
+      path: '/examples/custom-brick'
+      fullPath: '/examples/custom-brick'
+      preLoaderRoute: typeof ExamplesCustomBrickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/data-grid': {
+      id: '/examples/data-grid'
+      path: '/examples/data-grid'
+      fullPath: '/examples/data-grid'
+      preLoaderRoute: typeof ExamplesDataGridRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/multilingual': {
+      id: '/examples/multilingual'
+      path: '/examples/multilingual'
+      fullPath: '/examples/multilingual'
+      preLoaderRoute: typeof ExamplesMultilingualRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/remote-selects': {
+      id: '/examples/remote-selects'
+      path: '/examples/remote-selects'
+      fullPath: '/examples/remote-selects'
+      preLoaderRoute: typeof ExamplesRemoteSelectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/rules': {
+      id: '/examples/rules'
+      path: '/examples/rules'
+      fullPath: '/examples/rules'
+      preLoaderRoute: typeof ExamplesRulesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/server-validation': {
+      id: '/examples/server-validation'
+      path: '/examples/server-validation'
+      fullPath: '/examples/server-validation'
+      preLoaderRoute: typeof ExamplesServerValidationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/simple-form': {
+      id: '/examples/simple-form'
+      path: '/examples/simple-form'
+      fullPath: '/examples/simple-form'
+      preLoaderRoute: typeof ExamplesSimpleFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/theming': {
+      id: '/examples/theming'
+      path: '/examples/theming'
+      fullPath: '/examples/theming'
+      preLoaderRoute: typeof ExamplesThemingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/wizard': {
+      id: '/examples/wizard'
+      path: '/examples/wizard'
+      fullPath: '/examples/wizard'
+      preLoaderRoute: typeof ExamplesWizardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PlaygroundRoute: PlaygroundRoute,
+  ExamplesAuthContextRoute: ExamplesAuthContextRoute,
+  ExamplesCustomBrickRoute: ExamplesCustomBrickRoute,
+  ExamplesDataGridRoute: ExamplesDataGridRoute,
+  ExamplesMultilingualRoute: ExamplesMultilingualRoute,
+  ExamplesRemoteSelectsRoute: ExamplesRemoteSelectsRoute,
+  ExamplesRulesRoute: ExamplesRulesRoute,
+  ExamplesServerValidationRoute: ExamplesServerValidationRoute,
+  ExamplesSimpleFormRoute: ExamplesSimpleFormRoute,
+  ExamplesThemingRoute: ExamplesThemingRoute,
+  ExamplesWizardRoute: ExamplesWizardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

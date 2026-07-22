@@ -228,17 +228,23 @@ export const frFkTranslations: FkTranslations = {
   'brick.tabs.name': 'Onglets',
 };
 
-let translations: FkTranslations = { ...en };
+const GLOBAL_KEY = Symbol.for('formkrafter.wc.i18n');
+const globalStore = globalThis as unknown as Record<
+  symbol,
+  { current: FkTranslations } | undefined
+>;
+
+const state = (globalStore[GLOBAL_KEY] ??= { current: { ...en } });
 
 export function setFkTranslations(overrides: FkTranslations = {}): void {
-  translations = { ...en, ...overrides };
+  state.current = { ...en, ...overrides };
 }
 
 export function fkT(
   key: string,
   params?: Record<string, string | number>
 ): string {
-  let text = translations[key] ?? key;
+  let text = state.current[key] ?? key;
 
   for (const [name, value] of Object.entries(params ?? {})) {
     text = text.replace(`{${name}}`, String(value));
@@ -248,5 +254,5 @@ export function fkT(
 }
 
 export function fkTOr(key: string, fallback: string): string {
-  return translations[key] ?? fallback;
+  return state.current[key] ?? fallback;
 }

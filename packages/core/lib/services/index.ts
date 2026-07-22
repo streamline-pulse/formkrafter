@@ -11,14 +11,19 @@ import {
   type FileUploadService,
 } from "./file_upload_service";
 
-const jsRunnerService: JsRunnerService = new SandboxJsRunnerService();
-const dataSourceService: DataSourceService = new FetchDataSourceService();
-const fileUploadService: FileUploadService = new Base64FileUploadService();
+export interface Services {
+  jsRunnerService: JsRunnerService;
+  dataSourceService: DataSourceService;
+  fileUploadService: FileUploadService;
+}
 
-const services = {
-  jsRunnerService,
-  dataSourceService,
-  fileUploadService,
-};
+const GLOBAL_KEY = Symbol.for("formkrafter.core.services");
+const globalStore = globalThis as unknown as Record<symbol, Services | undefined>;
+
+const services: Services = (globalStore[GLOBAL_KEY] ??= {
+  jsRunnerService: new SandboxJsRunnerService(),
+  dataSourceService: new FetchDataSourceService(),
+  fileUploadService: new Base64FileUploadService(),
+});
 
 export { services };
