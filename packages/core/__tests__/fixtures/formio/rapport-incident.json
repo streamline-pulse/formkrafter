@@ -1,0 +1,194 @@
+{
+  "display": "form",
+  "name": "rapportIncident",
+  "title": "Rapport d'incident logistique",
+  "components": [
+    {
+      "type": "tabs",
+      "key": "onglets",
+      "components": [
+        {
+          "label": "Incident",
+          "key": "ongletIncident",
+          "components": [
+            {
+              "type": "day",
+              "key": "jour_de_lincident",
+              "label": "Jour de l'incident",
+              "validate": { "required": true }
+            },
+            {
+              "type": "time",
+              "key": "heure_de_lincident",
+              "label": "Heure",
+              "validate": { "required": true }
+            },
+            {
+              "type": "datetime",
+              "key": "constate_le",
+              "label": "Constaté le",
+              "enableTime": true,
+              "validate": { "required": true }
+            },
+            {
+              "type": "selectboxes",
+              "key": "types_de_dommages",
+              "label": "Types de dommages",
+              "values": [
+                { "label": "Matériel", "value": "materiel" },
+                { "label": "Corporel", "value": "corporel" },
+                { "label": "Environnemental", "value": "environnemental" },
+                { "label": "Autre", "value": "autre" }
+              ],
+              "validate": { "required": true }
+            },
+            {
+              "type": "textarea",
+              "key": "description_autre_dommage",
+              "label": "Décrivez l'autre dommage",
+              "customConditional": "show = data.types_de_dommages && data.types_de_dommages.autre === true;",
+              "validate": { "required": false }
+            },
+            {
+              "type": "tags",
+              "key": "mots_cles",
+              "label": "Mots-clés"
+            }
+          ]
+        },
+        {
+          "label": "Localisation",
+          "key": "ongletLocalisation",
+          "components": [
+            {
+              "type": "address",
+              "key": "adresse_du_site",
+              "label": "Adresse du site",
+              "validate": { "required": true }
+            },
+            {
+              "type": "select",
+              "key": "entrepot",
+              "label": "Entrepôt concerné",
+              "dataSrc": "url",
+              "searchField": "q",
+              "valueProperty": "id",
+              "template": "<span>{{ item.designation }}</span>",
+              "data": { "url": "https://api.example.org/entrepots?region={region}" },
+              "validate": { "required": true }
+            },
+            {
+              "type": "hidden",
+              "key": "region",
+              "label": "Region"
+            },
+            {
+              "type": "well",
+              "key": "cadreCarte",
+              "components": [
+                {
+                  "type": "url",
+                  "key": "lien_carte",
+                  "label": "Lien vers la carte",
+                  "validate": { "required": false }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Personnes",
+          "key": "ongletPersonnes",
+          "components": [
+            {
+              "type": "editgrid",
+              "key": "temoins",
+              "label": "Témoins",
+              "components": [
+                {
+                  "type": "textfield",
+                  "key": "nom_complet",
+                  "label": "Nom complet",
+                  "validate": { "required": true }
+                },
+                {
+                  "type": "phoneNumber",
+                  "key": "telephone",
+                  "label": "Téléphone"
+                },
+                {
+                  "type": "select",
+                  "key": "role",
+                  "label": "Rôle",
+                  "dataSrc": "values",
+                  "data": {
+                    "values": [
+                      { "label": "Employé·e", "value": "employe" },
+                      { "label": "Visiteur·se", "value": "visiteur" },
+                      { "label": "Prestataire", "value": "prestataire" }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "key": "responsableSecurite",
+              "label": "Responsable sécurité",
+              "components": [
+                {
+                  "type": "textfield",
+                  "key": "nom_responsable_securite",
+                  "label": "Nom",
+                  "validate": { "required": true }
+                },
+                {
+                  "type": "email",
+                  "key": "email_responsable_securite",
+                  "label": "Email"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Validation",
+          "key": "ongletValidation",
+          "components": [
+            {
+              "type": "survey",
+              "key": "auto_evaluation",
+              "label": "Auto-évaluation",
+              "questions": [{ "label": "Gravité perçue", "value": "gravite" }],
+              "values": [{ "label": "Faible", "value": "1" }]
+            },
+            {
+              "type": "signature",
+              "key": "signature_du_declarant",
+              "label": "Signature du déclarant",
+              "validate": { "required": true }
+            },
+            {
+              "type": "content",
+              "key": "html",
+              "html": "<div class=\"well\">Récapitulatif généré</div>",
+              "logic": [
+                {
+                  "name": "recap dynamique",
+                  "trigger": { "type": "javascript", "javascript": "result = true;" },
+                  "actions": [
+                    {
+                      "name": "générer le récap",
+                      "type": "customAction",
+                      "customAction": "const recapDiv = document.getElementById(\"recapDisplay\"); recapDiv.innerHTML = JSON.stringify(data);"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

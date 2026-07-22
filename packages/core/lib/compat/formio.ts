@@ -181,7 +181,7 @@ function convertComponent(
 
     if (type === "content" || type === "htmlelement") {
         return [
-            {
+            withCommon(component, ctx, {
                 type: "output",
                 dataType: "void",
                 id: "content",
@@ -191,7 +191,7 @@ function convertComponent(
                     key: component.key ?? ctx.nextUid(),
                     content: String(component.html ?? component.content ?? ""),
                 },
-            },
+            }),
         ];
     }
 

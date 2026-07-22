@@ -1,0 +1,73 @@
+{
+  "display": "form",
+  "name": "confirmationPaiement",
+  "title": "Confirmation manuelle d'un paiement",
+  "components": [
+    {
+      "type": "content",
+      "key": "content",
+      "html": "<p><span class=\"text-big\" style=\"color:red;\"><strong>En validant, je confirme la réception du paiement</strong></span></p>",
+      "input": false,
+      "conditional": { "eq": "", "show": null, "when": null },
+      "validate": { "required": false, "custom": "", "customMessage": "" }
+    },
+    {
+      "type": "radio",
+      "key": "paiement_recu",
+      "label": "Avez-vous reçu un paiement pour ce dossier ?",
+      "inline": true,
+      "values": [
+        { "label": "Oui", "value": "oui", "shortcut": "" },
+        { "label": "Non", "value": "non", "shortcut": "" }
+      ],
+      "dataSrc": "values",
+      "template": "<span>{{ item.label }}</span>",
+      "validate": { "required": true, "customMessage": "", "custom": "" },
+      "conditional": { "eq": "", "show": null, "when": null }
+    },
+    {
+      "type": "file",
+      "key": "preuve_de_paiement",
+      "label": "Preuve de paiement",
+      "storage": "url",
+      "url": "https://api.example.org/uploads",
+      "filePattern": ".pdf,.jpeg,.png,.jpg",
+      "fileMaxSize": "1GB",
+      "fileMinSize": "0KB",
+      "hidden": true,
+      "conditional": { "eq": "oui", "show": true, "when": "paiement_recu" },
+      "validate": { "required": true, "customMessage": "", "custom": "" }
+    },
+    {
+      "type": "number",
+      "key": "montant_recu",
+      "label": "Montant reçu",
+      "hidden": true,
+      "conditional": { "eq": "oui", "show": true, "when": "paiement_recu" },
+      "validate": { "required": true, "min": 1, "max": "", "step": "any" }
+    },
+    {
+      "type": "textarea",
+      "key": "motif_de_non_reception",
+      "label": "Motif de non-réception",
+      "hidden": true,
+      "conditional": { "eq": "non", "show": true, "when": "paiement_recu" },
+      "validate": { "required": true, "minLength": 10 }
+    },
+    {
+      "type": "password",
+      "key": "code_agent",
+      "label": "Code agent",
+      "validate": {
+        "required": true,
+        "custom": "valid = `${input}`.length === 6 && `${input}`.startsWith('AG') ? true : 'Le code agent fait 6 caractères et commence par AG';"
+      }
+    },
+    {
+      "type": "button",
+      "key": "submit",
+      "label": "Valider",
+      "action": "submit"
+    }
+  ]
+}

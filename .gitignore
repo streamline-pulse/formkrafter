@@ -8,5 +8,5 @@ loader/
 .env
 .env.*
 
-packages/core/__tests__/fixtures/
+packages/core/__tests__/fixtures-local/
 *.local.test.ts

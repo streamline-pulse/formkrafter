@@ -1,0 +1,325 @@
+{
+  "display": "wizard",
+  "name": "demandeSubvention",
+  "title": "Demande de subvention associative",
+  "components": [
+    {
+      "type": "panel",
+      "key": "etapeStructure",
+      "title": "STRUCTURE",
+      "components": [
+        {
+          "type": "content",
+          "key": "intro",
+          "html": "<p><strong>Renseignez les informations de votre structure.</strong></p>",
+          "input": false
+        },
+        {
+          "type": "radio",
+          "key": "type_de_structure",
+          "label": "Type de structure",
+          "values": [
+            { "label": "Association loi 1901", "value": "association" },
+            { "label": "Coopérative", "value": "cooperative" },
+            { "label": "Groupe de citoyens", "value": "citoyens" }
+          ],
+          "validate": { "required": true, "custom": "", "customMessage": "" }
+        },
+        {
+          "type": "textfield",
+          "key": "nom_de_la_structure",
+          "label": "Nom de la structure",
+          "validate": { "required": true, "minLength": 3, "maxLength": "" }
+        },
+        {
+          "type": "textfield",
+          "key": "numero_rna",
+          "label": "Numéro RNA",
+          "conditional": { "show": true, "when": "type_de_structure", "eq": "association" },
+          "validate": {
+            "required": true,
+            "pattern": "^W[0-9]{9}$",
+            "customMessage": "Le numéro RNA commence par W suivi de 9 chiffres"
+          }
+        },
+        {
+          "type": "number",
+          "key": "nombre_adherents",
+          "label": "Nombre d'adhérents",
+          "validate": { "min": 2, "max": 100000, "step": "", "required": true }
+        },
+        {
+          "type": "currency",
+          "key": "budget_annuel",
+          "label": "Budget annuel",
+          "currency": "EUR",
+          "validate": { "min": 0, "required": true }
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "key": "etapeContact",
+      "title": "RESPONSABLE",
+      "components": [
+        {
+          "type": "columns",
+          "key": "colonnesIdentite",
+          "columns": [
+            {
+              "components": [
+                {
+                  "type": "textfield",
+                  "key": "nom_du_responsable",
+                  "label": "Nom",
+                  "validate": { "required": true }
+                }
+              ]
+            },
+            {
+              "components": [
+                {
+                  "type": "textfield",
+                  "key": "prenom_du_responsable",
+                  "label": "Prénoms",
+                  "validate": { "required": true }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "key": "pays_de_residence",
+          "label": "Pays de résidence",
+          "dataSrc": "json",
+          "valueProperty": "code",
+          "template": "<span>{{ item.label }}</span>",
+          "data": {
+            "url": "",
+            "json": [
+              { "code": "TG", "label": "Togo" },
+              { "code": "BJ", "label": "Bénin" },
+              { "code": "BF", "label": "Burkina Faso" },
+              { "code": "CI", "label": "Côte d'Ivoire" },
+              { "code": "GH", "label": "Ghana" },
+              { "code": "NE", "label": "Niger" },
+              { "code": "NG", "label": "Nigéria" },
+              { "code": "SN", "label": "Sénégal" },
+              { "code": "ML", "label": "Mali" },
+              { "code": "FR", "label": "France" }
+            ]
+          },
+          "validate": { "required": true }
+        },
+        {
+          "type": "select",
+          "key": "fonction_du_responsable",
+          "label": "Fonction",
+          "dataSrc": "json",
+          "data": {
+            "url": "",
+            "json": [
+              { "id": "1", "label": "Président·e", "value": "president" },
+              { "id": "2", "label": "Trésorier·ère", "value": "tresorier" },
+              { "id": "3", "label": "Secrétaire général·e", "value": "sg" },
+              { "id": "4", "label": "Autre", "value": "autre" }
+            ]
+          },
+          "validate": { "required": true }
+        },
+        {
+          "type": "textfield",
+          "key": "autre_fonction",
+          "label": "Précisez la fonction",
+          "conditional": { "show": true, "when": "fonction_du_responsable", "eq": "autre" },
+          "validate": { "required": true }
+        },
+        {
+          "type": "phoneNumber",
+          "key": "telephone_du_responsable",
+          "label": "Téléphone",
+          "validate": {
+            "required": true,
+            "custom": "const prefixesFixes = ['22', '23'];\r\nconst prefixesMobiles = ['70', '90', '91', '96', '98'];\r\nvalid = ((`${input}`.length == 8) && (prefixesFixes.includes(`${input}`.substring(0, 2)) || prefixesMobiles.includes(`${input}`.substring(0, 2)))) ? true : 'Veuillez saisir un numéro national valide (8 chiffres)';",
+            "customMessage": ""
+          }
+        },
+        {
+          "type": "email",
+          "key": "email_du_responsable",
+          "label": "Email",
+          "validate": { "required": true }
+        },
+        {
+          "type": "datetime",
+          "key": "date_de_prise_de_fonction",
+          "label": "Date de prise de fonction",
+          "enableTime": false,
+          "format": "dd-MM-yyyy",
+          "validate": { "required": true }
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "key": "etapeProjet",
+      "title": "PROJET",
+      "components": [
+        {
+          "type": "textfield",
+          "key": "intitule_du_projet",
+          "label": "Intitulé du projet",
+          "validate": { "required": true, "minLength": 5 }
+        },
+        {
+          "type": "textarea",
+          "key": "description_du_projet",
+          "label": "Description",
+          "rows": 5,
+          "validate": { "required": true, "minLength": 30 }
+        },
+        {
+          "type": "datagrid",
+          "key": "lignes_budgetaires",
+          "label": "Lignes budgétaires",
+          "components": [
+            {
+              "type": "textfield",
+              "key": "intitule",
+              "label": "Intitulé",
+              "validate": { "required": true }
+            },
+            {
+              "type": "select",
+              "key": "categorie",
+              "label": "Catégorie",
+              "dataSrc": "values",
+              "data": {
+                "values": [
+                  { "label": "Fonctionnement", "value": "fonctionnement" },
+                  { "label": "Investissement", "value": "investissement" },
+                  { "label": "Ressources humaines", "value": "rh" }
+                ]
+              },
+              "validate": { "required": true }
+            },
+            {
+              "type": "number",
+              "key": "montant",
+              "label": "Montant (EUR)",
+              "validate": { "required": true, "min": 1 }
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "key": "cofinancement",
+          "label": "Le projet bénéficie d'autres financements"
+        },
+        {
+          "type": "textarea",
+          "key": "details_cofinancement",
+          "label": "Détaillez les cofinancements",
+          "conditional": { "show": true, "when": "cofinancement", "eq": true },
+          "validate": { "required": true }
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "key": "etapePieces",
+      "title": "PIÈCES JOINTES",
+      "components": [
+        {
+          "type": "fieldset",
+          "key": "groupePieces",
+          "legend": "Pièces",
+          "components": [
+            {
+              "type": "file",
+              "key": "statuts_de_la_structure",
+              "label": "Statuts de la structure",
+              "storage": "url",
+              "url": "https://api.example.org/uploads",
+              "filePattern": ".pdf",
+              "hidden": true,
+              "conditional": { "show": true, "when": "type_de_structure", "eq": "association" },
+              "validate": { "required": true }
+            },
+            {
+              "type": "file",
+              "key": "budget_previsionnel",
+              "label": "Budget prévisionnel signé",
+              "storage": "url",
+              "url": "https://api.example.org/uploads",
+              "filePattern": ".pdf,.xlsx",
+              "validate": { "required": true }
+            },
+            {
+              "type": "file",
+              "key": "attestation_bancaire",
+              "label": "Attestation bancaire (RIB)",
+              "storage": "url",
+              "url": "https://api.example.org/uploads",
+              "filePattern": "*",
+              "hidden": true,
+              "logic": [
+                {
+                  "name": "visible pour structures formelles",
+                  "trigger": {
+                    "type": "javascript",
+                    "javascript": "result = (data.type_de_structure === \"association\") || (data.type_de_structure === \"cooperative\");"
+                  },
+                  "actions": [
+                    {
+                      "name": "montrer",
+                      "type": "property",
+                      "state": false,
+                      "property": { "type": "boolean", "label": "Hidden", "value": "hidden" }
+                    }
+                  ]
+                }
+              ],
+              "validate": { "required": false }
+            },
+            {
+              "type": "file",
+              "key": "photos_des_activites",
+              "label": "Photos des activités",
+              "storage": "url",
+              "url": "https://api.example.org/uploads",
+              "filePattern": ".jpg,.jpeg,.png",
+              "multiple": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "key": "etapeRecap",
+      "title": "RÉCAPITULATIF",
+      "components": [
+        {
+          "type": "htmlelement",
+          "key": "avertissement",
+          "html": "<p><span style=\"color:red;\"><strong>Vérifiez vos informations avant de soumettre.</strong></span></p>",
+          "input": false
+        },
+        {
+          "type": "checkbox",
+          "key": "engagement_sur_honneur",
+          "label": "J'atteste sur l'honneur l'exactitude des informations",
+          "validate": { "required": true }
+        },
+        {
+          "type": "button",
+          "key": "soumettre",
+          "label": "Soumettre la demande",
+          "action": "submit"
+        }
+      ]
+    }
+  ]
+}
