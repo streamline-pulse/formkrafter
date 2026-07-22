@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { convertFormioForm } from '@streamline-pulse/formkrafter-core'
+import { FkFormBuilder } from '@streamline-pulse/formkrafter-react'
 
 import FormDemo from './FormDemo'
 import { m } from '#/paraglide/messages'
 
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+import type { SpecChangeDetail } from '@streamline-pulse/formkrafter-wc'
 
 const sampleFormio = {
   display: 'form',
@@ -56,6 +58,8 @@ const sampleFormio = {
 export default function FormioImportDemo() {
   const [source, setSource] = useState(JSON.stringify(sampleFormio, null, 2))
   const [spec, setSpec] = useState<BrickSpec>()
+  const [importedSpec, setImportedSpec] = useState<BrickSpec>()
+  const [importCount, setImportCount] = useState(0)
   const [warnings, setWarnings] = useState<string[]>([])
   const [parseError, setParseError] = useState<string>()
 
@@ -63,13 +67,20 @@ export default function FormioImportDemo() {
     try {
       const result = convertFormioForm(JSON.parse(source))
       setSpec(result.spec)
+      setImportedSpec(structuredClone(result.spec))
+      setImportCount((count) => count + 1)
       setWarnings(result.warnings)
       setParseError(undefined)
     } catch (error) {
       setParseError(error instanceof Error ? error.message : String(error))
       setSpec(undefined)
+      setImportedSpec(undefined)
       setWarnings([])
     }
+  }
+
+  function handleSpecChange(event: CustomEvent<SpecChangeDetail>) {
+    setSpec(event.detail.spec ? structuredClone(event.detail.spec) : undefined)
   }
 
   return (
@@ -109,6 +120,17 @@ export default function FormioImportDemo() {
 
       {spec ? (
         <>
+          <section className="space-y-2">
+            <h2 className="text-sm font-semibold">{m.fio_edit()}</h2>
+            <div className="border-border bg-card rounded-lg border p-2">
+              <FkFormBuilder
+                key={importCount}
+                spec={importedSpec ? structuredClone(importedSpec) : undefined}
+                onSpecChange={handleSpecChange}
+                locales={['en', 'fr']}
+              />
+            </div>
+          </section>
           <section className="space-y-2">
             <h2 className="text-sm font-semibold">{m.fio_result()}</h2>
             <FormDemo spec={spec} />

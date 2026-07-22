@@ -36,6 +36,7 @@ export {
   dataGridBrick,
   hiddenBrick,
   contentBrick,
+  recapBrick,
   groupBrick,
   rowBrick,
   columnBrick,

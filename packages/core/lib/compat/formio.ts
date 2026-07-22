@@ -84,6 +84,7 @@ export interface FormioConversionResult {
 type Converter = {
     nextUid: () => string;
     warn: (message: string) => void;
+    uploadUrls: Map<string, number>;
 };
 
 const INPUT_TYPE_MAP: Record<
@@ -114,6 +115,7 @@ export function convertFormioForm(form: FormioForm): FormioConversionResult {
     const ctx: Converter = {
         nextUid: () => `fio-${++counter}`,
         warn: (message) => warnings.push(message),
+        uploadUrls: new Map(),
     };
 
     let children = convertComponents(form.components ?? [], ctx);
@@ -143,6 +145,12 @@ export function convertFormioForm(form: FormioForm): FormioConversionResult {
         configs: { uid: ctx.nextUid(), key: form.name ?? "form" },
         children,
     };
+
+    for (const [url, count] of ctx.uploadUrls) {
+        warnings.push(
+            `${count} file component(s) store uploads at "${url}" (kept as the uploadUrl config) — configure services.fileUploadService with UrlFileUploadService to upload there`
+        );
+    }
 
     return { spec, warnings };
 }
@@ -342,16 +350,22 @@ function convertComponent(
         if (component.filePattern && component.filePattern !== "*") {
             configs.accept = component.filePattern;
         }
-        if (component.multiple) configs.multiple = true;
-        if (component.storage === "url" && component.url) {
+        if (component.multiple) {
             ctx.warn(
-                `file "${component.key ?? "?"}" uploaded to "${component.url}" — configure services.fileUploadService to reproduce this upload`
+                `file "${component.key ?? "?"}" allows multiple files — single file kept (multi-file uploads are not supported yet)`
+            );
+        }
+        if (component.storage === "url" && component.url) {
+            configs.uploadUrl = component.url;
+            ctx.uploadUrls.set(
+                component.url,
+                (ctx.uploadUrls.get(component.url) ?? 0) + 1
             );
         }
         return [
             withCommon(component, ctx, {
                 type: "input",
-                dataType: "array",
+                dataType: "object",
                 id: "file",
                 name: "File",
                 configs,
@@ -493,9 +507,10 @@ function withCommon(
     const validations = convertValidations(component, ctx);
     if (validations.length) brick.validations = validations;
 
-    const rules = [...convertConditional(component, ctx)];
+    const conditionalRules = convertConditional(component, ctx);
+    const rules = [...conditionalRules];
 
-    if (component.hidden) {
+    if (component.hidden && conditionalRules.length === 0) {
         rules.push({
             name: "always hidden",
             type: "jsonLogic",

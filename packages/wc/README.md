@@ -49,13 +49,13 @@ sequenceDiagram
 
 Underscore-prefixed keys injected via the `data` prop (e.g. `_authToken`) are available internally (interpolation, rules) but **excluded from every emitted payload**.
 
-## Built-in bricks (27)
+## Built-in bricks (28)
 
 | Category | Bricks |
 |---|---|
 | **Inputs** (18) | text, email, password, url, phone, textarea, number, date, time, datetime, select, multi-select, radio, select-boxes, checkbox, tags, signature, address |
-| **Data** (3) | file (pluggable upload), data-grid (repeating rows, per-row validation), hidden |
-| **Layout** (6) | content, group (fieldset), row, column, stepper (wizard), tabs |
+| **Data** (3) | file (pluggable upload, per-brick `uploadUrl`), data-grid (repeating rows, per-row validation), hidden |
+| **Layout** (7) | content, recap (live summary of the whole form), group (fieldset), row, column, stepper (wizard), tabs |
 
 Notable behaviors:
 

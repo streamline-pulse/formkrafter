@@ -258,6 +258,34 @@ describe("convertFormioForm", () => {
         expect(warnings.some((w) => w.includes("customConditional"))).toBe(true);
     });
 
+    test("hidden default + conditional: the conditional governs visibility", async () => {
+        const { getAffectedProperties } = await import("../lib/brick/utils");
+        const { spec } = convertFormioForm({
+            components: [
+                { type: "radio", key: "confirm", values: [{ label: "Oui", value: "oui" }] },
+                {
+                    type: "file",
+                    key: "proof",
+                    hidden: true,
+                    storage: "url",
+                    url: "https://api.test/uploads",
+                    conditional: { show: true, when: "confirm", eq: "oui" },
+                },
+            ],
+        });
+
+        const proof = brickById(spec, "proof");
+        expect(proof.rules).toHaveLength(1);
+        expect(proof.configs?.uploadUrl).toBe("https://api.test/uploads");
+
+        expect(
+            getAffectedProperties(proof.rules, { confirm: "oui" }).hidden
+        ).not.toBe(true);
+        expect(
+            getAffectedProperties(proof.rules, { confirm: "non" }).hidden
+        ).toBe(true);
+    });
+
     test("unknown component types warn and are skipped", () => {
         const { spec, warnings } = convertFormioForm({
             components: [

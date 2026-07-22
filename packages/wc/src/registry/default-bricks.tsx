@@ -4,8 +4,12 @@ import { createBrick } from './create-brick';
 import { registerBricks } from './registry';
 import { asInlineStyle } from '../utils/style';
 import { normalizeOptions } from '../utils/options';
-import { fkT } from '../i18n/i18n';
-import { resolveLocalizedText } from '@streamline-pulse/formkrafter-core';
+import { fkT, fkTOr } from '../i18n/i18n';
+import {
+  getAffectedProperties,
+  resolveLocalizedText,
+} from '@streamline-pulse/formkrafter-core';
+import type { BrickSpec } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
 const labelOf = (props: WcBrickProps, fallback: string): string =>
@@ -490,6 +494,7 @@ export const fileBrick = createBrick({
       <fk-file-input
         value={props.data as never}
         accept={props.configs?.accept as string}
+        uploadUrl={props.configs?.uploadUrl as string}
         disabled={props.editable || props.disabled}
         onFileValueChange={(event: CustomEvent<unknown>) => {
           event.stopPropagation();
@@ -670,6 +675,242 @@ export const columnBrick = createBrick({
   ),
 });
 
+type RecapItem =
+  | { kind: 'field'; label: string; value: string }
+  | { kind: 'section'; label: string }
+  | { kind: 'collection'; label: string; columns: string[]; rows: string[][] };
+
+const formatRecapValue = (brick: BrickSpec, value: unknown): string => {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => formatRecapValue(brick, item))
+      .filter(Boolean)
+      .join(', ');
+  }
+  if (value === true) return fkTOr('recap.yes', 'Yes');
+  if (value === false) return fkTOr('recap.no', 'No');
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    if (typeof record.name === 'string' && 'url' in record) return record.name;
+    return Object.values(record)
+      .filter((part) => typeof part === 'string' && part)
+      .join(' ');
+  }
+
+  const raw = String(value ?? '');
+  if (brick.configs?.options != null) {
+    const labelKey =
+      typeof brick.configs.labelKey === 'string' ? brick.configs.labelKey : 'label';
+    const valueKey =
+      typeof brick.configs.valueKey === 'string' ? brick.configs.valueKey : 'value';
+    const match = normalizeOptions(brick.configs.options, labelKey, valueKey).find(
+      (option) => option.value === raw
+    );
+    if (match) return match.label;
+  }
+  return raw;
+};
+
+const isEmptyRecapValue = (raw: unknown): boolean =>
+  raw === undefined ||
+  raw === null ||
+  raw === '' ||
+  (Array.isArray(raw) && raw.length === 0);
+
+const brickLabel = (brick: BrickSpec, locale?: string): string =>
+  String(
+    resolveLocalizedText(brick.configs?.label, locale) ??
+      brick.name ??
+      brick.configs?.key ??
+      ''
+  );
+
+const collectionInputs = (spec: BrickSpec): BrickSpec[] => {
+  const inputs: BrickSpec[] = [];
+  for (const child of spec.children ?? []) {
+    const key = child.configs?.key;
+    if (child.type === 'input' && key && !key.startsWith('_')) {
+      inputs.push(child);
+    } else if (child.type === 'panel') {
+      inputs.push(...collectionInputs(child));
+    }
+  }
+  return inputs;
+};
+
+const collectRecapItems = (
+  spec: BrickSpec | undefined,
+  dataMap: Record<string, unknown> | undefined,
+  locale: string | undefined,
+  showEmpty: boolean,
+  groupBySections = false
+): RecapItem[] => {
+  if (!spec) return [];
+  const items: RecapItem[] = [];
+
+  for (const child of spec.children ?? []) {
+    if (child.id === 'recap' || child.type === 'action') continue;
+    if (getAffectedProperties(child.rules, dataMap).hidden === true) continue;
+
+    const key = child.configs?.key;
+    const label = brickLabel(child, locale);
+
+    if (child.type === 'collection') {
+      const rows =
+        key && Array.isArray(dataMap?.[key])
+          ? (dataMap[key] as Record<string, unknown>[])
+          : [];
+      if (!rows.length && !showEmpty) continue;
+
+      const inputs = collectionInputs(child);
+      items.push({
+        kind: 'collection',
+        label,
+        columns: inputs.map((input) => brickLabel(input, locale)),
+        rows: rows.map((row) =>
+          inputs.map((input) => {
+            const raw = row?.[input.configs!.key!];
+            return isEmptyRecapValue(raw) ? '—' : formatRecapValue(input, raw);
+          })
+        ),
+      });
+      continue;
+    }
+
+    if (child.type === 'panel') {
+      const sectionLabel = resolveLocalizedText(child.configs?.label, locale);
+      if (
+        groupBySections &&
+        typeof sectionLabel === 'string' &&
+        sectionLabel.trim()
+      ) {
+        const sectionItems = collectRecapItems(child, dataMap, locale, showEmpty);
+        if (sectionItems.length) {
+          items.push({ kind: 'section', label: sectionLabel });
+          items.push(...sectionItems);
+        }
+        continue;
+      }
+      items.push(
+        ...collectRecapItems(child, dataMap, locale, showEmpty, groupBySections)
+      );
+      continue;
+    }
+
+    if (child.type !== 'input' || !key || key.startsWith('_')) continue;
+
+    const raw = dataMap?.[key];
+    if (isEmptyRecapValue(raw) && !showEmpty) continue;
+
+    items.push({
+      kind: 'field',
+      label,
+      value: isEmptyRecapValue(raw) ? '—' : formatRecapValue(child, raw),
+    });
+  }
+
+  return items;
+};
+
+export const recapBrick = createBrick({
+  type: 'output',
+  dataType: 'void',
+  id: 'recap',
+  name: 'Recap',
+  category: 'Layout',
+  defaultConfigs: { label: 'Recap', showEmpty: false, groupBySections: false },
+  render: (props) => {
+    const items = collectRecapItems(
+      props.rootSpec,
+      props.dataMap,
+      props.locale,
+      props.configs?.showEmpty === true,
+      props.configs?.groupBySections === true
+    );
+
+    const blocks: VNode[] = [];
+    let fields: Extract<RecapItem, { kind: 'field' }>[] = [];
+
+    const flushFields = () => {
+      if (!fields.length) return;
+      blocks.push(
+        <dl class="fk-recap__list">
+          {fields.map((field) => (
+            <div class="fk-recap__row" key={field.label}>
+              <dt class="fk-recap__term">{field.label}</dt>
+              <dd class="fk-recap__value">{field.value}</dd>
+            </div>
+          ))}
+        </dl>
+      );
+      fields = [];
+    };
+
+    for (const item of items) {
+      if (item.kind === 'field') {
+        fields.push(item);
+        continue;
+      }
+      flushFields();
+      if (item.kind === 'section') {
+        blocks.push(
+          <span class="fk-recap__group-title" key={`section:${item.label}`}>
+            {item.label}
+          </span>
+        );
+        continue;
+      }
+      blocks.push(
+        <section class="fk-recap__section" key={item.label}>
+          <span class="fk-recap__section-title">{item.label}</span>
+          {item.rows.length ? (
+            <div class="fk-recap__table-wrap">
+              <table class="fk-recap__table">
+                <thead>
+                  <tr>
+                    <th class="fk-recap__index-cell">#</th>
+                    {item.columns.map((column) => (
+                      <th key={column}>{column}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {item.rows.map((row, index) => (
+                    <tr key={index}>
+                      <td class="fk-recap__index-cell">{index + 1}</td>
+                      {row.map((cell, cellIndex) => (
+                        <td key={cellIndex}>{cell}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p class="fk-recap__empty">
+              {fkTOr('recap.empty', 'Nothing to summarize yet.')}
+            </p>
+          )}
+        </section>
+      );
+    }
+    flushFields();
+
+    return (
+      <div class="fk-field fk-recap" style={asInlineStyle(props.styles)}>
+        <span class="fk-field__label">{labelOf(props, 'Recap')}</span>
+        {blocks.length ? (
+          blocks
+        ) : (
+          <p class="fk-recap__empty">
+            {fkTOr('recap.empty', 'Nothing to summarize yet.')}
+          </p>
+        )}
+      </div>
+    );
+  },
+});
+
 export function registerDefaultBricks(): void {
   registerBricks([
     textInputBrick,
@@ -694,6 +935,7 @@ export function registerDefaultBricks(): void {
     dataGridBrick,
     hiddenBrick,
     contentBrick,
+    recapBrick,
     groupBrick,
     rowBrick,
     columnBrick,

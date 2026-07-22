@@ -173,6 +173,7 @@ export class FkFormRender {
       <form class="fk-form" onSubmit={(event) => event.preventDefault()}>
         <fk-brick-render
           brickSpec={this.spec}
+          rootSpec={this.spec}
           data={this.currentData}
           dataMap={this.currentData}
           errors={this.visibleErrors()}

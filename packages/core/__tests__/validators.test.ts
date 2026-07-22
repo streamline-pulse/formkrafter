@@ -282,6 +282,100 @@ describe("validateBrickSpecDataDetailed", () => {
     ).toBe(true);
   });
 
+  test("required fields hidden by rules are excluded from validation", () => {
+    const spec = (): BrickSpec => ({
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "string",
+          id: "select",
+          name: "Profession",
+          configs: { uid: "a", key: "profession" },
+        },
+        {
+          type: "input",
+          dataType: "string",
+          id: "text",
+          name: "Other",
+          configs: { uid: "b", key: "other" },
+          validations: [{ validator: "required" }],
+          rules: [
+            {
+              name: "hide unless Autre",
+              type: "jsonLogic",
+              logic: { "!=": [{ var: "profession" }, "Autre"] },
+              effects: [
+                { property: { target: "hidden", type: "boolean" }, boolean: true },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(
+      validateBrickSpecDataDetailed(spec(), { profession: "Dev" }).valid
+    ).toBe(true);
+    expect(
+      validateBrickSpecDataDetailed(spec(), { profession: "Autre" }).errors
+    ).toEqual({ other: "This field is required" });
+    expect(
+      validateBrickSpecDataDetailed(spec(), { profession: "Autre", other: "X" })
+        .valid
+    ).toBe(true);
+  });
+
+  test("children of a hidden panel are excluded from validation", () => {
+    const spec: BrickSpec = {
+      type: "panel",
+      id: "root",
+      name: "root",
+      configs: { uid: "r", key: "root" },
+      children: [
+        {
+          type: "input",
+          dataType: "boolean",
+          id: "checkbox",
+          name: "Toggle",
+          configs: { uid: "a", key: "extra" },
+        },
+        {
+          type: "panel",
+          id: "group",
+          name: "Extras",
+          configs: { uid: "g", key: "extras" },
+          rules: [
+            {
+              name: "hide unless extra",
+              type: "jsonLogic",
+              logic: { "!": { var: "extra" } },
+              effects: [
+                { property: { target: "hidden", type: "boolean" }, boolean: true },
+              ],
+            },
+          ],
+          children: [
+            {
+              type: "input",
+              dataType: "string",
+              id: "text",
+              name: "Detail",
+              configs: { uid: "b", key: "detail" },
+              validations: [{ validator: "required" }],
+            },
+          ],
+        },
+      ],
+    };
+
+    expect(validateBrickSpecDataDetailed(spec, {}).valid).toBe(true);
+    expect(validateBrickSpecDataDetailed(spec, { extra: true }).valid).toBe(false);
+  });
+
   test("an invalid regex pattern does not crash validation", () => {
     const spec: BrickSpec = {
       type: "panel",

@@ -37,12 +37,27 @@
 .fk-file__selected {
   display: flex;
   align-items: center;
-  gap: calc(var(--fk-spacing) / 2);
-  max-width: 100%;
-  padding: calc(var(--fk-spacing) / 2) var(--fk-spacing);
+  gap: var(--fk-spacing);
+  width: 100%;
+  box-sizing: border-box;
+  padding: calc(var(--fk-spacing) * 0.75) var(--fk-spacing);
   border: 1px solid var(--fk-color-border);
   border-radius: var(--fk-radius);
   background: var(--fk-color-surface);
+}
+
+.fk-file__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--fk-color-primary);
+}
+
+.fk-file__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
 .fk-file__name {
@@ -64,9 +79,15 @@
   border: none;
   background: transparent;
   color: var(--fk-color-muted);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 4px 6px;
+  border-radius: calc(var(--fk-radius) / 2);
+  flex-shrink: 0;
+}
+
+.fk-file__remove:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--fk-color-danger) 12%, transparent);
 }
 
 .fk-file__remove:hover:not(:disabled) {

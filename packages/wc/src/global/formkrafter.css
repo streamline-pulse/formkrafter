@@ -259,3 +259,107 @@ select.fk-field__input {
 .fk-tags__input:focus {
   outline: none;
 }
+
+.fk-recap__list {
+  margin: 0;
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  overflow: hidden;
+}
+
+.fk-recap__row {
+  display: flex;
+  gap: var(--fk-spacing);
+  justify-content: space-between;
+  padding: calc(var(--fk-spacing) * 0.75) var(--fk-spacing);
+  font-family: var(--fk-font);
+  font-size: 0.875rem;
+}
+
+.fk-recap__row + .fk-recap__row {
+  border-top: 1px solid var(--fk-color-border);
+}
+
+.fk-recap__term {
+  color: var(--fk-color-muted);
+  margin: 0;
+}
+
+.fk-recap__value {
+  color: var(--fk-color-text);
+  margin: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.fk-recap__empty {
+  color: var(--fk-color-muted);
+  font-family: var(--fk-font);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.fk-recap__section {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+}
+
+.fk-recap__section-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fk-color-muted);
+}
+
+.fk-recap__table-wrap {
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  overflow-x: auto;
+}
+
+.fk-recap__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--fk-font);
+  font-size: 0.85rem;
+}
+
+.fk-recap__table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--fk-color-muted);
+  padding: calc(var(--fk-spacing) * 0.75) var(--fk-spacing);
+  border-bottom: 1px solid var(--fk-color-border);
+  white-space: nowrap;
+}
+
+.fk-recap__table td {
+  padding: calc(var(--fk-spacing) * 0.75) var(--fk-spacing);
+  color: var(--fk-color-text);
+  overflow-wrap: anywhere;
+}
+
+.fk-recap__table tbody tr + tr td {
+  border-top: 1px solid var(--fk-color-border);
+}
+
+.fk-recap__index-cell {
+  width: 1%;
+  color: var(--fk-color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.fk-recap__group-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--fk-color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-top: calc(var(--fk-spacing) / 2);
+  border-top: 1px solid var(--fk-color-border);
+}
+
+.fk-recap__group-title:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}

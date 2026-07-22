@@ -26,6 +26,7 @@ import type {
 })
 export class FkBrickRender {
   @Prop() brickSpec!: BrickSpec;
+  @Prop() rootSpec?: BrickSpec;
   @Prop() data?: Record<string, unknown>;
   @Prop() dataMap?: Record<string, unknown>;
   @Prop() path: string = '0';
@@ -63,6 +64,7 @@ export class FkBrickRender {
     const childNodes: VNode[] = (spec.children ?? []).map((childSpec, index) => (
       <fk-brick-render
         brickSpec={childSpec}
+        rootSpec={this.rootSpec ?? this.brickSpec}
         data={this.data}
         dataMap={this.dataMap}
         errors={this.errors}
@@ -86,6 +88,7 @@ export class FkBrickRender {
       styles: spec.styles ?? {},
       data: getBrickData(spec, this.data),
       dataMap: this.dataMap,
+      rootSpec: this.rootSpec ?? this.brickSpec,
       error: spec.configs?.key ? this.errors[spec.configs.key] : undefined,
       disabled: editing ? false : affected.disabled === true,
       path: this.path,

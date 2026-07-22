@@ -41,6 +41,7 @@ export namespace Components {
           * @default '0'
          */
         "path": string;
+        "rootSpec"?: BrickSpec;
         "selectedUid"?: string;
         "utils": Utils;
     }
@@ -76,6 +77,7 @@ export namespace Components {
           * @default false
          */
         "disabled": boolean;
+        "uploadUrl"?: string;
         "value"?: UploadedFile;
     }
     interface FkFormBuilder {
@@ -561,6 +563,7 @@ declare namespace LocalJSX {
           * @default '0'
          */
         "path"?: string;
+        "rootSpec"?: BrickSpec;
         "selectedUid"?: string;
         "utils": Utils;
     }
@@ -599,6 +602,7 @@ declare namespace LocalJSX {
          */
         "disabled"?: boolean;
         "onFileValueChange"?: (event: FkFileInputCustomEvent<UploadedFile | undefined>) => void;
+        "uploadUrl"?: string;
         "value"?: UploadedFile;
     }
     interface FkFormBuilder {
@@ -721,6 +725,7 @@ declare namespace LocalJSX {
     interface FkFileInputAttributes {
         "disabled": boolean;
         "accept": string;
+        "uploadUrl": string;
     }
     interface FkFormRenderAttributes {
         "editable": boolean;

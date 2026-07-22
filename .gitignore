@@ -7,3 +7,6 @@ loader/
 .DS_Store
 .env
 .env.*
+
+packages/core/__tests__/fixtures/
+*.local.test.ts

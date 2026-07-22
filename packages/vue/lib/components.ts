@@ -54,6 +54,7 @@ export const FkBrickNotFound: StencilVueComponent<JSX.FkBrickNotFound> = /*@__PU
 
 export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__*/ defineContainer<JSX.FkBrickRender>('fk-brick-render', defineFkBrickRender, [
   'brickSpec',
+  'rootSpec',
   'data',
   'dataMap',
   'path',
@@ -116,6 +117,7 @@ export const FkFileInput: StencilVueComponent<JSX.FkFileInput> = /*@__PURE__*/ d
   'value',
   'disabled',
   'accept',
+  'uploadUrl',
   'fileValueChange'
 ], [
   'fileValueChange'

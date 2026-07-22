@@ -59,6 +59,7 @@
   "fio_source": "Form.io definition (JSON)",
   "fio_convert": "Convert to FormKrafter",
   "fio_warnings": "Conversion warnings",
+  "fio_edit": "Edit the converted form",
   "fio_result": "Converted form, rendered",
   "fio_spec": "View the converted spec",
   "ex_theming_nav": "Theming",

@@ -5,7 +5,7 @@ import type { BrickSpec } from "../utils/brick-spec";
 import { buildValidationSchema, iterateSchemaBricks } from "../utils/brick-spec";
 import { resolveLocalizedText } from "../utils/localized-text";
 import { defaultValidationMessage } from "./default-messages";
-import { evalBrickCode } from "../brick/utils";
+import { evalBrickCode, getAffectedProperties } from "../brick/utils";
 
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv, ["email", "uri"]);
@@ -112,6 +112,30 @@ const keyOfError = (error: ErrorObject): string | undefined => {
     return error.instancePath.split("/").filter(Boolean)[0];
 };
 
+const hiddenKeys = (
+    brickSpec: BrickSpec,
+    dataMap: Record<string, unknown> | undefined
+): Set<string> => {
+    const hidden = new Set<string>();
+
+    const walk = (brick: BrickSpec, parentHidden: boolean) => {
+        const isHidden =
+            parentHidden ||
+            (brick.rules?.length
+                ? getAffectedProperties(brick.rules, dataMap).hidden === true
+                : false);
+
+        const key = brick.configs?.key;
+        if (isHidden && key) hidden.add(key);
+
+        if (brick.type === "collection") return;
+        for (const child of brick.children ?? []) walk(child, isHidden);
+    };
+
+    walk(brickSpec, false);
+    return hidden;
+};
+
 export const validateBrickSpecDataDetailed = (
     brickSpec: BrickSpec,
     data: unknown,
@@ -131,6 +155,14 @@ export const validateBrickSpecDataDetailed = (
 
     for (const [key, message] of Object.entries(customErrors(brickSpec, data, locale))) {
         if (!(key in errors)) errors[key] = message;
+    }
+
+    const dataMap =
+        typeof data === "object" && data !== null
+            ? (data as Record<string, unknown>)
+            : undefined;
+    for (const key of hiddenKeys(brickSpec, dataMap)) {
+        delete errors[key];
     }
 
     return { valid: Object.keys(errors).length === 0, errors };

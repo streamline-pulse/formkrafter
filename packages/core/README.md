@@ -93,7 +93,7 @@ services.jsRunnerService = new UnsafeEvalJsRunnerService()
 |---|---|---|
 | `services.jsRunnerService` | AST sandbox | you need full JS in a trusted context |
 | `services.dataSourceService` | `fetch` + per-URL/headers cache | auth, base URL, retry policy:<br/>`new FetchDataSourceService({ credentials: 'include', headers: {...} })` |
-| `services.fileUploadService` | base64 data-URL | real uploads (S3, API): return `{ name, type, size, url }` |
+| `services.fileUploadService` | base64 data-URL | real uploads: `new UrlFileUploadService({ url, headers, credentials })` — multipart POST + `remove()` on delete; the brick-level `uploadUrl` config overrides the default URL |
 
 ## Shared singleton state
 

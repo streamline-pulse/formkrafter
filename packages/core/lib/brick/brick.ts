@@ -20,6 +20,7 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   ) => void;
   data?: DataType;
   dataMap?: Record<string, unknown>;
+  rootSpec?: BrickSpec;
   onDataChange?: (value?: DataType) => void;
   onMove?: (from: string, to: string) => void;
   onDuplicate?: (path: string) => void;

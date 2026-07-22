@@ -61,7 +61,10 @@ export {
     FileLike,
     UploadedFile,
     FileUploadService,
-    Base64FileUploadService
+    FileUploadOptions,
+    Base64FileUploadService,
+    UrlFileUploadService,
+    UrlFileUploadDefaults
 } from "./services/file_upload_service";
 
 // Localized content
