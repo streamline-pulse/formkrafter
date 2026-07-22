@@ -86,6 +86,8 @@ registerBrick(createBrick({
 
 `h` (and the `VNode` type) are re-exported by this package — no Stencil dependency needed in your app.
 
+> The brick registry, the chrome translations, and core `services` are **page-wide singletons** (shared through `globalThis`, see the [core README](../core/README.md#shared-singleton-state)) — register bricks or override services once at app startup and every FormKrafter instance sees them, regardless of bundling.
+
 ## Theming
 
 All styling flows through CSS custom properties — override them anywhere in the cascade:

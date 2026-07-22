@@ -95,6 +95,16 @@ services.jsRunnerService = new UnsafeEvalJsRunnerService()
 | `services.dataSourceService` | `fetch` + per-URL/headers cache | auth, base URL, retry policy:<br/>`new FetchDataSourceService({ credentials: 'include', headers: {...} })` |
 | `services.fileUploadService` | base64 data-URL | real uploads (S3, API): return `{ name, type, size, url }` |
 
+## Shared singleton state
+
+`services` is a **page-wide singleton**, stored on `globalThis` under `Symbol.for("formkrafter.core.services")`. Bundlers routinely end up with several copies of this module in one app (your bundle imports core directly, and the Web Components bundle embeds its own copy) — without the shared store, replacing a service from your app would mutate a copy the components never read.
+
+What this means in practice:
+
+- `services.dataSourceService = …` (or any other override) takes effect **everywhere**, whichever bundle copy executes it — configure once at app startup.
+- Every FormKrafter instance on the page shares the same services, brick registry, and chrome translations. That is the intended behavior for host-level configuration; per-form differences belong in the spec, not in services.
+- The same pattern backs the brick registry and the i18n store in `formkrafter-wc`.
+
 ## Localized content
 
 Any text in a spec may be a string or a per-locale object; resolution helpers are exported:
