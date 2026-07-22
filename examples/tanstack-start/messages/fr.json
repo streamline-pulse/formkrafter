@@ -87,7 +87,7 @@
   "theming_view_code": "Voir le code",
   "theming_frameworks_note": "Aucun framework UI n'est chargé sur cette page : les cartes Bootstrap et Ant ne font que remapper les tokens --fk-* vers ces langages visuels. Dans une app qui embarque déjà l'un d'eux, pointez les tokens vers les variables du framework — ex. --fk-color-primary: var(--bs-primary) — et FormKrafter suit son thème.",
   "home_examples_title": "Parcourir les exemples",
-  "home_playground_hint": "Ou partez d'une page blanche dans le playground.",
+  "home_playground_hint": "Chaque exemple ci-dessous peut aussi s'ouvrir prérempli dans le playground.",
   "ex_view_spec": "Voir la spec",
   "ex_open_playground": "Ouvrir dans le playground",
   "ex_copy_spec": "Copier le JSON",
