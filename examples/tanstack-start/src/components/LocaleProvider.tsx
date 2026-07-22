@@ -1,4 +1,11 @@
-import { Fragment, createContext, useContext, useState } from 'react'
+import {
+  Fragment,
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import { getLocale, setLocale } from '#/paraglide/runtime'
 
@@ -23,13 +30,31 @@ export default function LocaleProvider({
   children: React.ReactNode
 }) {
   const [locale, setLocaleState] = useState<Locale>(() => getLocale())
+  const pendingScroll = useRef<number | null>(null)
 
   async function switchLocale(next: Locale) {
     if (next === locale) return
+    pendingScroll.current = window.scrollY
     await setLocale(next, { reload: false })
     document.documentElement.setAttribute('lang', next)
     setLocaleState(next)
   }
+
+  useLayoutEffect(() => {
+    const target = pendingScroll.current
+    if (target === null) return
+    pendingScroll.current = null
+
+    window.scrollTo(0, target)
+    let attempts = 0
+    const retry = () => {
+      if (Math.abs(window.scrollY - target) < 2 || attempts >= 20) return
+      attempts += 1
+      window.scrollTo(0, target)
+      requestAnimationFrame(retry)
+    }
+    requestAnimationFrame(retry)
+  }, [locale])
 
   return (
     <LocaleContext.Provider value={{ locale, switchLocale }}>

@@ -1,8 +1,9 @@
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { Suspense, lazy } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { m } from '#/paraglide/messages'
 import { templates } from '#/examples/catalog'
+import { useHydrated } from '#/lib/use-hydrated'
 
 const FormKrafterPlayground = lazy(
   () => import('#/components/FormKrafterPlayground')
@@ -16,9 +17,7 @@ export const Route = createFileRoute('/playground')({
 
 function Playground() {
   const { template } = Route.useSearch()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
+  const mounted = useHydrated()
 
   const initialSpec = template ? templates[template] : undefined
 
@@ -34,7 +33,11 @@ function Playground() {
 
       {mounted ? (
         <Suspense fallback={<p className="text-muted-foreground">{m.loading()}</p>}>
-          <FormKrafterPlayground key={template ?? 'blank'} initialSpec={initialSpec} />
+          <FormKrafterPlayground
+            key={template ?? 'blank'}
+            draftId={template ?? 'blank'}
+            initialSpec={initialSpec}
+          />
         </Suspense>
       ) : (
         <p className="text-muted-foreground">{m.loading()}</p>

@@ -1,9 +1,10 @@
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
 import type { ComponentType, LazyExoticComponent } from 'react'
 import { Link } from '@tanstack/react-router'
 
 import { m } from '#/paraglide/messages'
 import { templates } from '#/examples/catalog'
+import { useHydrated } from '#/lib/use-hydrated'
 
 interface ExamplePageProps {
   component: LazyExoticComponent<ComponentType>
@@ -20,10 +21,8 @@ export function ExamplePage({
   intro,
   templateId,
 }: ExamplePageProps) {
-  const [mounted, setMounted] = useState(false)
+  const mounted = useHydrated()
   const [copied, setCopied] = useState(false)
-
-  useEffect(() => setMounted(true), [])
 
   const spec = templateId ? templates[templateId] : undefined
   const specJson = spec ? JSON.stringify(spec, null, 2) : undefined

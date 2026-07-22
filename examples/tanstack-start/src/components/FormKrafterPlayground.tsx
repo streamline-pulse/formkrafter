@@ -18,16 +18,27 @@ import type { DataChangeDetail, SpecChangeDetail } from '@streamline-pulse/formk
 
 interface FormKrafterPlaygroundProps {
   initialSpec?: BrickSpec
+  draftId?: string
 }
+
+let draftKey: string | undefined
+let draftSpec: BrickSpec | undefined
 
 export default function FormKrafterPlayground({
   initialSpec,
+  draftId,
 }: FormKrafterPlaygroundProps) {
   const { locale } = useLocale()
   setFkTranslations(locale === 'fr' ? frFkTranslations : {})
 
+  const [startSpec] = useState<BrickSpec | undefined>(() => {
+    if (draftId !== undefined && draftId === draftKey && draftSpec) {
+      return structuredClone(draftSpec)
+    }
+    return initialSpec ? structuredClone(initialSpec) : undefined
+  })
   const [spec, setSpec] = useState<BrickSpec | undefined>(
-    initialSpec ? structuredClone(initialSpec) : undefined
+    startSpec ? structuredClone(startSpec) : undefined
   )
   const [result, setResult] = useState<DataChangeDetail | undefined>(undefined)
   const [validity, setValidity] = useState<ValidationResult | undefined>(undefined)
@@ -40,13 +51,18 @@ export default function FormKrafterPlayground({
   }
 
   function handleSpecChange(event: CustomEvent<SpecChangeDetail>) {
-    setSpec(event.detail.spec ? structuredClone(event.detail.spec) : undefined)
+    const next = event.detail.spec ? structuredClone(event.detail.spec) : undefined
+    setSpec(next)
+    if (draftId !== undefined) {
+      draftKey = draftId
+      draftSpec = next ? structuredClone(next) : undefined
+    }
   }
 
   return (
     <div className="space-y-8">
       <FkFormBuilder
-        spec={initialSpec ? structuredClone(initialSpec) : undefined}
+        spec={startSpec ? structuredClone(startSpec) : undefined}
         onSpecChange={handleSpecChange}
         locales={['en', 'fr']}
       />
