@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-vue",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Vue bindings for FormKrafter web components",
   "license": "MIT",
   "type": "module",
@@ -19,7 +19,10 @@
     "web-components",
     "formkrafter"
   ],
-  "files": ["dist", "LICENSE"],
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc -p .",
     "prepublishOnly": "cp ../../LICENSE . && bun run build"
@@ -34,5 +37,8 @@
   "devDependencies": {
     "typescript": "catalog:",
     "vue": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "React bindings for FormKrafter web components",
   "license": "MIT",
   "type": "module",
@@ -19,7 +19,10 @@
     "web-components",
     "formkrafter"
   ],
-  "files": ["dist", "LICENSE"],
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc -p .",
     "prepublishOnly": "cp ../../LICENSE . && bun run build"
@@ -35,5 +38,8 @@
     "@types/react": "catalog:",
     "react": "catalog:",
     "typescript": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
