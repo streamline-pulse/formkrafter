@@ -88,3 +88,9 @@ export {
 export { SpecHistory } from "./ops/history";
 export type { Operation } from "fast-json-patch";
 
+export { convertFormioForm } from "./compat/formio";
+export type {
+    FormioForm,
+    FormioComponent,
+    FormioConversionResult
+} from "./compat/formio";

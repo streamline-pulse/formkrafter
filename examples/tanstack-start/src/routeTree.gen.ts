@@ -14,6 +14,7 @@ import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as ExamplesAuthContextRouteImport } from './routes/examples/auth-context'
 import { Route as ExamplesCustomBrickRouteImport } from './routes/examples/custom-brick'
 import { Route as ExamplesDataGridRouteImport } from './routes/examples/data-grid'
+import { Route as ExamplesFormioImportRouteImport } from './routes/examples/formio-import'
 import { Route as ExamplesMultilingualRouteImport } from './routes/examples/multilingual'
 import { Route as ExamplesRemoteSelectsRouteImport } from './routes/examples/remote-selects'
 import { Route as ExamplesRulesRouteImport } from './routes/examples/rules'
@@ -45,6 +46,11 @@ const ExamplesCustomBrickRoute = ExamplesCustomBrickRouteImport.update({
 const ExamplesDataGridRoute = ExamplesDataGridRouteImport.update({
   id: '/examples/data-grid',
   path: '/examples/data-grid',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesFormioImportRoute = ExamplesFormioImportRouteImport.update({
+  id: '/examples/formio-import',
+  path: '/examples/formio-import',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExamplesMultilingualRoute = ExamplesMultilingualRouteImport.update({
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/examples/auth-context': typeof ExamplesAuthContextRoute
   '/examples/custom-brick': typeof ExamplesCustomBrickRoute
   '/examples/data-grid': typeof ExamplesDataGridRoute
+  '/examples/formio-import': typeof ExamplesFormioImportRoute
   '/examples/multilingual': typeof ExamplesMultilingualRoute
   '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
   '/examples/rules': typeof ExamplesRulesRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/examples/auth-context': typeof ExamplesAuthContextRoute
   '/examples/custom-brick': typeof ExamplesCustomBrickRoute
   '/examples/data-grid': typeof ExamplesDataGridRoute
+  '/examples/formio-import': typeof ExamplesFormioImportRoute
   '/examples/multilingual': typeof ExamplesMultilingualRoute
   '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
   '/examples/rules': typeof ExamplesRulesRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/examples/auth-context': typeof ExamplesAuthContextRoute
   '/examples/custom-brick': typeof ExamplesCustomBrickRoute
   '/examples/data-grid': typeof ExamplesDataGridRoute
+  '/examples/formio-import': typeof ExamplesFormioImportRoute
   '/examples/multilingual': typeof ExamplesMultilingualRoute
   '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
   '/examples/rules': typeof ExamplesRulesRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/examples/auth-context'
     | '/examples/custom-brick'
     | '/examples/data-grid'
+    | '/examples/formio-import'
     | '/examples/multilingual'
     | '/examples/remote-selects'
     | '/examples/rules'
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/examples/auth-context'
     | '/examples/custom-brick'
     | '/examples/data-grid'
+    | '/examples/formio-import'
     | '/examples/multilingual'
     | '/examples/remote-selects'
     | '/examples/rules'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/examples/auth-context'
     | '/examples/custom-brick'
     | '/examples/data-grid'
+    | '/examples/formio-import'
     | '/examples/multilingual'
     | '/examples/remote-selects'
     | '/examples/rules'
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   ExamplesAuthContextRoute: typeof ExamplesAuthContextRoute
   ExamplesCustomBrickRoute: typeof ExamplesCustomBrickRoute
   ExamplesDataGridRoute: typeof ExamplesDataGridRoute
+  ExamplesFormioImportRoute: typeof ExamplesFormioImportRoute
   ExamplesMultilingualRoute: typeof ExamplesMultilingualRoute
   ExamplesRemoteSelectsRoute: typeof ExamplesRemoteSelectsRoute
   ExamplesRulesRoute: typeof ExamplesRulesRoute
@@ -222,6 +235,13 @@ declare module '@tanstack/react-router' {
       path: '/examples/data-grid'
       fullPath: '/examples/data-grid'
       preLoaderRoute: typeof ExamplesDataGridRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/formio-import': {
+      id: '/examples/formio-import'
+      path: '/examples/formio-import'
+      fullPath: '/examples/formio-import'
+      preLoaderRoute: typeof ExamplesFormioImportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/examples/multilingual': {
@@ -282,6 +302,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExamplesAuthContextRoute: ExamplesAuthContextRoute,
   ExamplesCustomBrickRoute: ExamplesCustomBrickRoute,
   ExamplesDataGridRoute: ExamplesDataGridRoute,
+  ExamplesFormioImportRoute: ExamplesFormioImportRoute,
   ExamplesMultilingualRoute: ExamplesMultilingualRoute,
   ExamplesRemoteSelectsRoute: ExamplesRemoteSelectsRoute,
   ExamplesRulesRoute: ExamplesRulesRoute,

@@ -105,6 +105,19 @@ What this means in practice:
 - Every FormKrafter instance on the page shares the same services, brick registry, and chrome translations. That is the intended behavior for host-level configuration; per-form differences belong in the spec, not in services.
 - The same pattern backs the brick registry and the i18n store in `formkrafter-wc`.
 
+## Coming from Form.io
+
+`convertFormioForm(form)` turns a Form.io form definition into a FormKrafter spec — fields, layout (panels, columns, tabs, data grids, wizard → stepper), validations and simple `show/when/eq` conditionals included:
+
+```ts
+import { convertFormioForm } from '@streamline-pulse/formkrafter-core'
+
+const { spec, warnings } = convertFormioForm(formioJson)
+// warnings: anything that could not be mapped (buttons, custom JS conditionals, …)
+```
+
+The conversion never throws on unknown components — they are skipped and reported in `warnings` so you can migrate incrementally.
+
 ## Localized content
 
 Any text in a spec may be a string or a per-locale object; resolution helpers are exported:

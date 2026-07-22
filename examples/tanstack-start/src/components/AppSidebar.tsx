@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import {
+  ArrowRightLeft,
   Braces,
   Globe,
   Grid3x3,
@@ -49,6 +50,7 @@ const groups = [
       { to: '/examples/server-validation', label: () => m.ex_server_nav(), icon: ServerCog },
       { to: '/examples/custom-brick', label: () => m.ex_custom_nav(), icon: Star },
       { to: '/examples/theming', label: () => m.ex_theming_nav(), icon: Palette },
+      { to: '/examples/formio-import', label: () => m.ex_fio_nav(), icon: ArrowRightLeft },
     ],
   },
 ]
