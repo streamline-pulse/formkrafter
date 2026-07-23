@@ -128,3 +128,8 @@ describe("runSandboxed", () => {
     ).toThrow();
   });
 });
+
+test("evalBrickCode exposes the form values as dataMap", async () => {
+  const { evalBrickCode } = await import("../lib/brick/utils");
+  expect(evalBrickCode("return dataMap.qty * 2;", { qty: 21 })).toBe(42);
+});

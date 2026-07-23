@@ -938,6 +938,18 @@ export const recapBrick = createBrick({
   },
 });
 
+const fieldKeys = (spec?: BrickSpec): string[] => {
+  if (!spec) return [];
+  const keys: string[] = [];
+  const walk = (brick: BrickSpec) => {
+    const key = brick.configs?.key;
+    if (brick.type === 'input' && key && !key.startsWith('_')) keys.push(key);
+    for (const child of brick.children ?? []) walk(child);
+  };
+  walk(spec);
+  return keys;
+};
+
 export const codeBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -957,6 +969,7 @@ export const codeBrick = createBrick({
       ) : (
         <fk-code-editor
           value={(props.data as string) ?? ''}
+          completions={fieldKeys(props.rootSpec)}
           placeholder={props.configs?.placeholder as string}
           onCodeChange={(event: CustomEvent<string>) => {
             event.stopPropagation();

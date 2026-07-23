@@ -10,6 +10,7 @@ const fetchCodeMirror = () =>
     import('@codemirror/language'),
     import('@codemirror/lang-javascript'),
     import('@codemirror/theme-one-dark'),
+    import('@codemirror/autocomplete'),
   ]);
 
 let codeMirrorModules: ReturnType<typeof fetchCodeMirror> | undefined;
@@ -26,6 +27,7 @@ export class FkCodeEditor {
 
   @Prop() value = '';
   @Prop() placeholder = '';
+  @Prop() completions: string[] = [];
 
   @Event() codeChange!: EventEmitter<string>;
 
@@ -38,13 +40,49 @@ export class FkCodeEditor {
       { EditorView: View, keymap, lineNumbers, placeholder: cmPlaceholder },
       { defaultKeymap, history, historyKeymap },
       { defaultHighlightStyle, syntaxHighlighting },
-      { javascript },
+      { javascript, javascriptLanguage },
       { oneDark },
+      { autocompletion, completionKeymap },
     ] = await loadCodeMirror();
 
     if (this.disconnected) return;
 
     const isDark = !!this.host.closest('.dark, [data-fk-theme="dark"]');
+
+    const variableSource = (context: {
+      pos: number;
+      explicit: boolean;
+      matchBefore: (
+        expr: RegExp
+      ) => { from: number; to: number; text: string } | null;
+    }) => {
+      const propertyAccess = context.matchBefore(/dataMap\s*\.\s*\w*/);
+      if (propertyAccess) {
+        const dotIndex = propertyAccess.text.lastIndexOf('.');
+        return {
+          from: propertyAccess.from + dotIndex + 1,
+          options: this.completions.map((name) => ({
+            label: name,
+            type: 'property',
+          })),
+        };
+      }
+
+      const word = context.matchBefore(/\w+/);
+      if (!word && !context.explicit) return null;
+
+      return {
+        from: word ? word.from : context.pos,
+        options: [
+          { label: 'dataMap', type: 'variable' },
+          { label: 'value', type: 'variable' },
+          ...this.completions.map((name) => ({
+            label: name,
+            type: 'variable',
+          })),
+        ],
+      };
+    };
 
     this.view = new View({
       parent: this.host,
@@ -53,8 +91,10 @@ export class FkCodeEditor {
         extensions: [
           lineNumbers(),
           history(),
-          keymap.of([...defaultKeymap, ...historyKeymap]),
+          keymap.of([...defaultKeymap, ...historyKeymap, ...completionKeymap]),
           javascript(),
+          autocompletion(),
+          javascriptLanguage.data.of({ autocomplete: variableSource }),
           ...(isDark
             ? [oneDark]
             : [syntaxHighlighting(defaultHighlightStyle)]),

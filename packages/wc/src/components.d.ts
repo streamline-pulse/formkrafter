@@ -47,6 +47,10 @@ export namespace Components {
     }
     interface FkCodeEditor {
         /**
+          * @default []
+         */
+        "completions": string[];
+        /**
           * @default ''
          */
         "placeholder": string;
@@ -580,6 +584,10 @@ declare namespace LocalJSX {
         "utils": Utils;
     }
     interface FkCodeEditor {
+        /**
+          * @default []
+         */
+        "completions"?: string[];
         "onCodeChange"?: (event: FkCodeEditorCustomEvent<string>) => void;
         /**
           * @default ''
