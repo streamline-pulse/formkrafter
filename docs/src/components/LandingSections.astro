@@ -1,0 +1,570 @@
+---
+import LiveDemo from './LiveDemo.astro'
+
+interface Props {
+  lang?: 'en' | 'fr'
+}
+
+const { lang = 'en' } = Astro.props
+const base = lang === 'fr' ? '/formkrafter/fr' : '/formkrafter'
+
+const t =
+  lang === 'fr'
+    ? {
+        statsBundle: 'builder complet, gzippé',
+        statsBricks: 'bricks intégrées',
+        statsFrameworks: 'intégrations — WC, React, Vue',
+        statsEval: '`eval` — sandbox AST, compatible CSP',
+        howTitle: 'Comment ça marche',
+        howLead:
+          'Un formulaire est un spec JSON. Tout le cycle de vie tient en trois gestes.',
+        s1Title: 'Composer',
+        s1Text:
+          'Glissez des bricks dans le builder. Chaque modification émet le spec et des patches RFC 6902 — undo/redo et audit gratuits.',
+        s2Title: 'Afficher',
+        s2Text:
+          'Le même spec se rend en HTML pur, React ou Vue. Règles dynamiques, i18n et uploads inclus.',
+        s3Title: 'Valider',
+        s3Text:
+          'Le même spec produit le même verdict sur votre backend — champs cachés exclus, messages localisés.',
+        liveTitle: 'Essayez, là, tout de suite',
+        liveLead:
+          "Ce n'est pas une capture d'écran : c'est le renderer FormKrafter qui tourne dans cette page. Tapez, choisissez un rôle, regardez la validation réagir.",
+        liveCta: 'Ouvrir le builder complet →',
+        boxTitle: 'Tout est inclus',
+        boxItems: [
+          'Validation client + serveur',
+          'Règles conditionnelles (JSON Logic / JS sandboxé)',
+          'Wizard multi-étapes & onglets',
+          'Data grids avec validation par ligne',
+          'Uploads de fichiers (simple & multiple)',
+          'Formulaires imbriqués (specRef)',
+          'Brick recap (résumé vivant)',
+          'Masques de saisie',
+          'Éditeur de code avec autocomplétion',
+          'i18n contenu + chrome (en/fr)',
+          'Accessibilité WAI-ARIA',
+          'Undo/redo & patches RFC 6902',
+        ],
+        whyTitle: 'Pourquoi FormKrafter',
+        features: [
+          {
+            icon: '🧩',
+            title: 'Agnostique du framework',
+            text: 'Web Components (Stencil) à la base ; wrappers React et Vue générés depuis la même source. Un comportement, trois intégrations.',
+          },
+          {
+            icon: '⚡',
+            title: 'Léger, vraiment',
+            text: "~215 Ko gzippé pour le builder complet. Éditeur de code chargé en lazy, zéro framework CSS, styles opt-in de 6 Ko.",
+          },
+          {
+            icon: '🛡️',
+            title: 'Règles sans eval',
+            text: 'JSON Logic ou JavaScript sandboxé par un interpréteur AST : compatible CSP, builtins whitelistés, budget d\'exécution.',
+          },
+          {
+            icon: '📄',
+            title: 'Des specs, pas des composants',
+            text: 'Formulaires stockés en JSON portable. Ops immuables, patches bidirectionnels, historique undo/redo intégré.',
+          },
+          {
+            icon: '🔁',
+            title: 'Convertisseur Form.io',
+            text: 'convertFormioForm migre champs, wizards, validations, conditionnels et uploads — et signale ce qui reste à faire.',
+          },
+          {
+            icon: '🌍',
+            title: 'i18n de bout en bout',
+            text: 'Labels, options et messages localisés dans le spec ; chrome du builder en anglais et français, extensible.',
+          },
+        ],
+        migTitle: 'Vous venez de Form.io ?',
+        migText:
+          'Divisez par ~2 le poids gzippé de votre stack formulaires, abandonnez Bootstrap, et voyez vos définitions stockées fondre de 3 à 5× sur des exports de production réels.',
+        migCta: 'Guide de migration',
+        ctaTitle: 'Prêt à essayer ?',
+        ctaStart: 'Bien démarrer',
+        ctaDemo: 'Démo live',
+      }
+    : {
+        statsBundle: 'full builder, gzipped',
+        statsBricks: 'built-in bricks',
+        statsFrameworks: 'integrations — WC, React, Vue',
+        statsEval: '`eval` — AST sandbox, CSP-safe',
+        howTitle: 'How it works',
+        howLead: 'A form is a JSON spec. The whole lifecycle fits in three moves.',
+        s1Title: 'Design',
+        s1Text:
+          'Drag bricks in the builder. Every edit emits the spec plus RFC 6902 patches — undo/redo and audit for free.',
+        s2Title: 'Render',
+        s2Text:
+          'The same spec renders in plain HTML, React or Vue. Dynamic rules, i18n and uploads included.',
+        s3Title: 'Validate',
+        s3Text:
+          'The same spec produces the same verdict on your backend — hidden fields excluded, localized messages.',
+        liveTitle: 'Try it right here',
+        liveLead:
+          "This is not a screenshot: it's the FormKrafter renderer running in this page. Type, pick a role, watch validation react.",
+        liveCta: 'Open the full builder →',
+        boxTitle: 'Everything in the box',
+        boxItems: [
+          'Client + server validation',
+          'Conditional rules (JSON Logic / sandboxed JS)',
+          'Multi-step wizard & tabs',
+          'Data grids with per-row validation',
+          'File uploads (single & multiple)',
+          'Nested forms (specRef)',
+          'Recap brick (live summary)',
+          'Input masks',
+          'Code editor with autocompletion',
+          'Content + chrome i18n (en/fr)',
+          'WAI-ARIA accessibility',
+          'Undo/redo & RFC 6902 patches',
+        ],
+        whyTitle: 'Why FormKrafter',
+        features: [
+          {
+            icon: '🧩',
+            title: 'Framework-agnostic',
+            text: 'Web Components (Stencil) at the core; React and Vue wrappers generated from the same source. One behavior, three integrations.',
+          },
+          {
+            icon: '⚡',
+            title: 'Actually lightweight',
+            text: '~215 KB gzipped for the full builder. Lazy-loaded code editor, zero CSS framework, 6 KB opt-in stylesheet.',
+          },
+          {
+            icon: '🛡️',
+            title: 'Rules without eval',
+            text: 'JSON Logic or JavaScript sandboxed by an AST interpreter: CSP-safe, whitelisted builtins, execution budget.',
+          },
+          {
+            icon: '📄',
+            title: 'Specs, not components',
+            text: 'Forms stored as portable JSON. Immutable ops, patches both ways, built-in undo/redo history.',
+          },
+          {
+            icon: '🔁',
+            title: 'Form.io converter',
+            text: 'convertFormioForm migrates fields, wizards, validations, conditionals and uploads — and reports what needs a manual pass.',
+          },
+          {
+            icon: '🌍',
+            title: 'i18n end to end',
+            text: 'Localized labels, options and messages in the spec; builder chrome shipped in English and French, extendable.',
+          },
+        ],
+        migTitle: 'Coming from Form.io?',
+        migText:
+          'Roughly halve your gzipped form-stack weight, drop Bootstrap, and watch stored definitions shrink 3–5× on real production exports.',
+        migCta: 'Migration guide',
+        ctaTitle: 'Ready to try?',
+        ctaStart: 'Get started',
+        ctaDemo: 'Live demo',
+      }
+---
+
+<section class="fkl-stats" aria-label="key numbers">
+  <div class="fkl-stat">
+    <span class="fkl-stat__value">~215&nbsp;KB</span>
+    <span class="fkl-stat__label">{t.statsBundle}</span>
+  </div>
+  <div class="fkl-stat">
+    <span class="fkl-stat__value">30</span>
+    <span class="fkl-stat__label">{t.statsBricks}</span>
+  </div>
+  <div class="fkl-stat">
+    <span class="fkl-stat__value">3</span>
+    <span class="fkl-stat__label">{t.statsFrameworks}</span>
+  </div>
+  <div class="fkl-stat">
+    <span class="fkl-stat__value">0</span>
+    <span class="fkl-stat__label">{t.statsEval.replace(/`/g, '')}</span>
+  </div>
+</section>
+
+<section class="fkl-section">
+  <h2 class="fkl-h2">{t.howTitle}</h2>
+  <p class="fkl-lead">{t.howLead}</p>
+
+  <div class="fkl-steps">
+    <div class="fkl-step">
+      <span class="fkl-step__num">01</span>
+      <h3 class="fkl-step__title">{t.s1Title}</h3>
+      <p class="fkl-step__text">{t.s1Text}</p>
+      <pre class="fkl-code"><code><span class="fkl-c-kw">const</span> {'{ spec, patches }'} = event.detail</code></pre>
+    </div>
+    <div class="fkl-step">
+      <span class="fkl-step__num">02</span>
+      <h3 class="fkl-step__title">{t.s2Title}</h3>
+      <p class="fkl-step__text">{t.s2Text}</p>
+      <pre class="fkl-code"><code>&lt;<span class="fkl-c-tag">FkFormRender</span> <span class="fkl-c-attr">spec</span>={'{spec}'} /&gt;</code></pre>
+    </div>
+    <div class="fkl-step">
+      <span class="fkl-step__num">03</span>
+      <h3 class="fkl-step__title">{t.s3Title}</h3>
+      <p class="fkl-step__text">{t.s3Text}</p>
+      <pre class="fkl-code"><code><span class="fkl-c-fn">validateFormData</span>(spec, payload, <span class="fkl-c-str">'fr'</span>)</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="fkl-section">
+  <div class="fkl-live__head">
+    <div>
+      <h2 class="fkl-h2">{t.liveTitle}</h2>
+      <p class="fkl-lead">{t.liveLead}</p>
+    </div>
+    <a class="fkl-btn fkl-btn--ghost" href={`${base}/demo/`}>{t.liveCta}</a>
+  </div>
+  <div class="fkl-live__frame">
+    <LiveDemo mode="render" validateLabel={lang === 'fr' ? 'Valider' : 'Validate'} />
+  </div>
+</section>
+
+<section class="fkl-section">
+  <h2 class="fkl-h2">{t.boxTitle}</h2>
+  <ul class="fkl-box">
+    {t.boxItems.map((item) => <li class="fkl-box__item">{item}</li>)}
+  </ul>
+</section>
+
+<section class="fkl-section">
+  <h2 class="fkl-h2">{t.whyTitle}</h2>
+  <div class="fkl-grid">
+    {
+      t.features.map((feature) => (
+        <div class="fkl-card">
+          <span class="fkl-card__icon">{feature.icon}</span>
+          <h3 class="fkl-card__title">{feature.title}</h3>
+          <p class="fkl-card__text">{feature.text}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<section class="fkl-mig">
+  <div class="fkl-mig__body">
+    <h2 class="fkl-mig__title">{t.migTitle}</h2>
+    <p class="fkl-mig__text">{t.migText}</p>
+  </div>
+  <div class="fkl-mig__side">
+    <div class="fkl-mig__figures">
+      <span class="fkl-mig__figure">470&nbsp;KB&nbsp;→&nbsp;215&nbsp;KB</span>
+      <span class="fkl-mig__figure">specs&nbsp;÷&nbsp;3–5</span>
+    </div>
+    <a class="fkl-btn fkl-btn--ghost" href={`${base}/guides/formio-migration/`}>{t.migCta} →</a>
+  </div>
+</section>
+
+<section class="fkl-cta">
+  <h2 class="fkl-h2">{t.ctaTitle}</h2>
+  <div class="fkl-cta__actions">
+    <a class="fkl-btn fkl-btn--primary" href={`${base}/getting-started/`}>{t.ctaStart}</a>
+    <a class="fkl-btn fkl-btn--ghost" href={`${base}/demo/`}>{t.ctaDemo}</a>
+  </div>
+</section>
+
+<style>
+  .fkl-stats > :global(*),
+  .fkl-steps > :global(*),
+  .fkl-grid > :global(*),
+  .fkl-mig > :global(*),
+  .fkl-cta__actions > :global(*),
+  .fkl-box > :global(*),
+  .fkl-live__head > :global(*),
+  .fkl-live__head > :global(div) > :global(*:first-child),
+  .fkl-stat > :global(*),
+  .fkl-step > :global(*),
+  .fkl-card > :global(*),
+  .fkl-mig__side > :global(*) {
+    margin-top: 0 !important;
+  }
+
+  .fkl-stats {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+  }
+
+  .fkl-stat {
+    background: var(--sl-color-bg);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.35rem;
+  }
+
+  .fkl-stat__value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(120deg, var(--sl-color-accent), var(--sl-color-accent-high));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .fkl-stat__label {
+    color: var(--sl-color-gray-3);
+    font-size: 0.85rem;
+  }
+
+  .fkl-section {
+    margin-top: 4.5rem;
+  }
+
+  .fkl-h2 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .fkl-lead {
+    color: var(--sl-color-gray-3);
+    margin-top: 0.75rem;
+    max-width: 44rem;
+  }
+
+  .fkl-steps {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+  }
+
+  .fkl-step {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: var(--sl-color-bg);
+  }
+
+  .fkl-step__num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--sl-color-accent);
+  }
+
+  .fkl-step__title {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .fkl-step__text {
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    margin: 0;
+    flex: 1;
+  }
+
+  .fkl-code {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.5rem;
+    background: var(--sl-color-gray-6, var(--sl-color-black));
+    border: 1px solid var(--sl-color-gray-5);
+    font-size: 0.78rem;
+    overflow-x: auto;
+  }
+
+  .fkl-c-kw { color: var(--sl-color-accent-high); }
+  .fkl-c-tag { color: var(--sl-color-accent); }
+  .fkl-c-attr { color: var(--sl-color-accent-high); }
+  .fkl-c-fn { color: var(--sl-color-accent); }
+  .fkl-c-str { color: var(--sl-color-gray-2); }
+
+  .fkl-live__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .fkl-live__head .fkl-btn {
+    flex-shrink: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  .fkl-live__frame {
+    margin-top: 1.75rem;
+    max-width: 46rem;
+  }
+
+  .fkl-box {
+    margin-top: 2rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.6rem 1.5rem;
+  }
+
+  .fkl-box__item {
+    position: relative;
+    padding-left: 1.6rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.95rem;
+  }
+
+  .fkl-box__item::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--sl-color-accent);
+  }
+
+  .fkl-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+  }
+
+  .fkl-card {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    background: var(--sl-color-bg);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+
+  .fkl-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--sl-color-accent);
+  }
+
+  .fkl-card__icon {
+    font-size: 1.4rem;
+  }
+
+  .fkl-card__title {
+    font-size: 1.05rem;
+    margin: 0.6rem 0 0.4rem;
+  }
+
+  .fkl-card__text {
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .fkl-mig {
+    margin-top: 4.5rem;
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    background:
+      linear-gradient(var(--sl-color-bg), var(--sl-color-bg)) padding-box,
+      linear-gradient(120deg, var(--sl-color-accent), transparent 70%) border-box;
+  }
+
+  .fkl-mig__body {
+    flex: 1 1 22rem;
+  }
+
+  .fkl-mig__title {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  .fkl-mig__text {
+    color: var(--sl-color-gray-3);
+    margin: 0.6rem 0 0;
+    max-width: 36rem;
+  }
+
+  .fkl-mig__side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .fkl-mig__figures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .fkl-mig__figure {
+    font-family: var(--__sl-font-mono, monospace);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-accent-high);
+    background: var(--sl-color-bg-nav);
+  }
+
+  .fkl-cta {
+    margin: 4.5rem 0 2rem;
+    text-align: center;
+  }
+
+  .fkl-cta__actions {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .fkl-btn {
+    display: inline-block;
+    padding: 0.65rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: opacity 0.15s ease, border-color 0.15s ease;
+  }
+
+  .fkl-btn--primary {
+    background: linear-gradient(120deg, var(--sl-color-accent), var(--sl-color-accent-high));
+    color: var(--sl-color-black);
+  }
+
+  .fkl-btn--primary:hover {
+    opacity: 0.85;
+  }
+
+  .fkl-btn--ghost {
+    border: 1px solid var(--sl-color-gray-4);
+    color: var(--sl-color-white);
+  }
+
+  .fkl-btn--ghost:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent-high);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fkl-card,
+    .fkl-btn {
+      transition: none;
+    }
+    .fkl-card:hover {
+      transform: none;
+    }
+  }
+</style>

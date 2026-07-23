@@ -1,0 +1,185 @@
+---
+title: Bien démarrer
+description: Installer FormKrafter et afficher un premier formulaire en HTML pur, React ou Vue.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+FormKrafter est publié en quatre packages npm sous le scope `@streamline-pulse` :
+
+| Package | Ce que c'est |
+|---|---|
+| `formkrafter-core` | Headless : specs, ops, validation, sandbox de règles, services. Tourne en navigateur, Node, Bun. |
+| `formkrafter-wc` | L'UI en Web Components : `<fk-form-builder>`, `<fk-form-render>`, 30 bricks. |
+| `formkrafter-react` | Wrappers React (`FkFormBuilder`, `FkFormRender`) avec props et événements typés. |
+| `formkrafter-vue` | Wrappers Vue 3, même surface. |
+
+## Installation
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    <Tabs syncKey="pm">
+      <TabItem label="npm">
+        ```sh
+        npm install @streamline-pulse/formkrafter-react
+        ```
+      </TabItem>
+      <TabItem label="bun">
+        ```sh
+        bun add @streamline-pulse/formkrafter-react
+        ```
+      </TabItem>
+      <TabItem label="pnpm">
+        ```sh
+        pnpm add @streamline-pulse/formkrafter-react
+        ```
+      </TabItem>
+      <TabItem label="yarn">
+        ```sh
+        yarn add @streamline-pulse/formkrafter-react
+        ```
+      </TabItem>
+    </Tabs>
+  </TabItem>
+  <TabItem label="Vue">
+    <Tabs syncKey="pm">
+      <TabItem label="npm">
+        ```sh
+        npm install @streamline-pulse/formkrafter-vue
+        ```
+      </TabItem>
+      <TabItem label="bun">
+        ```sh
+        bun add @streamline-pulse/formkrafter-vue
+        ```
+      </TabItem>
+      <TabItem label="pnpm">
+        ```sh
+        pnpm add @streamline-pulse/formkrafter-vue
+        ```
+      </TabItem>
+      <TabItem label="yarn">
+        ```sh
+        yarn add @streamline-pulse/formkrafter-vue
+        ```
+      </TabItem>
+    </Tabs>
+  </TabItem>
+  <TabItem label="Web Components">
+    <Tabs syncKey="pm">
+      <TabItem label="npm">
+        ```sh
+        npm install @streamline-pulse/formkrafter-wc
+        ```
+      </TabItem>
+      <TabItem label="bun">
+        ```sh
+        bun add @streamline-pulse/formkrafter-wc
+        ```
+      </TabItem>
+      <TabItem label="pnpm">
+        ```sh
+        pnpm add @streamline-pulse/formkrafter-wc
+        ```
+      </TabItem>
+      <TabItem label="yarn">
+        ```sh
+        yarn add @streamline-pulse/formkrafter-wc
+        ```
+      </TabItem>
+    </Tabs>
+  </TabItem>
+</Tabs>
+
+Les wrappers embarquent `formkrafter-wc` et `formkrafter-core` transitivement — n'installez `formkrafter-core` seul que sur un backend qui valide les payloads.
+
+## Construire et afficher un formulaire
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    import { useState } from 'react'
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
+    import '@streamline-pulse/formkrafter-wc/styles.css'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    export function FormStudio() {
+      const [spec, setSpec] = useState<BrickSpec>()
+
+      return (
+        <>
+          <FkFormBuilder onSpecChange={(e) => setSpec(e.detail.spec)} />
+          {spec && (
+            <FkFormRender
+              spec={spec}
+              onFormSubmit={(e) => console.log(e.detail.data)}
+            />
+          )}
+        </>
+      )
+    }
+    ```
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <script setup lang="ts">
+    import { ref } from 'vue'
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-vue'
+    import '@streamline-pulse/formkrafter-wc/styles.css'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    const spec = ref<BrickSpec>()
+    </script>
+
+    <template>
+      <FkFormBuilder @spec-change="spec = $event.detail.spec" />
+      <FkFormRender
+        v-if="spec"
+        :spec="spec"
+        @form-submit="console.log($event.detail.data)"
+      />
+    </template>
+    ```
+  </TabItem>
+  <TabItem label="Web Components">
+    ```html
+    <script type="module">
+      import '@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js'
+      import '@streamline-pulse/formkrafter-wc/styles.css'
+
+      const builder = document.querySelector('fk-form-builder')
+      const preview = document.querySelector('fk-form-render')
+
+      builder.addEventListener('specChange', (e) => {
+        preview.spec = e.detail.spec
+      })
+      preview.addEventListener('formSubmit', (e) => {
+        console.log(e.detail.data)
+      })
+    </script>
+
+    <fk-form-builder></fk-form-builder>
+    <fk-form-render></fk-form-render>
+    ```
+  </TabItem>
+</Tabs>
+
+`styles.css` est **opt-in** (6 Ko) : tokens de design et styles des bricks, dark mode inclus. Vous pouvez l'ignorer et styler vous-même les classes `.fk-*`.
+
+## Valider côté serveur
+
+Le même spec produit exactement le même verdict sur votre backend — lignes de collections, exclusion des champs cachés et messages localisés compris :
+
+```ts
+import { validateFormData } from '@streamline-pulse/formkrafter-core'
+
+const { valid, errors } = validateFormData(spec, payload, 'fr')
+// errors: { name: 'Ce champ est obligatoire', 'contacts[0].email': 'Email invalide' }
+```
+
+## Étapes suivantes
+
+- Jouer avec la [démo live](/formkrafter/fr/demo/)
+- Parcourir les [30 bricks intégrées](/formkrafter/fr/guides/bricks/) ou [écrire la vôtre](/formkrafter/fr/guides/bricks/#custom-bricks)
+- Brancher les [règles dynamiques](/formkrafter/fr/guides/rules/) et les [services](/formkrafter/fr/guides/services/) (uploads, options distantes, auth)
+- Vous migrez ? Voir [venir de Form.io](/formkrafter/fr/guides/formio-migration/)

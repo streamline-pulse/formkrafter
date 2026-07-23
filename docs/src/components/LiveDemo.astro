@@ -1,0 +1,111 @@
+---
+interface Props {
+  mode?: 'builder' | 'render'
+  validateLabel?: string
+}
+
+const { mode = 'builder', validateLabel } = Astro.props
+---
+
+{
+  mode === 'builder' ? (
+    <div class="fk-live-demo not-content" data-fk-demo="builder">
+      <fk-form-builder></fk-form-builder>
+    </div>
+  ) : (
+    <div class="fk-live-demo fk-live-demo--render not-content" data-fk-demo="render">
+      <fk-form-render></fk-form-render>
+      {validateLabel && (
+        <button type="button" class="fk-live-demo__validate" data-fk-demo-validate>
+          {validateLabel}
+        </button>
+      )}
+    </div>
+  )
+}
+
+<script>
+  import '@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js'
+  import '@streamline-pulse/formkrafter-wc/styles.css'
+
+  const demoSpec = {
+    type: 'panel',
+    id: 'column',
+    name: 'Form',
+    configs: { uid: 'demo-root', key: 'form' },
+    children: [
+      {
+        type: 'input',
+        dataType: 'string',
+        id: 'text',
+        name: 'Text',
+        configs: {
+          uid: 'demo-name',
+          key: 'name',
+          label: { en: 'Full name', fr: 'Nom complet' },
+        },
+        validations: [{ validator: 'required' }],
+      },
+      {
+        type: 'input',
+        dataType: 'string',
+        id: 'select',
+        name: 'Select',
+        configs: {
+          uid: 'demo-role',
+          key: 'role',
+          label: { en: 'Role', fr: 'Rôle' },
+          optionsSource: 'static',
+          options: {
+            en: 'Developer\nDesigner\nManager',
+            fr: 'Développeur·se\nDesigner\nManager',
+          },
+        },
+      },
+    ],
+  }
+
+  const syncTheme = () => {
+    const dark = document.documentElement.dataset.theme === 'dark'
+    for (const host of document.querySelectorAll('[data-fk-demo]')) {
+      if (dark) (host as HTMLElement).setAttribute('data-fk-theme', 'dark')
+      else (host as HTMLElement).removeAttribute('data-fk-theme')
+    }
+  }
+
+  syncTheme()
+  new MutationObserver(syncTheme).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  })
+
+  const bootstrap = async () => {
+    const builderHost = document.querySelector('[data-fk-demo="builder"]')
+    const renderHost = document.querySelector('[data-fk-demo="render"]')
+
+    if (builderHost) {
+      await customElements.whenDefined('fk-form-builder')
+      const builder = builderHost.querySelector('fk-form-builder') as HTMLElement & {
+        spec?: unknown
+        locales?: string[]
+      }
+      builder.locales = ['en', 'fr']
+      builder.spec = demoSpec
+    }
+
+    if (renderHost) {
+      await customElements.whenDefined('fk-form-render')
+      const render = renderHost.querySelector('fk-form-render') as HTMLElement & {
+        spec?: unknown
+        validate?: () => Promise<unknown>
+      }
+      render.spec = demoSpec
+
+      renderHost
+        .querySelector('[data-fk-demo-validate]')
+        ?.addEventListener('click', () => void render.validate?.())
+    }
+  }
+
+  void bootstrap()
+</script>
