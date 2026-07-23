@@ -364,7 +364,7 @@ export class FkRulesEditor {
 
               {mode === 'javaScript' ? (
                 <div class="fk-rule__advanced">
-                  <fk-code-editor
+                  <fk-code-editor completions={this.fields}
                     value={rule.code ?? ''}
                     placeholder="return dataMap.country === 'BJ';"
                     onCodeChange={(event) => this.commitCode(index, event.detail)}

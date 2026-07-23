@@ -240,7 +240,7 @@ export class FkPropertyPanel {
       nodes.push(
         <label class="fk-props__field">
           <span class="fk-props__label">Code</span>
-          <fk-code-editor
+          <fk-code-editor completions={this.fields}
             value={(configs.optionsCode as string) ?? ''}
             placeholder="return dataMap.country === 'BJ' ? ['Cotonou'] : ['Paris'];"
             onCodeChange={(event) => this.emitConfigs({ optionsCode: event.detail })}
@@ -457,7 +457,7 @@ export class FkPropertyPanel {
             <span class="fk-props__label">{fkT('panel.custom')}</span>
           </label>
           {custom ? (
-            <fk-code-editor
+            <fk-code-editor completions={this.fields}
               value={custom.customValidator ?? ''}
               placeholder={'return value?.startsWith("BJ-") ? true : "Must start with BJ-";'}
               onCodeChange={(event) =>

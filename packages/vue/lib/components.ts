@@ -84,6 +84,7 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
 export const FkCodeEditor: StencilVueComponent<JSX.FkCodeEditor> = /*@__PURE__*/ defineContainer<JSX.FkCodeEditor>('fk-code-editor', defineFkCodeEditor, [
   'value',
   'placeholder',
+  'completions',
   'codeChange'
 ], [
   'codeChange'
