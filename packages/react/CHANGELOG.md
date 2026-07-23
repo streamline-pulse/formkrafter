@@ -1,5 +1,38 @@
 # @streamline-pulse/formkrafter-react
 
+## 0.4.0
+
+### Minor Changes
+
+- da442d9: Code brick and a friendlier empty canvas.
+
+  - New `code` input brick: a CodeMirror editor (lazy-loaded, One Dark in dark contexts) for collecting JavaScript or any code snippet as a string value; shows a static preview inside the builder canvas.
+  - Code editors gain JavaScript autocompletion: language snippets plus the form's field keys, offered as bare variables and as `dataMap.<key>` completions — in the code brick (keys from the rendered form) and in every builder editor (rules, custom validator, JS options).
+  - The empty builder canvas is now a single large drop zone — the "your form is empty" message and the drop target are one and the same, so the first brick can be dropped anywhere on it.
+
+- 9f48150: Input masks, data-grid row reordering, nested option keys and a dark code editor.
+
+  - Text and phone bricks support a `mask` config (`9` digit, `a` letter, `A` uppercase letter, `*` alphanumeric — literals auto-inserted), editable in the property panel. The Form.io converter maps `inputMask` to it.
+  - Data-grid rows can be reordered with accessible up/down buttons; per-row touched state follows the move.
+  - `labelKey` / `valueKey` accept dotted paths (`name.common`) for object-shaped options, in every options source.
+  - The code editor switches to the One Dark theme when rendered inside a dark context (`.dark` or `data-fk-theme="dark"`).
+
+- a7b15b8: Nested forms: reference a form inside another form.
+
+  - New `nested-form` brick: point it at another spec through its `specRef` config (editable in the property panel). At render time the referenced form is resolved and inlined as a labelled group — fields, validations and rules included.
+  - New `services.specSourceService` (default: `FetchSpecSourceService`, fetches the ref as a URL with optional `baseUrl`/headers/credentials and caching) — override it to load specs from your own store.
+  - New core APIs `expandSpec(spec, options?)` and `hasNestedForms(spec)`: the async expansion pass inlines every reference (cycle detection, configurable depth limit) and returns a plain spec that the whole synchronous pipeline — validation, rules, recap, backend `validateFormData` — consumes unchanged.
+  - `fk-form-render` expands automatically, with a loading state and an inline alert when a reference cannot be resolved.
+  - The Form.io converter maps `form` components to `nested-form` bricks (their reference kept as `specRef`).
+
+### Patch Changes
+
+- Updated dependencies [da442d9]
+- Updated dependencies [9f48150]
+- Updated dependencies [a7b15b8]
+- Updated dependencies [d886a52]
+  - @streamline-pulse/formkrafter-wc@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
