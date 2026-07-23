@@ -67,6 +67,10 @@ export namespace Components {
         "value"?: unknown;
     }
     interface FkDropArea {
+        /**
+          * @default false
+         */
+        "empty": boolean;
         "path": string;
     }
     interface FkEmptyForm {
@@ -598,6 +602,10 @@ declare namespace LocalJSX {
         "value"?: unknown;
     }
     interface FkDropArea {
+        /**
+          * @default false
+         */
+        "empty"?: boolean;
         "onBrickDrop"?: (event: FkDropAreaCustomEvent<BrickDropDetail>) => void;
         "path": string;
     }
@@ -737,6 +745,7 @@ declare namespace LocalJSX {
     }
     interface FkDropAreaAttributes {
         "path": string;
+        "empty": boolean;
     }
     interface FkFileInputAttributes {
         "disabled": boolean;

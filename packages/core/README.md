@@ -94,6 +94,7 @@ services.jsRunnerService = new UnsafeEvalJsRunnerService()
 | `services.jsRunnerService` | AST sandbox | you need full JS in a trusted context |
 | `services.dataSourceService` | `fetch` + per-URL/headers cache | auth, base URL, retry policy:<br/>`new FetchDataSourceService({ credentials: 'include', headers: {...} })` |
 | `services.fileUploadService` | base64 data-URL | real uploads: `new UrlFileUploadService({ url, headers, credentials })` — multipart POST + `remove()` on delete; the brick-level `uploadUrl` config overrides the default URL |
+| `services.specSourceService` | `fetch` the ref as a URL (`FetchSpecSourceService`, with `baseUrl`/headers/caching) | nested forms loaded from your own store: `fetchSpec(ref)` returns a `BrickSpec` |
 
 ## Shared singleton state
 
@@ -104,6 +105,23 @@ What this means in practice:
 - `services.dataSourceService = …` (or any other override) takes effect **everywhere**, whichever bundle copy executes it — configure once at app startup.
 - Every FormKrafter instance on the page shares the same services, brick registry, and chrome translations. That is the intended behavior for host-level configuration; per-form differences belong in the spec, not in services.
 - The same pattern backs the brick registry and the i18n store in `formkrafter-wc`.
+
+## Nested forms
+
+A `nested-form` brick references another form through its `specRef` config. `expandSpec` resolves every reference (cycle detection, depth limit) and returns a plain spec the whole synchronous pipeline consumes unchanged:
+
+```ts
+import { expandSpec, hasNestedForms, services, validateFormData } from '@streamline-pulse/formkrafter-core'
+
+services.specSourceService = {
+  fetchSpec: async (ref) => (await fetch(`/api/forms/${ref}`)).json(),
+}
+
+const full = await expandSpec(spec)          // nested-form bricks become labelled groups
+const verdict = validateFormData(full, data) // backend validation sees the complete tree
+```
+
+`fk-form-render` runs this expansion automatically on the frontend — configure the service once at startup.
 
 ## Coming from Form.io
 

@@ -938,6 +938,35 @@ export const recapBrick = createBrick({
   },
 });
 
+export const codeBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'code',
+  name: 'Code',
+  category: 'Inputs',
+  defaultConfigs: { label: 'Code', placeholder: 'return value;' },
+  render: (props) =>
+    fieldBlock(
+      props,
+      'Code',
+      props.editable || props.disabled ? (
+        <pre class="fk-code-preview">
+          {(props.data as string) ||
+            String(props.configs?.placeholder ?? '')}
+        </pre>
+      ) : (
+        <fk-code-editor
+          value={(props.data as string) ?? ''}
+          placeholder={props.configs?.placeholder as string}
+          onCodeChange={(event: CustomEvent<string>) => {
+            event.stopPropagation();
+            props.onDataChange?.(event.detail || undefined);
+          }}
+        />
+      )
+    ),
+});
+
 export const nestedFormBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -981,6 +1010,7 @@ export function registerDefaultBricks(): void {
     tagsBrick,
     signatureBrick,
     addressBrick,
+    codeBrick,
     fileBrick,
     dataGridBrick,
     hiddenBrick,

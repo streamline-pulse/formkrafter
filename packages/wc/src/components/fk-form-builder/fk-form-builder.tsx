@@ -420,7 +420,7 @@ export class FkFormBuilder {
                 locale={this.editLocale}
               />
             ) : (
-              [<fk-empty-form />, <fk-drop-area path="0" />]
+              <fk-drop-area path="0" empty={true} />
             )}
           </div>
         </main>

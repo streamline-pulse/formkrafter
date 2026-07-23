@@ -49,20 +49,22 @@ sequenceDiagram
 
 Underscore-prefixed keys injected via the `data` prop (e.g. `_authToken`) are available internally (interpolation, rules) but **excluded from every emitted payload**.
 
-## Built-in bricks (28)
+## Built-in bricks (30)
 
 | Category | Bricks |
 |---|---|
-| **Inputs** (18) | text, email, password, url, phone, textarea, number, date, time, datetime, select, multi-select, radio, select-boxes, checkbox, tags, signature, address |
-| **Data** (3) | file (pluggable upload, per-brick `uploadUrl`, `multiple` mode), data-grid (repeating rows, per-row validation), hidden |
-| **Layout** (7) | content, recap (live summary of the whole form), group (fieldset), row, column, stepper (wizard), tabs |
+| **Inputs** (19) | text, email, password, url, phone, textarea, number, date, time, datetime, select, multi-select, radio, select-boxes, checkbox, tags, signature, address, code (CodeMirror, lazy-loaded) |
+| **Data** (3) | file (pluggable upload, per-brick `uploadUrl`, `multiple` mode), data-grid (repeating rows, per-row validation, row reordering), hidden |
+| **Layout** (8) | content, recap (live summary of the whole form), nested-form (reference another form by `specRef`), group (fieldset), row, column, stepper (wizard), tabs |
 
 Notable behaviors:
 
-- **select / multi-select** — searchable combobox; options from `static`, `dataMap`, `remote` (URL + headers with `{key}` interpolation, optional server-side search param, cached) or `js` (sandboxed).
-- **data-grid** — the row template is edited like any panel; at render time each row scopes its own data; `minItems`/`maxItems` validate row counts; `validate()` reports `contacts[0].email` style keys.
-- **stepper** — per-step validation gate, optional step-click jumping, optional Submit button emitting `formSubmit`. **tabs** — optional "validate tab before leaving".
-- **text-family inputs** — optional `prefix`/`suffix` adornments (currency, %, units).
+- **select / multi-select** — searchable combobox (full WAI-ARIA pattern, keyboard navigation); options from `static`, `dataMap`, `remote` (URL + headers with `{key}` interpolation, optional server-side search param, cached) or `js` (sandboxed); `labelKey`/`valueKey` accept dotted paths (`name.common`).
+- **data-grid** — the row template is edited like any panel; at render time each row scopes its own data; `minItems`/`maxItems` validate row counts; rows reorder with accessible up/down buttons; `validate()` reports `contacts[0].email` style keys.
+- **stepper** — per-step validation gate, optional step-click jumping, optional Submit button emitting `formSubmit`. **tabs** — optional "validate tab before leaving", arrow-key navigation.
+- **text / phone** — optional `prefix`/`suffix` adornments and a `mask` config (`9` digit, `a` letter, `A` uppercase, `*` alphanumeric; literals auto-inserted).
+- **nested-form** — set `specRef` in its configs; at render time `fk-form-render` resolves it through `services.specSourceService` and inlines the referenced form (fields, validations, rules). See the [core README](../core/README.md#nested-forms) for `expandSpec`.
+- **recap** — `groupBySections` turns labelled panels into titled sections; collections render as tables.
 
 Register your own bricks:
 
