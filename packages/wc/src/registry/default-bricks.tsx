@@ -938,6 +938,29 @@ export const recapBrick = createBrick({
   },
 });
 
+export const nestedFormBrick = createBrick({
+  type: 'panel',
+  dataType: 'void',
+  id: 'nested-form',
+  name: 'Nested form',
+  category: 'Layout',
+  defaultConfigs: { label: 'Nested form', specRef: '' },
+  render: (props) => {
+    const ref = (props.configs?.specRef as string) || '';
+
+    return (
+      <div class="fk-nested-form" style={asInlineStyle(props.styles)}>
+        <span class="fk-field__label">{labelOf(props, 'Nested form')}</span>
+        <p class="fk-nested-form__hint">
+          {ref
+            ? `${fkTOr('nestedForm.ref', 'Referenced form')}: ${ref}`
+            : fkTOr('nestedForm.missing', 'Set the specRef config to reference a form.')}
+        </p>
+      </div>
+    );
+  },
+});
+
 export function registerDefaultBricks(): void {
   registerBricks([
     textInputBrick,
@@ -963,6 +986,7 @@ export function registerDefaultBricks(): void {
     hiddenBrick,
     contentBrick,
     recapBrick,
+    nestedFormBrick,
     groupBrick,
     rowBrick,
     columnBrick,

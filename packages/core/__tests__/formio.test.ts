@@ -302,6 +302,26 @@ describe("convertFormioForm", () => {
         expect(brickById(spec, "plain").configs?.mask).toBeUndefined();
     });
 
+    test("form components become nested-form bricks", () => {
+        const { spec, warnings } = convertFormioForm({
+            components: [
+                {
+                    type: "form",
+                    key: "identite",
+                    label: "Identité",
+                    form: "identity-form",
+                },
+            ],
+        });
+
+        const nested = brickById(spec, "identite");
+        expect(nested.id).toBe("nested-form");
+        expect(nested.configs?.specRef).toBe("identity-form");
+        expect(
+            warnings.some((warning) => warning.includes("specSourceService"))
+        ).toBe(true);
+    });
+
     test("unknown component types warn and are skipped", () => {
         const { spec, warnings } = convertFormioForm({
             components: [

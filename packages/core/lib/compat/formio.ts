@@ -346,6 +346,28 @@ function convertComponent(
         ];
     }
 
+    if (type === "form") {
+        const ref = String(
+            component.form ?? component.path ?? component.src ?? ""
+        );
+        ctx.warn(
+            `nested form "${component.key ?? "?"}" references "${ref}" — configure services.specSourceService so it can be resolved`
+        );
+        return [
+            withCommon(component, ctx, {
+                type: "panel",
+                id: "nested-form",
+                name: "Nested form",
+                configs: {
+                    uid: ctx.nextUid(),
+                    key: component.key ?? ctx.nextUid(),
+                    label: component.label,
+                    specRef: ref,
+                },
+            }),
+        ];
+    }
+
     if (type === "file") {
         const configs = baseConfigs(component, ctx);
         if (component.filePattern && component.filePattern !== "*") {

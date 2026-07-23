@@ -37,6 +37,7 @@ export {
   hiddenBrick,
   contentBrick,
   recapBrick,
+  nestedFormBrick,
   groupBrick,
   rowBrick,
   columnBrick,
