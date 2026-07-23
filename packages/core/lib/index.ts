@@ -104,3 +104,8 @@ export type {
     SpecSourceService,
     FetchSpecSourceDefaults
 } from "./services/spec_source_service";
+export { FetchOptionSourceService } from "./services/option_source_service";
+export type {
+    OptionSourceService,
+    FetchOptionSourceDefaults
+} from "./services/option_source_service";

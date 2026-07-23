@@ -333,4 +333,60 @@ describe("convertFormioForm", () => {
         expect(spec.children).toHaveLength(1);
         expect(warnings.some((w) => w.includes('"survey"'))).toBe(true);
     });
+
+    test("options compact to a newline string when label equals value", () => {
+        const { spec } = convertFormioForm({
+            components: [
+                {
+                    type: "radio",
+                    key: "city",
+                    values: [
+                        { label: "Cotonou", value: "Cotonou" },
+                        { label: "Paris", value: "Paris" },
+                    ],
+                },
+            ],
+        });
+
+        expect(brickById(spec, "city").configs?.options).toBe("Cotonou\nParis");
+    });
+
+    test("options stay objects when any label differs from its value", () => {
+        const { spec } = convertFormioForm({
+            components: [
+                {
+                    type: "radio",
+                    key: "sex",
+                    values: [
+                        { label: "Masculin", value: "M" },
+                        { label: "Féminin", value: "F" },
+                    ],
+                },
+            ],
+        });
+
+        expect(brickById(spec, "sex").configs?.options).toEqual([
+            { label: "Masculin", value: "M" },
+            { label: "Féminin", value: "F" },
+        ]);
+    });
+
+    test("large static option lists trigger a catalog recommendation", () => {
+        const values = Array.from({ length: 150 }, (_, i) => ({
+            label: `Option ${i}`,
+            value: `Option ${i}`,
+        }));
+        const { warnings } = convertFormioForm({
+            components: [{ type: "select", key: "profession", data: { values } }],
+        });
+
+        expect(
+            warnings.some(
+                (w) =>
+                    w.includes("profession") &&
+                    w.includes("150 static options") &&
+                    w.includes("optionsRef")
+            )
+        ).toBe(true);
+    });
 });

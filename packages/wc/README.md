@@ -59,7 +59,7 @@ Underscore-prefixed keys injected via the `data` prop (e.g. `_authToken`) are av
 
 Notable behaviors:
 
-- **select / multi-select** — searchable combobox (full WAI-ARIA pattern, keyboard navigation); options from `static`, `dataMap`, `remote` (URL + headers with `{key}` interpolation, optional server-side search param, cached) or `js` (sandboxed); `labelKey`/`valueKey` accept dotted paths (`name.common`).
+- **select / multi-select** — searchable combobox (full WAI-ARIA pattern, keyboard navigation); options from `static`, `dataMap`, `remote` (URL + headers with `{key}` interpolation, optional server-side search param, cached), `js` (sandboxed) or `catalog` (`optionsRef` resolved through `services.optionSourceService` — store a big list once, reference it everywhere); `labelKey`/`valueKey` accept dotted paths (`name.common`). Static options accept a plain newline string when label = value.
 - **data-grid** — the row template is edited like any panel; at render time each row scopes its own data; `minItems`/`maxItems` validate row counts; rows reorder with accessible up/down buttons; `validate()` reports `contacts[0].email` style keys.
 - **stepper** — per-step validation gate, optional step-click jumping, optional Submit button emitting `formSubmit`. **tabs** — optional "validate tab before leaving", arrow-key navigation.
 - **text / phone** — optional `prefix`/`suffix` adornments and a `mask` config (`9` digit, `a` letter, `A` uppercase, `*` alphanumeric; literals auto-inserted).

@@ -95,6 +95,7 @@ services.jsRunnerService = new UnsafeEvalJsRunnerService()
 | `services.dataSourceService` | `fetch` + per-URL/headers cache | auth, base URL, retry policy:<br/>`new FetchDataSourceService({ credentials: 'include', headers: {...} })` |
 | `services.fileUploadService` | base64 data-URL | real uploads: `new UrlFileUploadService({ url, headers, credentials })` — multipart POST + `remove()` on delete; the brick-level `uploadUrl` config overrides the default URL |
 | `services.specSourceService` | `fetch` the ref as a URL (`FetchSpecSourceService`, with `baseUrl`/headers/caching) | nested forms loaded from your own store: `fetchSpec(ref)` returns a `BrickSpec` |
+| `services.optionSourceService` | `fetch` the ref as a URL (`FetchOptionSourceService`, with `baseUrl`/headers/caching) | shared option catalogs (`optionsSource: "catalog"` + `optionsRef`) served from your own store: `fetchOptions(ref)` returns the option list |
 
 ## Shared singleton state
 

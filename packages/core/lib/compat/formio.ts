@@ -324,7 +324,7 @@ function convertComponent(
                 configs: {
                     ...baseConfigs(component, ctx),
                     optionsSource: "static",
-                    options: staticOptions(component.values),
+                    options: emitOptions(staticOptions(component.values), component, ctx),
                 },
             }),
         ];
@@ -340,7 +340,7 @@ function convertComponent(
                 configs: {
                     ...baseConfigs(component, ctx),
                     optionsSource: "static",
-                    options: staticOptions(component.values),
+                    options: emitOptions(staticOptions(component.values), component, ctx),
                 },
             }),
         ];
@@ -438,7 +438,7 @@ function convertSelect(component: FormioComponent, ctx: Converter): BrickSpec {
         if (component.searchField) configs.searchParam = component.searchField;
     } else if (component.dataSrc === "json" && Array.isArray(component.data?.json)) {
         configs.optionsSource = "static";
-        configs.options = jsonOptions(component, ctx);
+        configs.options = emitOptions(jsonOptions(component, ctx), component, ctx);
     } else {
         if (component.dataSrc && !["values", "json", ""].includes(component.dataSrc)) {
             ctx.warn(
@@ -446,7 +446,7 @@ function convertSelect(component: FormioComponent, ctx: Converter): BrickSpec {
             );
         }
         configs.optionsSource = "static";
-        configs.options = staticOptions(component.data?.values ?? component.values);
+        configs.options = emitOptions(staticOptions(component.data?.values ?? component.values), component, ctx);
     }
 
     return withCommon(component, ctx, {
@@ -493,6 +493,32 @@ function staticOptions(
         label: String(option.label ?? option.value ?? ""),
         value: String(option.value ?? option.label ?? ""),
     }));
+}
+
+const LARGE_OPTIONS_THRESHOLD = 100;
+
+function emitOptions(
+    list: Array<{ label: string; value: string }>,
+    component: FormioComponent,
+    ctx: Converter
+): string | Array<{ label: string; value: string }> {
+    if (list.length > LARGE_OPTIONS_THRESHOLD) {
+        ctx.warn(
+            `"${component.key ?? "?"}" embeds ${list.length} static options — consider optionsSource "remote" or a shared catalog (optionsSource "catalog" + optionsRef) to keep the spec small`
+        );
+    }
+
+    const compactable =
+        list.length > 0 &&
+        list.every(
+            (option) =>
+                option.label === option.value &&
+                option.value !== "" &&
+                option.value === option.value.trim() &&
+                !option.value.includes("\n")
+        );
+
+    return compactable ? list.map((option) => option.value).join("\n") : list;
 }
 
 function baseConfigs(
