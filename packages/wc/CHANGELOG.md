@@ -1,5 +1,27 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.3.0
+
+### Minor Changes
+
+- 973d369: Accessibility pass on the rendered form controls.
+
+  - Select / multi-select now implement the WAI-ARIA combobox pattern: focusable trigger (`role="combobox"`, `aria-expanded`, `aria-controls`), listbox with per-option ids and `aria-activedescendant`, full keyboard support (ArrowUp/Down, Home/End, Enter, Escape with focus return, Tab closes), highlighted active option, accessible labels on chip-remove and clear buttons, `aria-invalid` when the field has an error.
+  - Validation errors render as `role="alert"` live regions and native inputs (text family, textarea, number, date, radio group) carry `aria-invalid`.
+  - Stepper steps are real buttons with `aria-current="step"`; tabs get `aria-selected`, roving tabindex and ArrowLeft/ArrowRight navigation.
+  - Consistent `:focus-visible` outlines across all interactive controls.
+
+- e48934e: Multi-file uploads and a much lighter render bundle.
+
+  - The file brick now supports `multiple: true` in its configs: the value becomes an `UploadedFile[]`, each file has its own remove button (calling the upload service's `remove`), and an "+ Add a file" button appends more. The Form.io converter maps `multiple` file components to it (dataType `array`).
+  - CodeMirror is now loaded lazily by `fk-code-editor`: it only downloads when a code editor is actually shown (Rules/JS panels in the builder). Render-only consumers no longer pay for it — the FormKrafter chunk of a typical app drops from ~1 MB to ~424 KB minified (~125 KB gzip).
+
+### Patch Changes
+
+- Updated dependencies [973d369]
+- Updated dependencies [e48934e]
+  - @streamline-pulse/formkrafter-core@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
