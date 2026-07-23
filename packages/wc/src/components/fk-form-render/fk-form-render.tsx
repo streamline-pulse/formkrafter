@@ -1,7 +1,9 @@
 import { Component, Element, Event, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import {
+  expandSpec,
   getAffectedProperties,
+  hasNestedForms,
   iterateBricks,
   validateBrickSpecDataDetailed,
 } from '@streamline-pulse/formkrafter-core';
@@ -11,6 +13,7 @@ import type {
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core';
 import type { DataChangeDetail } from '../../utils/events';
+import { fkT } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-form-render',
@@ -31,14 +34,52 @@ export class FkFormRender {
 
   @State() currentData: Record<string, unknown> = {};
   @State() touched: Record<string, boolean> = {};
+  @State() expandedSpec?: BrickSpec;
+  @State() expanding = false;
+  @State() expandError?: string;
 
   componentWillLoad() {
     this.currentData = { ...this.data };
+    return this.runExpansion();
   }
 
   @Watch('data')
   syncData(next?: Record<string, unknown>) {
     this.currentData = { ...next };
+  }
+
+  @Watch('spec')
+  onSpecChange() {
+    void this.runExpansion();
+  }
+
+  private effectiveSpec(): BrickSpec {
+    return this.expandedSpec ?? this.spec;
+  }
+
+  private async runExpansion(): Promise<void> {
+    this.expandError = undefined;
+
+    if (this.editable || !hasNestedForms(this.spec)) {
+      this.expandedSpec = undefined;
+      return;
+    }
+
+    const source = this.spec;
+    this.expanding = true;
+
+    try {
+      const expanded = await expandSpec(source);
+      if (this.spec === source) this.expandedSpec = expanded;
+    } catch (error) {
+      if (this.spec === source) {
+        this.expandedSpec = undefined;
+        this.expandError =
+          error instanceof Error ? error.message : String(error);
+      }
+    } finally {
+      if (this.spec === source) this.expanding = false;
+    }
   }
 
   private publicData(): Record<string, unknown> {
@@ -72,7 +113,7 @@ export class FkFormRender {
   ): Record<string, unknown> {
     let result = data;
 
-    for (const { brick } of iterateBricks(this.spec)) {
+    for (const { brick } of iterateBricks(this.effectiveSpec())) {
       const key = brick.configs?.key;
       if (!key || !brick.rules?.length) continue;
 
@@ -88,7 +129,7 @@ export class FkFormRender {
   @Method()
   async validate(): Promise<ValidationResult> {
     const touched: Record<string, boolean> = {};
-    for (const { brick } of iterateBricks(this.spec)) {
+    for (const { brick } of iterateBricks(this.effectiveSpec())) {
       const key = brick.configs?.key;
       if (key) touched[key] = true;
     }
@@ -146,7 +187,7 @@ export class FkFormRender {
       )
     );
 
-    return validateBrickSpecDataDetailed(this.spec, presentData, this.locale);
+    return validateBrickSpecDataDetailed(this.effectiveSpec(), presentData, this.locale);
   }
 
   private visibleErrors(): Record<string, string> {
@@ -169,11 +210,20 @@ export class FkFormRender {
   render() {
     if (!this.spec) return null;
 
+    if (this.expanding) {
+      return <p class="fk-form__expanding">{fkT('nestedForm.loading')}</p>;
+    }
+
     return (
       <form class="fk-form" onSubmit={(event) => event.preventDefault()}>
+        {this.expandError ? (
+          <span class="fk-field__error" role="alert">
+            {this.expandError}
+          </span>
+        ) : null}
         <fk-brick-render
-          brickSpec={this.spec}
-          rootSpec={this.spec}
+          brickSpec={this.effectiveSpec()}
+          rootSpec={this.effectiveSpec()}
           data={this.currentData}
           dataMap={this.currentData}
           errors={this.visibleErrors()}

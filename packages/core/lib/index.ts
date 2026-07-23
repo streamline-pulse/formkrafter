@@ -97,3 +97,10 @@ export type {
     FormioComponent,
     FormioConversionResult
 } from "./compat/formio";
+export { expandSpec, hasNestedForms } from "./utils/expand-spec";
+export type { ExpandSpecOptions } from "./utils/expand-spec";
+export { FetchSpecSourceService } from "./services/spec_source_service";
+export type {
+    SpecSourceService,
+    FetchSpecSourceDefaults
+} from "./services/spec_source_service";

@@ -290,6 +290,13 @@ export class FkPropertyPanel {
               ),
             ]
           : null}
+        {configs && 'specRef' in configs
+          ? this.textField(
+              fkTOr('panel.specRef', 'Referenced form (specRef)'),
+              configs.specRef,
+              (value) => this.emitConfigs({ specRef: value })
+            )
+          : null}
         {configs && 'mask' in configs
           ? this.textField(
               fkTOr('panel.mask', 'Input mask (9=digit, a=letter, *=any)'),

@@ -376,3 +376,19 @@ select.fk-field__input {
   outline: 2px solid color-mix(in srgb, var(--fk-color-primary) 55%, transparent);
   outline-offset: 1px;
 }
+
+.fk-nested-form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+  padding: var(--fk-spacing);
+  border: 1px dashed var(--fk-color-border);
+  border-radius: var(--fk-radius);
+}
+
+.fk-nested-form__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--fk-color-muted);
+  font-family: var(--fk-font);
+}
