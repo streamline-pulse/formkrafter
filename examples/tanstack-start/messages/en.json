@@ -92,5 +92,9 @@
   "ex_open_playground": "Open in the playground",
   "ex_copy_spec": "Copy JSON",
   "ex_copied_spec": "Copied!",
-  "ex_view_page": "View the example"
+  "ex_view_page": "View the example",
+  "ex_nested_nav": "Nested form",
+  "ex_nested_title": "Reference a form inside a form",
+  "ex_nested_intro": "The host form embeds two reusable forms through nested-form bricks: at render time each specRef is resolved by services.specSourceService and inlined — fields, validations and rules included.",
+  "ex_nested_note": "This page registers an in-memory spec source with two refs (adresse, contact-urgence) and a simulated latency. In production, point fetchSpec at your own form store."
 }

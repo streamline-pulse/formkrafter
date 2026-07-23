@@ -16,6 +16,7 @@ import { Route as ExamplesCustomBrickRouteImport } from './routes/examples/custo
 import { Route as ExamplesDataGridRouteImport } from './routes/examples/data-grid'
 import { Route as ExamplesFormioImportRouteImport } from './routes/examples/formio-import'
 import { Route as ExamplesMultilingualRouteImport } from './routes/examples/multilingual'
+import { Route as ExamplesNestedFormRouteImport } from './routes/examples/nested-form'
 import { Route as ExamplesRemoteSelectsRouteImport } from './routes/examples/remote-selects'
 import { Route as ExamplesRulesRouteImport } from './routes/examples/rules'
 import { Route as ExamplesServerValidationRouteImport } from './routes/examples/server-validation'
@@ -58,6 +59,11 @@ const ExamplesMultilingualRoute = ExamplesMultilingualRouteImport.update({
   path: '/examples/multilingual',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExamplesNestedFormRoute = ExamplesNestedFormRouteImport.update({
+  id: '/examples/nested-form',
+  path: '/examples/nested-form',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExamplesRemoteSelectsRoute = ExamplesRemoteSelectsRouteImport.update({
   id: '/examples/remote-selects',
   path: '/examples/remote-selects',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/examples/data-grid': typeof ExamplesDataGridRoute
   '/examples/formio-import': typeof ExamplesFormioImportRoute
   '/examples/multilingual': typeof ExamplesMultilingualRoute
+  '/examples/nested-form': typeof ExamplesNestedFormRoute
   '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
   '/examples/rules': typeof ExamplesRulesRoute
   '/examples/server-validation': typeof ExamplesServerValidationRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/examples/data-grid': typeof ExamplesDataGridRoute
   '/examples/formio-import': typeof ExamplesFormioImportRoute
   '/examples/multilingual': typeof ExamplesMultilingualRoute
+  '/examples/nested-form': typeof ExamplesNestedFormRoute
   '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
   '/examples/rules': typeof ExamplesRulesRoute
   '/examples/server-validation': typeof ExamplesServerValidationRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/examples/data-grid': typeof ExamplesDataGridRoute
   '/examples/formio-import': typeof ExamplesFormioImportRoute
   '/examples/multilingual': typeof ExamplesMultilingualRoute
+  '/examples/nested-form': typeof ExamplesNestedFormRoute
   '/examples/remote-selects': typeof ExamplesRemoteSelectsRoute
   '/examples/rules': typeof ExamplesRulesRoute
   '/examples/server-validation': typeof ExamplesServerValidationRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/examples/data-grid'
     | '/examples/formio-import'
     | '/examples/multilingual'
+    | '/examples/nested-form'
     | '/examples/remote-selects'
     | '/examples/rules'
     | '/examples/server-validation'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/examples/data-grid'
     | '/examples/formio-import'
     | '/examples/multilingual'
+    | '/examples/nested-form'
     | '/examples/remote-selects'
     | '/examples/rules'
     | '/examples/server-validation'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/examples/data-grid'
     | '/examples/formio-import'
     | '/examples/multilingual'
+    | '/examples/nested-form'
     | '/examples/remote-selects'
     | '/examples/rules'
     | '/examples/server-validation'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   ExamplesDataGridRoute: typeof ExamplesDataGridRoute
   ExamplesFormioImportRoute: typeof ExamplesFormioImportRoute
   ExamplesMultilingualRoute: typeof ExamplesMultilingualRoute
+  ExamplesNestedFormRoute: typeof ExamplesNestedFormRoute
   ExamplesRemoteSelectsRoute: typeof ExamplesRemoteSelectsRoute
   ExamplesRulesRoute: typeof ExamplesRulesRoute
   ExamplesServerValidationRoute: typeof ExamplesServerValidationRoute
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExamplesMultilingualRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/examples/nested-form': {
+      id: '/examples/nested-form'
+      path: '/examples/nested-form'
+      fullPath: '/examples/nested-form'
+      preLoaderRoute: typeof ExamplesNestedFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/examples/remote-selects': {
       id: '/examples/remote-selects'
       path: '/examples/remote-selects'
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExamplesDataGridRoute: ExamplesDataGridRoute,
   ExamplesFormioImportRoute: ExamplesFormioImportRoute,
   ExamplesMultilingualRoute: ExamplesMultilingualRoute,
+  ExamplesNestedFormRoute: ExamplesNestedFormRoute,
   ExamplesRemoteSelectsRoute: ExamplesRemoteSelectsRoute,
   ExamplesRulesRoute: ExamplesRulesRoute,
   ExamplesServerValidationRoute: ExamplesServerValidationRoute,

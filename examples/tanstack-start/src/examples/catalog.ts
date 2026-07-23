@@ -4,6 +4,7 @@ import {
   contactSpec,
   gridSpec,
   i18nSpec,
+  nestedFormSpec,
   ratingSpec,
   remoteSpec,
   rulesSpec,
@@ -21,6 +22,7 @@ export const templates: Record<string, BrickSpec> = {
   'auth-context': authSpec,
   rules: rulesSpec,
   'custom-brick': ratingSpec,
+  'nested-form': nestedFormSpec,
 }
 
 export interface ExampleEntry {
@@ -56,6 +58,12 @@ export const exampleCatalog: ExampleGroup[] = [
         nav: () => m.ex_i18nform_nav(),
         intro: () => m.ex_i18nform_intro(),
         templateId: 'multilingual',
+      },
+      {
+        slug: 'nested-form',
+        nav: () => m.ex_nested_nav(),
+        intro: () => m.ex_nested_intro(),
+        templateId: 'nested-form',
       },
     ],
   },
