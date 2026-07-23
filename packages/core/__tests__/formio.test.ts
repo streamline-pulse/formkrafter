@@ -286,6 +286,22 @@ describe("convertFormioForm", () => {
         ).toBe(true);
     });
 
+    test("inputMask maps to the mask config", () => {
+        const { spec } = convertFormioForm({
+            components: [
+                {
+                    type: "phoneNumber",
+                    key: "tel",
+                    inputMask: "99999999",
+                },
+                { type: "textfield", key: "plain" },
+            ],
+        });
+
+        expect(brickById(spec, "tel").configs?.mask).toBe("99999999");
+        expect(brickById(spec, "plain").configs?.mask).toBeUndefined();
+    });
+
     test("unknown component types warn and are skipped", () => {
         const { spec, warnings } = convertFormioForm({
             components: [

@@ -158,4 +158,27 @@ describe('fk-data-grid', () => {
     };
     expect((await el.validate()).valid).toBe(true);
   });
+
+  test('move buttons reorder rows and emit the new order', async () => {
+    const addButton = renderEl.querySelector('.fk-grid__add') as HTMLButtonElement;
+    addButton.click();
+    await tick();
+
+    const secondRowName = rows()[1].querySelectorAll('input')[0] as HTMLInputElement;
+    secondRowName.value = 'Linus';
+    secondRowName.dispatchEvent(new Event('input', { bubbles: true }));
+    await tick();
+
+    const moveButtons = rows()[1].querySelectorAll('.fk-grid__move');
+    expect(moveButtons.length).toBe(2);
+    (moveButtons[0] as HTMLButtonElement).click();
+    await tick();
+
+    const contacts = (lastData?.contacts ?? []) as Array<Record<string, unknown>>;
+    expect(contacts[0].name).toBe('Linus');
+    expect(contacts[1].name).toBe('Grace');
+
+    const upFirst = rows()[0].querySelectorAll('.fk-grid__move')[0] as HTMLButtonElement;
+    expect(upFirst.disabled).toBe(true);
+  });
 });

@@ -9,6 +9,7 @@ const fetchCodeMirror = () =>
     import('@codemirror/commands'),
     import('@codemirror/language'),
     import('@codemirror/lang-javascript'),
+    import('@codemirror/theme-one-dark'),
   ]);
 
 let codeMirrorModules: ReturnType<typeof fetchCodeMirror> | undefined;
@@ -38,9 +39,12 @@ export class FkCodeEditor {
       { defaultKeymap, history, historyKeymap },
       { defaultHighlightStyle, syntaxHighlighting },
       { javascript },
+      { oneDark },
     ] = await loadCodeMirror();
 
     if (this.disconnected) return;
+
+    const isDark = !!this.host.closest('.dark, [data-fk-theme="dark"]');
 
     this.view = new View({
       parent: this.host,
@@ -51,7 +55,9 @@ export class FkCodeEditor {
           history(),
           keymap.of([...defaultKeymap, ...historyKeymap]),
           javascript(),
-          syntaxHighlighting(defaultHighlightStyle),
+          ...(isDark
+            ? [oneDark]
+            : [syntaxHighlighting(defaultHighlightStyle)]),
           cmPlaceholder(this.placeholder),
           View.domEventHandlers({
             blur: () => this.emitIfChanged(),
