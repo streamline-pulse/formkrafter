@@ -2,17 +2,14 @@
   "name": "@streamline-pulse/formkrafter-wc",
   "version": "0.3.0",
   "description": "FormKrafter web components (Stencil)",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
+  "main": "dist/components/index.js",
+  "module": "dist/components/index.js",
   "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
   "unpkg": "dist/formkrafter-wc/formkrafter-wc.esm.js",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/components/index.js",
-      "require": "./dist/index.cjs.js"
+      "import": "./dist/components/index.js"
     },
     "./styles.css": "./dist/formkrafter-wc/formkrafter-wc.css",
     "./dist/components": {
@@ -30,11 +27,6 @@
     "./components/*": {
       "import": "./dist/components/*.js",
       "types": "./dist/components/*.d.ts"
-    },
-    "./loader": {
-      "import": "./loader/index.js",
-      "require": "./loader/index.cjs.js",
-      "types": "./loader/index.d.ts"
     }
   },
   "license": "MIT",
@@ -47,8 +39,9 @@
     "formkrafter"
   ],
   "files": [
-    "dist/",
-    "loader/",
+    "dist/components/",
+    "dist/formkrafter-wc/",
+    "dist/types/",
     "LICENSE"
   ],
   "scripts": {
