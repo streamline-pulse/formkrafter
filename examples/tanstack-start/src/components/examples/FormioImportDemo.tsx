@@ -62,20 +62,27 @@ export default function FormioImportDemo() {
   const [importCount, setImportCount] = useState(0)
   const [warnings, setWarnings] = useState<string[]>([])
   const [parseError, setParseError] = useState<string>()
+  const [sizes, setSizes] = useState<{ formio: number; fk: number }>()
 
   function convert() {
     try {
-      const result = convertFormioForm(JSON.parse(source))
+      const parsed = JSON.parse(source)
+      const result = convertFormioForm(parsed)
       setSpec(result.spec)
       setImportedSpec(structuredClone(result.spec))
       setImportCount((count) => count + 1)
       setWarnings(result.warnings)
+      setSizes({
+        formio: JSON.stringify(parsed).length,
+        fk: JSON.stringify(result.spec).length,
+      })
       setParseError(undefined)
     } catch (error) {
       setParseError(error instanceof Error ? error.message : String(error))
       setSpec(undefined)
       setImportedSpec(undefined)
       setWarnings([])
+      setSizes(undefined)
     }
   }
 
@@ -117,6 +124,19 @@ export default function FormioImportDemo() {
             ))}
           </ul>
         </section>
+      ) : null}
+
+      {spec && sizes ? (
+        <p className="text-muted-foreground text-xs font-medium">
+          {m.fio_size_note({
+            formio: (sizes.formio / 1024).toFixed(1),
+            fk: (sizes.fk / 1024).toFixed(1),
+            delta:
+              (sizes.fk <= sizes.formio ? '−' : '+') +
+              Math.abs(Math.round((1 - sizes.fk / sizes.formio) * 100)) +
+              ' %',
+          })}
+        </p>
       ) : null}
 
       {spec ? (
