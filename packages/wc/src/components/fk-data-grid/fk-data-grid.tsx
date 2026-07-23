@@ -6,7 +6,7 @@ import type {
   Utils,
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core';
-import { fkT } from '../../i18n/i18n';
+import { fkT, fkTOr } from '../../i18n/i18n';
 
 @Component({
   tag: 'fk-data-grid',
@@ -122,6 +122,23 @@ export class FkDataGrid {
     this.gridValueChange.emit([...this.rows(), {}]);
   };
 
+  private moveRow(index: number, delta: number) {
+    const rows = [...this.rows()];
+    const target = index + delta;
+    if (target < 0 || target >= rows.length) return;
+
+    const [moved] = rows.splice(index, 1);
+    rows.splice(target, 0, moved);
+
+    const touched = { ...this.touched };
+    const movedTouched = touched[index];
+    touched[index] = touched[target];
+    touched[target] = movedTouched;
+    this.touched = touched;
+
+    this.gridValueChange.emit(rows);
+  }
+
   private removeRow(index: number) {
     const rows = this.rows().filter((_, i) => i !== index);
 
@@ -161,18 +178,47 @@ export class FkDataGrid {
                 />
               ))}
             </div>
-            <button
-              type="button"
-              class="fk-grid__remove"
-              title={fkT('grid.removeRow')}
-              disabled={this.disabled}
-              onClick={(event) => {
-                event.preventDefault();
-                this.removeRow(index);
-              }}
-            >
-              ✕
-            </button>
+            <div class="fk-grid__row-actions">
+              <button
+                type="button"
+                class="fk-grid__move"
+                title={fkTOr('grid.moveUp', 'Move row up')}
+                aria-label={fkTOr('grid.moveUp', 'Move row up')}
+                disabled={this.disabled || index === 0}
+                onClick={(event) => {
+                  event.preventDefault();
+                  this.moveRow(index, -1);
+                }}
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                class="fk-grid__move"
+                title={fkTOr('grid.moveDown', 'Move row down')}
+                aria-label={fkTOr('grid.moveDown', 'Move row down')}
+                disabled={this.disabled || index === rows.length - 1}
+                onClick={(event) => {
+                  event.preventDefault();
+                  this.moveRow(index, 1);
+                }}
+              >
+                ↓
+              </button>
+              <button
+                type="button"
+                class="fk-grid__remove"
+                title={fkT('grid.removeRow')}
+                aria-label={fkT('grid.removeRow')}
+                disabled={this.disabled}
+                onClick={(event) => {
+                  event.preventDefault();
+                  this.removeRow(index);
+                }}
+              >
+                ✕
+              </button>
+            </div>
           </div>
         ))}
 

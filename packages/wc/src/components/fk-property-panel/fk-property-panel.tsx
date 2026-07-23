@@ -290,6 +290,13 @@ export class FkPropertyPanel {
               ),
             ]
           : null}
+        {configs && 'mask' in configs
+          ? this.textField(
+              fkTOr('panel.mask', 'Input mask (9=digit, a=letter, *=any)'),
+              configs.mask,
+              (value) => this.emitConfigs({ mask: value })
+            )
+          : null}
         {configs && 'accept' in configs
           ? this.textField(
               fkTOr('panel.accept', 'Accepted file types'),

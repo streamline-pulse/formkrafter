@@ -16,6 +16,7 @@ export interface FormioComponent {
     multiple?: boolean;
     prefix?: string;
     suffix?: string;
+    inputMask?: string;
     html?: string;
     content?: string;
     legend?: string;
@@ -492,6 +493,9 @@ function baseConfigs(
     if (component.disabled) configs.disabled = true;
     if (component.prefix) configs.prefix = component.prefix;
     if (component.suffix) configs.suffix = component.suffix;
+    if (typeof component.inputMask === "string" && component.inputMask) {
+        configs.mask = component.inputMask;
+    }
     return configs;
 }
 

@@ -3,6 +3,17 @@ export interface SelectOption {
   value: string;
 }
 
+const readPath = (record: Record<string, unknown>, path: string): unknown => {
+  if (!path.includes('.')) return record[path];
+
+  let current: unknown = record;
+  for (const segment of path.split('.')) {
+    if (typeof current !== 'object' || current === null) return undefined;
+    current = (current as Record<string, unknown>)[segment];
+  }
+  return current;
+};
+
 export function normalizeOptions(
   raw: unknown,
   labelKey = 'label',
@@ -13,8 +24,8 @@ export function normalizeOptions(
       .map((item) => {
         if (typeof item === 'object' && item !== null) {
           const record = item as Record<string, unknown>;
-          const label = record[labelKey] ?? record[valueKey];
-          const value = record[valueKey] ?? record[labelKey];
+          const label = readPath(record, labelKey) ?? readPath(record, valueKey);
+          const value = readPath(record, valueKey) ?? readPath(record, labelKey);
           return { label: String(label ?? ''), value: String(value ?? '') };
         }
 

@@ -4,6 +4,7 @@ import { createBrick } from './create-brick';
 import { registerBricks } from './registry';
 import { asInlineStyle } from '../utils/style';
 import { normalizeOptions } from '../utils/options';
+import { applyMask } from '../utils/mask';
 import { fkT, fkTOr } from '../i18n/i18n';
 import {
   getAffectedProperties,
@@ -59,6 +60,7 @@ const createTextVariant = (params: {
   id: string;
   name: string;
   inputType: string;
+  maskable?: boolean;
 }) =>
   createBrick({
     type: 'input',
@@ -66,7 +68,9 @@ const createTextVariant = (params: {
     id: params.id,
     name: params.name,
     category: 'Inputs',
-    defaultConfigs: { label: params.name },
+    defaultConfigs: params.maskable
+      ? { label: params.name, mask: '' }
+      : { label: params.name },
     render: (props) =>
       field(
         props,
@@ -80,9 +84,13 @@ const createTextVariant = (params: {
           value={(props.data as string) ?? ''}
           placeholder={props.configs?.placeholder as string}
           disabled={props.editable || props.disabled}
-          onInput={(event) =>
-            props.onDataChange?.((event.target as HTMLInputElement).value)
-          }
+          onInput={(event) => {
+            const input = event.target as HTMLInputElement;
+            const mask = props.configs?.mask as string | undefined;
+            const next = mask ? applyMask(input.value, mask) : input.value;
+            if (next !== input.value) input.value = next;
+            props.onDataChange?.(next);
+          }}
           />
         )
       ),
@@ -92,6 +100,7 @@ export const textInputBrick = createTextVariant({
   id: 'text',
   name: 'Text',
   inputType: 'text',
+  maskable: true,
 });
 export const emailBrick = createTextVariant({
   id: 'email',
@@ -112,6 +121,7 @@ export const phoneBrick = createTextVariant({
   id: 'phone',
   name: 'Phone',
   inputType: 'tel',
+  maskable: true,
 });
 
 export const textareaBrick = createBrick({
