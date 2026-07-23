@@ -92,5 +92,9 @@
   "ex_open_playground": "Ouvrir dans le playground",
   "ex_copy_spec": "Copier le JSON",
   "ex_copied_spec": "Copié !",
-  "ex_view_page": "Voir l'exemple"
+  "ex_view_page": "Voir l'exemple",
+  "ex_nested_nav": "Formulaire imbriqué",
+  "ex_nested_title": "Référencer un formulaire dans un formulaire",
+  "ex_nested_intro": "Le formulaire hôte embarque deux formulaires réutilisables via des bricks nested-form : au rendu, chaque specRef est résolue par services.specSourceService puis inlinée — champs, validations et règles compris.",
+  "ex_nested_note": "Cette page enregistre une source de specs en mémoire avec deux refs (adresse, contact-urgence) et une latence simulée. En production, pointez fetchSpec vers votre propre stockage de formulaires."
 }

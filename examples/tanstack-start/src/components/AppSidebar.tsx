@@ -3,6 +3,7 @@ import {
   ArrowRightLeft,
   Braces,
   Globe,
+  Layers,
   Grid3x3,
   Hammer,
   House,
@@ -33,6 +34,7 @@ const groups = [
       { to: '/examples/simple-form', label: () => m.ex_simple_nav(), icon: TextCursorInput },
       { to: '/examples/wizard', label: () => m.ex_wizard_nav(), icon: ListChecks },
       { to: '/examples/multilingual', label: () => m.ex_i18nform_nav(), icon: Languages },
+      { to: '/examples/nested-form', label: () => m.ex_nested_nav(), icon: Layers },
     ],
   },
   {

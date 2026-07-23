@@ -9,12 +9,15 @@ import '@streamline-pulse/formkrafter-wc/styles.css'
 
 import { m } from '#/paraglide/messages'
 import { useLocale } from '#/components/LocaleProvider'
+import { registerDemoSpecSource } from '#/examples/nested-source'
 
 import type {
   BrickSpec,
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core'
 import type { DataChangeDetail, SpecChangeDetail } from '@streamline-pulse/formkrafter-wc'
+
+registerDemoSpecSource()
 
 interface FormKrafterPlaygroundProps {
   initialSpec?: BrickSpec

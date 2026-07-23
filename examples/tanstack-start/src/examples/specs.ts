@@ -369,3 +369,101 @@ export const ratingSpec: BrickSpec = column('rating', [
     ],
   },
 ])
+
+export const addressSubSpec: BrickSpec = column('addressSub', [
+  {
+    type: 'input',
+    dataType: 'string',
+    id: 'text',
+    name: 'Street',
+    configs: { uid: 'ns-street', key: 'street', label: { en: 'Street', fr: 'Rue' } },
+    validations: [{ validator: 'required' }],
+  },
+  {
+    type: 'panel',
+    id: 'row',
+    name: 'Row',
+    configs: { uid: 'ns-row', key: 'cityRow' },
+    children: [
+      {
+        type: 'input',
+        dataType: 'string',
+        id: 'text',
+        name: 'City',
+        configs: { uid: 'ns-city', key: 'city', label: { en: 'City', fr: 'Ville' } },
+        validations: [{ validator: 'required' }],
+      },
+      {
+        type: 'input',
+        dataType: 'string',
+        id: 'text',
+        name: 'Zip',
+        configs: { uid: 'ns-zip', key: 'zip', label: { en: 'Zip code', fr: 'Code postal' } },
+      },
+    ],
+  },
+])
+
+export const emergencyContactSubSpec: BrickSpec = column('emergencySub', [
+  {
+    type: 'input',
+    dataType: 'string',
+    id: 'text',
+    name: 'Contact name',
+    configs: {
+      uid: 'ne-name',
+      key: 'contactName',
+      label: { en: 'Contact name', fr: 'Nom du contact' },
+    },
+    validations: [{ validator: 'required' }],
+  },
+  {
+    type: 'input',
+    dataType: 'string',
+    id: 'phone',
+    name: 'Contact phone',
+    configs: {
+      uid: 'ne-phone',
+      key: 'contactPhone',
+      label: { en: 'Contact phone', fr: 'Téléphone du contact' },
+      mask: '99 99 99 99',
+    },
+  },
+])
+
+export const nestedFormSpec: BrickSpec = column('nestedHost', [
+  {
+    type: 'input',
+    dataType: 'string',
+    id: 'text',
+    name: 'Full name',
+    configs: {
+      uid: 'nh-name',
+      key: 'fullName',
+      label: { en: 'Full name', fr: 'Nom complet' },
+    },
+    validations: [{ validator: 'required' }],
+  },
+  {
+    type: 'panel',
+    id: 'nested-form',
+    name: 'Nested form',
+    configs: {
+      uid: 'nh-address',
+      key: 'address',
+      label: { en: 'Delivery address', fr: 'Adresse de livraison' },
+      specRef: 'adresse',
+    },
+  },
+  {
+    type: 'panel',
+    id: 'nested-form',
+    name: 'Nested form',
+    configs: {
+      uid: 'nh-emergency',
+      key: 'emergency',
+      label: { en: 'Emergency contact', fr: "Contact d'urgence" },
+      specRef: 'contact-urgence',
+    },
+  },
+])
