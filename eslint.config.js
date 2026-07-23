@@ -15,6 +15,7 @@ export default tseslint.config(
       'packages/react/lib/components/',
       'packages/vue/lib/components.ts',
       'packages/wc/src/components.d.ts',
+      'docs/',
     ],
   },
   eslint.configs.recommended,

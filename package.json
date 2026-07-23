@@ -6,7 +6,8 @@
     "packages": [
       "packages/*",
       "examples/*",
-      "e2e"
+      "e2e",
+      "docs"
     ],
     "catalog": {
       "typescript": "^6.0.3",
@@ -33,6 +34,8 @@
     "lint": "eslint .",
     "e2e": "bun run --cwd examples/tanstack-start build && bun run --cwd e2e test",
     "e2e:only": "bun run --cwd e2e test",
+    "docs:dev": "bun run --cwd docs dev",
+    "docs:build": "bun run --cwd docs build",
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
     "version-packages": "changeset version && rm -f bun.lock && bun install",

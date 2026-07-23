@@ -92,12 +92,12 @@ registerBrick(createBrick({
 
 ## Bundle size
 
-Measured on v0.4.0 — bundled from `dist/components` with `bun build --minify`, sizes before/after gzip:
+Measured on v0.5.0 — bundled from `dist/components` with `bun build --minify`, sizes before/after gzip:
 
 | What you ship | Minified | Gzipped |
 |---|---|---|
-| Builder — includes the renderer and all 30 bricks | ~673 KB | **~214 KB** |
-| Renderer only | ~630 KB | **~205 KB** |
+| Builder — includes the renderer and all 30 bricks | ~675 KB | **~215 KB** |
+| Renderer only | ~632 KB | **~205 KB** |
 | `styles.css` (the only stylesheet — and it's optional) | 6 KB | ~1 KB |
 
 The code editor (CodeMirror, ~243 KB minified) is **lazy-loaded**: it never ships in the initial bundle, only when a code or rules editor actually opens. No CSS framework is required — no Bootstrap, no reset, nothing global.

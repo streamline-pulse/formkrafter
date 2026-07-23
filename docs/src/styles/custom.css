@@ -1,0 +1,64 @@
+:root {
+  --sl-color-accent-low: #d9f0f1;
+  --sl-color-accent: #328f97;
+  --sl-color-accent-high: #1d5a60;
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #123a3e;
+  --sl-color-accent: #4fb8b2;
+  --sl-color-accent-high: #bfe8e5;
+}
+
+[data-has-hero] .hero h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.08;
+  background: linear-gradient(
+    115deg,
+    var(--sl-color-white) 35%,
+    var(--sl-color-accent) 75%,
+    var(--sl-color-accent-high)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[data-has-hero] .hero .tagline {
+  max-width: 42rem;
+  color: var(--sl-color-gray-3);
+}
+
+.fk-live-demo {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+}
+
+:root:has(main .fk-live-demo) {
+  --sl-content-width: 85rem;
+}
+
+.fk-live-demo fk-form-builder {
+  display: block;
+  min-height: 640px;
+}
+
+.fk-live-demo--render {
+  padding: 1rem;
+}
+
+.fk-live-demo__validate {
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: linear-gradient(120deg, var(--sl-color-accent), var(--sl-color-accent-high));
+  color: var(--sl-color-black);
+}
+
+.fk-live-demo__validate:hover {
+  opacity: 0.85;
+}
