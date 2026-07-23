@@ -392,3 +392,17 @@ select.fk-field__input {
   color: var(--fk-color-muted);
   font-family: var(--fk-font);
 }
+
+.fk-code-preview {
+  margin: 0;
+  padding: var(--fk-spacing);
+  border: 1px solid var(--fk-color-border);
+  border-radius: var(--fk-radius);
+  background: var(--fk-color-surface);
+  color: var(--fk-color-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-height: 48px;
+}

@@ -14,6 +14,7 @@ export class FkDropArea {
   @Element() host!: HTMLElement;
 
   @Prop() path!: string;
+  @Prop() empty = false;
 
   @Event() brickDrop!: EventEmitter<BrickDropDetail>;
 
@@ -43,8 +44,21 @@ export class FkDropArea {
 
   render() {
     return (
-      <div class={{ 'fk-drop': true, 'fk-drop--over': this.isOver }}>
-        <span class="fk-drop__hint">{fkT('drop.hint')}</span>
+      <div
+        class={{
+          'fk-drop': true,
+          'fk-drop--over': this.isOver,
+          'fk-drop--empty': this.empty,
+        }}
+      >
+        {this.empty ? (
+          <div class="fk-drop__empty">
+            <p class="fk-drop__title">{fkT('empty.title')}</p>
+            <span class="fk-drop__hint">{fkT('empty.hint')}</span>
+          </div>
+        ) : (
+          <span class="fk-drop__hint">{fkT('drop.hint')}</span>
+        )}
       </div>
     );
   }

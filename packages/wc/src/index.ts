@@ -32,6 +32,7 @@ export {
   tagsBrick,
   signatureBrick,
   addressBrick,
+  codeBrick,
   fileBrick,
   dataGridBrick,
   hiddenBrick,

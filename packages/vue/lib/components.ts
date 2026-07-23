@@ -104,6 +104,7 @@ export const FkDataGrid: StencilVueComponent<JSX.FkDataGrid> = /*@__PURE__*/ def
 
 export const FkDropArea: StencilVueComponent<JSX.FkDropArea> = /*@__PURE__*/ defineContainer<JSX.FkDropArea>('fk-drop-area', defineFkDropArea, [
   'path',
+  'empty',
   'brickDrop'
 ], [
   'brickDrop'

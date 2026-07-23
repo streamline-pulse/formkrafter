@@ -16,3 +16,21 @@
   background: color-mix(in srgb, var(--fk-color-primary) 8%, transparent);
   color: var(--fk-color-primary);
 }
+
+.fk-drop--empty {
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fk-drop__empty {
+  text-align: center;
+}
+
+.fk-drop__title {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fk-color-text);
+}
