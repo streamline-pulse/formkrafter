@@ -1,6 +1,6 @@
 # @streamline-pulse/formkrafter-wc
 
-The FormKrafter UI as **Stencil Web Components**: a drag & drop builder, a form renderer, and 27 built-in bricks. Framework wrappers ([React](../react/README.md), [Vue](../vue/README.md)) are generated from this package.
+The FormKrafter UI as **Stencil Web Components**: a drag & drop builder, a form renderer, and 30 built-in bricks. Framework wrappers ([React](../react/README.md), [Vue](../vue/README.md)) are generated from this package.
 
 ```html
 <script type="module" src=".../formkrafter-wc.esm.js"></script>
@@ -89,6 +89,18 @@ registerBrick(createBrick({
 `h` (and the `VNode` type) are re-exported by this package — no Stencil dependency needed in your app.
 
 > The brick registry, the chrome translations, and core `services` are **page-wide singletons** (shared through `globalThis`, see the [core README](../core/README.md#shared-singleton-state)) — register bricks or override services once at app startup and every FormKrafter instance sees them, regardless of bundling.
+
+## Bundle size
+
+Measured on v0.4.0 — bundled from `dist/components` with `bun build --minify`, sizes before/after gzip:
+
+| What you ship | Minified | Gzipped |
+|---|---|---|
+| Builder — includes the renderer and all 30 bricks | ~673 KB | **~214 KB** |
+| Renderer only | ~630 KB | **~205 KB** |
+| `styles.css` (the only stylesheet — and it's optional) | 6 KB | ~1 KB |
+
+The code editor (CodeMirror, ~243 KB minified) is **lazy-loaded**: it never ships in the initial bundle, only when a code or rules editor actually opens. No CSS framework is required — no Bootstrap, no reset, nothing global.
 
 ## Theming
 

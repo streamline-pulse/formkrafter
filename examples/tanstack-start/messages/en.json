@@ -60,6 +60,7 @@
   "fio_convert": "Convert to FormKrafter",
   "fio_warnings": "Conversion warnings",
   "fio_edit": "Edit the converted form",
+  "fio_weight_note": "Bonus: migrating roughly halves your gzipped form-stack weight (~214 KB for the full FormKrafter builder vs ~470 KB for formio.full.min.js) and drops the Bootstrap dependency — details and methodology in the docs.",
   "fio_result": "Converted form, rendered",
   "fio_spec": "View the converted spec",
   "ex_theming_nav": "Theming",

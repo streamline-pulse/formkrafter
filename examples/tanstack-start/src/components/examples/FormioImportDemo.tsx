@@ -105,6 +105,7 @@ export default function FormioImportDemo() {
             <p className="text-destructive text-sm font-medium">{parseError}</p>
           ) : null}
         </div>
+        <p className="text-muted-foreground text-xs">{m.fio_weight_note()}</p>
       </section>
 
       {warnings.length > 0 ? (
