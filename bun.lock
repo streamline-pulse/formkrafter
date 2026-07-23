@@ -77,7 +77,7 @@
     },
     "packages/core": {
       "name": "@streamline-pulse/formkrafter-core",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "dependencies": {
         "acorn": "catalog:",
         "ajv": "catalog:",
@@ -93,7 +93,7 @@
     },
     "packages/react": {
       "name": "@streamline-pulse/formkrafter-react",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "dependencies": {
         "@stencil/react-output-target": "^1.6.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -109,7 +109,7 @@
     },
     "packages/vue": {
       "name": "@streamline-pulse/formkrafter-vue",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "dependencies": {
         "@stencil/vue-output-target": "^0.14.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -124,7 +124,7 @@
     },
     "packages/wc": {
       "name": "@streamline-pulse/formkrafter-wc",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "dependencies": {
         "@atlaskit/pragmatic-drag-and-drop": "catalog:",
         "@codemirror/autocomplete": "^6.20.3",
