@@ -10,3 +10,7 @@ loader/
 
 packages/core/__tests__/fixtures-local/
 *.local.test.ts
+
+e2e/test-results/
+e2e/playwright-report/
+e2e/blob-report/

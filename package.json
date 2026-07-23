@@ -5,7 +5,8 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "examples/*"
+      "examples/*",
+      "e2e"
     ],
     "catalog": {
       "typescript": "^6.0.3",
@@ -30,6 +31,8 @@
     "build": "bun run --filter '@streamline-pulse/*' build",
     "test": "bun run --filter '@streamline-pulse/*' test",
     "lint": "eslint .",
+    "e2e": "bun run --cwd examples/tanstack-start build && bun run --cwd e2e test",
+    "e2e:only": "bun run --cwd e2e test",
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
     "version-packages": "changeset version && rm -f bun.lock && bun install",
