@@ -37,12 +37,15 @@ export class FkSelectInput {
   private triggerEl?: HTMLElement;
 
   private lastRemoteSignature?: string;
+  private lastCatalogRef?: string;
   private searchTimer?: ReturnType<typeof setTimeout>;
   @State() remoteOptions: unknown[] = [];
   @State() remoteError?: string;
+  @State() catalogOptions: unknown = [];
+  @State() catalogError?: string;
 
   componentWillLoad() {
-    return this.resolveRemote();
+    return Promise.all([this.resolveRemote(), this.resolveCatalog()]);
   }
 
   disconnectedCallback() {
@@ -52,6 +55,7 @@ export class FkSelectInput {
   @Watch('configs')
   onConfigsChange() {
     this.resolveRemote();
+    this.resolveCatalog();
   }
 
   @Watch('dataMap')
@@ -207,6 +211,28 @@ export class FkSelectInput {
     }
   }
 
+  private async resolveCatalog(force = false) {
+    if (this.source() !== 'catalog') return;
+
+    const ref = (this.configs?.optionsRef as string) || '';
+    if (!ref) {
+      this.catalogOptions = [];
+      return;
+    }
+
+    if (!force && ref === this.lastCatalogRef) return;
+    this.lastCatalogRef = ref;
+
+    try {
+      this.catalogError = undefined;
+      this.catalogOptions = await services.optionSourceService.fetchOptions(ref);
+    } catch (error) {
+      this.catalogOptions = [];
+      this.catalogError =
+        error instanceof Error ? error.message : String(error);
+    }
+  }
+
   private onSearchInput(value: string) {
     this.query = value;
 
@@ -225,6 +251,11 @@ export class FkSelectInput {
         return {
           options: normalizeOptions(this.remoteOptions, labelKey, valueKey),
           error: this.remoteError,
+        };
+      case 'catalog':
+        return {
+          options: normalizeOptions(this.catalogOptions, labelKey, valueKey),
+          error: this.catalogError,
         };
       case 'dataMap': {
         const path = this.configs?.optionsPath as string | undefined;

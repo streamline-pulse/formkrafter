@@ -173,7 +173,7 @@ export class FkPropertyPanel {
                 })
               }
             >
-              {['static', 'dataMap', 'remote', 'js'].map((candidate) => (
+              {['static', 'dataMap', 'remote', 'js', 'catalog'].map((candidate) => (
                 <option value={candidate} selected={candidate === source}>
                   {candidate}
                 </option>
@@ -249,7 +249,15 @@ export class FkPropertyPanel {
       );
     }
 
-    if (source === 'remote' || source === 'js') {
+    if (source === 'catalog') {
+      nodes.push(
+        this.textField(fkT('panel.optionsRef'), configs.optionsRef, (value) =>
+          this.emitConfigs({ optionsRef: value })
+        )
+      );
+    }
+
+    if (source === 'remote' || source === 'js' || source === 'catalog') {
       nodes.push(
         this.textField(fkT('panel.labelKey'), configs.labelKey, (value) =>
           this.emitConfigs({ labelKey: value })
