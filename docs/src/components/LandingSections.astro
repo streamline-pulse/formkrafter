@@ -15,6 +15,11 @@ const t =
         statsBricks: 'bricks intégrées',
         statsFrameworks: 'intégrations — WC, React, Vue',
         statsEval: '`eval` — sandbox AST, compatible CSP',
+        howEyebrow: 'Workflow',
+        liveEyebrow: 'Démo',
+        boxEyebrow: 'Inclus',
+        whyEyebrow: 'Atouts',
+        migEyebrow: 'Migration',
         howTitle: 'Comment ça marche',
         howLead:
           'Un formulaire est un spec JSON. Tout le cycle de vie tient en trois gestes.',
@@ -92,6 +97,11 @@ const t =
         statsBricks: 'built-in bricks',
         statsFrameworks: 'integrations — WC, React, Vue',
         statsEval: '`eval` — AST sandbox, CSP-safe',
+        howEyebrow: 'Workflow',
+        liveEyebrow: 'Demo',
+        boxEyebrow: 'Included',
+        whyEyebrow: 'Why',
+        migEyebrow: 'Migration',
         howTitle: 'How it works',
         howLead: 'A form is a JSON spec. The whole lifecycle fits in three moves.',
         s1Title: 'Design',
@@ -185,6 +195,7 @@ const t =
 </section>
 
 <section class="fkl-section">
+  <span class="fkl-eyebrow">{t.howEyebrow}</span>
   <h2 class="fkl-h2">{t.howTitle}</h2>
   <p class="fkl-lead">{t.howLead}</p>
 
@@ -213,6 +224,7 @@ const t =
 <section class="fkl-section">
   <div class="fkl-live__head">
     <div>
+      <span class="fkl-eyebrow">{t.liveEyebrow}</span>
       <h2 class="fkl-h2">{t.liveTitle}</h2>
       <p class="fkl-lead">{t.liveLead}</p>
     </div>
@@ -224,6 +236,7 @@ const t =
 </section>
 
 <section class="fkl-section">
+  <span class="fkl-eyebrow">{t.boxEyebrow}</span>
   <h2 class="fkl-h2">{t.boxTitle}</h2>
   <ul class="fkl-box">
     {t.boxItems.map((item) => <li class="fkl-box__item">{item}</li>)}
@@ -231,6 +244,7 @@ const t =
 </section>
 
 <section class="fkl-section">
+  <span class="fkl-eyebrow">{t.whyEyebrow}</span>
   <h2 class="fkl-h2">{t.whyTitle}</h2>
   <div class="fkl-grid">
     {
@@ -247,6 +261,7 @@ const t =
 
 <section class="fkl-mig">
   <div class="fkl-mig__body">
+    <span class="fkl-eyebrow">{t.migEyebrow}</span>
     <h2 class="fkl-mig__title">{t.migTitle}</h2>
     <p class="fkl-mig__text">{t.migText}</p>
   </div>
@@ -320,6 +335,16 @@ const t =
     margin-top: 4.5rem;
   }
 
+  .fkl-eyebrow {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sl-color-accent);
+  }
+
   .fkl-h2 {
     font-size: 1.75rem;
     line-height: 1.2;
@@ -350,10 +375,17 @@ const t =
   }
 
   .fkl-step__num {
-    font-size: 0.8rem;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.6rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--sl-color-accent);
+    letter-spacing: 0.08em;
+    color: var(--sl-color-accent-high);
+    background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 35%, transparent);
   }
 
   .fkl-step__title {
@@ -436,19 +468,27 @@ const t =
 
   .fkl-card {
     border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.75rem;
+    border-radius: 0.9rem;
     padding: 1.5rem;
-    background: var(--sl-color-bg);
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    background: color-mix(in srgb, var(--sl-color-bg) 65%, var(--sl-color-bg-nav));
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .fkl-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--sl-color-accent);
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--sl-color-accent) 60%, transparent);
+    box-shadow: 0 12px 32px -14px color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
   }
 
   .fkl-card__icon {
-    font-size: 1.4rem;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.7rem;
+    font-size: 1.25rem;
+    background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
   }
 
   .fkl-card__title {

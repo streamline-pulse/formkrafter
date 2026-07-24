@@ -13,7 +13,9 @@
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier --write . && eslint --fix",
-    "check": "prettier --check ."
+    "check": "prettier --check .",
+    "build:cf": "FK_DEPLOY_TARGET=cloudflare vite build",
+    "deploy:cf": "FK_DEPLOY_TARGET=cloudflare vite build && wrangler deploy"
   },
   "dependencies": {
     "@faker-js/faker": "^10.3.0",
@@ -46,6 +48,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.47.0",
     "@inlang/paraglide-js": "^2.13.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-event-client": "latest",
@@ -63,7 +66,8 @@
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.0",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "wrangler": "^4.114.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

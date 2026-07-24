@@ -1,17 +1,24 @@
 ---
 tableOfContents: false
-title: Démo live
-description: Le builder FormKrafter, en direct dans cette page — glissez des bricks, éditez les propriétés, annulez, exportez.
+title: Démos
+description: Le builder FormKrafter en direct dans cette page, plus les applications de démo complètes.
 ---
 
 import LiveDemo from '../../../components/LiveDemo.astro'
+import DemoApps from '../../../components/DemoApps.astro'
 
-C'est le vrai `<fk-form-builder>`, chargé depuis le package que vous installeriez — pas une vidéo, pas une maquette.
+## Playground — dans cette page
 
-Glissez des bricks depuis la palette, cliquez sur l'une d'elles pour éditer ses configs, validations, styles et règles, utilisez undo/redo, et exportez le JSON avec le bouton Copy.
+C'est le vrai `<fk-form-builder>`, chargé depuis le package que vous installeriez — pas une vidéo, pas une maquette. Glissez des bricks depuis la palette, cliquez sur l'une d'elles pour éditer ses configs, validations, styles et règles, utilisez undo/redo, et exportez le JSON avec le bouton Copy.
 
 <LiveDemo mode="builder" />
 
 :::tip
 Le builder émet un événement `specChange` à chaque modification, avec le nouveau spec **et** des patches RFC 6902 dans les deux sens — persistez-les, synchronisez-les, ou alimentez `<fk-form-render>` en direct comme dans [bien démarrer](/formkrafter/fr/getting-started/).
 :::
+
+## Applications de démo
+
+Des apps complètes qui montrent FormKrafter intégré pour de vrai — routing, SSR, patterns d'auth, validation côté serveur.
+
+<DemoApps lang="fr" />
