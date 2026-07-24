@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "formkrafter-examples",
+  "name": "formkrafter-examples-tanstack-start",
   "compatibility_date": "2026-07-24",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry"
