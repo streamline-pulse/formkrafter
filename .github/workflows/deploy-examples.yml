@@ -1,0 +1,56 @@
+name: Deploy examples
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'examples/tanstack-start/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-examples.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-examples
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Cloudflare secrets
+        id: secrets
+        run: |
+          if [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID not set — skipping deploy."
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ready == 'true'
+
+      - uses: oven-sh/setup-bun@v2
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        if: steps.secrets.outputs.ready == 'true'
+        run: bun install --frozen-lockfile
+
+      - name: Build packages
+        if: steps.secrets.outputs.ready == 'true'
+        run: bun run build
+
+      - name: Build app for Cloudflare
+        if: steps.secrets.outputs.ready == 'true'
+        run: bun run --cwd examples/tanstack-start build:cf
+
+      - name: Deploy to Cloudflare Workers
+        if: steps.secrets.outputs.ready == 'true'
+        run: bunx wrangler deploy
+        working-directory: examples/tanstack-start
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

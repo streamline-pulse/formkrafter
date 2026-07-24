@@ -1,0 +1,179 @@
+---
+interface Props {
+  lang?: 'en' | 'fr'
+}
+
+const { lang = 'en' } = Astro.props
+
+const t =
+  lang === 'fr'
+    ? {
+        soon: 'Bientôt en ligne',
+        code: 'Code source',
+        open: 'Ouvrir',
+        apps: [
+          {
+            title: 'Showcase TanStack Start',
+            stack: ['React 19', 'SSR', 'Server functions'],
+            text: "L'app d'exemples complète : playground du builder, wizard multi-étapes, formulaires imbriqués, selects distants avec auth, data grid, règles dynamiques, validation serveur réelle, brick custom, theming et import Form.io.",
+            live: '',
+            source:
+              'https://github.com/streamline-pulse/formkrafter/tree/main/examples/tanstack-start',
+          },
+          {
+            title: 'Exemple Vue 3',
+            stack: ['Vue 3', 'formkrafter-vue'],
+            text: 'La même surface via les wrappers Vue — à venir.',
+            live: '',
+            source: '',
+          },
+          {
+            title: 'HTML pur (CDN)',
+            stack: ['Zéro build', 'Web Components'],
+            text: 'Builder + renderer dans une seule page HTML, sans bundler — à venir.',
+            live: '',
+            source: '',
+          },
+        ],
+      }
+    : {
+        soon: 'Online soon',
+        code: 'Source code',
+        open: 'Open',
+        apps: [
+          {
+            title: 'TanStack Start showcase',
+            stack: ['React 19', 'SSR', 'Server functions'],
+            text: 'The full examples app: builder playground, multi-step wizard, nested forms, remote selects with auth, data grid, dynamic rules, real server-side validation, custom brick, theming and Form.io import.',
+            live: '',
+            source:
+              'https://github.com/streamline-pulse/formkrafter/tree/main/examples/tanstack-start',
+          },
+          {
+            title: 'Vue 3 example',
+            stack: ['Vue 3', 'formkrafter-vue'],
+            text: 'The same surface through the Vue wrappers — coming soon.',
+            live: '',
+            source: '',
+          },
+          {
+            title: 'Plain HTML (CDN)',
+            stack: ['No build step', 'Web Components'],
+            text: 'Builder + renderer in a single HTML page, no bundler — coming soon.',
+            live: '',
+            source: '',
+          },
+        ],
+      }
+---
+
+<div class="fk-apps not-content">
+  {
+    t.apps.map((app) => (
+      <article class="fk-app">
+        <div class="fk-app__badges">
+          {app.stack.map((item) => (
+            <span class="fk-app__badge">{item}</span>
+          ))}
+        </div>
+        <h3 class="fk-app__title">{app.title}</h3>
+        <p class="fk-app__text">{app.text}</p>
+        <div class="fk-app__actions">
+          {app.live ? (
+            <a class="fk-app__link fk-app__link--primary" href={app.live}>
+              {t.open} ↗
+            </a>
+          ) : (
+            <span class="fk-app__soon">{t.soon}</span>
+          )}
+          {app.source && (
+            <a class="fk-app__link" href={app.source}>
+              {t.code} ↗
+            </a>
+          )}
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .fk-apps {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+  }
+
+  .fk-app {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.9rem;
+    padding: 1.4rem;
+    background: color-mix(in srgb, var(--sl-color-bg) 65%, var(--sl-color-bg-nav));
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .fk-app:hover {
+    border-color: color-mix(in srgb, var(--sl-color-accent) 60%, transparent);
+    box-shadow: 0 12px 32px -14px color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+  }
+
+  .fk-app__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .fk-app__badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    color: var(--sl-color-accent-high);
+    background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+  }
+
+  .fk-app__title {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--sl-color-white);
+  }
+
+  .fk-app__text {
+    margin: 0;
+    flex: 1;
+    color: var(--sl-color-gray-3);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .fk-app__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .fk-app__link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--sl-color-accent-high);
+  }
+
+  .fk-app__link:hover {
+    text-decoration: underline;
+  }
+
+  .fk-app__soon {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    color: var(--sl-color-gray-3);
+    border: 1px dashed var(--sl-color-gray-4);
+  }
+</style>
