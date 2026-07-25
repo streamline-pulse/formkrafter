@@ -62,6 +62,8 @@ const eyebrow = groupLabelOf(sidebar as SidebarEntry[])
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--sl-color-accent);
+    /* accent is only 3.8:1 on the light background; brand-fill resolves to
+       the darker accent-high there and the brighter accent in dark mode. */
+    color: var(--sl-brand-fill);
   }
 </style>
