@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
+import starlightLinksValidator from 'starlight-links-validator'
 
 export default defineConfig({
   site: 'https://streamline-pulse.github.io',
@@ -25,18 +26,31 @@ export default defineConfig({
         baseUrl: 'https://github.com/streamline-pulse/formkrafter/edit/main/docs/',
       },
       customCss: ['./src/styles/custom.css'],
+      components: {
+        // Adds a section eyebrow above the page title, derived from the
+        // sidebar group so it stays translated and in sync automatically.
+        PageTitle: './src/components/docs/PageTitle.astro',
+      },
+      plugins: [
+        // Fails the build on any broken internal link or heading anchor —
+        // Starlight itself stays silent about them.
+        starlightLinksValidator({ errorOnRelativeLinks: false }),
+      ],
       sidebar: [
         {
           label: 'Start here',
           translations: { fr: 'Commencer' },
           items: [
+            { slug: 'overview' },
             { slug: 'getting-started' },
             { slug: 'demo' },
           ],
         },
         {
           label: 'Guides',
+          translations: { fr: 'Guides' },
           items: [
+            { slug: 'guides/form-specs' },
             { slug: 'guides/bricks' },
             { slug: 'guides/validation' },
             { slug: 'guides/rules' },
@@ -48,12 +62,16 @@ export default defineConfig({
         },
         {
           label: 'Migration',
+          translations: { fr: 'Migration' },
           items: [{ slug: 'guides/formio-migration' }],
         },
         {
           label: 'Reference',
           translations: { fr: 'Référence' },
-          items: [{ slug: 'reference/packages' }],
+          items: [
+            { slug: 'reference/components' },
+            { slug: 'reference/packages' },
+          ],
         },
       ],
     }),

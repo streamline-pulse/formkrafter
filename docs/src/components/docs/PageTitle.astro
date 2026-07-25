@@ -1,0 +1,67 @@
+---
+/**
+ * Overrides Starlight's PageTitle to prepend a section eyebrow.
+ *
+ * The eyebrow is derived from the sidebar group that contains the current
+ * page, so it needs no per-page frontmatter and inherits the group's
+ * `translations` from astro.config.mjs automatically — it can never drift
+ * out of sync with the navigation or the locale.
+ */
+// Starlight does not export its constants subpath; this is the value of
+// PAGE_TITLE_ID, which the table of contents anchors its "Overview" link to.
+const PAGE_TITLE_ID = '_top'
+
+type SidebarEntry = {
+  type: 'link' | 'group'
+  label: string
+  isCurrent?: boolean
+  entries?: SidebarEntry[]
+}
+
+const { entry, sidebar } = Astro.locals.starlightRoute
+
+const containsCurrent = (entries: SidebarEntry[]): boolean =>
+  entries.some((item) =>
+    item.type === 'group'
+      ? containsCurrent(item.entries ?? [])
+      : item.isCurrent === true
+  )
+
+const groupLabelOf = (entries: SidebarEntry[]): string | undefined => {
+  for (const item of entries) {
+    if (item.type !== 'group') continue
+    if (containsCurrent(item.entries ?? [])) {
+      // Prefer the deepest group that still contains the page.
+      return groupLabelOf(item.entries ?? []) ?? item.label
+    }
+  }
+  return undefined
+}
+
+const eyebrow = groupLabelOf(sidebar as SidebarEntry[])
+---
+
+{eyebrow && <p class="fk-eyebrow">{eyebrow}</p>}
+<h1 id={PAGE_TITLE_ID}>{entry.data.title}</h1>
+
+<style>
+  @layer starlight.core {
+    h1 {
+      margin-top: 0.35rem;
+      font-size: var(--sl-text-h1);
+      line-height: var(--sl-line-height-headings);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--sl-color-white);
+    }
+  }
+
+  .fk-eyebrow {
+    margin: 1rem 0 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sl-color-accent);
+  }
+</style>

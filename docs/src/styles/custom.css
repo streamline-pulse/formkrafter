@@ -153,7 +153,39 @@ site-search kbd {
 }
 
 .sl-markdown-content h3 {
+  margin-top: 2rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--sl-color-white);
+}
+
+/* Cards / LinkCards: match the landing's elevated-card language. */
+.sl-markdown-content .card,
+.sl-markdown-content .sl-link-card {
+  border-radius: 0.9rem;
+  border-color: var(--sl-color-hairline);
+  background: color-mix(in srgb, var(--sl-color-text) 2.5%, transparent);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.sl-markdown-content .sl-link-card:hover {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 55%, transparent);
+  box-shadow: 0 12px 32px -14px color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+}
+
+.sl-markdown-content .card .icon {
+  color: var(--sl-color-accent);
+}
+
+/* Steps: brand the connector rail and the step markers. */
+.sl-markdown-content .sl-steps > li::before {
+  background: var(--sl-brand-fill) !important;
+  color: var(--sl-brand-ink) !important;
+  font-weight: 700;
+}
+
+.sl-markdown-content .sl-steps > li:not(:last-child)::after {
+  background: var(--sl-color-hairline);
 }
 
 .sl-markdown-content a {
