@@ -1,0 +1,1371 @@
+---
+interface Props {
+  lang?: 'en' | 'fr'
+}
+
+const { lang = 'en' } = Astro.props
+
+const baseRoot = import.meta.env.BASE_URL.replace(/\/$/, '') + '/'
+const base = lang === 'fr' ? `${baseRoot}fr/` : baseRoot
+const altHref = lang === 'fr' ? baseRoot : `${baseRoot}fr/`
+const github = 'https://github.com/streamline-pulse/formkrafter'
+
+const t =
+  lang === 'fr'
+    ? {
+        navDocs: 'Docs',
+        navDemo: 'Démo',
+        navStart: 'Commencer',
+        pill: 'v0.5 · MIT · Web Components · React · Vue',
+        h1a: 'Construisez vos formulaires',
+        h1b: 'une fois, exécutez-les partout',
+        lede: "Un builder de formulaires drag & drop et son renderer, utilisables en HTML pur, React ou Vue — avec validation, règles dynamiques, formulaires imbriqués et i18n intégrés.",
+        ctaStart: 'Commencer →',
+        ctaDemo: 'Voir la démo live',
+        install: 'bun add @streamline-pulse/formkrafter-react',
+        howEyebrow: 'Comment ça marche',
+        howTitle: 'Un spec JSON. Trois étapes. Zéro divergence.',
+        steps: [
+          {
+            n: '01',
+            title: 'Décrire',
+            text: "Chaque formulaire est un arbre JSON de bricks — champs, panels, validations, règles. Exportable, diffable, stockable où vous voulez.",
+            code: `{ id: 'email', validations: [required] }`,
+          },
+          {
+            n: '02',
+            title: 'Valider',
+            text: 'Le même spec compile un schéma Ajv — côté client en temps réel, côté serveur avec exactement le même verdict.',
+            code: `validateFormData(spec, data, 'fr')`,
+          },
+          {
+            n: '03',
+            title: 'Afficher',
+            text: 'Un seul spec, trois renderers : Web Components nus, React ou Vue — au choix par app, une seule source de vérité.',
+            code: `<FkFormRender spec={spec} />`,
+          },
+        ],
+        fwEyebrow: 'Intégrations',
+        fwTitle: 'Un comportement, trois façons de le brancher.',
+        frameworks: [
+          {
+            name: 'Web Components',
+            text: 'Custom elements purs (Stencil). Aucune dépendance de framework.',
+            install: 'bun add @streamline-pulse/formkrafter-wc',
+          },
+          {
+            name: 'React',
+            text: 'Wrappers fins générés depuis les web components — props et événements typés.',
+            install: 'bun add @streamline-pulse/formkrafter-react',
+          },
+          {
+            name: 'Vue 3',
+            text: 'Même surface, composants Vue natifs.',
+            install: 'bun add @streamline-pulse/formkrafter-vue',
+          },
+        ],
+        whyEyebrow: 'Atouts',
+        whyTitle: 'Pourquoi FormKrafter.',
+        features: [
+          {
+            icon: '🧩',
+            title: 'Agnostique du framework',
+            text: 'Web Components à la base ; wrappers React et Vue générés depuis la même source.',
+          },
+          {
+            icon: '⚡',
+            title: 'Léger, vraiment',
+            text: '~215 Ko gzippé pour le builder complet. Éditeur de code en lazy, zéro framework CSS.',
+          },
+          {
+            icon: '🛡️',
+            title: 'Règles sans eval',
+            text: 'JSON Logic ou JS sandboxé par un interpréteur AST : compatible CSP, budget d’exécution.',
+          },
+          {
+            icon: '📄',
+            title: 'Des specs, pas des composants',
+            text: 'Formulaires en JSON portable. Patches RFC 6902 bidirectionnels, undo/redo intégré.',
+          },
+          {
+            icon: '🔁',
+            title: 'Convertisseur Form.io',
+            text: 'convertFormioForm migre champs, wizards, validations et uploads — et signale le reste.',
+          },
+          {
+            icon: '🌍',
+            title: 'i18n de bout en bout',
+            text: 'Contenu et chrome du builder localisés ; anglais et français fournis, extensible.',
+          },
+        ],
+        codeEyebrow: 'En pratique',
+        codeTitle: 'Un builder, un renderer, un événement.',
+        codeFile: 'App.tsx',
+        migEyebrow: 'Migration',
+        migTitle: 'Vous venez de Form.io ?',
+        migText: 'Divisez par ~2 le poids gzippé de votre stack, abandonnez Bootstrap, et voyez vos définitions stockées fondre de 3 à 5× sur des exports de production réels.',
+        migCta: 'Guide de migration',
+        migFig1: '470 Ko → 215 Ko',
+        migFig2: 'specs ÷ 3–5',
+        usesEyebrow: 'Cas d’usage',
+        usesTitle: 'Là où ça sert, vraiment.',
+        uses: [
+          {
+            title: 'Outils internes & back-office',
+            text: "Gestion de dossiers, approbations, consoles d'admin — les formulaires que votre équipe ops touche chaque jour.",
+          },
+          {
+            title: 'Services citoyens',
+            text: 'Formulaires publics multilingues, documents officiels, règles d’éligibilité conditionnelles.',
+          },
+          {
+            title: 'Onboarding & enquêtes',
+            text: 'KYC, onboarding produit, feedback — des wizards avec validation par étape.',
+          },
+          {
+            title: 'Builder embarqué',
+            text: 'Donnez à vos propres clients un builder de formulaires — palette en marque blanche, votre modèle de données.',
+          },
+        ],
+        ctaTitle: 'Prêt à construire ?',
+        ctaText: 'Ajoutez FormKrafter à l’app que vous avez déjà.',
+        ctaStar: 'Star sur GitHub',
+        footTag: 'Construit en Web Components, propulsé par Stencil.',
+      }
+    : {
+        navDocs: 'Docs',
+        navDemo: 'Demo',
+        navStart: 'Get started',
+        pill: 'v0.5 · MIT · Web Components · React · Vue',
+        h1a: 'Build forms once,',
+        h1b: 'run them everywhere',
+        lede: 'A drag & drop form builder and renderer that works in plain HTML, React or Vue — with validation, dynamic rules, nested forms and i18n built in.',
+        ctaStart: 'Get started →',
+        ctaDemo: 'Try the live demo',
+        install: 'bun add @streamline-pulse/formkrafter-react',
+        howEyebrow: 'How it works',
+        howTitle: 'One JSON spec. Three steps. Zero drift.',
+        steps: [
+          {
+            n: '01',
+            title: 'Describe',
+            text: 'Every form is a JSON tree of bricks — fields, panels, validations, rules. Exportable, diffable, storable anywhere.',
+            code: `{ id: 'email', validations: [required] }`,
+          },
+          {
+            n: '02',
+            title: 'Validate',
+            text: 'The same spec compiles to an Ajv schema — client-side in real time, server-side with the exact same verdict.',
+            code: `validateFormData(spec, data, 'fr')`,
+          },
+          {
+            n: '03',
+            title: 'Render',
+            text: 'One spec, three renderers: plain Web Components, React, or Vue — pick per app, keep one source of truth.',
+            code: `<FkFormRender spec={spec} />`,
+          },
+        ],
+        fwEyebrow: 'Integrations',
+        fwTitle: 'One behavior, three ways to wire it in.',
+        frameworks: [
+          {
+            name: 'Web Components',
+            text: 'Pure custom elements (Stencil). No framework dependency.',
+            install: 'bun add @streamline-pulse/formkrafter-wc',
+          },
+          {
+            name: 'React',
+            text: 'Thin wrappers generated from the web components — typed props and events.',
+            install: 'bun add @streamline-pulse/formkrafter-react',
+          },
+          {
+            name: 'Vue 3',
+            text: 'Same surface, native Vue components.',
+            install: 'bun add @streamline-pulse/formkrafter-vue',
+          },
+        ],
+        whyEyebrow: 'Why',
+        whyTitle: 'Why FormKrafter.',
+        features: [
+          {
+            icon: '🧩',
+            title: 'Framework-agnostic',
+            text: 'Web Components at the core; React and Vue wrappers generated from the same source.',
+          },
+          {
+            icon: '⚡',
+            title: 'Actually lightweight',
+            text: '~215 KB gzipped for the full builder. Lazy-loaded code editor, zero CSS framework.',
+          },
+          {
+            icon: '🛡️',
+            title: 'Rules without eval',
+            text: 'JSON Logic or JS sandboxed by an AST interpreter: CSP-safe, execution budget.',
+          },
+          {
+            icon: '📄',
+            title: 'Specs, not components',
+            text: 'Forms as portable JSON. RFC 6902 patches both ways, built-in undo/redo.',
+          },
+          {
+            icon: '🔁',
+            title: 'Form.io converter',
+            text: 'convertFormioForm migrates fields, wizards, validations and uploads — reports the rest.',
+          },
+          {
+            icon: '🌍',
+            title: 'i18n end to end',
+            text: 'Content and builder chrome localized; English and French shipped, extendable.',
+          },
+        ],
+        codeEyebrow: 'In practice',
+        codeTitle: 'One builder, one renderer, one event.',
+        codeFile: 'App.tsx',
+        migEyebrow: 'Migration',
+        migTitle: 'Coming from Form.io?',
+        migText: 'Roughly halve your gzipped form-stack weight, drop Bootstrap, and watch stored definitions shrink 3–5× on real production exports.',
+        migCta: 'Migration guide',
+        migFig1: '470 KB → 215 KB',
+        migFig2: 'specs ÷ 3–5',
+        usesEyebrow: 'Use cases',
+        usesTitle: 'Where it actually earns its keep.',
+        uses: [
+          {
+            title: 'Internal tools & back office',
+            text: 'Case management, approvals, admin consoles — the forms your ops team touches every day.',
+          },
+          {
+            title: 'Citizen services',
+            text: 'Multi-language public forms, official documents, conditional eligibility rules.',
+          },
+          {
+            title: 'Onboarding & surveys',
+            text: 'KYC flows, product onboarding, feedback — wizards with per-step validation.',
+          },
+          {
+            title: 'Embeddable builder',
+            text: 'Give your own customers a form builder — white-label the palette, keep your data model.',
+          },
+        ],
+        ctaTitle: 'Ready to build?',
+        ctaText: 'Add FormKrafter to the app you already have.',
+        ctaStar: 'Star on GitHub',
+        footTag: 'Built with Web Components, powered by Stencil.',
+      }
+---
+
+<div class="fk">
+  <header class="fk-nav">
+    <a class="fk-brand" href={base}>FormKrafter</a>
+    <nav class="fk-nav-links">
+      <a href={`${base}getting-started/`}>{t.navDocs}</a>
+      <a href={`${base}demo/`}>{t.navDemo}</a>
+      <a href={github} target="_blank" rel="noreferrer">GitHub</a>
+      <a class="fk-lang" href={altHref}>{lang === 'fr' ? 'EN' : 'FR'}</a>
+      <button
+        type="button"
+        class="fk-theme-toggle"
+        id="fkThemeToggle"
+        aria-label="Toggle color theme"
+      >
+        <span class="fk-theme-toggle__sun" aria-hidden="true">☀</span>
+        <span class="fk-theme-toggle__moon" aria-hidden="true">☾</span>
+      </button>
+      <a class="fk-btn fk-btn--primary fk-btn--sm" href={`${base}getting-started/`}
+        >{t.navStart}</a
+      >
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <main class="fk-hero">
+    <div class="fk-hero-copy">
+      <span class="fk-pill"><span class="fk-pill-dot"></span> {t.pill}</span>
+      <h1 class="fk-title">{t.h1a}<br /><span class="fk-grad">{t.h1b}</span></h1>
+      <p class="fk-lede">{t.lede}</p>
+      <div class="fk-cta">
+        <a class="fk-btn fk-btn--primary" href={`${base}getting-started/`}>{t.ctaStart}</a>
+        <a class="fk-btn fk-btn--ghost" href={`${base}demo/`}>{t.ctaDemo}</a>
+      </div>
+      <p class="fk-install"><code><span class="fk-dollar">$</span> {t.install}</code></p>
+    </div>
+
+    <!-- Drag-to-build mock -->
+    <div class="fk-visual" aria-hidden="true">
+      <div class="fk-builder">
+        <div class="fk-palette">
+          <div class="fk-mini-head">Palette</div>
+          <button class="fk-chip" data-chip="0">Text</button>
+          <button class="fk-chip" data-chip="1">Email</button>
+          <button class="fk-chip" data-chip="2">Select</button>
+          <button class="fk-chip" data-chip="3">Checkbox</button>
+        </div>
+        <div class="fk-canvas">
+          <div class="fk-mini-head">Canvas</div>
+          <div class="fk-canvas-body" id="fkCanvasBody"></div>
+          <div class="fk-drop-hint" id="fkDropHint">Drop a brick here</div>
+        </div>
+        <div class="fk-ghost" id="fkGhost"></div>
+      </div>
+      <div class="fk-visual-bar">
+        <span class="fk-status"><span class="fk-status-dot"></span> spec.json → live form</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- HOW IT WORKS -->
+  <section class="fk-section" id="how">
+    <div class="fk-section-head">
+      <span class="fk-eyebrow">{t.howEyebrow}</span>
+      <h2>{t.howTitle}</h2>
+    </div>
+    <ol class="fk-steps">
+      {
+        t.steps.map((s) => (
+          <li>
+            <span class="fk-step-n">{s.n}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+            <pre class="fk-mini-code"><code>{s.code}</code></pre>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- FRAMEWORK SUPPORT -->
+  <section class="fk-section">
+    <div class="fk-section-head">
+      <span class="fk-eyebrow">{t.fwEyebrow}</span>
+      <h2>{t.fwTitle}</h2>
+    </div>
+    <div class="fk-frameworks">
+      {
+        t.frameworks.map((f) => (
+          <article class="fk-fw-card">
+            <h3>{f.name}</h3>
+            <p>{f.text}</p>
+            <code class="fk-fw-install">{f.install}</code>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="fk-section">
+    <div class="fk-section-head">
+      <span class="fk-eyebrow">{t.whyEyebrow}</span>
+      <h2>{t.whyTitle}</h2>
+    </div>
+    <div class="fk-features">
+      {
+        t.features.map((f) => (
+          <article class="fk-card">
+            <div class="fk-card-ic">{f.icon}</div>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- CODE EXAMPLE -->
+  <section class="fk-section">
+    <div class="fk-section-head">
+      <span class="fk-eyebrow">{t.codeEyebrow}</span>
+      <h2>{t.codeTitle}</h2>
+    </div>
+    <div class="fk-code-card">
+      <div class="fk-code-top">
+        <span class="fk-dotc"></span><span class="fk-dotc"></span><span class="fk-dotc"
+        ></span>
+        <span class="fk-code-file">{t.codeFile}</span>
+      </div>
+      <pre><code><span class="fk-k">import</span> {'{'} useState {'}'} <span class="fk-k">from</span> <span class="fk-s">'react'</span>
+<span class="fk-k">import</span> {'{'} FkFormBuilder, FkFormRender {'}'} <span class="fk-k">from</span> <span class="fk-s">'@streamline-pulse/formkrafter-react'</span>
+<span class="fk-k">import</span> <span class="fk-s">'@streamline-pulse/formkrafter-wc/styles.css'</span>
+
+<span class="fk-k">export function</span> <span class="fk-fn">FormStudio</span>() {'{'}
+  <span class="fk-k">const</span> [spec, setSpec] = <span class="fk-fn">useState</span>()
+
+  <span class="fk-k">return</span> (
+    {'<>'}
+      {'<FkFormBuilder'} <span class="fk-attr">onSpecChange</span>={'{(e)'} {'=>'} <span class="fk-fn">setSpec</span>(e.detail.spec){'} />'}
+      {'{spec && ('}
+        {'<FkFormRender'}
+          <span class="fk-attr">spec</span>={'{spec}'}
+          <span class="fk-attr">onFormSubmit</span>={'{(e)'} {'=>'} console.<span class="fk-fn">log</span>(e.detail.data){'}'}
+        {'/>'}
+      {')}'}
+    {'</>'}
+  )
+{'}'}</code></pre>
+    </div>
+  </section>
+
+  <!-- MIGRATION -->
+  <section class="fk-mig">
+    <div class="fk-mig-body">
+      <span class="fk-eyebrow">{t.migEyebrow}</span>
+      <h2>{t.migTitle}</h2>
+      <p>{t.migText}</p>
+    </div>
+    <div class="fk-mig-side">
+      <div class="fk-mig-figures">
+        <span class="fk-mig-figure">{t.migFig1}</span>
+        <span class="fk-mig-figure">{t.migFig2}</span>
+      </div>
+      <a class="fk-btn fk-btn--ghost" href={`${base}guides/formio-migration/`}>{t.migCta} →</a>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="fk-section">
+    <div class="fk-section-head">
+      <span class="fk-eyebrow">{t.usesEyebrow}</span>
+      <h2>{t.usesTitle}</h2>
+    </div>
+    <div class="fk-uses">
+      {
+        t.uses.map((u) => (
+          <div class="fk-use">
+            <h3>{u.title}</h3>
+            <p>{u.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="fk-cta-band">
+    <h2>{t.ctaTitle}</h2>
+    <p>{t.ctaText}</p>
+    <div class="fk-cta">
+      <a class="fk-btn fk-btn--primary" href={`${base}getting-started/`}>{t.ctaStart}</a>
+      <a class="fk-btn fk-btn--ghost" href={github} target="_blank" rel="noreferrer"
+        >{t.ctaStar}</a
+      >
+    </div>
+    <p class="fk-install"><code><span class="fk-dollar">$</span> {t.install}</code></p>
+  </section>
+
+  <footer class="fk-foot">
+    <span>MIT © Streamline Pulse — {t.footTag}</span>
+    <span class="fk-foot-links">
+      <a href={`${base}getting-started/`}>{t.navDocs}</a>
+      <a href={github} target="_blank" rel="noreferrer">GitHub</a>
+    </span>
+  </footer>
+</div>
+
+<style>
+  .fk {
+    --fk-bg: #081314;
+    --fk-bg-soft: #0d1b1d;
+    --fk-ink: #eaf4f3;
+    --fk-muted: #93a8a7;
+    --fk-line: rgba(120, 190, 185, 0.16);
+    --fk-line-soft: rgba(120, 190, 185, 0.08);
+    --fk-accent: #4fb8b2;
+    --fk-accent-strong: #8de3d8;
+    --fk-accent-ink: #04211f;
+    --fk-danger: #ff9d7a;
+    --fk-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+    background: var(--fk-bg);
+    color: var(--fk-ink);
+    font-family:
+      ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  :global(:root[data-theme='light']) .fk {
+    --fk-bg: #fbfdfc;
+    --fk-bg-soft: #f2f7f6;
+    --fk-ink: #0e2a29;
+    --fk-muted: #4c6866;
+    --fk-line: rgba(29, 90, 96, 0.14);
+    --fk-line-soft: rgba(29, 90, 96, 0.07);
+    --fk-accent: #1f7a82;
+    --fk-accent-strong: #14555c;
+    --fk-accent-ink: #ffffff;
+    --fk-danger: #d9603f;
+  }
+
+  .fk {
+    background:
+      radial-gradient(60rem 40rem at 82% -8%, color-mix(in srgb, var(--fk-accent) 10%, transparent), transparent 58%),
+      radial-gradient(48rem 34rem at 6% 2%, color-mix(in srgb, var(--fk-accent) 8%, transparent), transparent 55%),
+      var(--fk-bg);
+  }
+
+  .fk :global(*) {
+    box-sizing: border-box;
+  }
+
+  .fk :global(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .fk {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  /* ---- nav ---- */
+  .fk-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 0;
+  }
+
+  .fk-brand {
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+
+  .fk-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  .fk-nav-links > a:not(.fk-btn) {
+    color: var(--fk-muted);
+    font-size: 0.92rem;
+    transition: color 0.15s;
+  }
+
+  .fk-nav-links > a:not(.fk-btn):hover {
+    color: var(--fk-ink);
+  }
+
+  .fk-lang {
+    border: 1px solid var(--fk-line);
+    border-radius: 999px;
+    padding: 0.24rem 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .fk-theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 999px;
+    border: 1px solid var(--fk-line);
+    background: none;
+    color: var(--fk-muted);
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .fk-theme-toggle__moon {
+    display: none;
+  }
+
+  :global(:root[data-theme='light']) .fk-theme-toggle__sun {
+    display: none;
+  }
+
+  :global(:root[data-theme='light']) .fk-theme-toggle__moon {
+    display: inline;
+  }
+
+  /* ---- buttons ---- */
+  .fk-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 0.8rem 1.4rem;
+    font-size: 0.98rem;
+    transition:
+      transform 0.12s,
+      background 0.15s,
+      border-color 0.15s,
+      opacity 0.15s;
+    white-space: nowrap;
+  }
+
+  .fk-btn:active {
+    transform: translateY(1px);
+  }
+
+  .fk-btn--sm {
+    padding: 0.5rem 0.95rem;
+    font-size: 0.88rem;
+  }
+
+  .fk-btn--primary {
+    background: linear-gradient(120deg, var(--fk-accent), var(--fk-accent-strong));
+    color: var(--fk-accent-ink);
+  }
+
+  .fk-btn--primary:hover {
+    opacity: 0.88;
+  }
+
+  .fk-btn--ghost {
+    border: 1px solid var(--fk-line);
+    background: color-mix(in srgb, var(--fk-ink) 3%, transparent);
+  }
+
+  .fk-btn--ghost:hover {
+    border-color: color-mix(in srgb, var(--fk-accent) 50%, transparent);
+  }
+
+  /* ---- hero ---- */
+  .fk-hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    padding: 4vh 0 4rem;
+  }
+
+  .fk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--fk-line);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--fk-muted);
+    background: color-mix(in srgb, var(--fk-ink) 3%, transparent);
+  }
+
+  .fk-pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--fk-accent);
+    box-shadow: 0 0 10px var(--fk-accent);
+  }
+
+  .fk-title {
+    margin: 1.3rem 0 0;
+    font-size: clamp(2.3rem, 4.6vw, 3.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+
+  .fk-grad {
+    background: linear-gradient(100deg, var(--fk-accent) 10%, var(--fk-accent-strong) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .fk-lede {
+    margin: 1.2rem 0 0;
+    max-width: 32rem;
+    color: var(--fk-muted);
+    font-size: clamp(1rem, 1.4vw, 1.1rem);
+  }
+
+  .fk-cta {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+  }
+
+  .fk-install {
+    margin-top: 1.4rem;
+  }
+
+  .fk-install code {
+    font-family: var(--fk-mono);
+    font-size: 0.86rem;
+    color: var(--fk-muted);
+  }
+
+  .fk-dollar {
+    color: var(--fk-accent);
+    margin-right: 0.4rem;
+  }
+
+  /* ---- hero visual: drag-to-build mock ---- */
+  .fk-visual {
+    border: 1px solid var(--fk-line);
+    border-radius: 18px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--fk-ink) 3%, transparent),
+      color-mix(in srgb, var(--fk-ink) 1%, transparent)
+    );
+    padding: 1.25rem;
+    box-shadow: 0 40px 80px -50px rgba(0, 0, 0, 0.6);
+  }
+
+  .fk-builder {
+    position: relative;
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.8rem;
+    min-height: 15rem;
+  }
+
+  .fk-mini-head {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fk-muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .fk-palette {
+    border: 1px solid var(--fk-line);
+    border-radius: 12px;
+    background: var(--fk-bg-soft);
+    padding: 0.7rem;
+  }
+
+  .fk-chip {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.4rem;
+    padding: 0.4rem 0.55rem;
+    border-radius: 8px;
+    border: 1px solid var(--fk-line);
+    background: color-mix(in srgb, var(--fk-ink) 3%, transparent);
+    color: var(--fk-ink);
+    font: inherit;
+    font-size: 0.76rem;
+    text-align: left;
+    cursor: default;
+    transition: border-color 0.2s, opacity 0.2s;
+  }
+
+  .fk-chip.is-active {
+    border-color: var(--fk-accent);
+    opacity: 0.35;
+  }
+
+  .fk-canvas {
+    position: relative;
+    border: 1px solid var(--fk-line);
+    border-radius: 12px;
+    background: var(--fk-bg-soft);
+    padding: 0.7rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fk-canvas-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+  }
+
+  .fk-canvas-body :global(.fk-field) {
+    animation: fk-pop 0.35s ease;
+  }
+
+  .fk-canvas-body :global(.fk-field label) {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--fk-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .fk-canvas-body :global(.fk-field .fk-input) {
+    height: 1.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--fk-line);
+    background: color-mix(in srgb, var(--fk-ink) 2%, transparent);
+  }
+
+  .fk-canvas-body :global(.fk-field--inline) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .fk-canvas-body :global(.fk-field--inline .fk-input) {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 4px;
+  }
+
+  .fk-canvas-body :global(.fk-field--inline label) {
+    margin: 0;
+  }
+
+  @keyframes fk-pop {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .fk-drop-hint {
+    margin-top: 0.6rem;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--fk-muted);
+    border: 1px dashed var(--fk-line);
+    border-radius: 8px;
+    padding: 0.5rem;
+    transition: opacity 0.2s;
+  }
+
+  .fk-drop-hint.is-hidden {
+    opacity: 0;
+  }
+
+  .fk-ghost {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    border: 1px solid var(--fk-accent);
+    background: color-mix(in srgb, var(--fk-accent) 18%, var(--fk-bg-soft));
+    color: var(--fk-ink);
+    font-size: 0.76rem;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .fk-visual-bar {
+    margin-top: 1.1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--fk-line-soft);
+  }
+
+  .fk-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    color: var(--fk-accent);
+    font-family: var(--fk-mono);
+  }
+
+  .fk-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--fk-accent);
+    box-shadow: 0 0 8px var(--fk-accent);
+    animation: fk-blink 1.6s ease-in-out infinite;
+  }
+
+  @keyframes fk-blink {
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  /* ---- section scaffolding ---- */
+  .fk-section {
+    padding: 4rem 0;
+    border-top: 1px solid var(--fk-line-soft);
+  }
+
+  .fk-section-head {
+    max-width: 42rem;
+    margin-bottom: 2.2rem;
+  }
+
+  .fk-eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.74rem;
+    color: var(--fk-accent);
+    font-weight: 700;
+  }
+
+  .fk-section-head h2,
+  .fk-mig-body h2,
+  .fk-cta-band h2 {
+    margin: 0.7rem 0 0;
+    font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  /* ---- steps ---- */
+  .fk-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .fk-steps li {
+    border: 1px solid var(--fk-line);
+    border-radius: 14px;
+    padding: 1.4rem;
+    background: color-mix(in srgb, var(--fk-ink) 2%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fk-step-n {
+    font-family: var(--fk-mono);
+    font-size: 0.8rem;
+    color: var(--fk-accent);
+    letter-spacing: 0.1em;
+  }
+
+  .fk-steps h3 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+
+  .fk-steps p {
+    margin: 0;
+    color: var(--fk-muted);
+    font-size: 0.9rem;
+    flex: 1;
+  }
+
+  .fk-mini-code {
+    margin: 0;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    background: var(--fk-bg-soft);
+    border: 1px solid var(--fk-line-soft);
+    font-size: 0.74rem;
+    overflow-x: auto;
+  }
+
+  .fk-mini-code code {
+    font-family: var(--fk-mono);
+    color: var(--fk-accent-strong);
+  }
+
+  /* ---- framework cards ---- */
+  .fk-frameworks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .fk-fw-card {
+    border: 1px solid var(--fk-line);
+    border-radius: 14px;
+    padding: 1.4rem;
+    background: color-mix(in srgb, var(--fk-ink) 2%, transparent);
+  }
+
+  .fk-fw-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .fk-fw-card p {
+    margin: 0 0 0.9rem;
+    color: var(--fk-muted);
+    font-size: 0.9rem;
+  }
+
+  .fk-fw-install {
+    display: block;
+    font-family: var(--fk-mono);
+    font-size: 0.76rem;
+    color: var(--fk-accent);
+    background: var(--fk-bg-soft);
+    border: 1px solid var(--fk-line-soft);
+    border-radius: 6px;
+    padding: 0.5rem 0.6rem;
+    overflow-x: auto;
+  }
+
+  /* ---- features ---- */
+  .fk-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .fk-card {
+    border: 1px solid var(--fk-line);
+    border-radius: 14px;
+    padding: 1.4rem;
+    background: color-mix(in srgb, var(--fk-ink) 2%, transparent);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .fk-card:hover {
+    border-color: color-mix(in srgb, var(--fk-accent) 45%, transparent);
+    transform: translateY(-3px);
+  }
+
+  .fk-card-ic {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--fk-accent) 12%, transparent);
+    font-size: 1.05rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .fk-card h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.02rem;
+  }
+
+  .fk-card p {
+    margin: 0;
+    color: var(--fk-muted);
+    font-size: 0.9rem;
+  }
+
+  /* ---- code example ---- */
+  .fk-code-card {
+    border: 1px solid var(--fk-line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--fk-bg-soft);
+    box-shadow: 0 30px 60px -44px rgba(0, 0, 0, 0.5);
+    max-width: 44rem;
+  }
+
+  .fk-code-top {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--fk-line-soft);
+  }
+
+  .fk-dotc {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--fk-ink) 14%, transparent);
+  }
+
+  .fk-code-file {
+    margin-left: 0.5rem;
+    font-family: var(--fk-mono);
+    font-size: 0.76rem;
+    color: var(--fk-muted);
+  }
+
+  .fk-code-card pre {
+    margin: 0;
+    padding: 1.1rem 1.25rem;
+    overflow-x: auto;
+  }
+
+  .fk-code-card code {
+    font-family: var(--fk-mono);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    white-space: pre;
+  }
+
+  .fk-k {
+    color: var(--fk-accent-strong);
+  }
+  .fk-s {
+    color: var(--fk-accent);
+  }
+  .fk-fn {
+    color: color-mix(in srgb, var(--fk-ink) 85%, var(--fk-accent));
+  }
+  .fk-attr {
+    color: var(--fk-accent);
+  }
+
+  /* ---- migration band ---- */
+  .fk-mig {
+    margin-top: 4rem;
+    border: 1px solid var(--fk-accent);
+    border-radius: 18px;
+    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    background:
+      linear-gradient(var(--fk-bg), var(--fk-bg)) padding-box,
+      linear-gradient(120deg, var(--fk-accent), transparent 70%) border-box;
+  }
+
+  .fk-mig-body {
+    flex: 1 1 22rem;
+  }
+
+  .fk-mig-body p {
+    margin: 0.6rem 0 0;
+    color: var(--fk-muted);
+    max-width: 34rem;
+  }
+
+  .fk-mig-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .fk-mig-figures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .fk-mig-figure {
+    font-family: var(--fk-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--fk-line);
+    color: var(--fk-accent);
+  }
+
+  /* ---- use cases ---- */
+  .fk-uses {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .fk-use {
+    border: 1px solid var(--fk-line);
+    border-left: 3px solid var(--fk-accent);
+    border-radius: 12px;
+    padding: 1.2rem 1.35rem;
+    background: color-mix(in srgb, var(--fk-ink) 1.5%, transparent);
+  }
+
+  .fk-use h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.02rem;
+  }
+
+  .fk-use p {
+    margin: 0;
+    color: var(--fk-muted);
+    font-size: 0.9rem;
+  }
+
+  /* ---- CTA band ---- */
+  .fk-cta-band {
+    text-align: center;
+    padding: 4.5rem 1.5rem;
+    margin: 2rem 0 1rem;
+    border: 1px solid var(--fk-line);
+    border-radius: 20px;
+    background: radial-gradient(
+        40rem 20rem at 50% 0%,
+        color-mix(in srgb, var(--fk-accent) 10%, transparent),
+        transparent 60%
+      ),
+      color-mix(in srgb, var(--fk-ink) 1.5%, transparent);
+  }
+
+  .fk-cta-band p {
+    margin: 0.6rem 0 0;
+    color: var(--fk-muted);
+  }
+
+  .fk-cta-band .fk-cta {
+    justify-content: center;
+    margin-top: 1.6rem;
+  }
+
+  .fk-cta-band .fk-install {
+    text-align: center;
+  }
+
+  /* ---- footer ---- */
+  .fk-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 0 1rem;
+    border-top: 1px solid var(--fk-line-soft);
+    color: var(--fk-muted);
+    font-size: 0.86rem;
+  }
+
+  .fk-foot-links {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  .fk-foot-links a:hover {
+    color: var(--fk-ink);
+  }
+
+  @media (max-width: 900px) {
+    .fk-hero {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+    .fk-steps,
+    .fk-frameworks,
+    .fk-features {
+      grid-template-columns: 1fr;
+    }
+    .fk-uses {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .fk-nav-links > a:not(.fk-btn):not(.fk-lang) {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fk-status-dot,
+    .fk-canvas-body :global(.fk-field) {
+      animation: none;
+    }
+    .fk-card {
+      transition: none;
+    }
+    .fk-card:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('fkThemeToggle')
+  toggle?.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
+    const next = current === 'light' ? 'dark' : 'light'
+    document.documentElement.dataset.theme = next
+    try {
+      localStorage.setItem('starlight-theme', next)
+    } catch {
+      /* storage unavailable */
+    }
+  })
+
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  const stage = document.querySelector('.fk-builder') as HTMLElement | null
+  const canvasBody = document.getElementById('fkCanvasBody')
+  const dropHint = document.getElementById('fkDropHint')
+  const ghost = document.getElementById('fkGhost')
+  const chips = Array.from(document.querySelectorAll<HTMLElement>('.fk-chip'))
+
+  const FIELDS = [
+    { chip: 'Text', label: 'Full name', kind: 'text' },
+    { chip: 'Email', label: 'Email', kind: 'email' },
+    { chip: 'Select', label: 'Role', kind: 'select' },
+    { chip: 'Checkbox', label: 'Terms', kind: 'checkbox' },
+  ] as const
+
+  function fieldHTML(f: (typeof FIELDS)[number]): string {
+    if (f.kind === 'checkbox') {
+      return `<div class="fk-field fk-field--inline"><div class="fk-input"></div><label>${f.label}</label></div>`
+    }
+    return `<div class="fk-field"><label>${f.label}</label><div class="fk-input"></div></div>`
+  }
+
+  if (stage && canvasBody && dropHint && ghost && chips.length) {
+    let i = 0
+
+    function reset() {
+      canvasBody!.innerHTML = ''
+      dropHint!.classList.remove('is-hidden')
+      for (const c of chips) c.classList.remove('is-active')
+      i = 0
+    }
+
+    function placeNext() {
+      const idx = i % FIELDS.length
+      const field = FIELDS[idx]
+      const chipEl = chips[idx]
+      chipEl.classList.add('is-active')
+
+      if (reduce) {
+        canvasBody!.insertAdjacentHTML('beforeend', fieldHTML(field))
+        dropHint!.classList.add('is-hidden')
+        i++
+        return
+      }
+
+      const stageRect = stage!.getBoundingClientRect()
+      const chipRect = chipEl.getBoundingClientRect()
+      const canvasRect = canvasBody!.getBoundingClientRect()
+
+      ghost!.textContent = field.chip
+      ghost!.style.transform = `translate(${chipRect.left - stageRect.left}px, ${chipRect.top - stageRect.top}px)`
+      ghost!.style.opacity = '1'
+
+      const targetX = canvasRect.left - stageRect.left + 8
+      const targetY = canvasRect.top - stageRect.top + canvasRect.height / 2 - 12
+
+      ghost!.animate(
+        [
+          { transform: ghost!.style.transform, opacity: 1 },
+          {
+            transform: `translate(${targetX}px, ${targetY}px)`,
+            opacity: 0,
+          },
+        ],
+        { duration: 550, easing: 'cubic-bezier(.4,0,.2,1)' }
+      )
+
+      setTimeout(() => {
+        dropHint!.classList.add('is-hidden')
+        canvasBody!.insertAdjacentHTML('beforeend', fieldHTML(field))
+        ghost!.style.opacity = '0'
+        i++
+      }, 480)
+    }
+
+    if (reduce) {
+      for (let n = 0; n < FIELDS.length; n++) placeNext()
+    } else {
+      function loop() {
+        setTimeout(() => {
+          if (i > 0 && i % FIELDS.length === 0) {
+            reset()
+            setTimeout(loop, 500)
+          } else {
+            placeNext()
+            loop()
+          }
+        }, 1500)
+      }
+      placeNext()
+      loop()
+    }
+  }
+</script>
