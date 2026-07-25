@@ -1,0 +1,29 @@
+---
+import LandingPage from '../components/landing/LandingPage.astro'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '') + '/'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FormKrafter — build forms once, run them everywhere</title>
+    <meta
+      name="description"
+      content="Framework-agnostic drag & drop form builder — Web Components, React, Vue. Forms are portable JSON specs: sandboxed rules, server-side validation, nested forms, i18n, Form.io migration."
+    />
+    <link rel="canonical" href={`https://streamline-pulse.github.io${base}`} />
+    <script is:inline>
+      ;(() => {
+        const stored = typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme')
+        const theme = stored || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark'
+      })()
+    </script>
+  </head>
+  <body>
+    <LandingPage lang="en" />
+  </body>
+</html>
