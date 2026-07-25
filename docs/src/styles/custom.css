@@ -109,6 +109,36 @@ header.header {
   box-shadow: 0 24px 48px -34px rgba(0, 0, 0, 0.5);
 }
 
+/* Give every plain (non-terminal, untitled) code block the same
+   dot-chrome header as the landing's code-card, so the whole site
+   reads as one consistent "editor" language. */
+.expressive-code .frame:not(.is-terminal):not(.has-title) .header {
+  display: flex;
+  align-items: center;
+  min-height: 2.3rem;
+  padding-inline: 1rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+  background: color-mix(in srgb, var(--sl-color-white) 4%, transparent);
+  border-radius: 11px 11px 0 0;
+}
+
+.expressive-code .frame:not(.is-terminal):not(.has-title) .header::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sl-color-white) 22%, transparent);
+  box-shadow:
+    13px 0 0 color-mix(in srgb, var(--sl-color-white) 22%, transparent),
+    26px 0 0 color-mix(in srgb, var(--sl-color-white) 22%, transparent);
+}
+
+.expressive-code .frame:not(.is-terminal):not(.has-title) pre,
+.expressive-code .frame:not(.is-terminal):not(.has-title) code {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 /* ---- callouts ---- */
 .starlight-aside {
   border-radius: 10px;
