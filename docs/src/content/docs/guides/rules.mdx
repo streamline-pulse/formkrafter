@@ -1,0 +1,137 @@
+---
+title: Dynamic rules
+description: Drive hidden, disabled, required and computed values from the form data — with JSON Logic or JavaScript executed without eval.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Most real forms are conditional: a field appears only for a certain country, a
+section unlocks once a box is ticked, a total recomputes as quantities change.
+In FormKrafter that behavior lives in the spec as **rules**, so it survives
+being stored, migrated and re-validated on the server.
+
+## Anatomy of a rule
+
+A rule has a trigger and a list of effects. When the trigger evaluates to
+strictly `true`, its effects apply:
+
+```ts
+type Rule = {
+  name: string
+  type: 'jsonLogic' | 'javaScript'
+  logic?: RulesLogic     // when type is 'jsonLogic'
+  code?: string          // when type is 'javaScript'
+  effects?: Effect[]
+}
+```
+
+Each effect targets one property of the brick:
+
+| Target | Type | Effect |
+|---|---|---|
+| `hidden` | boolean | removes the field from view **and from validation** |
+| `disabled` | boolean | renders it read-only |
+| `required` | boolean | makes it mandatory conditionally |
+| `value` | computed | overwrites the field's value |
+
+## Two ways to write the trigger
+
+### JSON Logic — the default
+
+Serializable, inspectable, safe to store and diff:
+
+```json title="Hide unless the country is FR or DE"
+{
+  "name": "eu-only",
+  "type": "jsonLogic",
+  "logic": { "!": { "in": [{ "var": "country" }, ["FR", "DE"]] } },
+  "effects": [
+    { "property": { "target": "hidden", "type": "boolean" }, "boolean": true }
+  ]
+}
+```
+
+### JavaScript — the escape hatch
+
+When the logic gets awkward to express declaratively:
+
+```js
+return dataMap.quantity > 10 ? 'GOLD' : 'STANDARD'
+```
+
+`dataMap` is the whole form's data, keyed by brick `key`. The builder's rule
+editor autocompletes `dataMap.` with your form's actual field keys.
+
+## The sandbox
+
+JavaScript rules are **never** passed to `eval`. They are parsed with Acorn and
+walked by an AST interpreter:
+
+- **CSP-safe** — no `unsafe-eval` directive needed anywhere in your app.
+- **Isolated** — only `dataMap` (and `value` inside custom validators), plus
+  whitelisted builtins: `Math`, `JSON`, `String`, `Number`, `Date`, `Array`,
+  `Object`, `Boolean`. No `fetch`, no `globalThis`, no `constructor` or
+  `__proto__` escape.
+- **Expressive enough** — expressions, ternaries, `const`/`let`, `if`/`return`,
+  template literals, optional chaining, arrow functions (`.filter(x => …)`).
+- **Bounded** — unsupported syntax is rejected upfront and runaway code is cut
+  by an execution budget.
+
+You can run the same sandbox yourself:
+
+```ts
+import { runSandboxed } from '@streamline-pulse/formkrafter-core'
+
+runSandboxed('return items.filter((i) => i > 2)', { items: [1, 2, 3] })
+// → [3]
+```
+
+<Aside type="danger">
+A trusted environment can opt back into full JavaScript by swapping the runner:
+
+```ts
+import { services, UnsafeEvalJsRunnerService } from '@streamline-pulse/formkrafter-core'
+services.jsRunnerService = new UnsafeEvalJsRunnerService()
+```
+
+This uses real `eval`. Only do it when every spec on the page is authored by
+someone you trust as much as your own source code.
+</Aside>
+
+## Rules and validation
+
+A brick hidden by a rule — or nested inside a hidden parent — is skipped by
+validation, in the browser **and** in `validateFormData` on your server. This is
+what stops a conditionally hidden required field from blocking a submission
+forever.
+
+<Aside type="tip">
+This cascade is the reason to express conditional visibility as a rule rather
+than by swapping specs: the server sees the same conditions and reaches the
+same conclusion.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Custom validators run in this same sandbox, with value in scope."
+  />
+  <LinkCard
+    title="Form specs"
+    href="../form-specs/"
+    description="Where rules live on a brick and how to replace them immutably."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="The code brick and rules editor, with dataMap autocompletion."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="Swap the JS runner and the other injection points."
+  />
+</CardGrid>

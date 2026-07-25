@@ -1,0 +1,190 @@
+---
+title: Bricks
+description: The 30 built-in bricks, the behaviors worth knowing about each family, and how to register bricks of your own.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+A brick is one node in a [form spec](../form-specs/) — a field, a layout
+container, or a piece of output. Thirty ship in the box, and the registry that
+holds them is open: your own bricks are registered the same way and appear in
+the same palette.
+
+## The built-in catalog
+
+### Inputs
+
+| Brick `id` | Data type | Notes |
+|---|---|---|
+| `text`, `textarea`, `password` | string | `text` supports masks and adornments |
+| `email`, `url`, `phone` | string | paired with the matching validators |
+| `number` | number | `min` / `max` / `step` |
+| `date`, `time`, `datetime` | string | native pickers |
+| `select`, `radio` | string | single choice |
+| `multi-select`, `select-boxes`, `tags` | array | multiple choice |
+| `checkbox` | boolean | inline label |
+| `signature` | string | canvas, stored as a data URL |
+| `address` | object | composite field |
+| `code` | string | CodeMirror, loaded lazily |
+
+### Data
+
+| Brick `id` | Type | Notes |
+|---|---|---|
+| `file` | input / object | pluggable upload, per-brick `uploadUrl`, `multiple` mode |
+| `data-grid` | collection / array | repeating rows with per-row validation |
+| `hidden` | input / string | carries a value without rendering |
+
+### Layout
+
+| Brick `id` | Type | Notes |
+|---|---|---|
+| `group`, `row`, `column` | panel | fieldset and flex containers |
+| `stepper` | panel | wizard with per-step validation |
+| `tabs` | panel | optional validate-before-leaving |
+| `nested-form` | panel | references another form by `specRef` |
+| `content` | output | static rich text |
+| `recap` | output | live summary of the whole form |
+
+## Behaviors worth knowing
+
+### Select and multi-select
+
+A searchable combobox implementing the full WAI-ARIA pattern — keyboard
+navigation, focus management, screen reader announcements. Options come from
+five sources:
+
+| `optionsSource` | Where options come from |
+|---|---|
+| `static` | a newline-separated string, or `{ label, value }` objects |
+| `dataMap` | another field's value in the same form |
+| `remote` | a URL, with `{key}` interpolation and optional server-side search |
+| `catalog` | a shared list resolved through `optionSourceService` |
+| `js` | a sandboxed snippet returning the list |
+
+`labelKey` and `valueKey` accept dotted paths, so `name.common` reads a nested
+property of each option object.
+
+<Aside type="tip">
+For long lists — countries, professions — prefer `remote` or `catalog` over
+`static`. It keeps the spec small and the list editable in one place. The
+Form.io converter warns when it meets more than 100 static options.
+</Aside>
+
+### Data grid
+
+The row template is edited like any panel; at render time each row scopes its
+own data. `minItems` / `maxItems` validate the row count, rows reorder with
+accessible up/down buttons, and errors report as `contacts[0].email`.
+
+### Stepper and tabs
+
+Both gate navigation on validation. `stepper` validates the current step before
+advancing and can emit `formSubmit` from a final Submit button. `tabs` offers
+the same as an option, plus arrow-key navigation between tabs.
+
+### Text and phone
+
+Optional `prefix` / `suffix` adornments, plus a `mask` config:
+
+| Mask token | Accepts |
+|---|---|
+| `9` | a digit |
+| `a` | a letter |
+| `A` | a letter, upper-cased |
+| `*` | alphanumeric |
+
+Any other character is a literal and is inserted automatically — `+229 99 99 99 99`
+is written `+229 99 99 99 99`.
+
+### Recap
+
+A live, read-only summary of everything filled so far. `groupBySections` turns
+labelled panels into titled sections, and collections render as tables — useful
+as the last step of a wizard.
+
+## Registering your own brick
+
+`createBrick` returns a brick the registry accepts. The `render` function
+receives the brick's props and returns a virtual node:
+
+<Steps>
+
+1. Describe and render it.
+
+   ```tsx title="rating-brick.tsx"
+   import { createBrick, h, registerBrick } from '@streamline-pulse/formkrafter-wc'
+
+   export const ratingBrick = createBrick({
+     type: 'input',
+     dataType: 'number',
+     id: 'rating',
+     name: 'Rating',
+     category: 'Inputs',
+     defaultConfigs: { label: 'Rating' },
+     render: (props) =>
+       h(
+         'div',
+         { class: { 'fk-field': true } },
+         ...[1, 2, 3, 4, 5].map((star) =>
+           h(
+             'button',
+             {
+               type: 'button',
+               'aria-label': `${star} stars`,
+               onClick: () => props.onDataChange?.(star),
+             },
+             star <= Number(props.data ?? 0) ? '★' : '☆'
+           )
+         )
+       ),
+   })
+   ```
+
+2. Register it once, before the builder mounts.
+
+   ```ts
+   registerBrick(ratingBrick)
+   ```
+
+3. It now appears in the palette under its `category`, and renders wherever a
+   spec uses `"id": "rating"`.
+
+</Steps>
+
+<Aside>
+`h` and the `VNode` type are re-exported by `formkrafter-wc`, so your app needs
+no Stencil dependency of its own. `renderBuilder` is optional — provide it when
+the brick should look different while being edited.
+</Aside>
+
+<Aside type="caution">
+The registry is a **page-wide singleton** (shared through `globalThis`, like
+[services](../services/)). Register a brick once at startup; registering the
+same `type:id` twice replaces the first.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Form specs"
+    href="../form-specs/"
+    description="How bricks compose into a tree, and the ops that edit it."
+  />
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Attach validators to any brick, built-in or your own."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="The upload, option and spec sources that bricks consume."
+  />
+  <LinkCard
+    title="Theming"
+    href="../theming/"
+    description="The fk-* class names your custom brick should reuse."
+  />
+</CardGrid>

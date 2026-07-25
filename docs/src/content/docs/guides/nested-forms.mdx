@@ -1,0 +1,131 @@
+---
+title: Nested forms
+description: Reference one form from another with specRef, resolved at render time through a pluggable spec source — with cycle detection and a depth limit.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+An address block, an emergency contact, a set of company details — some
+fragments show up in a dozen forms. Rather than copying them, a `nested-form`
+brick **references** another form. It is resolved and inlined at render time, so
+everything downstream — rules, validation, recap — sees one ordinary spec.
+
+## Referencing a form
+
+The brick carries a `specRef` in its configs. What the ref means is entirely up
+to the service that resolves it: a URL, a database id, a slug.
+
+```json title="A brick that pulls in the address form"
+{
+  "type": "panel",
+  "id": "nested-form",
+  "name": "Nested form",
+  "configs": {
+    "uid": "n1",
+    "key": "address",
+    "label": "Delivery address",
+    "specRef": "address-v2"
+  }
+}
+```
+
+At render time that node is replaced by the referenced form's children, wrapped
+in a labelled group.
+
+## Wiring the source
+
+The default `FetchSpecSourceService` treats the ref as a URL and supports
+`baseUrl`, headers, credentials and per-URL caching. To resolve refs from your
+own store, provide anything matching the interface:
+
+<Steps>
+
+1. Implement `fetchSpec`, returning a `BrickSpec`.
+
+   ```ts title="app-startup.ts"
+   import { services } from '@streamline-pulse/formkrafter-core'
+
+   services.specSourceService = {
+     fetchSpec: async (ref) => {
+       const res = await fetch(`/api/forms/${ref}`)
+       if (!res.ok) throw new Error(`Unknown form: ${ref}`)
+       return res.json()
+     },
+   }
+   ```
+
+2. Or configure the built-in one instead of writing your own.
+
+   ```ts
+   import { services, FetchSpecSourceService } from '@streamline-pulse/formkrafter-core'
+
+   services.specSourceService = new FetchSpecSourceService({
+     baseUrl: '/api/forms',
+     credentials: 'include',
+   })
+   ```
+
+3. Render normally. `<fk-form-render>` expands nested forms automatically and
+   shows a loading state while it resolves.
+
+</Steps>
+
+<Aside type="tip">
+The builder deliberately does **not** expand nested forms — you edit the
+reference, not a copy of the referenced form. Expansion only happens at render
+time.
+</Aside>
+
+## Expanding on the server
+
+Your backend must validate the complete tree, so expand before validating:
+
+```ts title="server/validate.ts"
+import { expandSpec, validateFormData } from '@streamline-pulse/formkrafter-core'
+
+const full = await expandSpec(spec)
+const verdict = validateFormData(full, payload)
+```
+
+`hasNestedForms(spec)` tells you whether the work is needed at all, which is
+worth checking before paying for the expansion on a hot path:
+
+```ts
+import { hasNestedForms } from '@streamline-pulse/formkrafter-core'
+
+const full = hasNestedForms(spec) ? await expandSpec(spec) : spec
+```
+
+## Safety rails
+
+<Aside type="caution">
+`expandSpec` refuses to loop. A form that references itself — directly or
+through a chain — throws `Circular nested form reference: a → b → a` instead of
+recursing forever. Nesting is also capped at **5 levels** by default; raise it
+with `expandSpec(spec, { maxDepth: 8 })` if you genuinely need deeper trees.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="specSourceService alongside the four other injection points."
+  />
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Validating the expanded tree on your server."
+  />
+  <LinkCard
+    title="Form specs"
+    href="../form-specs/"
+    description="What the inlined result looks like as a spec."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="The nested-form brick among the other 29."
+  />
+</CardGrid>

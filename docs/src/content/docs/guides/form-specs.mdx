@@ -1,0 +1,204 @@
+---
+title: Form specs
+description: The BrickSpec tree, how form data is shaped, and the immutable operations that produce RFC 6902 patches and undo/redo.
+---
+
+import { Aside, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Everything in FormKrafter starts here. A form is a **spec**: a plain JSON tree
+that you can store in a database, diff in a pull request, send over the wire and
+hand to any of the three renderers. Nothing about it is framework-specific, and
+nothing about it needs FormKrafter to be readable.
+
+## The BrickSpec shape
+
+Every node in the tree — a field, a panel, a wizard step — is a `BrickSpec`.
+Only three properties are required:
+
+```ts
+interface BrickSpec {
+  type: 'panel' | 'input' | 'collection' | 'output' | 'action'  // required
+  id: string                    // which registered brick renders this node
+  name: string                  // human label, shown in the builder
+
+  dataType?: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array' | 'null' | 'void'
+  configs?: { uid?: string; key?: string } & Record<string, unknown>
+  styles?: Record<string, unknown>
+  validations?: Validation[]
+  rules?: Rule[]
+  children?: BrickSpec[]
+
+  category?: string
+  editable?: boolean
+  isPrivate?: boolean
+}
+```
+
+The two properties you touch most live inside `configs`:
+
+| Config | Role | Notes |
+|---|---|---|
+| `uid` | Identity of the node | Stable across edits. Operations address bricks by `uid`; duplicating a brick regenerates it. |
+| `key` | Name of the field in the form data | What ends up in your payload. A brick without a `key` holds no data. |
+
+<Aside type="caution">
+`uid` and `key` are not interchangeable. Renaming a `key` changes your data
+shape; changing a `uid` breaks the patch history pointing at that node.
+</Aside>
+
+## A complete spec
+
+A form with a text field and a select, both required:
+
+```json title="contact-form.json"
+{
+  "type": "panel",
+  "id": "column",
+  "name": "Contact",
+  "configs": { "uid": "root", "key": "contact" },
+  "children": [
+    {
+      "type": "input",
+      "dataType": "string",
+      "id": "text",
+      "name": "Text",
+      "configs": { "uid": "f1", "key": "fullName", "label": "Full name" },
+      "validations": [{ "validator": "required" }]
+    },
+    {
+      "type": "input",
+      "dataType": "string",
+      "id": "select",
+      "name": "Select",
+      "configs": {
+        "uid": "f2",
+        "key": "role",
+        "label": "Role",
+        "optionsSource": "static",
+        "options": "Developer\nDesigner\nManager"
+      },
+      "validations": [{ "validator": "required" }]
+    }
+  ]
+}
+```
+
+That spec produces this data:
+
+```json
+{ "fullName": "Ada Lovelace", "role": "Developer" }
+```
+
+Form data is **flat** — one entry per `key`, regardless of how deeply the brick
+is nested in panels, wizard steps or tabs. The single exception is a
+`collection` brick (like `data-grid`), where each row is its own scoped record:
+
+```json
+{ "fullName": "Ada", "contacts": [{ "email": "a@b.c" }, { "email": "d@e.f" }] }
+```
+
+## Editing a spec
+
+Never mutate a spec in place. Every operation returns a new spec plus the
+patches to get there and back:
+
+```ts
+import { moveBrick, addBrick, SpecHistory } from '@streamline-pulse/formkrafter-core'
+
+const update = moveBrick(spec, '0.0', '0.2.0')
+// update.spec     → the new spec
+// update.patches  → RFC 6902 operations that applied the change
+// update.inverse  → RFC 6902 operations that undo it
+```
+
+Paths are dot-strings rooted at `"0"`, using pre-removal coordinates: `"0.2.0"`
+is the first child of the third child of the root.
+
+### Available operations
+
+| Operation | Signature | Merge behavior |
+|---|---|---|
+| `addBrick` | `(spec, brick, parentPath, index?)` | — |
+| `removeBrick` | `(spec, path)` | throws on the root path `"0"` |
+| `moveBrick` | `(spec, from, to)` | throws when moving a brick into its own subtree |
+| `duplicateBrick` | `(spec, path)` | regenerates `uid`s recursively |
+| `updateBrickConfigs` | `(spec, uid, configs)` | **merged** into existing configs |
+| `updateBrickStyles` | `(spec, uid, styles)` | **merged** |
+| `updateBrickValidations` | `(spec, uid, validations)` | **replaced** wholesale |
+| `updateBrickRules` | `(spec, uid, rules)` | **replaced** wholesale |
+
+<Aside>
+Configs and styles are merged, validations and rules are replaced. To remove a
+single validation, pass the full array without it.
+</Aside>
+
+### Undo and redo
+
+`SpecHistory` records updates and replays their inverses:
+
+<Steps>
+
+1. Record every update as it happens.
+
+   ```ts
+   const history = new SpecHistory()
+   history.record(update)
+   ```
+
+2. Check whether stepping is possible — useful for disabling toolbar buttons.
+
+   ```ts
+   history.canUndo  // boolean
+   history.canRedo  // boolean
+   ```
+
+3. Step back or forward, passing the current spec.
+
+   ```ts
+   spec = history.undo(spec) ?? spec
+   spec = history.redo(spec) ?? spec
+   ```
+
+</Steps>
+
+The builder does exactly this internally, which is why its `specChange` event
+carries `{ spec, patches, inverse }` — you can persist the patches, replay them
+on a server, or drive your own history stack.
+
+## Walking a spec
+
+```ts
+import { iterateBricks, getBrickAt, pointerOfUid } from '@streamline-pulse/formkrafter-core'
+
+for (const { brick, path } of iterateBricks(spec)) {
+  console.log(path, brick.configs?.key)
+}
+
+getBrickAt(spec, '0.1')        // the brick at a dot-path
+pointerOfUid(spec, 'f2')       // JSON Pointer for a uid, or undefined
+```
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="What each id renders, and how to register bricks of your own."
+  />
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Attach validations to a spec and reproduce the verdict on your server."
+  />
+  <LinkCard
+    title="Dynamic rules"
+    href="../rules/"
+    description="Drive hidden, disabled, required and computed values from the data."
+  />
+  <LinkCard
+    title="Components reference"
+    href="../../reference/components/"
+    description="The specChange event and the rest of the builder/renderer API."
+  />
+</CardGrid>

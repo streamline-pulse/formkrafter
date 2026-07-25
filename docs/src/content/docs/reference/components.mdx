@@ -1,0 +1,237 @@
+---
+title: Components
+description: Props, events and methods of fk-form-builder and fk-form-render, with the exact naming for Web Components, React and Vue.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard, Badge } from '@astrojs/starlight/components'
+
+Two components carry the whole public UI surface: the builder that produces a
+spec, and the renderer that turns a spec into a working form. Everything else in
+the package is an internal brick they compose.
+
+## Naming across the three integrations
+
+The same component is exposed three ways. Props are identical; only the event
+syntax changes:
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    <FkFormRender spec={spec} onFormSubmit={(e) => save(e.detail.data)} />
+    ```
+    Props are camelCase, events are `onXxx` handlers.
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <FkFormRender :spec="spec" @form-submit="save($event.detail.data)" />
+    ```
+    Vue 3 camelizes event names in templates, so `@form-submit` and
+    `@formSubmit` both resolve to the emitted `formSubmit`.
+  </TabItem>
+  <TabItem label="Web Components">
+    ```js
+    el.spec = spec
+    el.addEventListener('formSubmit', (e) => save(e.detail.data))
+    ```
+    Events keep their raw camelCase name on the DOM element.
+  </TabItem>
+</Tabs>
+
+## `<fk-form-render>` <Badge text="stable" variant="success" />
+
+Renders a spec as a working form.
+
+### Props
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `spec` | `BrickSpec` | — | **Required.** The form to render. |
+| `data` | `Record<string, unknown>` | `{}` | Initial values, keyed by brick `key`. |
+| `editable` | `boolean` | `false` | Render in builder mode (selection outlines, drop zones). Used by the builder itself. |
+| `selectedUid` | `string` | — | Which brick shows as selected in editable mode. |
+| `locale` | `string` | — | Locale used to resolve localized labels and validation messages. |
+
+<Aside type="tip">
+Keys prefixed with an underscore — `data={{ _authToken }}` — are readable
+internally by rules and URL interpolation, but are **stripped from every
+emitted payload**. That is the supported way to pass context without leaking it
+into your submitted data.
+</Aside>
+
+### Events
+
+| Event | Detail | Fires when |
+|---|---|---|
+| `formDataChange` | `{ data, isValid, errors }` | Any field changes, and after `validate()` |
+| `formSubmit` | `{ data, isValid, errors }` | The stepper's Submit button is pressed, after an internal validation pass |
+
+```ts
+interface DataChangeDetail {
+  data: Record<string, unknown>
+  isValid: boolean
+  errors: Record<string, string>   // keyed by brick key, e.g. "contacts[0].email"
+}
+```
+
+### Methods
+
+```ts
+await element.validate(): Promise<ValidationResult>
+```
+
+`validate()` marks every keyed brick as touched (so errors become visible),
+validates the flat data, awaits row-level validation on every data grid, merges
+the results and emits `formDataChange`. It returns `{ valid, errors }`.
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    import { useRef } from 'react'
+    import { FkFormRender } from '@streamline-pulse/formkrafter-react'
+
+    const ref = useRef<HTMLFkFormRenderElement>(null)
+    const verdict = await ref.current?.validate()
+    ```
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <script setup lang="ts">
+    import { ref } from 'vue'
+    const form = ref()
+    const check = async () => (await form.value.validate()).valid
+    </script>
+
+    <template>
+      <FkFormRender ref="form" :spec="spec" />
+    </template>
+    ```
+  </TabItem>
+  <TabItem label="Web Components">
+    ```js
+    const verdict = await document.querySelector('fk-form-render').validate()
+    ```
+  </TabItem>
+</Tabs>
+
+## `<fk-form-builder>` <Badge text="stable" variant="success" />
+
+The drag & drop editor. It renders its own palette, canvas and property panel.
+
+### Props
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `spec` | `BrickSpec` | — | Spec to load into the canvas. Omit to start from an empty form. |
+| `data` | `Record<string, unknown>` | `{}` | Preview values used while editing. |
+| `locales` | `string[]` | `[]` | Enables the edit-language selector; panel fields then read and write per locale. |
+
+<Aside type="caution">
+`locales` is an array, so it must be set as a **DOM property**, not an
+attribute. `<fk-form-builder locales='["en","fr"]'>` silently fails — assign
+`el.locales = ['en', 'fr']` instead. The React and Vue wrappers handle this for
+you.
+</Aside>
+
+### Events
+
+| Event | Detail | Fires when |
+|---|---|---|
+| `specChange` | `{ spec, patches, inverse }` | Any edit: drop, reorder, config change, undo, redo, import |
+
+```ts
+interface SpecChangeDetail {
+  spec?: BrickSpec
+  patches: Operation[]    // RFC 6902, forward
+  inverse: Operation[]    // RFC 6902, backward
+}
+```
+
+On undo, redo and full-spec replacement, `patches` and `inverse` are emitted as
+empty arrays — the spec itself is authoritative in those cases.
+
+## Wiring both together
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    import { useState } from 'react'
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
+    import '@streamline-pulse/formkrafter-wc/styles.css'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    export function Studio() {
+      const [spec, setSpec] = useState<BrickSpec>()
+
+      return (
+        <>
+          <FkFormBuilder onSpecChange={(e) => setSpec(e.detail.spec)} />
+          {spec && (
+            <FkFormRender spec={spec} onFormSubmit={(e) => console.log(e.detail.data)} />
+          )}
+        </>
+      )
+    }
+    ```
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <script setup lang="ts">
+    import { ref } from 'vue'
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-vue'
+    import '@streamline-pulse/formkrafter-wc/styles.css'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    const spec = ref<BrickSpec>()
+    </script>
+
+    <template>
+      <FkFormBuilder @spec-change="spec = $event.detail.spec" />
+      <FkFormRender v-if="spec" :spec="spec" @form-submit="onSubmit($event.detail.data)" />
+    </template>
+    ```
+  </TabItem>
+  <TabItem label="Web Components">
+    ```html
+    <fk-form-builder></fk-form-builder>
+    <fk-form-render></fk-form-render>
+
+    <script type="module">
+      import '@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js'
+      import '@streamline-pulse/formkrafter-wc/styles.css'
+
+      const builder = document.querySelector('fk-form-builder')
+      const preview = document.querySelector('fk-form-render')
+
+      builder.addEventListener('specChange', (e) => {
+        preview.spec = e.detail.spec
+      })
+      preview.addEventListener('formSubmit', (e) => console.log(e.detail.data))
+    </script>
+    ```
+  </TabItem>
+</Tabs>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Form specs"
+    href="../../guides/form-specs/"
+    description="What the spec and the patches in specChange actually contain."
+  />
+  <LinkCard
+    title="Packages"
+    href="../packages/"
+    description="Entry points, exports and how the four packages relate."
+  />
+  <LinkCard
+    title="Services"
+    href="../../guides/services/"
+    description="Injection points for uploads, remote options and spec sources."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../../guides/bricks/"
+    description="Register your own brick and have the builder pick it up."
+  />
+</CardGrid>
