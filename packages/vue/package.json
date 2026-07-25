@@ -13,11 +13,12 @@
     }
   },
   "keywords": [
-    "form",
     "form-builder",
+    "formio",
+    "forms",
+    "low-code",
     "vue",
-    "web-components",
-    "formkrafter"
+    "web-components"
   ],
   "files": [
     "dist",
