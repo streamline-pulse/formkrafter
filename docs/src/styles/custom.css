@@ -1,9 +1,38 @@
 /* FormKrafter — Starlight theme (brand teal, matches the custom landing). */
 
+/* Starlight builds its whole neutral scale on hsl(224, …) — a blue-violet
+   hue — which is why the docs read as a different site from the teal-tinted
+   landing even once the accent matches. Remap the full scale onto the
+   landing's own palette: --sl-color-bg is literally the landing's --fk-bg,
+   the grays share its hue, and the hairlines are its translucent teal. */
+
 :root {
   --sl-color-accent-low: #d9f0f1;
   --sl-color-accent: #328f97;
   --sl-color-accent-high: #1d5a60;
+
+  /* Light: Starlight inverts white/black — "white" is the darkest ink. */
+  --sl-color-white: #0e2a29; /* landing --fk-ink */
+  --sl-color-gray-1: #153634;
+  --sl-color-gray-2: #2c4b49;
+  --sl-color-gray-3: #4c6866; /* landing --fk-muted */
+  --sl-color-gray-4: #7d9694;
+  --sl-color-gray-5: #c3d5d3;
+  --sl-color-gray-6: #f2f7f6; /* landing --fk-bg-soft */
+  --sl-color-gray-7: #f7fbfa;
+  --sl-color-black: #fbfdfc; /* landing --fk-bg */
+
+  --sl-color-bg: #fbfdfc;
+  --sl-color-bg-sidebar: #f7fbfa;
+  --sl-color-bg-nav: color-mix(in srgb, #fbfdfc 78%, transparent);
+  --sl-color-bg-inline-code: rgba(29, 90, 96, 0.08);
+  --sl-color-hairline: rgba(29, 90, 96, 0.14); /* landing --fk-line */
+  --sl-color-hairline-light: rgba(29, 90, 96, 0.2);
+  --sl-color-hairline-shade: rgba(29, 90, 96, 0.08);
+  --sl-color-text: #2c4b49;
+  /* accent (#328f97) is only 3.8:1 on the light background — below AA for
+     text, so links and eyebrows use the darker accent-high (7.8:1). */
+  --sl-color-text-accent: #1d5a60;
   /* The one "confident" brand fill, reused for every filled surface
      (active nav, active tab, buttons) so nothing on the site quietly
      falls back to a paler, unbranded accent. Light mode's strongest,
@@ -22,6 +51,26 @@
   --sl-color-accent-low: #123a3e;
   --sl-color-accent: #4fb8b2;
   --sl-color-accent-high: #bfe8e5;
+
+  --sl-color-white: #eaf4f3; /* landing --fk-ink */
+  --sl-color-gray-1: #d3e3e1;
+  --sl-color-gray-2: #b3c8c6;
+  --sl-color-gray-3: #93a8a7; /* landing --fk-muted */
+  --sl-color-gray-4: #5d7271;
+  --sl-color-gray-5: #2c3d3d;
+  --sl-color-gray-6: #0d1b1d; /* landing --fk-bg-soft */
+  --sl-color-gray-7: #0a1617;
+  --sl-color-black: #081314; /* landing --fk-bg */
+
+  --sl-color-bg: #081314;
+  --sl-color-bg-sidebar: #0a1718;
+  --sl-color-bg-nav: color-mix(in srgb, #081314 78%, transparent);
+  --sl-color-bg-inline-code: rgba(120, 190, 185, 0.1);
+  --sl-color-hairline: rgba(120, 190, 185, 0.16); /* landing --fk-line */
+  --sl-color-hairline-light: rgba(120, 190, 185, 0.24);
+  --sl-color-hairline-shade: rgba(120, 190, 185, 0.08);
+  --sl-color-text: #b3c8c6;
+  --sl-color-text-accent: #8de3d8;
   /* In dark mode accent-high is the pale mint tint — using it as a fill
      reads as washed out. accent (#4fb8b2) is dark mode's strongest,
      most saturated teal — verified 7.5:1 with near-black ink. */
