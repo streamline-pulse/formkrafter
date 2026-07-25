@@ -1,0 +1,154 @@
+---
+title: Validation
+description: Validateurs déclaratifs, validateurs personnalisés sandboxés, et comment le serveur reproduit exactement le verdict du frontend.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+La validation est attachée au spec, pas à l'UI. C'est cette seule décision qui
+permet au navigateur et à votre backend d'aboutir au même verdict à partir du
+même fichier — aucun schéma à synchroniser à la main, aucune règle qui n'existe
+que côté client.
+
+## Validateurs déclaratifs
+
+Chaque brick porte un tableau `validations`. Ils sont compilés en JSON Schema
+(Ajv + ajv-errors + ajv-formats) au moment du rendu :
+
+| Validateur | S'applique à | `value` |
+|---|---|---|
+| `required` | tout | — |
+| `minLength` / `maxLength` | chaîne | nombre |
+| `pattern` | chaîne | source de regex |
+| `email` / `url` | chaîne | — |
+| `min` / `max` | nombre | nombre |
+| `minItems` / `maxItems` | tableau | nombre |
+| `custom` | tout | — (utilise `customValidator`) |
+
+```json title="Un email obligatoire et bien formé"
+{
+  "validations": [
+    { "validator": "required" },
+    { "validator": "email", "message": "Saisissez une adresse valide" }
+  ]
+}
+```
+
+`message` est optionnel et peut être localisé — voir
+[messages et locales](#messages-et-locales) plus bas.
+
+## Validateurs personnalisés
+
+Quand les onze validateurs intégrés ne suffisent pas, `custom` exécute un
+extrait de code dans le [bac à sable des règles](../rules/) :
+
+```js
+// `value` est la valeur de ce champ, `dataMap` est tout le formulaire
+return value !== dataMap.oldEmail || "Doit différer de l'adresse actuelle"
+```
+
+La valeur retournée décide du résultat :
+
+| Retour | Résultat |
+|---|---|
+| `true`, `undefined`, `null` | passe |
+| une chaîne | échoue, et la chaîne devient le message |
+| une `Error` | échoue avec `error.message` |
+| tout le reste | échoue avec le `message` configuré, ou le message par défaut intégré |
+
+<Aside type="caution">
+`dataMap` contient les valeurs de tout le formulaire : un validateur
+personnalisé peut donc comparer des champs. Il ne peut pas atteindre le réseau,
+`globalThis`, ni quoi que ce soit hors du bac à sable — voir
+[le bac à sable](../rules/#le-bac-à-sable) pour ce qui est disponible.
+</Aside>
+
+## Messages et locales
+
+Les messages se résolvent en cascade : d'abord le `message` de l'auteur, puis
+les messages par défaut de FormKrafter pour la locale active. L'anglais et le
+français sont fournis d'office.
+
+```json title="Un message localisé"
+{ "validator": "required", "message": { "en": "Required", "fr": "Obligatoire" } }
+```
+
+Enregistrez d'autres langues au démarrage :
+
+```ts
+import { registerValidationMessages } from '@streamline-pulse/formkrafter-core'
+
+registerValidationMessages('de', {
+  required: 'Pflichtfeld',
+  minLength: 'Mindestens {value} Zeichen',
+})
+```
+
+Le placeholder `{value}` est interpolé avec le paramètre du validateur.
+
+## Le même verdict côté serveur
+
+`validateFormData` est le point d'entrée backend. Il prend le même spec, le
+payload soumis et une locale optionnelle :
+
+<Tabs syncKey="framework">
+  <TabItem label="Node / Bun">
+    ```ts title="server/validate.ts"
+    import { validateFormData } from '@streamline-pulse/formkrafter-core'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    export function checkSubmission(spec: BrickSpec, payload: unknown) {
+      const { valid, errors } = validateFormData(spec, payload, 'fr')
+      if (!valid) throw new Error(JSON.stringify(errors))
+      return payload
+    }
+    ```
+  </TabItem>
+  <TabItem label="Dans le navigateur">
+    ```ts
+    // Le renderer expose la même passe sous forme de méthode
+    const { valid, errors } = await formEl.validate()
+    ```
+  </TabItem>
+</Tabs>
+
+Il reproduit trois comportements du frontend qu'un contrôle backend écrit à la
+main rate facilement :
+
+- **Les lignes de collection sont validées individuellement**, et remontent sous
+  la forme `contacts[0].email`.
+- **Les chaînes vides comptent comme absentes**, si bien que `required` se
+  comporte comme ce que l'utilisateur a vu.
+- **Les champs cachés par une règle sont exclus.** Un champ obligatoire à
+  l'étape 3 qu'une règle masque ne peut jamais bloquer une soumission dont il ne
+  fait pas partie.
+
+<Aside type="tip">
+Valider côté serveur n'est pas optionnel. Le verdict du navigateur est un
+confort d'UX ; seul `validateFormData` sur votre backend est une garantie.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Règles dynamiques"
+    href="../rules/"
+    description="Le bac à sable dans lequel tournent les validateurs personnalisés, et comment les champs cachés sont exclus."
+  />
+  <LinkCard
+    title="Specs de formulaire"
+    href="../form-specs/"
+    description="Où vivent les validations dans le spec et comment les mettre à jour immuablement."
+  />
+  <LinkCard
+    title="Internationalisation"
+    href="../i18n/"
+    description="Localiser messages, libellés et options dans tout le formulaire."
+  />
+  <LinkCard
+    title="Référence des composants"
+    href="../../reference/components/"
+    description="La méthode validate() et les erreurs portées par formDataChange."
+  />
+</CardGrid>

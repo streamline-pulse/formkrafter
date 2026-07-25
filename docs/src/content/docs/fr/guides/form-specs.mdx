@@ -1,0 +1,210 @@
+---
+title: Specs de formulaire
+description: L'arbre BrickSpec, la forme des données du formulaire, et les opérations immuables qui produisent des patches RFC 6902 et l'undo/redo.
+---
+
+import { Aside, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components'
+
+Tout dans FormKrafter commence ici. Un formulaire est un **spec** : un simple
+arbre JSON que vous pouvez stocker en base, comparer dans une pull request,
+envoyer sur le réseau et confier à n'importe lequel des trois renderers. Rien
+n'y est spécifique à un framework, et rien n'y exige FormKrafter pour être
+lisible.
+
+## La forme d'un BrickSpec
+
+Chaque nœud de l'arbre — un champ, un panel, une étape de wizard — est un
+`BrickSpec`. Seules trois propriétés sont obligatoires :
+
+```ts
+interface BrickSpec {
+  type: 'panel' | 'input' | 'collection' | 'output' | 'action'  // obligatoire
+  id: string                    // quelle brick enregistrée rend ce nœud
+  name: string                  // libellé humain, affiché dans le builder
+
+  dataType?: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array' | 'null' | 'void'
+  configs?: { uid?: string; key?: string } & Record<string, unknown>
+  styles?: Record<string, unknown>
+  validations?: Validation[]
+  rules?: Rule[]
+  children?: BrickSpec[]
+
+  category?: string
+  editable?: boolean
+  isPrivate?: boolean
+}
+```
+
+Les deux propriétés que vous manipulez le plus vivent dans `configs` :
+
+| Config | Rôle | Notes |
+|---|---|---|
+| `uid` | Identité du nœud | Stable au fil des éditions. Les opérations adressent les bricks par `uid` ; dupliquer une brick le régénère. |
+| `key` | Nom du champ dans les données du formulaire | Ce qui se retrouve dans votre payload. Une brick sans `key` ne porte aucune donnée. |
+
+<Aside type="caution">
+`uid` et `key` ne sont pas interchangeables. Renommer une `key` change la forme
+de vos données ; changer un `uid` casse l'historique de patches qui pointe vers
+ce nœud.
+</Aside>
+
+## Un spec complet
+
+Un formulaire avec un champ texte et un select, tous deux obligatoires :
+
+```json title="contact-form.json"
+{
+  "type": "panel",
+  "id": "column",
+  "name": "Contact",
+  "configs": { "uid": "root", "key": "contact" },
+  "children": [
+    {
+      "type": "input",
+      "dataType": "string",
+      "id": "text",
+      "name": "Text",
+      "configs": { "uid": "f1", "key": "fullName", "label": "Nom complet" },
+      "validations": [{ "validator": "required" }]
+    },
+    {
+      "type": "input",
+      "dataType": "string",
+      "id": "select",
+      "name": "Select",
+      "configs": {
+        "uid": "f2",
+        "key": "role",
+        "label": "Rôle",
+        "optionsSource": "static",
+        "options": "Développeur\nDesigner\nManager"
+      },
+      "validations": [{ "validator": "required" }]
+    }
+  ]
+}
+```
+
+Ce spec produit ces données :
+
+```json
+{ "fullName": "Ada Lovelace", "role": "Développeur" }
+```
+
+Les données du formulaire sont **plates** — une entrée par `key`, quelle que
+soit la profondeur d'imbrication de la brick dans des panels, des étapes de
+wizard ou des onglets. La seule exception est une brick `collection` (comme
+`data-grid`), où chaque ligne constitue son propre enregistrement scopé :
+
+```json
+{ "fullName": "Ada", "contacts": [{ "email": "a@b.c" }, { "email": "d@e.f" }] }
+```
+
+## Éditer un spec
+
+Ne mutez jamais un spec sur place. Chaque opération renvoie un nouveau spec plus
+les patches pour y aller et en revenir :
+
+```ts
+import { moveBrick, addBrick, SpecHistory } from '@streamline-pulse/formkrafter-core'
+
+const update = moveBrick(spec, '0.0', '0.2.0')
+// update.spec     → le nouveau spec
+// update.patches  → les opérations RFC 6902 qui ont appliqué le changement
+// update.inverse  → les opérations RFC 6902 qui l'annulent
+```
+
+Les chemins sont des chaînes pointées enracinées en `"0"`, exprimées en
+coordonnées d'avant suppression : `"0.2.0"` est le premier enfant du troisième
+enfant de la racine.
+
+### Opérations disponibles
+
+| Opération | Signature | Comportement de fusion |
+|---|---|---|
+| `addBrick` | `(spec, brick, parentPath, index?)` | — |
+| `removeBrick` | `(spec, path)` | lève une erreur sur le chemin racine `"0"` |
+| `moveBrick` | `(spec, from, to)` | lève une erreur si l'on déplace une brick dans son propre sous-arbre |
+| `duplicateBrick` | `(spec, path)` | régénère les `uid` récursivement |
+| `updateBrickConfigs` | `(spec, uid, configs)` | **fusionné** dans les configs existantes |
+| `updateBrickStyles` | `(spec, uid, styles)` | **fusionné** |
+| `updateBrickValidations` | `(spec, uid, validations)` | **remplacé** intégralement |
+| `updateBrickRules` | `(spec, uid, rules)` | **remplacé** intégralement |
+
+<Aside>
+Les configs et les styles sont fusionnés, les validations et les règles sont
+remplacées. Pour retirer une seule validation, passez le tableau complet sans
+elle.
+</Aside>
+
+### Undo et redo
+
+`SpecHistory` enregistre les mises à jour et rejoue leurs inverses :
+
+<Steps>
+
+1. Enregistrez chaque mise à jour au fil de l'eau.
+
+   ```ts
+   const history = new SpecHistory()
+   history.record(update)
+   ```
+
+2. Vérifiez si un pas est possible — pratique pour désactiver les boutons de la
+   barre d'outils.
+
+   ```ts
+   history.canUndo  // boolean
+   history.canRedo  // boolean
+   ```
+
+3. Reculez ou avancez d'un pas, en passant le spec courant.
+
+   ```ts
+   spec = history.undo(spec) ?? spec
+   spec = history.redo(spec) ?? spec
+   ```
+
+</Steps>
+
+Le builder fait exactement cela en interne, et c'est pourquoi son événement
+`specChange` transporte `{ spec, patches, inverse }` — vous pouvez persister les
+patches, les rejouer sur un serveur, ou piloter votre propre pile d'historique.
+
+## Parcourir un spec
+
+```ts
+import { iterateBricks, getBrickAt, pointerOfUid } from '@streamline-pulse/formkrafter-core'
+
+for (const { brick, path } of iterateBricks(spec)) {
+  console.log(path, brick.configs?.key)
+}
+
+getBrickAt(spec, '0.1')        // la brick au chemin pointé
+pointerOfUid(spec, 'f2')       // le JSON Pointer d'un uid, ou undefined
+```
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="Ce que rend chaque id, et comment enregistrer vos propres bricks."
+  />
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Attacher des validations à un spec et reproduire le verdict sur votre serveur."
+  />
+  <LinkCard
+    title="Règles dynamiques"
+    href="../rules/"
+    description="Piloter les valeurs cachées, désactivées, obligatoires et calculées depuis les données."
+  />
+  <LinkCard
+    title="Référence des composants"
+    href="../../reference/components/"
+    description="L'événement specChange et le reste de l'API du builder et du renderer."
+  />
+</CardGrid>

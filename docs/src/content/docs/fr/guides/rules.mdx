@@ -1,0 +1,143 @@
+---
+title: Règles dynamiques
+description: Piloter les états caché, désactivé, obligatoire et les valeurs calculées depuis les données du formulaire — en JSON Logic ou en JavaScript exécuté sans eval.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+La plupart des formulaires réels sont conditionnels : un champ n'apparaît que
+pour un certain pays, une section se déverrouille quand une case est cochée, un
+total se recalcule au fil des quantités. Dans FormKrafter, ce comportement vit
+dans le spec sous forme de **règles** — il survit donc au stockage, à la
+migration et à la revalidation côté serveur.
+
+## Anatomie d'une règle
+
+Une règle a un déclencheur et une liste d'effets. Quand le déclencheur s'évalue
+à strictement `true`, ses effets s'appliquent :
+
+```ts
+type Rule = {
+  name: string
+  type: 'jsonLogic' | 'javaScript'
+  logic?: RulesLogic     // quand type vaut 'jsonLogic'
+  code?: string          // quand type vaut 'javaScript'
+  effects?: Effect[]
+}
+```
+
+Chaque effet cible une propriété de la brick :
+
+| Cible | Type | Effet |
+|---|---|---|
+| `hidden` | booléen | retire le champ de l'affichage **et de la validation** |
+| `disabled` | booléen | le rend en lecture seule |
+| `required` | booléen | le rend obligatoire conditionnellement |
+| `value` | calculé | écrase la valeur du champ |
+
+## Deux façons d'écrire le déclencheur
+
+### JSON Logic — le choix par défaut
+
+Sérialisable, inspectable, sûr à stocker et à differ :
+
+```json title="Masquer sauf si le pays est FR ou DE"
+{
+  "name": "eu-only",
+  "type": "jsonLogic",
+  "logic": { "!": { "in": [{ "var": "country" }, ["FR", "DE"]] } },
+  "effects": [
+    { "property": { "target": "hidden", "type": "boolean" }, "boolean": true }
+  ]
+}
+```
+
+### JavaScript — la porte de sortie
+
+Quand la logique devient pénible à exprimer déclarativement :
+
+```js
+return dataMap.quantity > 10 ? 'GOLD' : 'STANDARD'
+```
+
+`dataMap` contient les données de tout le formulaire, indexées par la `key` des
+bricks. L'éditeur de règles du builder complète `dataMap.` avec les clés réelles
+de vos champs.
+
+## Le bac à sable
+
+Les règles JavaScript ne sont **jamais** passées à `eval`. Elles sont parsées
+avec Acorn et parcourues par un interpréteur d'AST :
+
+- **Compatible CSP** — aucune directive `unsafe-eval` nécessaire nulle part dans
+  votre application.
+- **Isolé** — uniquement `dataMap` (et `value` dans les validateurs
+  personnalisés), plus des builtins autorisés : `Math`, `JSON`, `String`,
+  `Number`, `Date`, `Array`, `Object`, `Boolean`. Pas de `fetch`, pas de
+  `globalThis`, aucune échappatoire par `constructor` ou `__proto__`.
+- **Suffisamment expressif** — expressions, ternaires, `const`/`let`,
+  `if`/`return`, littéraux de gabarit, chaînage optionnel, fonctions fléchées
+  (`.filter(x => …)`).
+- **Borné** — la syntaxe non supportée est rejetée d'emblée et le code qui
+  s'emballe est coupé par un budget d'exécution.
+
+Vous pouvez exécuter ce même bac à sable vous-même :
+
+```ts
+import { runSandboxed } from '@streamline-pulse/formkrafter-core'
+
+runSandboxed('return items.filter((i) => i > 2)', { items: [1, 2, 3] })
+// → [3]
+```
+
+<Aside type="danger">
+Un environnement de confiance peut revenir au JavaScript complet en changeant le
+runner :
+
+```ts
+import { services, UnsafeEvalJsRunnerService } from '@streamline-pulse/formkrafter-core'
+services.jsRunnerService = new UnsafeEvalJsRunnerService()
+```
+
+Cela utilise le vrai `eval`. Ne le faites que lorsque chaque spec de la page est
+écrit par quelqu'un en qui vous avez autant confiance qu'en votre propre code
+source.
+</Aside>
+
+## Règles et validation
+
+Une brick cachée par une règle — ou imbriquée dans un parent caché — est ignorée
+par la validation, dans le navigateur **et** dans `validateFormData` sur votre
+serveur. C'est ce qui empêche un champ obligatoire conditionnellement caché de
+bloquer une soumission indéfiniment.
+
+<Aside type="tip">
+Cette cascade est la raison d'exprimer la visibilité conditionnelle par une
+règle plutôt qu'en échangeant des specs : le serveur voit les mêmes conditions et
+aboutit à la même conclusion.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Les validateurs personnalisés tournent dans ce même bac à sable, avec value dans la portée."
+  />
+  <LinkCard
+    title="Specs de formulaire"
+    href="../form-specs/"
+    description="Où vivent les règles sur une brick et comment les remplacer immuablement."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="La brick code et l'éditeur de règles, avec l'autocomplétion de dataMap."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="Remplacer le runner JS et les autres points d'injection."
+  />
+</CardGrid>

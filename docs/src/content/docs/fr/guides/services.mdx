@@ -1,0 +1,146 @@
+---
+title: Services
+description: Les cinq points d'injection — uploads de fichiers, options distantes, catalogues d'options, sources de formulaires imbriqués et exécution JS — et comment les surcharger une fois au démarrage.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+FormKrafter ne présume jamais du fonctionnement de votre infrastructure. Tout ce
+qui touche au monde extérieur — uploader un fichier, récupérer une liste
+d'options, charger un formulaire référencé — passe par un **service** que vous
+pouvez remplacer. Surchargez-le une fois au démarrage de l'application et chaque
+builder et renderer de la page le reprend.
+
+## Les cinq services
+
+| Service | Par défaut | Remplacez-le quand… |
+|---|---|---|
+| `jsRunnerService` | `SandboxJsRunnerService` (interpréteur d'AST) | vous avez besoin du JS complet dans un contexte de confiance |
+| `dataSourceService` | `FetchDataSourceService` | les options distantes d'un select nécessitent une auth, une URL de base ou une politique de retry |
+| `fileUploadService` | `Base64FileUploadService` (data URLs) | vous voulez de vrais uploads plutôt que du base64 inliné |
+| `specSourceService` | `FetchSpecSourceService` | les [formulaires imbriqués](../nested-forms/) viennent de votre propre stockage |
+| `optionSourceService` | `FetchOptionSourceService` | les catalogues d'options partagés viennent de votre propre stockage |
+
+```ts title="app-startup.ts"
+import { services, UrlFileUploadService } from '@streamline-pulse/formkrafter-core'
+
+services.fileUploadService = new UrlFileUploadService({
+  url: '/api/uploads',
+  credentials: 'include',
+})
+```
+
+## Uploads de fichiers
+
+Le service par défaut transforme chaque fichier en data URL base64 — parfait
+pour une démo, inadapté à la production. `UrlFileUploadService` envoie plutôt
+chaque fichier en POST multipart :
+
+<Steps>
+
+1. Pointez-le vers votre endpoint.
+
+   ```ts
+   services.fileUploadService = new UrlFileUploadService({
+     url: '/api/uploads',
+     headers: { 'X-Tenant': 'acme' },
+     credentials: 'include',
+   })
+   ```
+
+2. Retournez l'emplacement stocké depuis votre endpoint. Le service lit la
+   première clé parmi `url`, `path`, `location` ou `href` qu'il trouve dans la
+   réponse JSON.
+
+   ```json
+   { "url": "https://cdn.example.com/f/8a2c.pdf" }
+   ```
+
+3. Implémentez la suppression si vous voulez que le bouton de retrait fasse le
+   ménage. Le service appelle `remove()` quand l'utilisateur supprime un fichier.
+
+</Steps>
+
+Une config `uploadUrl` au niveau de la brick surcharge l'URL par défaut du
+service : un formulaire peut donc envoyer ses pièces jointes ailleurs.
+
+## Options distantes et authentification
+
+Un select peut charger ses options depuis une URL, en interpolant des
+placeholders `{key}` depuis les données courantes du formulaire :
+
+```txt title="Config de la brick"
+URL      /api/employees?dept={department}
+Headers  Authorization: Bearer {_authToken}
+```
+
+Deux schémas d'authentification, qui se composent :
+
+<Steps>
+
+1. **Cookie httpOnly** — recommandé pour les API de même origine. Aucun secret
+   n'entre jamais dans le spec ni dans le panneau de propriétés.
+
+   ```ts
+   import { services, FetchDataSourceService } from '@streamline-pulse/formkrafter-core'
+
+   services.dataSourceService = new FetchDataSourceService({ credentials: 'include' })
+   ```
+
+2. **Token de contexte** — quand l'API est cross-origin. L'hôte l'injecte comme
+   donnée préfixée d'un underscore sur le renderer.
+
+   ```tsx
+   <FkFormRender spec={spec} data={{ _authToken: token }} />
+   ```
+
+</Steps>
+
+<Aside type="tip">
+Les clés préfixées d'un underscore sont lisibles par les règles et
+l'interpolation d'URL, mais elles sont **retirées de tous les payloads émis** —
+elles ne fuitent jamais dans vos données soumises.
+</Aside>
+
+## Un singleton à l'échelle de la page, par conception
+
+`services` vit sur `globalThis` sous
+`Symbol.for("formkrafter.core.services")`. Les bundlers se retrouvent
+couramment avec plusieurs copies d'un module dans une même application : votre
+bundle importe le core directement, et le bundle Web Components embarque le
+sien. Le store partagé garantit qu'une surcharge faite depuis votre application
+est vue par les composants, quelle que soit la copie qui s'exécute.
+
+<Aside type="caution">
+Parce qu'il vaut pour toute la page, les services sont une configuration **au
+niveau de l'hôte**. Les différences par formulaire appartiennent au spec (le
+`uploadUrl` d'une brick, le `optionsUrl` d'un select), pas à un service que vous
+échangez d'avant en arrière à l'exécution.
+</Aside>
+
+Le registre de bricks et les traductions du chrome suivent le même schéma.
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Formulaires imbriqués"
+    href="../nested-forms/"
+    description="specSourceService en pratique : résoudre un formulaire référencé par un autre."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="Quelles bricks consomment quel service — file, select, nested-form."
+  />
+  <LinkCard
+    title="Règles dynamiques"
+    href="../rules/"
+    description="Ce qu'exécute jsRunnerService, et ce que le bac à sable autorise."
+  />
+  <LinkCard
+    title="Packages"
+    href="../../reference/packages/"
+    description="D'où chaque type de service est exporté."
+  />
+</CardGrid>

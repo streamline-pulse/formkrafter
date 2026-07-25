@@ -1,0 +1,137 @@
+---
+title: Formulaires imbriqués
+description: Référencer un formulaire depuis un autre avec specRef, résolu au moment du rendu via une source de spec remplaçable — avec détection de cycles et limite de profondeur.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Un bloc adresse, un contact d'urgence, un jeu d'informations d'entreprise —
+certains fragments reviennent dans une dizaine de formulaires. Plutôt que de les
+copier, une brick `nested-form` **référence** un autre formulaire. Elle est
+résolue et inlinée au moment du rendu : tout ce qui vient ensuite — règles,
+validation, récapitulatif — voit un spec ordinaire.
+
+## Référencer un formulaire
+
+La brick porte un `specRef` dans ses configs. Ce que la référence signifie
+dépend entièrement du service qui la résout : une URL, un identifiant de base de
+données, un slug.
+
+```json title="Une brick qui tire le formulaire d'adresse"
+{
+  "type": "panel",
+  "id": "nested-form",
+  "name": "Nested form",
+  "configs": {
+    "uid": "n1",
+    "key": "address",
+    "label": "Adresse de livraison",
+    "specRef": "address-v2"
+  }
+}
+```
+
+Au moment du rendu, ce nœud est remplacé par les enfants du formulaire
+référencé, enveloppés dans un groupe étiqueté.
+
+## Brancher la source
+
+Le `FetchSpecSourceService` par défaut traite la référence comme une URL et
+supporte `baseUrl`, les en-têtes, les credentials et un cache par URL. Pour
+résoudre les références depuis votre propre stockage, fournissez n'importe quoi
+qui respecte l'interface :
+
+<Steps>
+
+1. Implémentez `fetchSpec`, en retournant un `BrickSpec`.
+
+   ```ts title="app-startup.ts"
+   import { services } from '@streamline-pulse/formkrafter-core'
+
+   services.specSourceService = {
+     fetchSpec: async (ref) => {
+       const res = await fetch(`/api/forms/${ref}`)
+       if (!res.ok) throw new Error(`Unknown form: ${ref}`)
+       return res.json()
+     },
+   }
+   ```
+
+2. Ou configurez celui fourni au lieu d'écrire le vôtre.
+
+   ```ts
+   import { services, FetchSpecSourceService } from '@streamline-pulse/formkrafter-core'
+
+   services.specSourceService = new FetchSpecSourceService({
+     baseUrl: '/api/forms',
+     credentials: 'include',
+   })
+   ```
+
+3. Faites le rendu normalement. `<fk-form-render>` développe automatiquement les
+   formulaires imbriqués et affiche un état de chargement pendant la résolution.
+
+</Steps>
+
+<Aside type="tip">
+Le builder ne développe délibérément **pas** les formulaires imbriqués — vous
+éditez la référence, pas une copie du formulaire référencé. Le développement
+n'a lieu qu'au moment du rendu.
+</Aside>
+
+## Développer côté serveur
+
+Votre backend doit valider l'arbre complet : développez donc avant de valider.
+
+```ts title="server/validate.ts"
+import { expandSpec, validateFormData } from '@streamline-pulse/formkrafter-core'
+
+const full = await expandSpec(spec)
+const verdict = validateFormData(full, payload)
+```
+
+`hasNestedForms(spec)` vous dit si le travail est nécessaire, ce qui vaut la
+peine d'être vérifié avant de payer le coût du développement sur un chemin
+chaud :
+
+```ts
+import { hasNestedForms } from '@streamline-pulse/formkrafter-core'
+
+const full = hasNestedForms(spec) ? await expandSpec(spec) : spec
+```
+
+## Garde-fous
+
+<Aside type="caution">
+`expandSpec` refuse de boucler. Un formulaire qui se référence lui-même —
+directement ou via une chaîne — lève `Circular nested form reference: a → b → a`
+au lieu de récurser indéfiniment. L'imbrication est aussi plafonnée à
+**5 niveaux** par défaut ; relevez la limite avec
+`expandSpec(spec, { maxDepth: 8 })` si vous avez réellement besoin d'arbres plus
+profonds.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="specSourceService aux côtés des quatre autres points d'injection."
+  />
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Valider l'arbre développé sur votre serveur."
+  />
+  <LinkCard
+    title="Specs de formulaire"
+    href="../form-specs/"
+    description="À quoi ressemble le résultat inliné en tant que spec."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="La brick nested-form parmi les 29 autres."
+  />
+</CardGrid>
