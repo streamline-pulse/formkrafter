@@ -33,12 +33,36 @@
   );
 }
 
-/* Ambient depth behind every doc page, echoing the landing. */
+/* Ambient depth, echoing the landing. Applied to .main-frame (the
+   content + right-sidebar pane), not body — body's own glow sits
+   almost entirely behind the opaque header/sidebar and never shows. */
 body {
+  background: var(--sl-color-bg);
+}
+
+.main-frame {
   background:
-    radial-gradient(60rem 40rem at 100% -10%, color-mix(in srgb, var(--sl-color-accent) 8%, transparent), transparent 55%),
-    radial-gradient(46rem 34rem at 0% 0%, color-mix(in srgb, var(--sl-color-accent) 6%, transparent), transparent 55%),
-    var(--sl-color-bg);
+    radial-gradient(50rem 34rem at 100% -12%, color-mix(in srgb, var(--sl-color-accent) 10%, transparent), transparent 55%),
+    radial-gradient(40rem 30rem at 30% 0%, color-mix(in srgb, var(--sl-color-accent) 6%, transparent), transparent 55%);
+}
+
+/* Breathing room: content on the landing is spacious; give prose the
+   same generosity instead of the default docs-app density. */
+.sl-markdown-content {
+  line-height: 1.75;
+}
+
+.sl-markdown-content > p {
+  margin-block: 1.1em;
+}
+
+.content-panel {
+  padding-block: 1.75rem;
+}
+
+.sl-markdown-content h1,
+.content-panel h1 {
+  font-size: clamp(2.2rem, 4vw, 2.75rem);
 }
 
 /* ---- header ---- */
@@ -55,9 +79,35 @@ header.header {
   color: var(--sl-color-accent);
 }
 
+/* Search "input" is actually a button that opens a modal — style it
+   like the landing's pill nav elements instead of a plain bordered box. */
+site-search button[data-open-modal] {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sl-color-white) 3%, transparent);
+  transition: border-color 0.15s;
+}
+
+site-search button[data-open-modal]:hover {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 50%, transparent);
+}
+
+site-search kbd {
+  border-radius: 999px;
+}
+
 /* ---- sidebar ---- */
 .sidebar-pane {
   border-inline-end: 1px solid var(--sl-color-hairline);
+  background: color-mix(in srgb, var(--sl-color-bg) 96%, var(--sl-color-accent));
+}
+
+.sidebar-content {
+  padding-block-start: 0.5rem;
+}
+
+.sidebar-content a {
+  padding-block: 0.4rem;
 }
 
 .sidebar-content .group-label > span,
