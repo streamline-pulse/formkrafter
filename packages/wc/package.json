@@ -31,12 +31,13 @@
   },
   "license": "MIT",
   "keywords": [
-    "form",
-    "form-builder",
     "drag-and-drop",
-    "web-components",
+    "form-builder",
+    "formio",
+    "forms",
+    "low-code",
     "stencil",
-    "formkrafter"
+    "web-components"
   ],
   "files": [
     "dist/components/",
