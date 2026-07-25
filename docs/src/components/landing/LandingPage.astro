@@ -470,7 +470,7 @@ const t =
     --fk-line: rgba(120, 190, 185, 0.16);
     --fk-line-soft: rgba(120, 190, 185, 0.08);
     --fk-accent: #4fb8b2;
-    --fk-accent-strong: #8de3d8;
+    --fk-accent-strong: color-mix(in srgb, var(--fk-accent) 55%, white);
     --fk-accent-ink: #04211f;
     --fk-danger: #ff9d7a;
     --fk-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -483,8 +483,8 @@ const t =
     --fk-muted: #4c6866;
     --fk-line: rgba(29, 90, 96, 0.14);
     --fk-line-soft: rgba(29, 90, 96, 0.07);
-    --fk-accent: #1f7a82;
-    --fk-accent-strong: #14555c;
+    --fk-accent: #1d5a60;
+    --fk-accent-strong: color-mix(in srgb, var(--fk-accent) 80%, black);
     --fk-accent-ink: #ffffff;
     --fk-danger: #d9603f;
   }

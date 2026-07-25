@@ -4,12 +4,33 @@
   --sl-color-accent-low: #d9f0f1;
   --sl-color-accent: #328f97;
   --sl-color-accent-high: #1d5a60;
+  /* The one "confident" brand fill, reused for every filled surface
+     (active nav, active tab, buttons) so nothing on the site quietly
+     falls back to a paler, unbranded accent. Light mode's strongest,
+     most saturated teal is accent-high (#1d5a60) — verified 7.8:1 with
+     white ink. */
+  --sl-brand-fill: var(--sl-color-accent-high);
+  --sl-brand-ink: var(--sl-color-black);
+  --sl-brand-gradient: linear-gradient(
+    120deg,
+    var(--sl-brand-fill),
+    color-mix(in srgb, var(--sl-brand-fill) 80%, black)
+  );
 }
 
 :root[data-theme='dark'] {
   --sl-color-accent-low: #123a3e;
   --sl-color-accent: #4fb8b2;
   --sl-color-accent-high: #bfe8e5;
+  /* In dark mode accent-high is the pale mint tint — using it as a fill
+     reads as washed out. accent (#4fb8b2) is dark mode's strongest,
+     most saturated teal — verified 7.5:1 with near-black ink. */
+  --sl-brand-fill: var(--sl-color-accent);
+  --sl-brand-gradient: linear-gradient(
+    120deg,
+    var(--sl-brand-fill),
+    color-mix(in srgb, var(--sl-brand-fill) 80%, white)
+  );
 }
 
 /* Ambient depth behind every doc page, echoing the landing. */
@@ -31,6 +52,7 @@ header.header {
 .site-title {
   font-weight: 800;
   letter-spacing: -0.01em;
+  color: var(--sl-color-accent);
 }
 
 /* ---- sidebar ---- */
@@ -60,8 +82,8 @@ header.header {
 
 .sidebar-content a[aria-current='page'],
 .sidebar-content a[aria-current='page']:hover {
-  background: var(--sl-color-accent-high);
-  color: var(--sl-color-black);
+  background: var(--sl-brand-gradient);
+  color: var(--sl-brand-ink);
   font-weight: 600;
 }
 
@@ -162,16 +184,70 @@ header.header {
 
 /* ---- buttons (Starlight <LinkButton>) ---- */
 .sl-link-button.primary {
-  background: var(--sl-color-accent);
+  background: var(--sl-brand-gradient);
+  color: var(--sl-brand-ink);
   border-radius: 999px;
+  border: none;
+}
+
+/* ---- tabs: segmented pill control, matching the landing's buttons ---- */
+[role='tablist'] {
+  display: inline-flex;
+  gap: 0.25rem;
+  width: fit-content;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sl-color-text) 5%, transparent);
+}
+
+.tab > [role='tab'] {
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  box-shadow: none;
+  color: var(--sl-color-gray-2);
+  font-size: 0.88rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tab > [role='tab']:hover {
+  color: var(--sl-color-white);
+}
+
+.tab [role='tab'][aria-selected='true'],
+.tab [role='tab'][aria-selected='true']:hover {
+  background: var(--sl-brand-gradient);
+  color: var(--sl-brand-ink);
+  font-weight: 600;
 }
 
 /* ---- tables ---- */
+.sl-markdown-content table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .sl-markdown-content th {
   color: var(--sl-color-white);
+  text-align: left;
+  background: color-mix(in srgb, var(--sl-color-text) 4%, transparent);
 }
-.sl-markdown-content table {
-  border-color: var(--sl-color-hairline);
+
+.sl-markdown-content th,
+.sl-markdown-content td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+  border-inline-start: none;
+  border-inline-end: none;
+  border-top: none;
+}
+
+.sl-markdown-content tr:last-child td {
+  border-bottom: none;
 }
 
 /* ---- live demo embeds (guides/demo page) ---- */
