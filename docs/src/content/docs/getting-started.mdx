@@ -1,20 +1,18 @@
 ---
 title: Getting started
-description: Install FormKrafter and render your first form in plain HTML, React or Vue.
+description: Install FormKrafter, build a form with the drag & drop builder, render it in React, Vue or plain HTML, and validate it on your server.
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components'
+import { Aside, Steps, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
 
-FormKrafter ships as four npm packages under the `@streamline-pulse` scope:
-
-| Package | What it is |
-|---|---|
-| `formkrafter-core` | Headless: specs, ops, validation, rules sandbox, services. Runs in browsers, Node, Bun. |
-| `formkrafter-wc` | The UI as Web Components: `<fk-form-builder>`, `<fk-form-render>`, 30 bricks. |
-| `formkrafter-react` | React wrappers (`FkFormBuilder`, `FkFormRender`) with typed props and events. |
-| `formkrafter-vue` | Vue 3 wrappers, same surface. |
+By the end of this page you will have a form built visually, rendered in your
+framework, and validated on your server — all from the same file. It takes one
+install and about twenty lines of code.
 
 ## Install
+
+Pick the package matching your app. The framework wrappers pull in the Web
+Components and the core transitively.
 
 <Tabs syncKey="framework">
   <TabItem label="React">
@@ -91,13 +89,34 @@ FormKrafter ships as four npm packages under the `@streamline-pulse` scope:
   </TabItem>
 </Tabs>
 
-The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively — install `formkrafter-core` directly only on a backend that validates payloads.
+<Aside type="tip">
+Install `@streamline-pulse/formkrafter-core` on its own only where there is no
+UI — a Node or Bun backend that validates submitted payloads. See
+[packages](reference/packages/) for what each one contains.
+</Aside>
 
 ## Build and render a form
 
+The builder produces a spec; the renderer consumes it. Wiring the two together
+is the whole integration:
+
+<Steps>
+
+1. **Mount the builder** and keep the spec it emits. Every edit fires
+   `specChange` with the new spec — plus the RFC 6902 patches that produced it,
+   if you want undo/redo or an audit trail.
+
+2. **Feed that spec to the renderer.** It is plain JSON: store it, version it,
+   fetch it back later.
+
+3. **Import the stylesheet** once. It is opt-in and about 6 KB — skip it and
+   style the `.fk-*` classes yourself if you prefer.
+
+</Steps>
+
 <Tabs syncKey="framework">
   <TabItem label="React">
-    ```tsx
+    ```tsx title="FormStudio.tsx"
     import { useState } from 'react'
     import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
     import '@streamline-pulse/formkrafter-wc/styles.css'
@@ -109,6 +128,7 @@ The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively — in
       return (
         <>
           <FkFormBuilder onSpecChange={(e) => setSpec(e.detail.spec)} />
+
           {spec && (
             <FkFormRender
               spec={spec}
@@ -121,7 +141,7 @@ The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively — in
     ```
   </TabItem>
   <TabItem label="Vue">
-    ```vue
+    ```vue title="FormStudio.vue"
     <script setup lang="ts">
     import { ref } from 'vue'
     import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-vue'
@@ -129,20 +149,28 @@ The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively — in
     import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
 
     const spec = ref<BrickSpec>()
+
+    function onSubmit(data: Record<string, unknown>) {
+      console.log(data)
+    }
     </script>
 
     <template>
       <FkFormBuilder @spec-change="spec = $event.detail.spec" />
+
       <FkFormRender
         v-if="spec"
         :spec="spec"
-        @form-submit="console.log($event.detail.data)"
+        @form-submit="onSubmit($event.detail.data)"
       />
     </template>
     ```
   </TabItem>
   <TabItem label="Web Components">
-    ```html
+    ```html title="index.html"
+    <fk-form-builder></fk-form-builder>
+    <fk-form-render></fk-form-render>
+
     <script type="module">
       import '@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js'
       import '@streamline-pulse/formkrafter-wc/styles.css'
@@ -153,33 +181,73 @@ The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively — in
       builder.addEventListener('specChange', (e) => {
         preview.spec = e.detail.spec
       })
+
       preview.addEventListener('formSubmit', (e) => {
         console.log(e.detail.data)
       })
     </script>
-
-    <fk-form-builder></fk-form-builder>
-    <fk-form-render></fk-form-render>
     ```
   </TabItem>
 </Tabs>
 
-`styles.css` is **opt-in** (6 KB): design tokens and brick styles, dark mode included. Skip it and style the `.fk-*` classes yourself if you prefer.
-
 ## Validate on the server
 
-The exact same spec produces the exact same verdict on your backend — collection rows, hidden-field exclusions and localized messages included:
+The browser verdict is a convenience for your users; the server verdict is the
+one that counts. Both come from the same spec:
 
-```ts
+```ts title="server/submit.ts"
 import { validateFormData } from '@streamline-pulse/formkrafter-core'
+import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
 
-const { valid, errors } = validateFormData(spec, payload, 'fr')
-// errors: { name: 'Ce champ est obligatoire', 'contacts[0].email': 'Email invalide' }
+export async function submit(spec: BrickSpec, payload: unknown) {
+  const { valid, errors } = validateFormData(spec, payload, 'en')
+
+  if (!valid) {
+    // { fullName: 'This field is required', 'contacts[0].email': 'Invalid email' }
+    return { status: 422, errors }
+  }
+
+  return { status: 200, data: payload }
+}
 ```
+
+<Aside type="caution">
+Fields hidden by a rule are excluded from validation on **both** sides, and
+empty strings count as missing. That is why re-implementing this check by hand
+on the backend tends to disagree with the frontend — use `validateFormData`.
+</Aside>
 
 ## Next steps
 
-- Play with the [live demo](/formkrafter/demo/)
-- Browse the [30 built-in bricks](/formkrafter/guides/bricks/) or [write your own](/formkrafter/guides/bricks/#custom-bricks)
-- Wire [dynamic rules](/formkrafter/guides/rules/) and [services](/formkrafter/guides/services/) (uploads, remote options, auth)
-- Migrating? See [coming from Form.io](/formkrafter/guides/formio-migration/)
+<CardGrid>
+  <LinkCard
+    title="Form specs"
+    href="guides/form-specs/"
+    description="The BrickSpec shape, the ops that edit it, and patches for undo/redo."
+  />
+  <LinkCard
+    title="Bricks"
+    href="guides/bricks/"
+    description="The 30 built-in bricks, and how to register bricks of your own."
+  />
+  <LinkCard
+    title="Components reference"
+    href="reference/components/"
+    description="Every prop, event and method of the builder and the renderer."
+  />
+  <LinkCard
+    title="Dynamic rules"
+    href="guides/rules/"
+    description="Conditional visibility and computed values, without eval."
+  />
+  <LinkCard
+    title="Live demo"
+    href="demo/"
+    description="The real builder running in the page, plus the full demo apps."
+  />
+  <LinkCard
+    title="Coming from Form.io"
+    href="guides/formio-migration/"
+    description="Convert existing definitions and see what the migration buys you."
+  />
+</CardGrid>

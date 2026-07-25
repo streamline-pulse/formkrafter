@@ -1,0 +1,100 @@
+---
+title: Theming
+description: Style FormKrafter with CSS custom properties, switch to dark mode through the cascade, or drop the stylesheet entirely and bring your own.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+FormKrafter ships one stylesheet of about 6 KB, and it is **opt-in**. There is
+no CSS framework underneath, no global reset, and nothing that escapes the
+`.fk-*` class namespace — so it can drop into an existing design system without
+a fight.
+
+## Design tokens
+
+Everything visual flows through CSS custom properties. Override them anywhere in
+the cascade — globally, or scoped to one subtree:
+
+| Token | Light | Dark |
+|---|---|---|
+| `--fk-color-primary` | `#328f97` | `#4fb8b2` |
+| `--fk-color-surface` | `#ffffff` | `#111c24` |
+| `--fk-color-border` | `#d5dde2` | `#2d3f4b` |
+| `--fk-color-text` | text | — |
+| `--fk-color-muted` | secondary text | — |
+| `--fk-color-danger` | error state | — |
+| `--fk-radius` | corner radius | — |
+| `--fk-spacing` | base spacing unit | — |
+| `--fk-font` | font stack | — |
+
+```css title="Scoped to one section"
+.checkout-form {
+  --fk-color-primary: #7c3aed;
+  --fk-radius: 2px;
+}
+```
+
+## Dark mode
+
+Dark mode activates through the cascade — no JavaScript, no theme provider,
+no re-render. Either signal works:
+
+<Tabs>
+  <TabItem label="Tailwind-style class">
+    ```html
+    <html class="dark">
+      <fk-form-render></fk-form-render>
+    </html>
+    ```
+  </TabItem>
+  <TabItem label="Data attribute">
+    ```html
+    <div data-fk-theme="dark">
+      <fk-form-render></fk-form-render>
+    </div>
+    ```
+  </TabItem>
+</Tabs>
+
+<Aside type="tip">
+Because it is pure cascade, dark mode is scopable to a subtree. You can render a
+dark form preview inside an otherwise light page — which is exactly how the
+[demo page](../../demo/) shows the builder against this site's theme.
+</Aside>
+
+## Bring your own CSS
+
+Skipping `styles.css` entirely and writing your own `.fk-*` rules is a supported
+strategy, not a workaround. The components emit stable class names and no
+inline styles for anything you'd want to control.
+
+```ts title="Just don't import it"
+import { FkFormRender } from '@streamline-pulse/formkrafter-react'
+// import '@streamline-pulse/formkrafter-wc/styles.css'  ← omit this
+```
+
+<Aside type="caution">
+Without the stylesheet you inherit **nothing** — including layout. Budget for
+styling the field wrapper, label, control, error text and the layout bricks
+(row, column, stepper, tabs) before shipping.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="The class names each brick renders, and how to build your own."
+  />
+  <LinkCard
+    title="Internationalization"
+    href="../i18n/"
+    description="The other half of white-labeling: translating the builder chrome."
+  />
+  <LinkCard
+    title="Components reference"
+    href="../../reference/components/"
+    description="Where styles.css is imported from and what it covers."
+  />
+</CardGrid>

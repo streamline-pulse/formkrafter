@@ -1,0 +1,141 @@
+---
+title: Services
+description: The five injection points — file uploads, remote options, option catalogs, nested form sources and JS execution — and how to override them once at startup.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+FormKrafter never assumes how your infrastructure works. Anything that touches
+the outside world — uploading a file, fetching a list of options, loading a
+referenced form — goes through a **service** you can replace. Override once at
+app startup and every builder and renderer on the page picks it up.
+
+## The five services
+
+| Service | Default | Replace it when… |
+|---|---|---|
+| `jsRunnerService` | `SandboxJsRunnerService` (AST interpreter) | you need full JS in a trusted context |
+| `dataSourceService` | `FetchDataSourceService` | remote select options need auth, a base URL or a retry policy |
+| `fileUploadService` | `Base64FileUploadService` (data URLs) | you want real uploads instead of inlined base64 |
+| `specSourceService` | `FetchSpecSourceService` | [nested forms](../nested-forms/) come from your own store |
+| `optionSourceService` | `FetchOptionSourceService` | shared option catalogs come from your own store |
+
+```ts title="app-startup.ts"
+import { services, UrlFileUploadService } from '@streamline-pulse/formkrafter-core'
+
+services.fileUploadService = new UrlFileUploadService({
+  url: '/api/uploads',
+  credentials: 'include',
+})
+```
+
+## File uploads
+
+The default turns every file into a base64 data URL — fine for a demo, wrong
+for production. `UrlFileUploadService` POSTs each file as multipart instead:
+
+<Steps>
+
+1. Point it at your endpoint.
+
+   ```ts
+   services.fileUploadService = new UrlFileUploadService({
+     url: '/api/uploads',
+     headers: { 'X-Tenant': 'acme' },
+     credentials: 'include',
+   })
+   ```
+
+2. Return the stored location from your endpoint. The service reads the first
+   of `url`, `path`, `location` or `href` it finds in the JSON response.
+
+   ```json
+   { "url": "https://cdn.example.com/f/8a2c.pdf" }
+   ```
+
+3. Implement deletion if you want the remove button to clean up. The service
+   calls `remove()` when the user deletes a file.
+
+</Steps>
+
+A brick-level `uploadUrl` config overrides the service's default URL, so one
+form can send its attachments somewhere else.
+
+## Remote options and auth
+
+A select can load its options from a URL, interpolating `{key}` placeholders
+from the current form data:
+
+```txt title="Brick config"
+URL      /api/employees?dept={department}
+Headers  Authorization: Bearer {_authToken}
+```
+
+Two auth patterns, which compose:
+
+<Steps>
+
+1. **httpOnly cookie** — recommended for same-origin APIs. Nothing secret ever
+   enters the spec or the property panel.
+
+   ```ts
+   import { services, FetchDataSourceService } from '@streamline-pulse/formkrafter-core'
+
+   services.dataSourceService = new FetchDataSourceService({ credentials: 'include' })
+   ```
+
+2. **Context token** — when the API is cross-origin. The host injects it as
+   underscore-prefixed data on the renderer.
+
+   ```tsx
+   <FkFormRender spec={spec} data={{ _authToken: token }} />
+   ```
+
+</Steps>
+
+<Aside type="tip">
+Underscore-prefixed keys are readable by rules and URL interpolation but are
+**stripped from every emitted payload** — they never leak into your submitted
+data.
+</Aside>
+
+## A page-wide singleton, by design
+
+`services` lives on `globalThis` under
+`Symbol.for("formkrafter.core.services")`. Bundlers routinely end up with
+several copies of a module in one app — your bundle imports core directly, and
+the Web Components bundle embeds its own. The shared store guarantees that an
+override made from your app is seen by the components, whichever copy runs it.
+
+<Aside type="caution">
+Because it is page-wide, services are **host-level** configuration. Per-form
+differences belong in the spec (a brick's `uploadUrl`, a select's `optionsUrl`),
+not in a service you swap back and forth at runtime.
+</Aside>
+
+The brick registry and the chrome translations use the same pattern.
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Nested forms"
+    href="../nested-forms/"
+    description="specSourceService in practice: resolving a form referenced by another."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="Which bricks consume which service — file, select, nested-form."
+  />
+  <LinkCard
+    title="Dynamic rules"
+    href="../rules/"
+    description="What jsRunnerService executes, and what the sandbox allows."
+  />
+  <LinkCard
+    title="Packages"
+    href="../../reference/packages/"
+    description="Where each service type is exported from."
+  />
+</CardGrid>

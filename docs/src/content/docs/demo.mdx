@@ -1,24 +1,55 @@
 ---
 tableOfContents: false
 title: Demos
-description: The FormKrafter builder running in this page, plus the full demo applications.
+description: The real FormKrafter builder running in this page, plus the complete demo applications with routing, SSR and server-side validation.
 ---
 
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components'
 import LiveDemo from '../../components/LiveDemo.astro'
 import DemoApps from '../../components/DemoApps.astro'
 
+Reading about a form builder only goes so far. This page runs the actual
+component — the same one you get from npm — and links to full applications
+showing it wired into a real stack.
+
 ## Playground — right in this page
 
-This is the real `<fk-form-builder>`, loaded from the same package you would install — not a video, not a mock. Drag bricks from the palette, click one to edit its configs, validations, styles and rules, use undo/redo, and export the JSON with the Copy button.
+This is the real `<fk-form-builder>`, loaded from the package you would install:
+not a video, not a mock. Drag bricks from the palette, click one to edit its
+configs, validations, styles and rules, use undo/redo, and export the result
+with the Copy button.
 
 <LiveDemo mode="builder" />
 
-:::tip
-The builder emits a `specChange` event on every edit with the new spec **and** RFC 6902 patches in both directions — persist them, sync them, or feed `<fk-form-render>` live as in [getting started](/formkrafter/getting-started/).
-:::
+<Aside type="tip">
+Every edit emits `specChange` with the new spec **and** RFC 6902 patches in both
+directions — persist them, sync them, or feed `<fk-form-render>` live as shown
+in [getting started](getting-started/).
+</Aside>
 
 ## Demo applications
 
-Complete apps showing FormKrafter integrated for real — routing, SSR, auth patterns, server-side validation.
+Complete apps showing FormKrafter integrated for real — routing, SSR, auth
+patterns and server-side validation.
 
 <DemoApps lang="en" />
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Getting started"
+    href="getting-started/"
+    description="Install it and reproduce this setup in your own app."
+  />
+  <LinkCard
+    title="Form specs"
+    href="guides/form-specs/"
+    description="What the JSON you just exported from the playground actually is."
+  />
+  <LinkCard
+    title="Components reference"
+    href="reference/components/"
+    description="The props and events the playground is using under the hood."
+  />
+</CardGrid>

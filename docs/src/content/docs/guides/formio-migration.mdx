@@ -1,0 +1,151 @@
+---
+title: Coming from Form.io
+description: Convert Form.io definitions to FormKrafter specs with convertFormioForm — what maps, what to check by hand, and what the migration buys you.
+---
+
+import { Aside, Steps, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Migrating a form portfolio is usually the reason people put a migration off for
+a year. `convertFormioForm` exists to make it incremental: it converts what it
+can, reports what it cannot, and never throws — so you can run it over a
+hundred forms and get a work list instead of a stack trace.
+
+## Converting a definition
+
+<Steps>
+
+1. Feed it a Form.io form definition.
+
+   ```ts title="migrate.ts"
+   import { convertFormioForm } from '@streamline-pulse/formkrafter-core'
+
+   const formioJson = JSON.parse(await readFile('./legacy-form.json', 'utf8'))
+   const { spec, warnings } = convertFormioForm(formioJson)
+   ```
+
+2. Review the warnings. Unknown components are skipped and listed here rather
+   than aborting the conversion.
+
+   ```ts
+   for (const warning of warnings) console.warn(warning)
+   // e.g. 'button "submit" skipped — FormKrafter renders its own submit action'
+   ```
+
+3. Store the resulting spec, or open it in the builder for a manual pass.
+
+</Steps>
+
+<Aside type="tip">
+The [Form.io import demo](../../demo/) runs this conversion in the browser and
+shows the resulting spec side by side with its size — the fastest way to try it
+on one of your own forms.
+</Aside>
+
+## What is mapped
+
+| Form.io | FormKrafter |
+|---|---|
+| Field components (textfield, email, number, day, select, radio, selectboxes, checkbox, textarea, phone, url, signature, address, …) | The matching input bricks, `inputMask` included |
+| Layout: panels, columns, tables, tabs, fieldsets | Layout bricks |
+| Wizard (`display: "wizard"`) | `stepper` with per-step validation |
+| datagrid / editgrid | `data-grid` with per-row validation |
+| `validate.*` (required, min/max, lengths, pattern, custom JS) | Validators; custom JS is auto-wrapped for the sandbox (`data`/`row` become `dataMap`) |
+| `conditional` (show/when/eq) and JavaScript `logic` triggers | [Rules](../rules/); a conditional takes precedence over an always-hidden flag |
+| Select `dataSrc: url / json` | Remote or static options (`valueProperty` → `valueKey`, item templates → `labelKey`, dotted paths supported) |
+| File components (`storage: url`, `multiple`) | `file` brick with `uploadUrl` / `multiple` configs |
+| Nested `form` components | [nested-form bricks](../nested-forms/) with `specRef` |
+| Content / HTML components | `content` bricks, conditionals preserved |
+
+The converter is regression-tested against real production Form.io forms —
+wizards, conditional file uploads, cascaded selects and custom validators.
+
+## What you gain in weight
+
+Methodology: bundles minified and gzipped; FormKrafter v0.5.0 measured with
+`bun build --minify` from the published package, Form.io `@formio/js` v5.5.0
+measured from its official CDN bundles (July 2026).
+
+| | FormKrafter | Form.io |
+|---|---|---|
+| Builder (renderer included) | **~215 KB** | ~470 KB (`formio.full.min.js`) |
+| Renderer only | ~205 KB | ~415 KB (`formio.form.min.js`) |
+| Required CSS | 6 KB, optional | 129 KB + Bootstrap |
+
+## Keep your specs small
+
+Your stored definitions shrink too. Real Form.io exports carry heavy
+boilerplate — every component serialized with all its defaults — while the
+converter keeps only what carries meaning and compacts static option lists into
+a newline string whenever labels equal values. Measured on a portfolio of six
+production forms:
+
+| | Raw JSON | Gzipped |
+|---|---|---|
+| Form.io definitions | 277 KB | 40 KB |
+| Converted FormKrafter specs | **68 KB** (3–5× smaller per form) | **18 KB** |
+
+<Aside type="caution">
+The exception worth knowing: a minimal, hand-written Form.io definition can come
+out slightly **larger** once converted, because the spec is more explicit —
+stable `uid`s for patches, typed configs. Nobody stores hand-minified
+definitions, but the import demo shows both sizes so you can judge on your own
+forms.
+</Aside>
+
+For the biggest lists — professions, nationalities — do not embed them at all.
+The converter warns past 100 static options and recommends:
+
+<Tabs>
+  <TabItem label="Remote">
+    ```json
+    { "optionsSource": "remote", "optionsUrl": "/api/professions?q={search}" }
+    ```
+    The select queries your API, with search-as-you-type support.
+  </TabItem>
+  <TabItem label="Shared catalog">
+    ```json
+    { "optionsSource": "catalog", "optionsRef": "professions" }
+    ```
+    Resolved through [`optionSourceService`](../services/): the list is stored
+    once and referenced by every form that needs it.
+  </TabItem>
+</Tabs>
+
+## Sandbox instead of eval
+
+Form.io executes custom validators and logic with real JavaScript. FormKrafter
+runs the converted code in a CSP-safe AST interpreter — see
+[dynamic rules](../rules/#the-sandbox). Converted snippets keep working because
+the converter injects compatibility aliases (`const data = dataMap; const row = dataMap;`),
+and they gain the sandbox's isolation for free.
+
+<Aside>
+If a converted validator relies on something the sandbox does not expose —
+network access, `window` — the conversion still succeeds but the rule will not
+run. Those are worth grepping for after a bulk migration.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Form specs"
+    href="../form-specs/"
+    description="Understand the shape your Form.io definitions are converted into."
+  />
+  <LinkCard
+    title="Dynamic rules"
+    href="../rules/"
+    description="Where converted conditionals and logic triggers end up."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="Wire the upload endpoint and option catalogs the converter points at."
+  />
+  <LinkCard
+    title="Live demo"
+    href="../../demo/"
+    description="Run the converter on one of your own forms in the browser."
+  />
+</CardGrid>

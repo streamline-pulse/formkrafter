@@ -1,0 +1,83 @@
+---
+title: Overview
+description: What FormKrafter is, how its four packages fit together, and where to go next depending on what you are building.
+---
+
+import { Card, CardGrid, LinkCard, Aside } from '@astrojs/starlight/components'
+
+FormKrafter turns a form into **data**. A form is a JSON spec — a tree of bricks
+with their validations and rules — and that one spec drives everything: the drag
+& drop builder, the renderer in three frameworks, and the verdict your backend
+returns. No component to rewrite per framework, no validation logic duplicated
+between client and server.
+
+## The idea in one pass
+
+<CardGrid>
+  <Card title="A spec, not components" icon="document">
+    Forms are portable JSON you can store, diff and version. Every builder edit
+    also emits RFC 6902 patches, so undo/redo and audit trails come for free.
+  </Card>
+  <Card title="One behavior, three renderers" icon="puzzle">
+    Web Components at the core; React and Vue wrappers generated from the same
+    source. Pick per app without forking your form logic.
+  </Card>
+  <Card title="The same verdict everywhere" icon="approve-check">
+    `validateFormData(spec, data)` runs on your server and reproduces the
+    frontend result exactly — hidden fields excluded, messages localized.
+  </Card>
+  <Card title="Rules without eval" icon="setting">
+    Conditional logic in JSON Logic or JavaScript, executed by an AST
+    interpreter: CSP-safe, whitelisted builtins, bounded execution.
+  </Card>
+</CardGrid>
+
+## The four packages
+
+| Package | What it is | You need it when… |
+|---|---|---|
+| `formkrafter-core` | Headless engine: specs, ops, validation, rules sandbox, services | always (directly on a backend, transitively on a frontend) |
+| `formkrafter-wc` | The UI as Web Components + the 30 built-in bricks | you render or build forms in the browser |
+| `formkrafter-react` | Generated React wrappers | your app is React |
+| `formkrafter-vue` | Generated Vue 3 wrappers | your app is Vue |
+
+<Aside type="tip">
+The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively.
+Install `formkrafter-core` on its own only where there is no UI — a Node or Bun
+backend that validates submitted payloads.
+</Aside>
+
+## Where to go next
+
+<CardGrid>
+  <LinkCard
+    title="Getting started"
+    href="../getting-started/"
+    description="Install, build a form, and validate it on the server — in React, Vue or plain HTML."
+  />
+  <LinkCard
+    title="Form specs"
+    href="../guides/form-specs/"
+    description="The BrickSpec shape, immutable operations, patches and undo/redo."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../guides/bricks/"
+    description="The 30 built-in bricks and how to register your own."
+  />
+  <LinkCard
+    title="Validation"
+    href="../guides/validation/"
+    description="Declarative validators, custom sandboxed ones, and backend parity."
+  />
+  <LinkCard
+    title="Components reference"
+    href="../reference/components/"
+    description="Props, events and methods of the builder and the renderer."
+  />
+  <LinkCard
+    title="Coming from Form.io"
+    href="../guides/formio-migration/"
+    description="Convert existing form definitions and see what you gain."
+  />
+</CardGrid>

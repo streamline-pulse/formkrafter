@@ -1,0 +1,149 @@
+---
+title: Validation
+description: Declarative validators, custom sandboxed validators, and how the server reproduces the frontend verdict exactly.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Validation is attached to the spec, not to the UI. That single decision is what
+lets the browser and your backend reach the same verdict from the same file —
+no schema kept in sync by hand, no rule that only exists client-side.
+
+## Declarative validators
+
+Each brick carries a `validations` array. They compile to a JSON Schema
+(Ajv + ajv-errors + ajv-formats) at render time:
+
+| Validator | Applies to | `value` |
+|---|---|---|
+| `required` | any | — |
+| `minLength` / `maxLength` | string | number |
+| `pattern` | string | regex source |
+| `email` / `url` | string | — |
+| `min` / `max` | number | number |
+| `minItems` / `maxItems` | array | number |
+| `custom` | any | — (uses `customValidator`) |
+
+```json title="A required, well-formed email"
+{
+  "validations": [
+    { "validator": "required" },
+    { "validator": "email", "message": "Enter a valid address" }
+  ]
+}
+```
+
+`message` is optional and may be localized — see
+[messages and locales](#messages-and-locales) below.
+
+## Custom validators
+
+When the eleven built-ins are not enough, `custom` runs a snippet in the
+[rules sandbox](../rules/):
+
+```js
+// `value` is this field's value, `dataMap` is the whole form
+return value !== dataMap.oldEmail || 'Must differ from the current address'
+```
+
+The return value decides the outcome:
+
+| Returned | Result |
+|---|---|
+| `true`, `undefined`, `null` | passes |
+| a string | fails, and the string becomes the message |
+| an `Error` | fails with `error.message` |
+| anything else | fails with the configured `message`, or the built-in default |
+
+<Aside type="caution">
+`dataMap` holds the values of the whole form, so a custom validator can compare
+fields. It cannot reach the network, `globalThis`, or anything outside the
+sandbox — see [the sandbox](../rules/#the-sandbox) for what is available.
+</Aside>
+
+## Messages and locales
+
+Messages resolve in a cascade: the author's `message` first, then FormKrafter's
+built-in defaults for the active locale. English and French ship in the box.
+
+```json title="A localized message"
+{ "validator": "required", "message": { "en": "Required", "fr": "Obligatoire" } }
+```
+
+Register more languages at startup:
+
+```ts
+import { registerValidationMessages } from '@streamline-pulse/formkrafter-core'
+
+registerValidationMessages('de', {
+  required: 'Pflichtfeld',
+  minLength: 'Mindestens {value} Zeichen',
+})
+```
+
+The `{value}` placeholder is interpolated with the validator's parameter.
+
+## The same verdict on the server
+
+`validateFormData` is the backend entry point. It takes the same spec, the
+submitted payload, and an optional locale:
+
+<Tabs syncKey="framework">
+  <TabItem label="Node / Bun">
+    ```ts title="server/validate.ts"
+    import { validateFormData } from '@streamline-pulse/formkrafter-core'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    export function checkSubmission(spec: BrickSpec, payload: unknown) {
+      const { valid, errors } = validateFormData(spec, payload, 'fr')
+      if (!valid) throw new Error(JSON.stringify(errors))
+      return payload
+    }
+    ```
+  </TabItem>
+  <TabItem label="In the browser">
+    ```ts
+    // The renderer exposes the same pass as a method
+    const { valid, errors } = await formEl.validate()
+    ```
+  </TabItem>
+</Tabs>
+
+It reproduces three frontend behaviors that are easy to get wrong in a
+hand-written backend check:
+
+- **Collection rows validate individually**, and report as `contacts[0].email`.
+- **Empty strings count as missing**, so `required` behaves consistently with
+  what the user saw.
+- **Fields hidden by a rule are excluded.** A required field on step 3 that a
+  rule hides can never block a submission it is not part of.
+
+<Aside type="tip">
+Validating on the server is not optional. The browser verdict is a UX
+affordance; only `validateFormData` on your backend is a guarantee.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Dynamic rules"
+    href="../rules/"
+    description="The sandbox that custom validators run in, and how hidden fields are excluded."
+  />
+  <LinkCard
+    title="Form specs"
+    href="../form-specs/"
+    description="Where validations live in the spec and how to update them immutably."
+  />
+  <LinkCard
+    title="Internationalization"
+    href="../i18n/"
+    description="Localize messages, labels and options across the whole form."
+  />
+  <LinkCard
+    title="Components reference"
+    href="../../reference/components/"
+    description="The validate() method and the errors carried by formDataChange."
+  />
+</CardGrid>

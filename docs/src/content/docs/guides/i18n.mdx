@@ -1,0 +1,114 @@
+---
+title: Internationalization
+description: Two independent layers — localized form content authored in the spec, and the builder chrome your users see — neither of which sniffs the browser language.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+FormKrafter separates two things most libraries conflate: the **content of a
+form** (authored by whoever built it) and the **chrome of the builder** (the UI
+your users click through). They are localized independently, and neither ever
+sniffs the browser language — the host decides, the library follows.
+
+## Layer 1 — form content
+
+Any label, placeholder, message or option list in a spec may be a plain string
+**or** an object keyed by locale:
+
+```json title="A localized label"
+{ "label": { "en": "Full name", "fr": "Nom complet" } }
+```
+
+Pass `locale` to the renderer to resolve it:
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    <FkFormRender spec={spec} locale="fr" />
+    ```
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <FkFormRender :spec="spec" locale="fr" />
+    ```
+  </TabItem>
+  <TabItem label="Web Components">
+    ```js
+    document.querySelector('fk-form-render').locale = 'fr'
+    ```
+  </TabItem>
+</Tabs>
+
+In the builder, pass `locales` to get an edit-language selector — panel fields
+then read and write the selected language:
+
+```tsx
+<FkFormBuilder locales={['en', 'fr']} />
+```
+
+<Aside type="tip">
+Validation messages resolve through the same mechanism, so
+`{ "message": { "en": "Required", "fr": "Obligatoire" } }` works exactly like a
+label. See [validation](../validation/#messages-and-locales).
+</Aside>
+
+## Layer 2 — builder chrome
+
+The palette, property panel, buttons and brick names are about 90 translation
+keys. English is built in and French ships in the package:
+
+```ts title="Before mounting the builder"
+import { setFkTranslations, frFkTranslations } from '@streamline-pulse/formkrafter-wc'
+
+setFkTranslations(frFkTranslations)
+```
+
+For any other language, pass your own dictionary — it is merged over the
+built-in English, so a partial translation is valid:
+
+```ts
+setFkTranslations({
+  'palette.search': 'Bausteine suchen…',
+  'panel.validation': 'Validierung',
+})
+```
+
+<Aside type="caution">
+`setFkTranslations` is read when a component mounts. Call it **before** mounting
+the builder; to switch language at runtime, re-mount the component (for example
+with a React `key` that changes with the locale).
+</Aside>
+
+## Choosing a locale
+
+Because nothing is automatic, the choice is explicitly yours — a URL segment, a
+user preference, a cookie. A typical wiring:
+
+```tsx title="Locale from the route"
+import { setFkTranslations, frFkTranslations } from '@streamline-pulse/formkrafter-wc'
+
+const locale = useRouteLocale()            // your router, your rule
+if (locale === 'fr') setFkTranslations(frFkTranslations)
+
+return <FkFormRender key={locale} spec={spec} locale={locale} />
+```
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="How localized validation messages cascade over the built-in defaults."
+  />
+  <LinkCard
+    title="Theming"
+    href="../theming/"
+    description="The other half of white-labeling the builder for your users."
+  />
+  <LinkCard
+    title="Form specs"
+    href="../form-specs/"
+    description="Where localized text lives inside a brick's configs."
+  />
+</CardGrid>
