@@ -1,0 +1,87 @@
+---
+title: Vue d'ensemble
+description: Ce qu'est FormKrafter, comment ses quatre packages s'articulent, et par où continuer selon ce que vous construisez.
+---
+
+import { Card, CardGrid, LinkCard, Aside } from '@astrojs/starlight/components'
+
+FormKrafter transforme un formulaire en **données**. Un formulaire est un spec
+JSON — un arbre de bricks avec leurs validations et leurs règles — et ce seul
+spec pilote tout : le builder en drag & drop, le renderer dans trois frameworks,
+et le verdict que renvoie votre backend. Aucun composant à réécrire par
+framework, aucune logique de validation dupliquée entre le client et le serveur.
+
+## L'idée en un coup d'œil
+
+<CardGrid>
+  <Card title="Un spec, pas des composants" icon="document">
+    Les formulaires sont du JSON portable que vous pouvez stocker, comparer et
+    versionner. Chaque édition dans le builder émet aussi des patches RFC 6902 :
+    undo/redo et pistes d'audit viennent gratuitement.
+  </Card>
+  <Card title="Un comportement, trois renderers" icon="puzzle">
+    Des Web Components au cœur ; les wrappers React et Vue sont générés depuis
+    la même source. Choisissez par application sans forker votre logique de
+    formulaire.
+  </Card>
+  <Card title="Le même verdict partout" icon="approve-check">
+    `validateFormData(spec, data)` tourne sur votre serveur et reproduit
+    exactement le résultat du frontend — champs cachés exclus, messages
+    localisés.
+  </Card>
+  <Card title="Des règles sans eval" icon="setting">
+    Logique conditionnelle en JSON Logic ou en JavaScript, exécutée par un
+    interpréteur AST : compatible CSP, builtins en liste blanche, exécution
+    bornée.
+  </Card>
+</CardGrid>
+
+## Les quatre packages
+
+| Package | Ce que c'est | Vous en avez besoin quand… |
+|---|---|---|
+| `formkrafter-core` | Moteur headless : specs, ops, validation, bac à sable de règles, services | toujours (directement sur un backend, transitivement sur un frontend) |
+| `formkrafter-wc` | L'UI en Web Components + les 30 bricks intégrées | vous affichez ou construisez des formulaires dans le navigateur |
+| `formkrafter-react` | Wrappers React générés | votre application est en React |
+| `formkrafter-vue` | Wrappers Vue 3 générés | votre application est en Vue |
+
+<Aside type="tip">
+Les wrappers embarquent `formkrafter-wc` et `formkrafter-core` transitivement.
+N'installez `formkrafter-core` seul que là où il n'y a pas d'UI — un backend
+Node ou Bun qui valide les payloads soumis.
+</Aside>
+
+## Par où continuer
+
+<CardGrid>
+  <LinkCard
+    title="Bien démarrer"
+    href="../getting-started/"
+    description="Installer, construire un formulaire et le valider côté serveur — en React, Vue ou HTML pur."
+  />
+  <LinkCard
+    title="Specs de formulaire"
+    href="../guides/form-specs/"
+    description="La forme d'un BrickSpec, les opérations immuables, les patches et l'undo/redo."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../guides/bricks/"
+    description="Les 30 bricks intégrées et comment enregistrer les vôtres."
+  />
+  <LinkCard
+    title="Validation"
+    href="../guides/validation/"
+    description="Validateurs déclaratifs, validateurs personnalisés sandboxés et parité avec le backend."
+  />
+  <LinkCard
+    title="Référence des composants"
+    href="../reference/components/"
+    description="Props, événements et méthodes du builder et du renderer."
+  />
+  <LinkCard
+    title="Vous venez de Form.io"
+    href="../guides/formio-migration/"
+    description="Convertir des définitions de formulaires existantes et voir ce que vous y gagnez."
+  />
+</CardGrid>

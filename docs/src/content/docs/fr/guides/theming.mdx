@@ -1,0 +1,103 @@
+---
+title: Theming
+description: Styler FormKrafter avec des propriétés CSS personnalisées, passer en dark mode par la cascade, ou abandonner la feuille de style et apporter la vôtre.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+FormKrafter livre une feuille de style d'environ 6 Ko, et elle est **opt-in**.
+Aucun framework CSS en dessous, aucun reset global, et rien qui s'échappe de
+l'espace de noms de classes `.fk-*` — elle s'insère donc dans un design system
+existant sans bagarre.
+
+## Tokens de design
+
+Tout le visuel passe par des propriétés CSS personnalisées. Surchargez-les où
+vous voulez dans la cascade — globalement, ou dans la portée d'un seul
+sous-arbre :
+
+| Token | Clair | Sombre |
+|---|---|---|
+| `--fk-color-primary` | `#328f97` | `#4fb8b2` |
+| `--fk-color-surface` | `#ffffff` | `#111c24` |
+| `--fk-color-border` | `#d5dde2` | `#2d3f4b` |
+| `--fk-color-text` | texte | — |
+| `--fk-color-muted` | texte secondaire | — |
+| `--fk-color-danger` | état d'erreur | — |
+| `--fk-radius` | rayon des angles | — |
+| `--fk-spacing` | unité d'espacement de base | — |
+| `--fk-font` | pile de polices | — |
+
+```css title="Limité à une section"
+.checkout-form {
+  --fk-color-primary: #7c3aed;
+  --fk-radius: 2px;
+}
+```
+
+## Dark mode
+
+Le dark mode s'active par la cascade — pas de JavaScript, pas de theme provider,
+pas de re-rendu. Les deux signaux fonctionnent :
+
+<Tabs>
+  <TabItem label="Classe façon Tailwind">
+    ```html
+    <html class="dark">
+      <fk-form-render></fk-form-render>
+    </html>
+    ```
+  </TabItem>
+  <TabItem label="Attribut de données">
+    ```html
+    <div data-fk-theme="dark">
+      <fk-form-render></fk-form-render>
+    </div>
+    ```
+  </TabItem>
+</Tabs>
+
+<Aside type="tip">
+Parce que c'est de la pure cascade, le dark mode se limite à un sous-arbre. Vous
+pouvez afficher un aperçu de formulaire sombre dans une page par ailleurs claire
+— c'est exactement ainsi que la [page de démo](../../demo/) montre le builder
+face au thème de ce site.
+</Aside>
+
+## Apporter votre propre CSS
+
+Ignorer complètement `styles.css` et écrire vos propres règles `.fk-*` est une
+stratégie supportée, pas un contournement. Les composants émettent des noms de
+classes stables et aucun style inline sur ce que vous voudriez contrôler.
+
+```ts title="Il suffit de ne pas l'importer"
+import { FkFormRender } from '@streamline-pulse/formkrafter-react'
+// import '@streamline-pulse/formkrafter-wc/styles.css'  ← à omettre
+```
+
+<Aside type="caution">
+Sans la feuille de style, vous n'héritez de **rien** — mise en page comprise.
+Prévoyez de styler le wrapper de champ, le libellé, le contrôle, le texte
+d'erreur et les bricks de layout (row, column, stepper, tabs) avant la mise en
+production.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Bricks"
+    href="../bricks/"
+    description="Les noms de classes que rend chaque brick, et comment écrire la vôtre."
+  />
+  <LinkCard
+    title="Internationalisation"
+    href="../i18n/"
+    description="L'autre moitié du white-labeling : traduire le chrome du builder."
+  />
+  <LinkCard
+    title="Référence des composants"
+    href="../../reference/components/"
+    description="D'où styles.css est importé et ce qu'il couvre."
+  />
+</CardGrid>

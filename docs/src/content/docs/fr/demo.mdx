@@ -1,24 +1,55 @@
 ---
 tableOfContents: false
 title: Démos
-description: Le builder FormKrafter en direct dans cette page, plus les applications de démo complètes.
+description: Le vrai builder FormKrafter qui tourne dans cette page, plus les applications de démo complètes avec routing, SSR et validation côté serveur.
 ---
 
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components'
 import LiveDemo from '../../../components/LiveDemo.astro'
 import DemoApps from '../../../components/DemoApps.astro'
 
-## Playground — dans cette page
+Lire un article sur un form builder a ses limites. Cette page fait tourner le
+composant réel — celui que vous récupérez depuis npm — et renvoie vers des
+applications complètes qui le montrent branché dans une vraie stack.
 
-C'est le vrai `<fk-form-builder>`, chargé depuis le package que vous installeriez — pas une vidéo, pas une maquette. Glissez des bricks depuis la palette, cliquez sur l'une d'elles pour éditer ses configs, validations, styles et règles, utilisez undo/redo, et exportez le JSON avec le bouton Copy.
+## Playground — directement dans cette page
+
+C'est le vrai `<fk-form-builder>`, chargé depuis le package que vous
+installeriez : pas une vidéo, pas une maquette. Glissez des bricks depuis la
+palette, cliquez sur l'une d'elles pour éditer ses configs, validations, styles
+et règles, utilisez undo/redo, et exportez le résultat avec le bouton Copy.
 
 <LiveDemo mode="builder" />
 
-:::tip
-Le builder émet un événement `specChange` à chaque modification, avec le nouveau spec **et** des patches RFC 6902 dans les deux sens — persistez-les, synchronisez-les, ou alimentez `<fk-form-render>` en direct comme dans [bien démarrer](/formkrafter/fr/getting-started/).
-:::
+<Aside type="tip">
+Chaque édition émet `specChange` avec le nouveau spec **et** des patches
+RFC 6902 dans les deux sens — persistez-les, synchronisez-les, ou alimentez
+`<fk-form-render>` en direct comme dans [bien démarrer](../getting-started/).
+</Aside>
 
 ## Applications de démo
 
-Des apps complètes qui montrent FormKrafter intégré pour de vrai — routing, SSR, patterns d'auth, validation côté serveur.
+Des applications complètes qui montrent FormKrafter intégré pour de vrai —
+routing, SSR, patterns d'authentification et validation côté serveur.
 
 <DemoApps lang="fr" />
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Bien démarrer"
+    href="../getting-started/"
+    description="L'installer et reproduire cette configuration dans votre propre application."
+  />
+  <LinkCard
+    title="Specs de formulaire"
+    href="../guides/form-specs/"
+    description="Ce qu'est vraiment le JSON que vous venez d'exporter depuis le playground."
+  />
+  <LinkCard
+    title="Référence des composants"
+    href="../reference/components/"
+    description="Les props et les événements que le playground utilise sous le capot."
+  />
+</CardGrid>

@@ -1,0 +1,194 @@
+---
+title: Bricks
+description: Les 30 bricks intégrées, les comportements à connaître pour chaque famille, et comment enregistrer vos propres bricks.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Une brick est un nœud d'un [spec de formulaire](../form-specs/) — un champ, un
+conteneur de mise en page, ou un élément d'affichage. Trente sont livrées
+d'origine, et le registre qui les contient est ouvert : vos propres bricks
+s'enregistrent de la même façon et apparaissent dans la même palette.
+
+## Le catalogue intégré
+
+### Inputs
+
+| `id` de brick | Type de données | Notes |
+|---|---|---|
+| `text`, `textarea`, `password` | string | `text` accepte les masques et les adornments |
+| `email`, `url`, `phone` | string | à associer aux validateurs correspondants |
+| `number` | number | `min` / `max` / `step` |
+| `date`, `time`, `datetime` | string | sélecteurs natifs |
+| `select`, `radio` | string | choix unique |
+| `multi-select`, `select-boxes`, `tags` | array | choix multiple |
+| `checkbox` | boolean | libellé en ligne |
+| `signature` | string | canvas, stocké en data URL |
+| `address` | object | champ composite |
+| `code` | string | CodeMirror, chargé en lazy |
+
+### Data
+
+| `id` de brick | Type | Notes |
+|---|---|---|
+| `file` | input / object | upload pluggable, `uploadUrl` par brick, mode `multiple` |
+| `data-grid` | collection / array | lignes répétées avec validation par ligne |
+| `hidden` | input / string | porte une valeur sans rien afficher |
+
+### Layout
+
+| `id` de brick | Type | Notes |
+|---|---|---|
+| `group`, `row`, `column` | panel | conteneurs fieldset et flex |
+| `stepper` | panel | wizard avec validation par étape |
+| `tabs` | panel | validation optionnelle avant de quitter l'onglet |
+| `nested-form` | panel | référence un autre formulaire par `specRef` |
+| `content` | output | texte riche statique |
+| `recap` | output | résumé vivant de tout le formulaire |
+
+## Comportements à connaître
+
+### Select et multi-select
+
+Un combobox avec recherche qui implémente le pattern WAI-ARIA complet —
+navigation clavier, gestion du focus, annonces aux lecteurs d'écran. Les options
+proviennent de cinq sources :
+
+| `optionsSource` | D'où viennent les options |
+|---|---|
+| `static` | une chaîne séparée par des retours à la ligne, ou des objets `{ label, value }` |
+| `dataMap` | la valeur d'un autre champ du même formulaire |
+| `remote` | une URL, avec interpolation `{key}` et recherche côté serveur optionnelle |
+| `catalog` | une liste partagée résolue via `optionSourceService` |
+| `js` | un snippet sandboxé qui renvoie la liste |
+
+`labelKey` et `valueKey` acceptent les chemins pointés : `name.common` lit donc
+une propriété imbriquée de chaque objet option.
+
+<Aside type="tip">
+Pour les listes longues — pays, professions — préférez `remote` ou `catalog` à
+`static`. Cela garde le spec léger et la liste éditable à un seul endroit. Le
+convertisseur Form.io émet un avertissement au-delà de 100 options statiques.
+</Aside>
+
+### Data grid
+
+Le template de ligne s'édite comme n'importe quel panel ; au rendu, chaque ligne
+scope ses propres données. `minItems` / `maxItems` valident le nombre de lignes,
+les lignes se réordonnent avec des boutons haut/bas accessibles, et les erreurs
+sont rapportées sous la forme `contacts[0].email`.
+
+### Stepper et tabs
+
+Les deux conditionnent la navigation à la validation. `stepper` valide l'étape
+courante avant d'avancer et peut émettre `formSubmit` depuis un bouton Submit
+final. `tabs` propose la même chose en option, plus la navigation aux flèches
+entre onglets.
+
+### Text et phone
+
+Adornments `prefix` / `suffix` optionnels, plus une config `mask` :
+
+| Jeton de masque | Accepte |
+|---|---|
+| `9` | un chiffre |
+| `a` | une lettre |
+| `A` | une lettre, mise en majuscule |
+| `*` | alphanumérique |
+
+Tout autre caractère est un littéral et s'insère automatiquement — `+229 99 99 99 99`
+s'écrit `+229 99 99 99 99`.
+
+### Recap
+
+Un résumé vivant, en lecture seule, de tout ce qui a été rempli jusqu'ici.
+`groupBySections` transforme les panels labellisés en sections titrées, et les
+collections se rendent en tableaux — pratique comme dernière étape d'un wizard.
+
+## Enregistrer votre propre brick
+
+`createBrick` renvoie une brick que le registre accepte. La fonction `render`
+reçoit les props de la brick et renvoie un nœud virtuel :
+
+<Steps>
+
+1. Décrivez-la et rendez-la.
+
+   ```tsx title="rating-brick.tsx"
+   import { createBrick, h, registerBrick } from '@streamline-pulse/formkrafter-wc'
+
+   export const ratingBrick = createBrick({
+     type: 'input',
+     dataType: 'number',
+     id: 'rating',
+     name: 'Rating',
+     category: 'Inputs',
+     defaultConfigs: { label: 'Note' },
+     render: (props) =>
+       h(
+         'div',
+         { class: { 'fk-field': true } },
+         ...[1, 2, 3, 4, 5].map((star) =>
+           h(
+             'button',
+             {
+               type: 'button',
+               'aria-label': `${star} étoiles`,
+               onClick: () => props.onDataChange?.(star),
+             },
+             star <= Number(props.data ?? 0) ? '★' : '☆'
+           )
+         )
+       ),
+   })
+   ```
+
+2. Enregistrez-la une fois, avant le montage du builder.
+
+   ```ts
+   registerBrick(ratingBrick)
+   ```
+
+3. Elle apparaît désormais dans la palette sous sa `category`, et se rend partout
+   où un spec utilise `"id": "rating"`.
+
+</Steps>
+
+<Aside>
+`h` et le type `VNode` sont réexportés par `formkrafter-wc` : votre application
+n'a besoin d'aucune dépendance Stencil. `renderBuilder` est optionnel —
+fournissez-le quand la brick doit avoir une apparence différente en cours
+d'édition.
+</Aside>
+
+<Aside type="caution">
+Le registre est un **singleton à l'échelle de la page** (partagé via
+`globalThis`, comme les [services](../services/)). Enregistrez une brick une
+seule fois au démarrage ; enregistrer deux fois le même `type:id` remplace le
+premier.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Specs de formulaire"
+    href="../form-specs/"
+    description="Comment les bricks se composent en arbre, et les ops qui l'éditent."
+  />
+  <LinkCard
+    title="Validation"
+    href="../validation/"
+    description="Attacher des validateurs à n'importe quelle brick, intégrée ou personnalisée."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="Les sources d'upload, d'options et de specs que les bricks consomment."
+  />
+  <LinkCard
+    title="Theming"
+    href="../theming/"
+    description="Les noms de classes fk-* que votre brick personnalisée doit réutiliser."
+  />
+</CardGrid>

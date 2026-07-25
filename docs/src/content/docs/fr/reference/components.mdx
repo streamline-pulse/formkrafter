@@ -1,0 +1,242 @@
+---
+title: Composants
+description: Props, événements et méthodes de fk-form-builder et fk-form-render, avec le nommage exact pour les Web Components, React et Vue.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard, Badge } from '@astrojs/starlight/components'
+
+Deux composants portent toute la surface publique de l'UI : le builder qui
+produit un spec, et le renderer qui transforme un spec en formulaire
+fonctionnel. Tout le reste du package n'est qu'une brick interne qu'ils
+composent.
+
+## Le nommage dans les trois intégrations
+
+Le même composant est exposé de trois façons. Les props sont identiques ; seule
+la syntaxe des événements change :
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    <FkFormRender spec={spec} onFormSubmit={(e) => save(e.detail.data)} />
+    ```
+    Les props sont en camelCase, les événements sont des handlers `onXxx`.
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <FkFormRender :spec="spec" @form-submit="save($event.detail.data)" />
+    ```
+    Vue 3 camélise les noms d'événements dans les templates, donc
+    `@form-submit` et `@formSubmit` se résolvent tous deux vers l'événement
+    émis `formSubmit`.
+  </TabItem>
+  <TabItem label="Web Components">
+    ```js
+    el.spec = spec
+    el.addEventListener('formSubmit', (e) => save(e.detail.data))
+    ```
+    Les événements gardent leur nom camelCase brut sur l'élément DOM.
+  </TabItem>
+</Tabs>
+
+## `<fk-form-render>` <Badge text="stable" variant="success" />
+
+Rend un spec sous forme de formulaire fonctionnel.
+
+### Props
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `spec` | `BrickSpec` | — | **Obligatoire.** Le formulaire à afficher. |
+| `data` | `Record<string, unknown>` | `{}` | Valeurs initiales, indexées par la `key` des bricks. |
+| `editable` | `boolean` | `false` | Rendu en mode builder (contours de sélection, zones de dépôt). Utilisé par le builder lui-même. |
+| `selectedUid` | `string` | — | Quelle brick apparaît sélectionnée en mode editable. |
+| `locale` | `string` | — | Locale utilisée pour résoudre les libellés et messages de validation localisés. |
+
+<Aside type="tip">
+Les clés préfixées d'un underscore — `data={{ _authToken }}` — sont lisibles en
+interne par les règles et l'interpolation d'URL, mais elles sont **retirées de
+tous les payloads émis**. C'est la façon supportée de passer du contexte sans
+qu'il fuite dans vos données soumises.
+</Aside>
+
+### Événements
+
+| Événement | Detail | Se déclenche quand |
+|---|---|---|
+| `formDataChange` | `{ data, isValid, errors }` | Un champ change, et après `validate()` |
+| `formSubmit` | `{ data, isValid, errors }` | Le bouton Soumettre du stepper est pressé, après une passe de validation interne |
+
+```ts
+interface DataChangeDetail {
+  data: Record<string, unknown>
+  isValid: boolean
+  errors: Record<string, string>   // indexé par key de brick, ex. "contacts[0].email"
+}
+```
+
+### Méthodes
+
+```ts
+await element.validate(): Promise<ValidationResult>
+```
+
+`validate()` marque chaque brick porteuse d'une key comme touchée (pour que les
+erreurs deviennent visibles), valide les données à plat, attend la validation
+ligne par ligne de chaque data grid, fusionne les résultats et émet
+`formDataChange`. Il retourne `{ valid, errors }`.
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    import { useRef } from 'react'
+    import { FkFormRender } from '@streamline-pulse/formkrafter-react'
+
+    const ref = useRef<HTMLFkFormRenderElement>(null)
+    const verdict = await ref.current?.validate()
+    ```
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <script setup lang="ts">
+    import { ref } from 'vue'
+    const form = ref()
+    const check = async () => (await form.value.validate()).valid
+    </script>
+
+    <template>
+      <FkFormRender ref="form" :spec="spec" />
+    </template>
+    ```
+  </TabItem>
+  <TabItem label="Web Components">
+    ```js
+    const verdict = await document.querySelector('fk-form-render').validate()
+    ```
+  </TabItem>
+</Tabs>
+
+## `<fk-form-builder>` <Badge text="stable" variant="success" />
+
+L'éditeur en glisser-déposer. Il rend sa propre palette, son canvas et son
+panneau de propriétés.
+
+### Props
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `spec` | `BrickSpec` | — | Spec à charger dans le canvas. Omettez-le pour partir d'un formulaire vide. |
+| `data` | `Record<string, unknown>` | `{}` | Valeurs d'aperçu utilisées pendant l'édition. |
+| `locales` | `string[]` | `[]` | Active le sélecteur de langue d'édition ; les champs du panneau lisent et écrivent alors par locale. |
+
+<Aside type="caution">
+`locales` est un tableau : il doit donc être défini comme **propriété DOM**, pas
+comme attribut. `<fk-form-builder locales='["en","fr"]'>` échoue silencieusement
+— affectez `el.locales = ['en', 'fr']` à la place. Les wrappers React et Vue
+s'en chargent pour vous.
+</Aside>
+
+### Événements
+
+| Événement | Detail | Se déclenche quand |
+|---|---|---|
+| `specChange` | `{ spec, patches, inverse }` | Toute édition : dépôt, réordonnancement, changement de config, undo, redo, import |
+
+```ts
+interface SpecChangeDetail {
+  spec?: BrickSpec
+  patches: Operation[]    // RFC 6902, avant
+  inverse: Operation[]    // RFC 6902, arrière
+}
+```
+
+Sur un undo, un redo et un remplacement complet du spec, `patches` et `inverse`
+sont émis sous forme de tableaux vides — le spec lui-même fait autorité dans ces
+cas-là.
+
+## Brancher les deux ensemble
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    import { useState } from 'react'
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
+    import '@streamline-pulse/formkrafter-wc/styles.css'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    export function Studio() {
+      const [spec, setSpec] = useState<BrickSpec>()
+
+      return (
+        <>
+          <FkFormBuilder onSpecChange={(e) => setSpec(e.detail.spec)} />
+          {spec && (
+            <FkFormRender spec={spec} onFormSubmit={(e) => console.log(e.detail.data)} />
+          )}
+        </>
+      )
+    }
+    ```
+  </TabItem>
+  <TabItem label="Vue">
+    ```vue
+    <script setup lang="ts">
+    import { ref } from 'vue'
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-vue'
+    import '@streamline-pulse/formkrafter-wc/styles.css'
+    import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+
+    const spec = ref<BrickSpec>()
+    </script>
+
+    <template>
+      <FkFormBuilder @spec-change="spec = $event.detail.spec" />
+      <FkFormRender v-if="spec" :spec="spec" @form-submit="onSubmit($event.detail.data)" />
+    </template>
+    ```
+  </TabItem>
+  <TabItem label="Web Components">
+    ```html
+    <fk-form-builder></fk-form-builder>
+    <fk-form-render></fk-form-render>
+
+    <script type="module">
+      import '@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js'
+      import '@streamline-pulse/formkrafter-wc/styles.css'
+
+      const builder = document.querySelector('fk-form-builder')
+      const preview = document.querySelector('fk-form-render')
+
+      builder.addEventListener('specChange', (e) => {
+        preview.spec = e.detail.spec
+      })
+      preview.addEventListener('formSubmit', (e) => console.log(e.detail.data))
+    </script>
+    ```
+  </TabItem>
+</Tabs>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Specs de formulaire"
+    href="../../guides/form-specs/"
+    description="Ce que contiennent réellement le spec et les patches de specChange."
+  />
+  <LinkCard
+    title="Packages"
+    href="../packages/"
+    description="Points d'entrée, exports et relations entre les quatre packages."
+  />
+  <LinkCard
+    title="Services"
+    href="../../guides/services/"
+    description="Points d'injection pour les uploads, les options distantes et les sources de spec."
+  />
+  <LinkCard
+    title="Bricks"
+    href="../../guides/bricks/"
+    description="Enregistrer votre propre brick et faire en sorte que le builder la reprenne."
+  />
+</CardGrid>

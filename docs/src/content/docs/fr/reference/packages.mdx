@@ -1,0 +1,131 @@
+---
+title: Packages
+description: Les quatre packages npm, leurs points d'entrée, ce que chacun exporte, et ceux que vous avez réellement besoin d'installer.
+---
+
+import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Les quatre packages sont publiés sous le scope `@streamline-pulse` avec des
+**versions synchronisées** — une release les incrémente ensemble, vous n'avez
+donc jamais à réfléchir à un mélange de versions.
+
+## Lesquels me faut-il ?
+
+| Je construis… | À installer |
+|---|---|
+| Une application React | `formkrafter-react` |
+| Une application Vue 3 | `formkrafter-vue` |
+| Du HTML pur, ou un autre framework | `formkrafter-wc` |
+| Un backend qui valide les soumissions | `formkrafter-core` |
+
+<Aside type="tip">
+Les packages d'UI dépendent de `formkrafter-core` transitivement — vous ne
+l'installez jamais à côté d'eux juste pour récupérer les types. Ne l'installez
+directement que là où il n'y a pas de DOM.
+</Aside>
+
+## `formkrafter-core`
+
+Du TypeScript headless : pas de DOM, pas de framework. Tourne en navigateur,
+Node, Bun et workers.
+
+| Domaine | Exports |
+|---|---|
+| Ops sur les specs | `addBrick`, `removeBrick`, `moveBrick`, `duplicateBrick`, `updateBrickConfigs`, `updateBrickStyles`, `updateBrickValidations`, `updateBrickRules`, `SpecHistory` |
+| Adressage | `getBrickAt`, `pointerOfUid`, `pointerFromPath`, `iterateBricks`, `iterateSchemaBricks` |
+| Validation | `validateFormData`, `validateBrickSpecData`, `validateBrickSpecDataDetailed`, `buildValidationSchema`, `registerValidationMessages`, `defaultValidationMessage` |
+| Règles | `runSandboxed`, `evalBrickCode`, `getAffectedProperties`, `SandboxJsRunnerService`, `UnsafeEvalJsRunnerService` |
+| Services | `services`, `FetchDataSourceService`, `Base64FileUploadService`, `UrlFileUploadService`, `FetchSpecSourceService`, `FetchOptionSourceService` |
+| Formulaires imbriqués | `expandSpec`, `hasNestedForms` |
+| Form.io | `convertFormioForm` |
+| Aides i18n | `resolveLocalizedText`, `resolveLocalizedRecord`, `isLocalizedObject` |
+| Types | `BrickSpec`, `BrickType`, `Validation`, `Validator`, `Rule`, `Effect`, `ValidationResult`, `SpecUpdate`, `Operation` |
+
+```ts
+import { validateFormData, expandSpec } from '@streamline-pulse/formkrafter-core'
+```
+
+## `formkrafter-wc`
+
+L'UI en Web Components Stencil. Le point d'entrée du package est le **build
+custom elements** — tree-shakeable et ESM uniquement :
+
+<Tabs>
+  <TabItem label="Bundler">
+    ```ts
+    import '@streamline-pulse/formkrafter-wc'            // enregistre les éléments
+    import '@streamline-pulse/formkrafter-wc/styles.css' // opt-in, ~6 Ko
+    ```
+  </TabItem>
+  <TabItem label="Balise script / CDN">
+    ```html
+    <script
+      type="module"
+      src="https://unpkg.com/@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js"
+    ></script>
+    ```
+    Un bundle à chargement paresseux qui enregistre les éléments à la demande.
+  </TabItem>
+</Tabs>
+
+Au-delà des composants, il exporte aussi le registre de bricks et les
+traductions du chrome :
+
+| Domaine | Exports |
+|---|---|
+| Registre | `registerBrick`, `registerBricks`, `getBrick`, `getBrickMolds`, `getBrickMoldsGroupedByCategory`, `newBrickSpec`, `createBrick`, `h` |
+| Bricks intégrées | `registerDefaultBricks`, plus les 30 instances de bricks (`textInputBrick`, `selectBrick`, `dataGridBrick`, …) |
+| i18n | `setFkTranslations`, `frFkTranslations`, `fkT`, `fkTOr` |
+| Types d'événements | `SpecChangeDetail`, `DataChangeDetail`, `BrickConfigsChangeDetail`, … |
+
+## `formkrafter-react` et `formkrafter-vue`
+
+De fins wrappers générés à partir des mêmes Web Components, avec props et
+événements typés. Ils n'exportent que les composants — les types viennent de
+`-core`, les styles de `-wc`.
+
+<Tabs syncKey="framework">
+  <TabItem label="React">
+    ```tsx
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-react'
+    ```
+    Les props sont en camelCase ; les événements sont `onSpecChange`,
+    `onFormDataChange`, `onFormSubmit`.
+  </TabItem>
+  <TabItem label="Vue">
+    ```ts
+    import { FkFormBuilder, FkFormRender } from '@streamline-pulse/formkrafter-vue'
+    ```
+    Vue 3 camélise les noms d'événements, donc `@spec-change` et `@specChange`
+    fonctionnent tous les deux.
+  </TabItem>
+</Tabs>
+
+Voir [composants](../components/) pour la référence complète des props, événements
+et méthodes.
+
+## Versionnage et releases
+
+Les releases sont automatisées avec Changesets : une PR par release, tous les
+packages incrémentés ensemble, publication depuis la CI. Le changelog de chaque
+package liste exactement ce qui est parti dans sa version.
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Référence des composants"
+    href="../components/"
+    description="Props, événements et méthodes du builder et du renderer."
+  />
+  <LinkCard
+    title="Specs de formulaire"
+    href="../../guides/form-specs/"
+    description="Les types et opérations exportés par le core, en contexte."
+  />
+  <LinkCard
+    title="Services"
+    href="../../guides/services/"
+    description="Les cinq points d'injection et leurs implémentations par défaut."
+  />
+</CardGrid>

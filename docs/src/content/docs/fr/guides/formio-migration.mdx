@@ -1,0 +1,157 @@
+---
+title: Venir de Form.io
+description: Convertir des définitions Form.io en specs FormKrafter avec convertFormioForm — ce qui est mappé, ce qu'il faut vérifier à la main, et ce que la migration vous rapporte.
+---
+
+import { Aside, Steps, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+Migrer un portefeuille de formulaires est en général la raison pour laquelle on
+repousse une migration d'un an. `convertFormioForm` existe pour la rendre
+incrémentale : il convertit ce qu'il peut, signale ce qu'il ne peut pas, et ne
+lève jamais d'exception — vous pouvez donc le passer sur une centaine de
+formulaires et obtenir une liste de tâches plutôt qu'une stack trace.
+
+## Convertir une définition
+
+<Steps>
+
+1. Donnez-lui une définition de formulaire Form.io.
+
+   ```ts title="migrate.ts"
+   import { convertFormioForm } from '@streamline-pulse/formkrafter-core'
+
+   const formioJson = JSON.parse(await readFile('./legacy-form.json', 'utf8'))
+   const { spec, warnings } = convertFormioForm(formioJson)
+   ```
+
+2. Passez les avertissements en revue. Les composants inconnus sont ignorés et
+   listés ici plutôt que d'interrompre la conversion.
+
+   ```ts
+   for (const warning of warnings) console.warn(warning)
+   // ex. 'button "submit" skipped — FormKrafter renders its own submit action'
+   ```
+
+3. Stockez le spec obtenu, ou ouvrez-le dans le builder pour une passe manuelle.
+
+</Steps>
+
+<Aside type="tip">
+La [démo d'import Form.io](../../demo/) exécute cette conversion dans le
+navigateur et affiche le spec résultant côte à côte avec sa taille — le moyen le
+plus rapide de l'essayer sur l'un de vos propres formulaires.
+</Aside>
+
+## Ce qui est mappé
+
+| Form.io | FormKrafter |
+|---|---|
+| Composants de champ (textfield, email, number, day, select, radio, selectboxes, checkbox, textarea, phone, url, signature, address, …) | Les bricks de saisie correspondantes, `inputMask` compris |
+| Layout : panels, columns, tables, tabs, fieldsets | Bricks de layout |
+| Wizard (`display: "wizard"`) | `stepper` avec validation par étape |
+| datagrid / editgrid | `data-grid` avec validation par ligne |
+| `validate.*` (required, min/max, longueurs, pattern, JS personnalisé) | Validateurs ; le JS personnalisé est automatiquement enveloppé pour le bac à sable (`data`/`row` deviennent `dataMap`) |
+| `conditional` (show/when/eq) et déclencheurs `logic` JavaScript | [Règles](../rules/) ; un conditional prend le pas sur un drapeau toujours caché |
+| Select `dataSrc: url / json` | Options distantes ou statiques (`valueProperty` → `valueKey`, gabarits d'item → `labelKey`, chemins pointés supportés) |
+| Composants de fichier (`storage: url`, `multiple`) | Brick `file` avec les configs `uploadUrl` / `multiple` |
+| Composants `form` imbriqués | [Bricks nested-form](../nested-forms/) avec `specRef` |
+| Composants Content / HTML | Bricks `content`, conditionals préservés |
+
+Le convertisseur est testé en régression contre de vrais formulaires Form.io de
+production — wizards, uploads de fichiers conditionnels, selects en cascade et
+validateurs personnalisés.
+
+## Ce que vous gagnez en poids
+
+Méthodologie : bundles minifiés et gzippés ; FormKrafter v0.5.0 mesuré avec
+`bun build --minify` depuis le package publié, Form.io `@formio/js` v5.5.0
+mesuré depuis ses bundles CDN officiels (juillet 2026).
+
+| | FormKrafter | Form.io |
+|---|---|---|
+| Builder (renderer inclus) | **~215 Ko** | ~470 Ko (`formio.full.min.js`) |
+| Renderer seul | ~205 Ko | ~415 Ko (`formio.form.min.js`) |
+| CSS nécessaire | 6 Ko, optionnel | 129 Ko + Bootstrap |
+
+## Gardez vos specs légers
+
+Vos définitions stockées maigrissent aussi. Les exports Form.io réels traînent
+un lourd boilerplate — chaque composant sérialisé avec toutes ses valeurs par
+défaut — là où le convertisseur ne garde que ce qui porte du sens et compacte
+les listes d'options statiques en une chaîne à sauts de ligne dès que les
+libellés valent les valeurs. Mesuré sur un portefeuille de six formulaires de
+production :
+
+| | JSON brut | Gzippé |
+|---|---|---|
+| Définitions Form.io | 277 Ko | 40 Ko |
+| Specs FormKrafter convertis | **68 Ko** (3 à 5× plus petits par formulaire) | **18 Ko** |
+
+<Aside type="caution">
+L'exception à connaître : une définition Form.io minimale, écrite à la main,
+peut ressortir légèrement **plus grosse** une fois convertie, parce que le spec
+est plus explicite — des `uid` stables pour les patches, des configs typées.
+Personne ne stocke de définitions minifiées à la main, mais la démo d'import
+affiche les deux tailles pour que vous jugiez sur vos propres formulaires.
+</Aside>
+
+Pour les plus grosses listes — professions, nationalités — ne les embarquez pas
+du tout. Le convertisseur alerte au-delà de 100 options statiques et
+recommande :
+
+<Tabs>
+  <TabItem label="Distant">
+    ```json
+    { "optionsSource": "remote", "optionsUrl": "/api/professions?q={search}" }
+    ```
+    Le select interroge votre API, avec la recherche au fil de la frappe.
+  </TabItem>
+  <TabItem label="Catalogue partagé">
+    ```json
+    { "optionsSource": "catalog", "optionsRef": "professions" }
+    ```
+    Résolu via [`optionSourceService`](../services/) : la liste est stockée une
+    seule fois et référencée par tous les formulaires qui en ont besoin.
+  </TabItem>
+</Tabs>
+
+## Le bac à sable plutôt qu'eval
+
+Form.io exécute les validateurs personnalisés et la logique avec du vrai
+JavaScript. FormKrafter fait tourner le code converti dans un interpréteur d'AST
+compatible CSP — voir [règles dynamiques](../rules/#le-bac-à-sable). Les
+extraits convertis continuent de fonctionner parce que le convertisseur injecte
+des alias de compatibilité (`const data = dataMap; const row = dataMap;`), et ils
+gagnent gratuitement l'isolation du bac à sable.
+
+<Aside>
+Si un validateur converti s'appuie sur quelque chose que le bac à sable
+n'expose pas — accès réseau, `window` — la conversion réussit quand même, mais
+la règle ne s'exécutera pas. Cela vaut la peine de les rechercher au grep après
+une migration en masse.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Specs de formulaire"
+    href="../form-specs/"
+    description="Comprendre la forme dans laquelle vos définitions Form.io sont converties."
+  />
+  <LinkCard
+    title="Règles dynamiques"
+    href="../rules/"
+    description="Où atterrissent les conditionals et les déclencheurs logic convertis."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="Brancher l'endpoint d'upload et les catalogues d'options que vise le convertisseur."
+  />
+  <LinkCard
+    title="Démo live"
+    href="../../demo/"
+    description="Exécuter le convertisseur sur l'un de vos formulaires dans le navigateur."
+  />
+</CardGrid>
