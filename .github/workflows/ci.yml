@@ -52,8 +52,13 @@ jobs:
       - name: Build packages
         run: bun run build
 
+      # Must run through the e2e workspace, not `bunx playwright`: the binary
+      # is not linked at the repo root, so bunx would fetch playwright@latest
+      # from npm and download browsers for a different version than the one
+      # running the tests — the browser revisions then disagree and every test
+      # fails with "Looks like Playwright was just installed or updated".
       - name: Install Playwright browsers
-        run: bunx playwright install --with-deps chromium
+        run: bun run --cwd e2e install:browsers
 
       - name: End-to-end tests
         run: bun run e2e

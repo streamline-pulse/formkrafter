@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "playwright test",
+    "install:browsers": "playwright install --with-deps chromium",
     "test:ui": "playwright test --ui"
   },
   "devDependencies": {
