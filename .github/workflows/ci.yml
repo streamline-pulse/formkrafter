@@ -28,6 +28,12 @@ jobs:
       - name: Test
         run: bun run test
 
+      # Bundlers tolerate extensionless relative specifiers; Node's ESM loader
+      # does not. Without this, a package can pass every other check and still
+      # break on import from a real Node process (SSR, externalised deps).
+      - name: ESM resolution smoke test
+        run: bun run smoke:esm
+
       - name: Lint
         run: bun run lint
 
