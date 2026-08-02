@@ -14,7 +14,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '') + '/'
       name="description"
       content="Form builder drag & drop agnostique du framework — Web Components, React, Vue. Formulaires en specs JSON portables : règles sandboxées, validation serveur, formulaires imbriqués, i18n, migration Form.io."
     />
-    <link rel="canonical" href={`https://streamline-pulse.github.io${base}fr/`} />
+    <link rel="canonical" href={new URL(`${base}fr/`, Astro.site).href} />
     <script is:inline>
       ;(() => {
         const stored = typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme')

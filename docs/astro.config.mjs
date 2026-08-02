@@ -3,8 +3,8 @@ import starlight from '@astrojs/starlight'
 import starlightLinksValidator from 'starlight-links-validator'
 
 export default defineConfig({
-  site: 'https://streamline-pulse.github.io',
-  base: '/formkrafter',
+  site: 'https://formkrafter.com',
+  base: '/',
   integrations: [
     starlight({
       title: 'FormKrafter',
