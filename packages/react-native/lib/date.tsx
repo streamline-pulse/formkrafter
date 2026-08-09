@@ -7,7 +7,7 @@
  * Stored formats match the web bricks: 'YYYY-MM-DD', 'HH:mm' and
  * 'YYYY-MM-DDTHH:mm'.
  */
-import { useState } from 'react'
+import { createElement, useState } from 'react'
 import { Platform, Pressable, Text, View } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker'
@@ -31,6 +31,41 @@ const parse = (mode: Mode, raw: unknown): Date => {
   const value = mode === 'time' ? `${fmtDate(new Date())}T${raw}` : raw
   const parsed = new Date(value)
   return Number.isNaN(parsed.getTime()) ? new Date() : parsed
+}
+
+/**
+ * Under react-native-web the community picker renders nothing useful; the
+ * browser has native date inputs, so use them — same controls and same
+ * stored formats as the web-components build.
+ */
+function WebDateControl(props: NativeBrickProps & { mode: Mode }) {
+  const theme = useFkTheme()
+  const value = typeof props.data === 'string' ? props.data : ''
+
+  return (
+    <Field label={props.configs.label} error={props.error}>
+      {createElement('input', {
+        type: props.mode === 'datetime' ? 'datetime-local' : props.mode,
+        value,
+        disabled: props.disabled,
+        'aria-label': props.configs.label ? String(props.configs.label) : undefined,
+        onChange: (event: { target: { value: string } }) =>
+          props.onDataChange(event.target.value || undefined),
+        style: {
+          boxSizing: 'border-box',
+          width: '100%',
+          border: `1px solid ${props.error ? theme.colorDanger : theme.colorBorder}`,
+          borderRadius: theme.radius,
+          background: theme.colorSurface,
+          color: theme.colorText,
+          padding: `${theme.spacing * 1.25}px ${theme.spacing * 1.5}px`,
+          font: 'inherit',
+          fontSize: 15,
+          opacity: props.disabled ? 0.6 : 1,
+        },
+      })}
+    </Field>
+  )
 }
 
 function DateControl(props: NativeBrickProps & { mode: Mode }) {
@@ -124,7 +159,12 @@ const brick = (id: string, mode: Mode): NativeBrick =>
   createNativeBrick({
     type: 'input',
     id,
-    render: (props) => <DateControl {...props} mode={mode} />,
+    render: (props) =>
+      Platform.OS === 'web' ? (
+        <WebDateControl {...props} mode={mode} />
+      ) : (
+        <DateControl {...props} mode={mode} />
+      ),
   })
 
 export const dateBricks: NativeBrick[] = [

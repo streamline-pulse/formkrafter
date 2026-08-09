@@ -18,11 +18,18 @@ import { Field } from './bricks/field.js'
 
 const HEIGHT = 160
 
-const toDataUrl = (paths: string[], width: number, stroke: string): string => {
+const toDataUrl = (
+  paths: string[],
+  width: number,
+  stroke: string,
+  background: string,
+): string => {
   const body = paths
     .map((d) => `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`)
     .join('')
-  const xml = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${HEIGHT}" viewBox="0 0 ${width} ${HEIGHT}">${body}</svg>`
+  // The background is baked into the SVG so a dark-theme signature stays
+  // readable wherever the stored image is displayed later.
+  const xml = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${HEIGHT}" viewBox="0 0 ${width} ${HEIGHT}"><rect width="100%" height="100%" fill="${background}"/>${body}</svg>`
   const encode = (globalThis as { btoa?: (raw: string) => string }).btoa
   if (!encode) throw new Error('No base64 encoder available')
   return `data:image/svg+xml;base64,${encode(xml)}`
@@ -43,12 +50,23 @@ const fromDataUrl = (value: unknown): string | undefined => {
 
 function SignatureControl(props: NativeBrickProps) {
   const theme = useFkTheme()
+  const ink = theme.colorText
   const [paths, setPaths] = useState<string[]>([])
   const [current, setCurrent] = useState<string>()
   const [width, setWidth] = useState(0)
-  const live = useRef({ paths: [] as string[], current: '', width: 0 })
+  const live = useRef({
+    paths: [] as string[],
+    current: '',
+    width: 0,
+    ink: '',
+    surface: '',
+  })
   live.current.paths = paths
   live.current.width = width
+  // The responder is created once; the theme can change after — read the
+  // colors through the ref so a switched theme serializes correctly.
+  live.current.ink = ink
+  live.current.surface = theme.colorSurface
 
   const pan = useRef(
     PanResponder.create({
@@ -68,7 +86,9 @@ function SignatureControl(props: NativeBrickProps) {
         const next = [...live.current.paths, live.current.current]
         setPaths(next)
         setCurrent(undefined)
-        props.onDataChange(toDataUrl(next, live.current.width || 300, '#1c2b33'))
+        props.onDataChange(
+          toDataUrl(next, live.current.width || 300, live.current.ink, live.current.surface),
+        )
       },
     }),
   ).current
@@ -93,7 +113,7 @@ function SignatureControl(props: NativeBrickProps) {
           borderWidth: 1,
           borderColor: props.error ? theme.colorDanger : theme.colorBorder,
           borderRadius: theme.radius,
-          backgroundColor: '#ffffff',
+          backgroundColor: theme.colorSurface,
           overflow: 'hidden',
         }}
       >
@@ -106,7 +126,7 @@ function SignatureControl(props: NativeBrickProps) {
                 key={index}
                 d={d}
                 fill="none"
-                stroke="#1c2b33"
+                stroke={ink}
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
