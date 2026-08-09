@@ -1,5 +1,21 @@
 # @streamline-pulse/formkrafter-react-native
 
+## 0.8.0
+
+### Minor Changes
+
+- 5cdd4b6: The native renderer now covers real production forms: a stepper wizard
+  with per-step validation, step navigation gating and submit (ported from
+  fk-stepper), radio and multi-select bricks, and date/time/datetime bricks
+  on a dedicated `formkrafter-react-native/date` entry point backed by
+  `@react-native-community/datetimepicker` as an optional peer — apps opt
+  in with `registerNativeDateBricks()`, everyone else never resolves the
+  native module.
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-core@0.8.0
+
 ## 0.7.1
 
 ### Patch Changes

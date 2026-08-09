@@ -1,5 +1,12 @@
 # formkrafter-docs
 
+## 0.0.7
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-core@0.8.0
+- @streamline-pulse/formkrafter-wc@0.8.0
+
 ## 0.0.6
 
 ### Patch Changes
