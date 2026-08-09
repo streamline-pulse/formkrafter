@@ -106,15 +106,15 @@ describe('select interactions', () => {
 
   test('the multi select toggles values and stays open', () => {
     const seen: unknown[][] = []
-    let renderer!: Renderer
     // Controlled like the real renderer: re-render with the emitted value.
+    // onChange only fires after the renderer exists.
     const onChange = (v: unknown) => {
       seen.push(v as unknown[])
       act(() => renderer.update(
         multiSelectBrick.render(selectProps(onChange, v)) as React.ReactElement,
       ))
     }
-    renderer = render(multiSelectBrick, selectProps(onChange, []))
+    const renderer = render(multiSelectBrick, selectProps(onChange, []))
 
     act(() => pressables(renderer.root)[0].props.onPress())
     act(() => rows(renderer.root)[0].props.onPress())
