@@ -1,5 +1,11 @@
 # @streamline-pulse/formkrafter-vue
 
+## 0.10.0
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-wc@0.10.0
+
 ## 0.9.0
 
 ### Patch Changes
