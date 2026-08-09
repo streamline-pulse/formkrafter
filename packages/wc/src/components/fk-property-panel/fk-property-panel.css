@@ -51,6 +51,8 @@
   border-radius: 0;
   background: transparent;
   color: var(--fk-color-muted);
+  text-transform: none;
+  letter-spacing: normal;
   cursor: pointer;
 }
 
@@ -76,6 +78,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  font-style: normal;
+  text-decoration: none;
 }
 
 .fk-props__field--inline {
@@ -88,6 +92,8 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--fk-color-muted);
+  font-style: normal;
+  text-decoration: none;
 }
 
 .fk-props__input {

@@ -37,6 +37,8 @@
   flex-direction: column;
   gap: calc(var(--fk-spacing) / 2);
   font-family: var(--fk-font);
+  font-style: normal;
+  text-decoration: none;
 }
 
 .fk-field--inline {
@@ -49,6 +51,8 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--fk-color-text);
+  font-style: normal;
+  text-decoration: none;
 }
 
 .fk-field__input {

@@ -25,6 +25,8 @@
   border-radius: 0;
   background: transparent;
   color: var(--fk-color-muted);
+  text-transform: none;
+  letter-spacing: normal;
   cursor: pointer;
 }
 

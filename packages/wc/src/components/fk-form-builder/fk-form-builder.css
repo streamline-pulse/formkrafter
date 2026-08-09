@@ -74,6 +74,8 @@
   background: var(--fk-color-surface);
   color: var(--fk-color-text);
   font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: normal;
   cursor: pointer;
 }
 
