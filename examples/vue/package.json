@@ -1,0 +1,23 @@
+{
+  "name": "formkrafter-example-vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@streamline-pulse/formkrafter-core": "workspace:*",
+    "@streamline-pulse/formkrafter-vue": "workspace:*",
+    "@streamline-pulse/formkrafter-wc": "workspace:*",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "typescript": "catalog:",
+    "vite": "^8.0.0",
+    "vue-tsc": "^3.1.1"
+  }
+}

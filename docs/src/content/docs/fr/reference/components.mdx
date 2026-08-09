@@ -101,7 +101,9 @@ ligne par ligne de chaque data grid, fusionne les résultats et émet
     <script setup lang="ts">
     import { ref } from 'vue'
     const form = ref()
-    const check = async () => (await form.value.validate()).valid
+    // Un ref de template renvoie l'instance Vue, pas le custom element —
+    // les méthodes du composant vivent sur $el.
+    const check = async () => (await form.value.$el.validate()).valid
     </script>
 
     <template>

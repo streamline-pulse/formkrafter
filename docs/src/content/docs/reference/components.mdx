@@ -98,7 +98,9 @@ the results and emits `formDataChange`. It returns `{ valid, errors }`.
     <script setup lang="ts">
     import { ref } from 'vue'
     const form = ref()
-    const check = async () => (await form.value.validate()).valid
+    // A template ref yields the Vue instance, not the custom element —
+    // the component's methods live on $el.
+    const check = async () => (await form.value.$el.validate()).valid
     </script>
 
     <template>

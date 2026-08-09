@@ -33,7 +33,7 @@
     "test": "bun run --filter '@streamline-pulse/*' test",
     "smoke:esm": "node scripts/smoke-esm.mjs",
     "lint": "eslint .",
-    "e2e": "bun run --cwd examples/tanstack-start build && bun run --cwd e2e test",
+    "e2e": "bun run --cwd examples/tanstack-start build && bun run --cwd examples/vue build && bun run --cwd e2e test",
     "e2e:only": "bun run --cwd e2e test",
     "docs:dev": "bun run --cwd docs dev",
     "docs:build": "bun run --cwd docs build",
