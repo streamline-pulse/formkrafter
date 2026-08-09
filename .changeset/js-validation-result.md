@@ -19,3 +19,6 @@ const { valid, error } = services.jsRunnerService.validateJs(code)
 If you read `validation.valide`, rename it to `validation.valid`. If you
 implement `JsRunnerService` yourself, return `valid` from `validateJs`. Nothing
 else changes — the semantics and the `error` field are untouched.
+
+**Also removed:** the `JsRunnerServiceImplementation` export, an unused alias of
+`SandboxJsRunnerService`. Import `SandboxJsRunnerService` directly.

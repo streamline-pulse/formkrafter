@@ -52,8 +52,7 @@ export { services } from "./services";
 export {
     JsRunnerService,
     JsValidationResult,
-    SandboxJsRunnerService,
-    JsRunnerServiceImplementation
+    SandboxJsRunnerService
 } from "./services/js_runner_service";
 export { UnsafeEvalJsRunnerService } from "./services/unsafe_js_runner_service";
 export { runSandboxed } from "./services/sandbox_interpreter";

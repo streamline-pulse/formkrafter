@@ -31,5 +31,3 @@ export class SandboxJsRunnerService implements JsRunnerService {
     return runSandboxed(js, scope);
   }
 }
-
-export const JsRunnerServiceImplementation = SandboxJsRunnerService;
