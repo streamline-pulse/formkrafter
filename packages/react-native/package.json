@@ -25,6 +25,18 @@
     "dist",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamline-pulse/formkrafter.git",
+    "directory": "packages/react-native"
+  },
+  "homepage": "https://github.com/streamline-pulse/formkrafter/tree/main/packages/react-native#readme",
+  "bugs": {
+    "url": "https://github.com/streamline-pulse/formkrafter/issues"
+  },
   "scripts": {
     "build": "tsc -p .",
     "test": "bun test __tests__",
