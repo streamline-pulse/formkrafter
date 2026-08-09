@@ -30,6 +30,7 @@ const TARGETS = [
   { name: 'formkrafter-react', entry: 'packages/react/dist/index.js', budgetKb: 325, external: ['react'] },
   { name: 'formkrafter-vue', entry: 'packages/vue/dist/index.js', budgetKb: 325, external: ['vue'] },
   { name: 'formkrafter-wc styles.css', file: 'packages/wc/dist/formkrafter-wc/formkrafter-wc.css', budgetKb: 10 },
+  { name: 'formkrafter-react-native', entry: 'packages/react-native/dist/index.js', budgetKb: 105, external: ['react', 'react-native'] },
 ]
 
 const out = mkdtempSync(join(tmpdir(), 'fk-size-'))
