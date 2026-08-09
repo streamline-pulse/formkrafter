@@ -1,5 +1,21 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.6.2
+
+### Patch Changes
+
+- 21d3d6b: Accessibility fixes surfaced by an axe audit: the builder's locale select
+  now carries an accessible name (new `builder.editLocale` translation), the
+  custom select combobox exposes the brick label through a new
+  `accessibleLabel` prop on `fk-select-input`, and the default light-theme
+  primary darkens from #328f97 to #2b7a81 so white-on-primary text meets the
+  WCAG AA 4.5:1 contrast ratio.
+- ca17618: Extend the host-styling hardening from border-radius to typography: toolbar
+  buttons and tabs now pin `text-transform` and `letter-spacing`, and field
+  wrappers pin `font-style` and `text-decoration`, so global `button`/`label`
+  rules in the host application no longer distort the chrome.
+  - @streamline-pulse/formkrafter-core@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes

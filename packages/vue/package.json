@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-vue",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Vue bindings for FormKrafter web components",
   "license": "MIT",
   "type": "module",
