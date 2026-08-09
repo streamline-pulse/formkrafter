@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
-import type { FormEngine } from './engine/form-engine'
+import type { FormEngine } from './engine/form-engine.js'
 
 export interface NativeBrickProps {
   spec: BrickSpec

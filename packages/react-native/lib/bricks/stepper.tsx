@@ -1,10 +1,10 @@
 import { Children, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { fkT, resolveLocalizedText } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
-import { stepKeys, stepValid } from './stepper-logic'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
+import { stepKeys, stepValid } from './stepper-logic.js'
 
 function StepperControl(props: NativeBrickProps) {
   const theme = useFkTheme()

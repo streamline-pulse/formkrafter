@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native'
 import type { ReactNode } from 'react'
-import { useFkTheme } from '../theme'
+import { useFkTheme } from '../theme.js'
 
 /** The native counterpart of the web build's .fk-field wrapper. */
 export function Field(props: {

@@ -12,10 +12,10 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
 import { fkT, services } from '@streamline-pulse/formkrafter-core'
 import type { FileLike, UploadedFile } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick, registerNativeBrick } from './registry'
-import type { NativeBrick, NativeBrickProps } from './registry'
-import { useFkTheme } from './theme'
-import { Field } from './bricks/field'
+import { createNativeBrick, registerNativeBrick } from './registry.js'
+import type { NativeBrick, NativeBrickProps } from './registry.js'
+import { useFkTheme } from './theme.js'
+import { Field } from './bricks/field.js'
 
 const asFileLike = (asset: DocumentPicker.DocumentPickerAsset): FileLike => ({
   name: asset.name,

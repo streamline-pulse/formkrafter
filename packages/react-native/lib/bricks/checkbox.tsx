@@ -1,8 +1,8 @@
 import { Switch, Text, View } from 'react-native'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick } from '../registry'
-import { useFkTheme } from '../theme'
-import { Field } from './field'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick } from '../registry.js'
+import { useFkTheme } from '../theme.js'
+import { Field } from './field.js'
 
 function CheckboxControl(props: {
   label?: unknown

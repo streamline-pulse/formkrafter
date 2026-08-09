@@ -1,9 +1,9 @@
 import { Text, TextInput, View } from 'react-native'
 import { fkT } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
-import { Field } from './field'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
+import { Field } from './field.js'
 
 const ADDRESS_PARTS = [
   { key: 'street', label: () => fkT('address.street'), full: true },

@@ -7,9 +7,9 @@ import {
   wrapBrickData,
 } from '@streamline-pulse/formkrafter-core'
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
-import { getNativeBrick } from '../registry'
-import type { FormEngine } from '../engine/form-engine'
-import { useFkTheme } from '../theme'
+import { getNativeBrick } from '../registry.js'
+import type { FormEngine } from '../engine/form-engine.js'
+import { useFkTheme } from '../theme.js'
 
 interface BrickRendererProps {
   spec: BrickSpec

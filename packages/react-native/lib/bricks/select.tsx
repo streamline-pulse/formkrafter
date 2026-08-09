@@ -17,10 +17,10 @@ import {
   services,
 } from '@streamline-pulse/formkrafter-core'
 import type { SelectOption } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
-import { Field } from './field'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
+import { Field } from './field.js'
 
 type Props = NativeBrickProps & { multiple?: boolean }
 

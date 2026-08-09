@@ -1,9 +1,9 @@
 import { TextInput } from 'react-native'
 import type { KeyboardTypeOptions } from 'react-native'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
-import { Field } from './field'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
+import { Field } from './field.js'
 
 function TextControl(props: NativeBrickProps & {
   keyboardType?: KeyboardTypeOptions

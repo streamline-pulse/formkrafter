@@ -1,6 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
-import { FormEngine } from './form-engine'
-import type { FormEngineOptions, FormEngineSnapshot } from './form-engine'
+import { FormEngine } from './form-engine.js'
+import type { FormEngineOptions, FormEngineSnapshot } from './form-engine.js'
 
 export interface UseFormEngineResult extends FormEngineSnapshot {
   engine: FormEngine

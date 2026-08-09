@@ -427,3 +427,42 @@ export const customSpec = cast({
     },
   ],
 })
+
+/** ~100 bricks generated on the fly — the profiling target. */
+export const stressSpec = cast({
+  type: 'panel',
+  id: 'column',
+  name: 'Form',
+  configs: { uid: 'root', key: 'form' },
+  children: Array.from({ length: 12 }, (_, section) => ({
+    type: 'panel',
+    id: 'group',
+    name: 'Group',
+    configs: {
+      uid: `s${section}`,
+      key: `section${section}`,
+      label: `Section ${section + 1}`,
+    },
+    children: Array.from({ length: 8 }, (_, field) => {
+      const uid = `s${section}-f${field}`
+      const key = `field_${section}_${field}`
+      const kinds = ['text', 'email', 'number', 'select', 'checkbox', 'radio', 'textarea', 'text']
+      const id = kinds[field]
+      return {
+        type: 'input',
+        dataType: id === 'number' ? 'number' : id === 'checkbox' ? 'boolean' : 'string',
+        id,
+        name: id,
+        configs: {
+          uid,
+          key,
+          label: `Field ${section + 1}.${field + 1}`,
+          ...(id === 'select' || id === 'radio'
+            ? { options: 'Alpha\nBravo\nCharlie' }
+            : {}),
+        },
+        ...(field === 0 ? { validations: [{ validator: 'required' }] } : {}),
+      }
+    }),
+  })),
+})

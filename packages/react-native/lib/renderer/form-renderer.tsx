@@ -5,11 +5,11 @@ import type {
   BrickSpec,
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core'
-import { useFormEngine } from '../engine/use-form-engine'
-import type { FormEngineCallbacks } from '../engine/form-engine'
-import { registerDefaultNativeBricks } from '../bricks/defaults'
-import { BrickRenderer } from './brick-renderer'
-import { useFkTheme } from '../theme'
+import { useFormEngine } from '../engine/use-form-engine.js'
+import type { FormEngineCallbacks } from '../engine/form-engine.js'
+import { registerDefaultNativeBricks } from '../bricks/defaults.js'
+import { BrickRenderer } from './brick-renderer.js'
+import { useFkTheme } from '../theme.js'
 
 export interface FormRendererProps extends FormEngineCallbacks {
   spec: BrickSpec

@@ -21,6 +21,16 @@ const DIRS = {
   'formkrafter-wc': 'packages/wc',
   'formkrafter-react': 'packages/react',
   'formkrafter-vue': 'packages/vue',
+  'formkrafter-react-native': 'packages/react-native',
+}
+
+// The react-native package imports native-only modules Node cannot load;
+// module hooks stub them so the exports map and file layout still get
+// exercised. Subpath entries ride along.
+const NATIVE = {
+  name: 'formkrafter-react-native',
+  register: resolve(import.meta.dirname, 'native-stubs/register.mjs'),
+  subpaths: ['/date', '/file', '/signature'],
 }
 
 const sandbox = mkdtempSync(join(tmpdir(), 'fk-pack-'))
@@ -66,7 +76,11 @@ try {
     ),
   )
 
-  execFileSync('npm', ['install', '--no-audit', '--no-fund'], {
+  // --legacy-peer-deps: react-native is a required peer of the native
+  // package, and auto-installing it would drag ~30 MB into the sandbox for
+  // code the stubs replace anyway. The peers the web wrappers execute
+  // (react, vue) are direct dependencies above.
+  execFileSync('npm', ['install', '--no-audit', '--no-fund', '--legacy-peer-deps'], {
     cwd: sandbox,
     stdio: ['ignore', 'ignore', 'inherit'],
   })
@@ -75,10 +89,13 @@ try {
 
   for (const name of Object.keys(DIRS)) {
     const specifier = `@streamline-pulse/${name}`
+    const nativeArgs =
+      name === NATIVE.name ? ['--import', NATIVE.register] : []
     try {
       const out = execFileSync(
         process.execPath,
         [
+          ...nativeArgs,
           '--input-type=module',
           '-e',
           `const m = await import(${JSON.stringify(specifier)})
@@ -91,6 +108,21 @@ try {
         { cwd: sandbox, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
       )
       console.log(`  ok    ${specifier} — ${out.trim()} exports from the tarball`)
+
+      for (const subpath of name === NATIVE.name ? NATIVE.subpaths : []) {
+        execFileSync(
+          process.execPath,
+          [
+            ...nativeArgs,
+            '--input-type=module',
+            '-e',
+            `const m = await import(${JSON.stringify(specifier + subpath)})
+             if (Object.keys(m).length === 0) process.exit(1)`,
+          ],
+          { cwd: sandbox, stdio: ['ignore', 'ignore', 'pipe'] },
+        )
+        console.log(`  ok    ${specifier}${subpath}`)
+      }
     } catch (error) {
       failed++
       const stderr = String(error.stderr ?? error.message)

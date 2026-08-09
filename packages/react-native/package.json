@@ -21,6 +21,11 @@
       "types": "./dist/types/file.d.ts",
       "react-native": "./dist/file.js",
       "import": "./dist/file.js"
+    },
+    "./signature": {
+      "types": "./dist/types/signature.d.ts",
+      "react-native": "./dist/signature.js",
+      "import": "./dist/signature.js"
     }
   },
   "keywords": [
@@ -59,7 +64,8 @@
     "@react-native-community/datetimepicker": ">=8.0.0",
     "expo-document-picker": ">=13.0.0",
     "react": "^18.0.0 || ^19.0.0",
-    "react-native": ">=0.76.0"
+    "react-native": ">=0.76.0",
+    "react-native-svg": ">=15.0.0"
   },
   "peerDependenciesMeta": {
     "@react-native-community/datetimepicker": {
@@ -67,14 +73,18 @@
     },
     "expo-document-picker": {
       "optional": true
+    },
+    "react-native-svg": {
+      "optional": true
     }
   },
   "devDependencies": {
     "@react-native-community/datetimepicker": "^8.6.0",
-    "expo-document-picker": "^14.0.0",
     "@types/react": "catalog:",
+    "expo-document-picker": "^14.0.0",
     "react": "catalog:",
     "react-native": "^0.86.0",
+    "react-native-svg": "^15.12.0",
     "typescript": "catalog:"
   }
 }

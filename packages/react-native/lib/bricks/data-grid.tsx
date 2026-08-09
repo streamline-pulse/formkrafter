@@ -8,10 +8,10 @@ import {
   wrapBrickData,
 } from '@streamline-pulse/formkrafter-core'
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick, getNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
-import { Field } from './field'
+import { createNativeBrick, getNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
+import { Field } from './field.js'
 
 type Row = Record<string, unknown>
 

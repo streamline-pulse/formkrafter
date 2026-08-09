@@ -1,8 +1,8 @@
 import { Text, View } from 'react-native'
 import { collectRecapItems } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
 
 function ContentControl(props: NativeBrickProps) {
   const theme = useFkTheme()

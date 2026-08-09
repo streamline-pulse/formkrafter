@@ -21,7 +21,7 @@ import { registerNativeDateBricks } from '@streamline-pulse/formkrafter-react-na
 import { registerNativeFileBrick } from '@streamline-pulse/formkrafter-react-native/file'
 import { FormScreen } from './screens/FormScreen'
 import { registerRatingBrick } from './rating-brick'
-import { customSpec, dataSpec, recapSpec, simpleSpec, wizardSpec } from './spec'
+import { customSpec, dataSpec, recapSpec, simpleSpec, stressSpec, wizardSpec } from './spec'
 
 registerNativeDateBricks()
 registerNativeFileBrick()
@@ -61,6 +61,14 @@ const SCREENS = [
     subtitle: 'Fill the order, then review the live summary before submitting.',
     spec: recapSpec,
     showValidateButton: false,
+  },
+  {
+    key: 'stress',
+    tab: 'Stress',
+    title: 'Stress',
+    subtitle: '97 bricks in one page — attach the profiler and type.',
+    spec: stressSpec,
+    showValidateButton: true,
   },
   {
     key: 'custom',

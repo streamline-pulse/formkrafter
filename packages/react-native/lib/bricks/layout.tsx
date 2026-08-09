@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native'
-import { createNativeBrick } from '../registry'
-import type { NativeBrick, NativeBrickProps } from '../registry'
-import { useFkTheme } from '../theme'
+import { createNativeBrick } from '../registry.js'
+import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { useFkTheme } from '../theme.js'
 
 function Column(props: NativeBrickProps) {
   const theme = useFkTheme()
