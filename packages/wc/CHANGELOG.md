@@ -1,5 +1,15 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.7.1
+
+### Patch Changes
+
+- 875af29: Default bricks no longer clobber application overrides. Registering your
+  own version of a built-in brick — a UI-kit skin, for example — before the
+  first component mounts now survives the default registration, regardless
+  of order.
+  - @streamline-pulse/formkrafter-core@0.7.1
+
 ## 0.7.0
 
 ### Patch Changes
