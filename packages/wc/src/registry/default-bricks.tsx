@@ -1,7 +1,7 @@
 import { h } from '@stencil/core';
 import type { VNode } from '@stencil/core';
 import { createBrick } from './create-brick';
-import { registerBricks } from './registry';
+import { getBrick, registerBricks } from './registry';
 import { asInlineStyle } from '../utils/style';
 import { normalizeOptions } from '../utils/options';
 import { applyMask } from '../utils/mask';
@@ -1021,7 +1021,15 @@ export function registerDefaultBricks(): void {
   if (globalFlags[DEFAULTS_KEY]) return;
   globalFlags[DEFAULTS_KEY] = true;
 
-  registerBricks([
+  // A default must never clobber anything: an application that registered
+  // its own version of a built-in brick before the first component mounted
+  // keeps it, regardless of registration order.
+  registerBricks(
+    defaults.filter((brick) => !getBrick(brick.type, brick.id))
+  );
+}
+
+const defaults = [
     textInputBrick,
     emailBrick,
     passwordBrick,
@@ -1052,5 +1060,4 @@ export function registerDefaultBricks(): void {
     columnBrick,
     stepperBrick,
     tabsBrick,
-  ]);
-}
+];

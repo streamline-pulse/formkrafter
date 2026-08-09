@@ -70,6 +70,19 @@ beforeAll(async () => {
     })
   );
 
+  // And an application override of a BUILT-IN brick — a UI-kit skin, say.
+  // The defaults must leave it alone.
+  registerBrick(
+    createBrick({
+      type: 'input',
+      dataType: 'string',
+      id: 'signature',
+      name: 'Custom signature',
+      category: 'Inputs',
+      render: () => h('div', { class: { 'fk-field': true } }, 'custom-signature'),
+    })
+  );
+
   const formRender = await import('../dist/components/fk-form-render.js');
   formRender.defineCustomElement();
 
@@ -93,5 +106,10 @@ describe('default brick registration', () => {
   test('the form renders instead of reporting a missing brick', () => {
     expect(renderEl.textContent).not.toContain('not found');
     expect(renderEl.querySelector('input')).toBeTruthy();
+  });
+
+  test('an override of a built-in brick survives the defaults', async () => {
+    const { getBrick } = await import('../dist/components/index.js');
+    expect(getBrick('input', 'signature')?.name).toBe('Custom signature');
   });
 });
