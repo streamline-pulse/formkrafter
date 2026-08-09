@@ -1,5 +1,20 @@
 # @streamline-pulse/formkrafter-react-native
 
+## 0.13.0
+
+### Minor Changes
+
+- fb9adc8: The signature brick arrives on a `formkrafter-react-native/signature`
+  entry point (react-native-svg as an optional peer), storing a data URL
+  like the web brick — image/svg+xml here. Every relative import in the
+  package now carries its .js extension: the packed-tarball smoke test
+  caught the entry points failing strict ESM resolution, the exact bug
+  class the web wrappers hit before their fix.
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-core@0.13.0
+
 ## 0.12.0
 
 ### Minor Changes
