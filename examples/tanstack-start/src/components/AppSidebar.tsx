@@ -61,7 +61,7 @@ export default function AppSidebar() {
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div className="border-b border-sidebar-border px-4 py-4">
-        <Link to="/" className="text-lg font-bold no-underline">
+        <Link to="/" className="text-lg font-bold no-underline text-sidebar-foreground">
           {m.app_title()}
         </Link>
       </div>
@@ -69,7 +69,7 @@ export default function AppSidebar() {
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
         {groups.map((group) => (
           <div key={group.label()}>
-            <p className="px-2 pb-1 text-[0.65rem] font-bold tracking-widest text-sidebar-foreground/50 uppercase">
+            <p className="px-2 pb-1 text-[0.65rem] font-bold tracking-widest text-sidebar-foreground/75 uppercase">
               {group.label()}
             </p>
             <div className="space-y-0.5">
