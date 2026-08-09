@@ -33,6 +33,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ['examples/html/serve.mjs'],
+    languageOptions: {
+      globals: { Bun: 'readonly' },
+    },
+  },
+  {
     files: ['packages/wc/**/*.tsx'],
     rules: {
       '@typescript-eslint/no-unused-vars': [
