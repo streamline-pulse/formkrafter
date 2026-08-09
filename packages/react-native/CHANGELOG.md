@@ -1,5 +1,16 @@
 # @streamline-pulse/formkrafter-react-native
 
+## 0.13.3
+
+### Patch Changes
+
+- 8d4fa0a: Rules now apply to bricks inside a data grid row: the grid rendered its
+  rows through its own mini-walker, which looked bricks up in the registry
+  but never resolved their rules — a field hidden or disabled by a rule
+  showed up anyway, unlike the web grid. Row rendering now goes through
+  the same renderBrick path as the form walker, so the two cannot drift.
+  - @streamline-pulse/formkrafter-core@0.13.3
+
 ## 0.13.2
 
 ### Patch Changes
