@@ -30,6 +30,9 @@ jobs:
           - name: Plain HTML example
             dir: examples/html
             build: build
+          - name: Expo web example
+            dir: examples/expo
+            build: build:web
     steps:
       - name: Check Cloudflare secrets
         id: secrets

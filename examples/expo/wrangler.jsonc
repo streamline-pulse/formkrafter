@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "formkrafter-examples-expo",
+  "compatibility_date": "2026-07-25",
+  // The web export of the Expo app — the same five screens as the phone,
+  // through react-native-web.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}

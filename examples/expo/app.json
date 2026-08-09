@@ -8,10 +8,14 @@
     "newArchEnabled": true,
     "platforms": [
       "ios",
-      "android"
+      "android",
+      "web"
     ],
     "plugins": [
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "web": {
+      "output": "single"
+    }
   }
 }
