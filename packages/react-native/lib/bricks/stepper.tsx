@@ -168,7 +168,7 @@ function StepperControl(props: NativeBrickProps) {
                 backgroundColor: theme.colorPrimary,
               }}
             >
-              <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
+              <Text style={{ color: theme.colorSurface, fontSize: 16, fontWeight: '600' }}>
                 {fkT('stepper.next')}
               </Text>
             </Pressable>
@@ -185,7 +185,7 @@ function StepperControl(props: NativeBrickProps) {
                 backgroundColor: theme.colorPrimary,
               }}
             >
-              <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
+              <Text style={{ color: theme.colorSurface, fontSize: 16, fontWeight: '600' }}>
                 {fkT('stepper.submit')}
               </Text>
             </Pressable>

@@ -47,7 +47,7 @@
 .fk-stepper__step--active .fk-stepper__index {
   border-color: var(--fk-color-primary);
   background: var(--fk-color-primary);
-  color: #ffffff;
+  color: var(--fk-color-surface);
 }
 
 .fk-stepper__step--done .fk-stepper__index {
@@ -76,7 +76,7 @@
 .fk-stepper__button--primary {
   border-color: var(--fk-color-primary);
   background: var(--fk-color-primary);
-  color: #ffffff;
+  color: var(--fk-color-surface);
 }
 
 .fk-stepper__button:disabled {

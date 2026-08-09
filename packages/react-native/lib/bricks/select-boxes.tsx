@@ -53,7 +53,7 @@ function SelectBoxesControl(props: NativeBrickProps) {
                 }}
               >
                 {checked ? (
-                  <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '700' }}>✓</Text>
+                  <Text style={{ color: theme.colorSurface, fontSize: 13, fontWeight: '700' }}>✓</Text>
                 ) : null}
               </View>
               <Text style={{ fontSize: 15, color: theme.colorText, flexShrink: 1 }}>

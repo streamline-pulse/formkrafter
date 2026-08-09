@@ -79,3 +79,28 @@ test.describe('accessibility', () => {
     await scan(page)
   })
 })
+
+// The same pages, dark. The apps follow prefers-color-scheme, so emulating
+// it is all it takes — dark palettes fail contrast in their own ways (the
+// stepper's primary button did).
+test.describe('accessibility, dark scheme', () => {
+  test.use({ colorScheme: 'dark' })
+
+  test('tanstack home', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('main')).toBeVisible()
+    await scan(page)
+  })
+
+  test('tanstack wizard', async ({ page }) => {
+    await page.goto('/examples/wizard')
+    await expect(page.locator('fk-form-render input').first()).toBeVisible()
+    await scan(page)
+  })
+
+  test('vue example', async ({ page }) => {
+    await page.goto(VUE_APP)
+    await expect(page.locator('fk-form-render input').first()).toBeVisible()
+    await scan(page)
+  })
+})
