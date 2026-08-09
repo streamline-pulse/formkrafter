@@ -1,10 +1,17 @@
 import { spawnSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 
-const packages = ['core', 'wc', 'react', 'vue']
+// Derived from the filesystem, not a hardcoded list: a new package joins
+// the release the day its directory appears. (formkrafter-react-native
+// missed its first release exactly because this used to be a list.)
+const packages = readdirSync('packages', { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
 
 for (const dir of packages) {
   const pkg = JSON.parse(readFileSync(`packages/${dir}/package.json`, 'utf8'))
+  if (pkg.private) continue
+
   const id = `${pkg.name}@${pkg.version}`
 
   const view = spawnSync('npm', ['view', id, 'version'], { stdio: 'pipe' })
