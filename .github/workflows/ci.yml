@@ -34,6 +34,9 @@ jobs:
       - name: ESM resolution smoke test
         run: bun run smoke:esm
 
+      - name: Packed tarball smoke test
+        run: bun run smoke:pack
+
       - name: Lint
         run: bun run lint
 
