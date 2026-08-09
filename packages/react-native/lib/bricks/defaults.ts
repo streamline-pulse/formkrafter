@@ -3,7 +3,11 @@ import { textBricks } from './text'
 import { checkboxBrick } from './checkbox'
 import { multiSelectBrick, selectBrick } from './select'
 import { radioBrick } from './radio'
+import { selectBoxesBrick } from './select-boxes'
+import { tagsBrick } from './tags'
+import { addressBrick } from './address'
 import { stepperBrick } from './stepper'
+import { contentBrick, hiddenBrick, recapBrick } from './output'
 import { layoutBricks } from './layout'
 
 const DEFAULTS_KEY = Symbol.for('formkrafter.native.defaultBricksRegistered')
@@ -25,7 +29,13 @@ export function registerDefaultNativeBricks(): void {
     selectBrick,
     multiSelectBrick,
     radioBrick,
+    selectBoxesBrick,
+    tagsBrick,
+    addressBrick,
     stepperBrick,
+    contentBrick,
+    hiddenBrick,
+    recapBrick,
     ...layoutBricks,
   ]
   for (const brick of defaults) {

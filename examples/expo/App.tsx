@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   useColorScheme,
@@ -11,76 +10,88 @@ import {
 import { StatusBar } from 'expo-status-bar'
 import {
   FkThemeProvider,
-  FormRenderer,
   fkDarkTheme,
   fkLightTheme,
 } from '@streamline-pulse/formkrafter-react-native'
 import { registerNativeDateBricks } from '@streamline-pulse/formkrafter-react-native/date'
-import type { FormRendererHandle } from '@streamline-pulse/formkrafter-react-native'
-import { registrationSpec } from './spec'
+import { FormScreen } from './screens/FormScreen'
+import { recapSpec, simpleSpec, wizardSpec } from './spec'
 
 registerNativeDateBricks()
+
+const SCREENS = [
+  {
+    key: 'wizard',
+    tab: 'Wizard',
+    title: 'FormKrafter — Wizard',
+    subtitle:
+      'Three steps with per-step validation, a date picker, radio, multi-select and a rule.',
+    spec: wizardSpec,
+    showValidateButton: false,
+  },
+  {
+    key: 'bricks',
+    tab: 'Bricks',
+    title: 'FormKrafter — Bricks',
+    subtitle: 'Content, tags, select boxes, address and a hidden field.',
+    spec: simpleSpec,
+    initialData: { source: 'expo-example' },
+    showValidateButton: true,
+  },
+  {
+    key: 'recap',
+    tab: 'Recap',
+    title: 'FormKrafter — Recap',
+    subtitle: 'Fill the order, then review the live summary before submitting.',
+    spec: recapSpec,
+    showValidateButton: false,
+  },
+] as const
 
 export default function App() {
   const scheme = useColorScheme()
   const theme = scheme === 'dark' ? fkDarkTheme : fkLightTheme
-  const form = useRef<FormRendererHandle>(null)
-  const [data, setData] = useState<Record<string, unknown>>({})
-  const [verdict, setVerdict] = useState<string>('—')
+  const [active, setActive] = useState<(typeof SCREENS)[number]['key']>('wizard')
+  const screen = SCREENS.find((entry) => entry.key === active) ?? SCREENS[0]
 
   return (
     <FkThemeProvider theme={theme}>
       <SafeAreaView style={[styles.screen, { backgroundColor: theme.colorSurface }]}>
         <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-        <ScrollView contentContainerStyle={styles.content}>
-          <Text style={[styles.title, { color: theme.colorText }]}>
-            FormKrafter — Expo
-          </Text>
-          <Text style={[styles.subtitle, { color: theme.colorMuted }]}>
-            The same form spec as the web demos, rendered with native components.
-          </Text>
-
-          <FormRenderer
-            ref={form}
-            spec={registrationSpec}
-            onDataChange={(next) => setData(next)}
-            onSubmit={(_next, isValid, errors) =>
-              setVerdict(
-                isValid
-                  ? 'submitted ✓'
-                  : `invalid — ${Object.keys(errors).join(', ')}`,
-              )
-            }
+        <View style={styles.body}>
+          <FormScreen
+            key={screen.key}
+            title={screen.title}
+            subtitle={screen.subtitle}
+            spec={screen.spec}
+            initialData={'initialData' in screen ? screen.initialData : undefined}
+            showValidateButton={screen.showValidateButton}
           />
-
-          <Pressable
-            style={[styles.button, { backgroundColor: theme.colorPrimary }]}
-            onPress={() => {
-              const result = form.current?.validate()
-              if (!result) return
-              setVerdict(
-                result.valid
-                  ? 'valid ✓'
-                  : `invalid — ${Object.keys(result.errors).join(', ')}`,
-              )
-            }}
-          >
-            <Text style={styles.buttonText}>Validate</Text>
-          </Pressable>
-
-          <View style={[styles.panel, { borderColor: theme.colorBorder }]}>
-            <Text style={[styles.panelTitle, { color: theme.colorMuted }]}>
-              LIVE DATA
-            </Text>
-            <Text style={[styles.mono, { color: theme.colorText }]}>
-              {JSON.stringify(data, null, 2)}
-            </Text>
-            <Text style={[styles.panelTitle, { color: theme.colorMuted }]}>
-              VERDICT
-            </Text>
-            <Text style={[styles.mono, { color: theme.colorText }]}>{verdict}</Text>
-          </View>
-        </ScrollView>
+        </View>
+        <View style={[styles.tabs, { borderTopColor: theme.colorBorder }]}>
+          {SCREENS.map((entry) => {
+            const current = entry.key === active
+            return (
+              <Pressable
+                key={entry.key}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: current }}
+                onPress={() => setActive(entry.key)}
+                style={styles.tab}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: current ? '700' : '400',
+                    color: current ? theme.colorPrimary : theme.colorMuted,
+                  }}
+                >
+                  {entry.tab}
+                </Text>
+              </Pressable>
+            )
+          })}
+        </View>
       </SafeAreaView>
     </FkThemeProvider>
   )
@@ -88,21 +99,11 @@ export default function App() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  content: { padding: 20, gap: 16 },
-  title: { fontSize: 24, fontWeight: '700' },
-  subtitle: { fontSize: 14, lineHeight: 20 },
-  button: {
-    borderRadius: 999,
-    paddingVertical: 12,
-    alignItems: 'center',
+  body: { flex: 1 },
+  tabs: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    paddingVertical: 10,
   },
-  buttonText: { color: '#ffffff', fontSize: 16, fontWeight: '600' },
-  panel: {
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 12,
-    gap: 8,
-  },
-  panelTitle: { fontSize: 11, fontWeight: '700', letterSpacing: 1 },
-  mono: { fontFamily: 'Menlo', fontSize: 12 },
+  tab: { flex: 1, alignItems: 'center', paddingVertical: 4 },
 })

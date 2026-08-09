@@ -19,6 +19,9 @@ export { getBrickData, wrapBrickData } from "./utils/brick-data";
 // Select option parsing, shared by every renderer
 export { SelectOption, normalizeOptions } from "./utils/options";
 
+// Recap summarization, shared by every renderer
+export { RecapItem, collectRecapItems } from "./utils/recap";
+
 // Brick
 export { PanelBrickProps, InputBrickProps, CollectionBrickProps } from "./brick/types";
 export { Brick, BrickProps } from "./brick/brick";

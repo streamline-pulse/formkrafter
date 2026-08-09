@@ -126,15 +126,17 @@ bricks avec des primitives natives.
 | Registre | `createNativeBrick`, `registerNativeBrick`, `registerNativeBricks`, `getNativeBrick`, `registerDefaultNativeBricks`, `Field` |
 | Theming | `FkThemeProvider`, `useFkTheme`, `fkLightTheme`, `fkDarkTheme` |
 
-La couverture des bricks est un sous-ensemble croissant du build web :
-variantes texte, nombre, case à cocher, select et sélection multiple (options
-statiques), boutons radio, le wizard à étapes avec validation par étape, et
-les layouts colonne/ligne/groupe. Date, heure et date/heure vivent sur le
-point d'entrée `formkrafter-react-native/date` : elles nécessitent
-`@react-native-community/datetimepicker` (peer optionnelle), donc les
-applications optent avec `registerNativeDateBricks()` et les autres ne
-résolvent jamais le module natif. Les bricks sans renderer natif affichent un
-placeholder explicite au lieu d'échouer.
+Couverture des bricks : variantes texte, nombre, case à cocher, select et
+sélection multiple (options statiques), boutons radio, cases à cocher
+multiples, étiquettes, adresse, contenu, champ caché, le récapitulatif (même
+parcours `collectRecapItems` que la brick web) et le wizard à étapes avec
+validation par étape, plus les layouts colonne/ligne/groupe. Date, heure et
+date/heure vivent sur le point d'entrée `formkrafter-react-native/date` :
+elles nécessitent `@react-native-community/datetimepicker` (peer optionnelle),
+donc les applications optent avec `registerNativeDateBricks()` et les autres
+ne résolvent jamais le module natif. Encore web uniquement : fichier,
+signature, grille de données, code et le rendu nested-form. Les bricks sans
+renderer natif affichent un placeholder explicite au lieu d'échouer.
 
 ## Versionnage et releases
 
