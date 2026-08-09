@@ -198,6 +198,55 @@ describe('data grid interactions', () => {
   })
 })
 
+describe('data grid rules', () => {
+  const spec = {
+    type: 'collection',
+    dataType: 'array',
+    id: 'data-grid',
+    name: 'Data grid',
+    configs: { uid: 'g', key: 'team', label: 'Team' },
+    children: [
+      {
+        type: 'input',
+        dataType: 'string',
+        id: 'text',
+        name: 'Text',
+        configs: { uid: 'g-role', key: 'role' },
+      },
+      {
+        type: 'input',
+        dataType: 'string',
+        id: 'text',
+        name: 'Text',
+        configs: { uid: 'g-team', key: 'squad' },
+        rules: [
+          {
+            name: 'engineers-only',
+            type: 'jsonLogic',
+            logic: { '!==': [{ var: 'role' }, 'Engineer'] },
+            effects: [
+              { property: { target: 'hidden', type: 'boolean' }, boolean: true },
+            ],
+          },
+        ],
+      },
+    ],
+  } as unknown as BrickSpec
+
+  test('a rule resolves against its own row, not the form', () => {
+    // Row 0 is an Engineer, row 1 is not: the ruled field shows in the
+    // first row only. Rendering rows without applying rules — which the
+    // grid's own walker used to do — shows it in both.
+    const renderer = render(
+      dataGridBrick,
+      props({ spec, data: [{ role: 'Engineer' }, { role: 'Designer' }] }),
+    )
+
+    const inputs = renderer.root.findAllByType('TextInput' as never)
+    expect(inputs).toHaveLength(3)
+  })
+})
+
 describe('stepper interactions', () => {
   const step = (index: number, required: boolean): BrickSpec =>
     ({

@@ -1,15 +1,8 @@
-import { Text } from 'react-native'
 import type { ReactNode } from 'react'
-import {
-  getAffectedProperties,
-  getBrickData,
-  resolveLocalizedRecord,
-  wrapBrickData,
-} from '@streamline-pulse/formkrafter-core'
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
-import { getNativeBrick } from '../registry.js'
 import type { FormEngine } from '../engine/form-engine.js'
 import { useFkTheme } from '../theme.js'
+import { renderBrick } from './render-brick.js'
 
 interface BrickRendererProps {
   spec: BrickSpec
@@ -25,18 +18,6 @@ export function BrickRenderer(props: BrickRendererProps): ReactNode {
   const { spec, data, errors, locale, engine } = props
   if (!spec) return null
 
-  const brick = getNativeBrick(spec.type, spec.id)
-  if (!brick) {
-    return (
-      <Text style={{ color: theme.colorDanger }}>
-        {`Brick ${spec.type}:${spec.id} has no native renderer`}
-      </Text>
-    )
-  }
-
-  const affected = getAffectedProperties(spec.rules, data)
-  if (affected.hidden === true) return null
-
   const children = (spec.children ?? []).map((child, index) => (
     <BrickRenderer
       key={child.configs?.uid ?? `${spec.configs?.uid ?? 'brick'}-${index}`}
@@ -48,19 +29,14 @@ export function BrickRenderer(props: BrickRendererProps): ReactNode {
     />
   ))
 
-  return brick.render({
+  return renderBrick({
     spec,
-    configs: resolveLocalizedRecord(spec.configs, locale) ?? {},
+    scope: data,
+    errors,
     locale,
-    data: getBrickData(spec, data),
-    dataMap: data,
-    error: spec.configs?.key ? errors[spec.configs.key] : undefined,
-    disabled: affected.disabled === true,
     engine,
     children,
-    onDataChange: (value) => {
-      const wrapped = wrapBrickData(spec, value)
-      if (wrapped !== undefined) engine.setValues(wrapped)
-    },
+    onValue: (patch) => engine.setValues(patch),
+    missingColor: theme.colorDanger,
   })
 }

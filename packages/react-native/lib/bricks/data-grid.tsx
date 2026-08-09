@@ -1,15 +1,10 @@
 import { useRef, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
-import {
-  fkT,
-  getBrickData,
-  resolveLocalizedRecord,
-  validateBrickSpecDataDetailed,
-  wrapBrickData,
-} from '@streamline-pulse/formkrafter-core'
+import { fkT, validateBrickSpecDataDetailed } from '@streamline-pulse/formkrafter-core'
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
-import { createNativeBrick, getNativeBrick } from '../registry.js'
+import { createNativeBrick } from '../registry.js'
 import type { NativeBrick, NativeBrickProps } from '../registry.js'
+import { renderBrick } from '../renderer/render-brick.js'
 import { useFkTheme } from '../theme.js'
 import { Field } from './field.js'
 
@@ -136,35 +131,22 @@ function DataGridControl(props: NativeBrickProps) {
                 </View>
               </View>
 
-              {children.map((child) => {
-                const brick = getNativeBrick(child.type, child.id)
-                if (!brick) {
-                  return (
-                    <Text key={child.configs?.uid} style={{ color: theme.colorDanger }}>
-                      {`Brick ${child.type}:${child.id} has no native renderer`}
-                    </Text>
-                  )
-                }
-                const key = child.configs?.key
-                return (
-                  <View key={child.configs?.uid ?? key}>
-                    {brick.render({
-                      spec: child,
-                      configs: resolveLocalizedRecord(child.configs, props.locale) ?? {},
-                      locale: props.locale,
-                      data: getBrickData(child, row),
-                      dataMap: { ...props.dataMap, ...row },
-                      error: key ? errors[key] : undefined,
-                      disabled: props.disabled,
-                      engine: props.engine,
-                      onDataChange: (value) => {
-                        const wrapped = wrapBrickData(child, value)
-                        if (wrapped !== undefined) patchRow(index, wrapped)
-                      },
-                    })}
-                  </View>
-                )
-              })}
+              {children.map((child) => (
+                <View key={child.configs?.uid ?? child.configs?.key}>
+                  {renderBrick({
+                    spec: child,
+                    // Rules resolve per row, the row's values shadowing the
+                    // form data — exactly how the web grid scopes them.
+                    scope: { ...props.dataMap, ...row },
+                    errors,
+                    locale: props.locale,
+                    engine: props.engine,
+                    disabled: props.disabled,
+                    onValue: (patch) => patchRow(index, patch),
+                    missingColor: theme.colorDanger,
+                  })}
+                </View>
+              ))}
             </View>
           )
         })}
