@@ -13,6 +13,12 @@ export {
     iterateSchemaBricks
 } from "./utils/brick-spec";
 
+// Per-brick data plumbing, shared by every renderer
+export { getBrickData, wrapBrickData } from "./utils/brick-data";
+
+// Select option parsing, shared by every renderer
+export { SelectOption, normalizeOptions } from "./utils/options";
+
 // Brick
 export { PanelBrickProps, InputBrickProps, CollectionBrickProps } from "./brick/types";
 export { Brick, BrickProps } from "./brick/brick";
@@ -74,6 +80,15 @@ export {
     resolveLocalizedText,
     resolveLocalizedRecord
 } from "./utils/localized-text";
+
+// Chrome translations, shared by every renderer (web components, native)
+export {
+    FkTranslations,
+    setFkTranslations,
+    fkT,
+    fkTOr,
+    frFkTranslations
+} from "./i18n";
 
 // Spec operations
 export { pointerFromPath, pointerOfUid, getBrickAt } from "./ops/pointer";
