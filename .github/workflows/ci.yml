@@ -56,6 +56,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The Playwright image has no unzip, which setup-bun needs to extract
+      # the bun archive.
+      - name: Install unzip
+        run: apt-get update && apt-get install -y unzip
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
