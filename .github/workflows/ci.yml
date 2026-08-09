@@ -45,6 +45,14 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
+    # The job runs inside the same image that generates the visual baselines
+    # (e2e/update-linux-snapshots.sh): screenshot comparison is only
+    # deterministic when CI renders with the exact same fonts and libraries.
+    # Browsers ship preinstalled in the image, so no install step is needed —
+    # keep the tag in sync with @playwright/test in e2e/package.json; a
+    # mismatch fails loudly with "browser not found".
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-jammy
     steps:
       - uses: actions/checkout@v4
 
@@ -57,14 +65,6 @@ jobs:
 
       - name: Build packages
         run: bun run build
-
-      # Must run through the e2e workspace, not `bunx playwright`: the binary
-      # is not linked at the repo root, so bunx would fetch playwright@latest
-      # from npm and download browsers for a different version than the one
-      # running the tests — the browser revisions then disagree and every test
-      # fails with "Looks like Playwright was just installed or updated".
-      - name: Install Playwright browsers
-        run: bun run --cwd e2e install:browsers
 
       - name: End-to-end tests
         run: bun run e2e
