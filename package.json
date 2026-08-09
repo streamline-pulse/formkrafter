@@ -35,6 +35,8 @@
     "lint": "eslint .",
     "e2e": "bun run --cwd examples/tanstack-start build && bun run --cwd examples/vue build && bun run --cwd e2e test",
     "e2e:only": "bun run --cwd e2e test",
+    "e2e:visual-update": "bun run --cwd e2e visual-update",
+    "e2e:visual-update:linux": "bun run --cwd e2e visual-update:linux",
     "docs:dev": "bun run --cwd docs dev",
     "docs:build": "bun run --cwd docs build",
     "lint:fix": "eslint . --fix",

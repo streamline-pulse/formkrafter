@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — hostile host page</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      /*
+       * Deliberately aggressive global styling, the kind a real host
+       * application ships: pill buttons, decorated inputs, loud labels.
+       * The components are scoped rather than shadow-DOM, so any property
+       * they do not pin explicitly leaks in. The visual baseline of this
+       * page is the regression contract: a new leak, or a lost hardening,
+       * changes the pixels and fails the suite.
+       */
+      button {
+        font: inherit;
+        border-radius: 999px;
+        border: 2px solid #e91e63;
+        background: #ffd54f;
+        color: #4a148c;
+        padding: 1.1rem 2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+      }
+
+      input,
+      select,
+      textarea {
+        border-radius: 999px;
+        border: 3px double #e53935;
+        background: #fffde7;
+        color: #1b5e20;
+        padding: 1rem 1.5rem;
+        line-height: 2.4;
+      }
+
+      label {
+        color: #d81b60;
+        font-style: italic;
+        text-decoration: underline wavy;
+      }
+
+      ul {
+        list-style: square;
+        padding-left: 3rem;
+      }
+
+      body {
+        margin: 24px;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: #eceff1;
+      }
+
+      main {
+        display: grid;
+        gap: 24px;
+        max-width: 1200px;
+      }
+
+      section {
+        background: #fff;
+        padding: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2>Renderer</h2>
+        <fk-form-render id="renderer"></fk-form-render>
+      </section>
+      <section>
+        <h2>Builder</h2>
+        <fk-form-builder id="builder"></fk-form-builder>
+      </section>
+    </main>
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const spec = {
+        type: 'panel',
+        id: 'column',
+        name: 'Form',
+        configs: { uid: 'root', key: 'form' },
+        children: [
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Text',
+            configs: { uid: 'u-name', key: 'fullName', label: 'Full name' },
+            validations: [{ validator: 'required' }],
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'select',
+            name: 'Select',
+            configs: {
+              uid: 'u-role',
+              key: 'role',
+              label: 'Role',
+              options: 'Engineer\nDesigner',
+            },
+          },
+        ],
+      }
+
+      document.getElementById('renderer').spec = spec
+      document.getElementById('builder').spec = spec
+      window.__ready = true
+    </script>
+  </body>
+</html>

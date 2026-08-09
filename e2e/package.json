@@ -6,7 +6,9 @@
   "scripts": {
     "test": "playwright test",
     "install:browsers": "playwright install --with-deps chromium",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "visual-update": "playwright test visual --update-snapshots",
+    "visual-update:linux": "bash update-linux-snapshots.sh"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.0",
