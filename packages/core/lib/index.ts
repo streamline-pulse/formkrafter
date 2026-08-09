@@ -51,6 +51,7 @@ export { JSONSchemaType } from "./validators/json-schema-type";
 export { services } from "./services";
 export {
     JsRunnerService,
+    JsValidationResult,
     SandboxJsRunnerService,
     JsRunnerServiceImplementation
 } from "./services/js_runner_service";

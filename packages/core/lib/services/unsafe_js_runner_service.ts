@@ -1,17 +1,17 @@
 import { type Options, parse } from "acorn";
-import type { JsRunnerService } from "./js_runner_service";
+import type { JsRunnerService, JsValidationResult } from "./js_runner_service";
 
 export class UnsafeEvalJsRunnerService implements JsRunnerService {
   validateJs(
     js: string,
     options: Options = { ecmaVersion: "latest", allowReturnOutsideFunction: true }
-  ): { valide: boolean; error?: Error } {
+  ): JsValidationResult {
     try {
       parse(js, options);
-      return { valide: true };
+      return { valid: true };
     } catch (error) {
       return {
-        valide: false,
+        valid: false,
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
@@ -24,7 +24,7 @@ export class UnsafeEvalJsRunnerService implements JsRunnerService {
     const fn = `(() => {${prelude}\n${js}})();`;
 
     const validation = this.validateJs(fn, { ecmaVersion: "latest" });
-    if (!validation.valide) throw validation.error;
+    if (!validation.valid) throw validation.error;
 
     return eval(fn);
   }

@@ -129,7 +129,7 @@ export class FkRulesEditor {
     const validation = services.jsRunnerService.validateJs(`(() => {${code}})();`);
     this.codeErrors = {
       ...this.codeErrors,
-      [index]: validation.valide ? '' : (validation.error?.message ?? 'Invalid code'),
+      [index]: validation.valid ? '' : (validation.error?.message ?? 'Invalid code'),
     };
     this.updateRule(index, { code });
   }
