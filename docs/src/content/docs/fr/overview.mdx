@@ -1,14 +1,14 @@
 ---
 title: Vue d'ensemble
-description: Ce qu'est FormKrafter, comment ses quatre packages s'articulent, et par où continuer selon ce que vous construisez.
+description: Ce qu'est FormKrafter, comment ses cinq packages s'articulent, et par où continuer selon ce que vous construisez.
 ---
 
 import { Card, CardGrid, LinkCard, Aside } from '@astrojs/starlight/components'
 
 FormKrafter transforme un formulaire en **données**. Un formulaire est un spec
 JSON — un arbre de bricks avec leurs validations et leurs règles — et ce seul
-spec pilote tout : le builder en drag & drop, le renderer dans trois frameworks,
-et le verdict que renvoie votre backend. Aucun composant à réécrire par
+spec pilote tout : le builder en drag & drop, les renderers web et natif, et le
+verdict que renvoie votre backend. Aucun composant à réécrire par
 framework, aucune logique de validation dupliquée entre le client et le serveur.
 
 ## L'idée en un coup d'œil
@@ -19,10 +19,10 @@ framework, aucune logique de validation dupliquée entre le client et le serveur
     versionner. Chaque édition dans le builder émet aussi des patches RFC 6902 :
     undo/redo et pistes d'audit viennent gratuitement.
   </Card>
-  <Card title="Un comportement, trois renderers" icon="puzzle">
-    Des Web Components au cœur ; les wrappers React et Vue sont générés depuis
-    la même source. Choisissez par application sans forker votre logique de
-    formulaire.
+  <Card title="Un comportement, tous les renderers" icon="puzzle">
+    Des Web Components au cœur, des wrappers React et Vue générés depuis la
+    même source, et un renderer React Native qui partage le même moteur.
+    Choisissez par application sans forker votre logique de formulaire.
   </Card>
   <Card title="Le même verdict partout" icon="approve-check">
     `validateFormData(spec, data)` tourne sur votre serveur et reproduit
@@ -36,7 +36,7 @@ framework, aucune logique de validation dupliquée entre le client et le serveur
   </Card>
 </CardGrid>
 
-## Les quatre packages
+## Les cinq packages
 
 | Package | Ce que c'est | Vous en avez besoin quand… |
 |---|---|---|
@@ -44,6 +44,7 @@ framework, aucune logique de validation dupliquée entre le client et le serveur
 | `formkrafter-wc` | L'UI en Web Components + les 30 bricks intégrées | vous affichez ou construisez des formulaires dans le navigateur |
 | `formkrafter-react` | Wrappers React générés | votre application est en React |
 | `formkrafter-vue` | Wrappers Vue 3 générés | votre application est en Vue |
+| `formkrafter-react-native` | Renderer natif des mêmes specs | votre application est en React Native ou Expo |
 
 <Aside type="tip">
 Les wrappers embarquent `formkrafter-wc` et `formkrafter-core` transitivement.

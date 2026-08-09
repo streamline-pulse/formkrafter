@@ -74,9 +74,10 @@ setFkTranslations({
 ```
 
 <Aside type="caution">
-`setFkTranslations` is read when a component mounts. Call it **before** mounting
-the builder; to switch language at runtime, re-mount the component (for example
-with a React `key` that changes with the locale).
+Do **not** remount the components to switch language — that wipes the form
+being filled or built. Call `setFkTranslations` first, then change the
+`locale` prop: the renderer re-resolves its labels and the builder re-renders
+its toolbar, palette and panel in place.
 </Aside>
 
 ## Choosing a locale
@@ -90,7 +91,7 @@ import { setFkTranslations, frFkTranslations } from '@streamline-pulse/formkraft
 const locale = useRouteLocale()            // your router, your rule
 if (locale === 'fr') setFkTranslations(frFkTranslations)
 
-return <FkFormRender key={locale} spec={spec} locale={locale} />
+return <FkFormRender spec={spec} locale={locale} />
 ```
 
 ## Next steps

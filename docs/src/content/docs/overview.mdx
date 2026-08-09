@@ -1,13 +1,13 @@
 ---
 title: Overview
-description: What FormKrafter is, how its four packages fit together, and where to go next depending on what you are building.
+description: What FormKrafter is, how its five packages fit together, and where to go next depending on what you are building.
 ---
 
 import { Card, CardGrid, LinkCard, Aside } from '@astrojs/starlight/components'
 
 FormKrafter turns a form into **data**. A form is a JSON spec — a tree of bricks
 with their validations and rules — and that one spec drives everything: the drag
-& drop builder, the renderer in three frameworks, and the verdict your backend
+& drop builder, the web and native renderers, and the verdict your backend
 returns. No component to rewrite per framework, no validation logic duplicated
 between client and server.
 
@@ -18,9 +18,10 @@ between client and server.
     Forms are portable JSON you can store, diff and version. Every builder edit
     also emits RFC 6902 patches, so undo/redo and audit trails come for free.
   </Card>
-  <Card title="One behavior, three renderers" icon="puzzle">
-    Web Components at the core; React and Vue wrappers generated from the same
-    source. Pick per app without forking your form logic.
+  <Card title="One behavior, every renderer" icon="puzzle">
+    Web Components at the core, React and Vue wrappers generated from the same
+    source, and a React Native renderer sharing the same engine. Pick per app
+    without forking your form logic.
   </Card>
   <Card title="The same verdict everywhere" icon="approve-check">
     `validateFormData(spec, data)` runs on your server and reproduces the
@@ -32,7 +33,7 @@ between client and server.
   </Card>
 </CardGrid>
 
-## The four packages
+## The five packages
 
 | Package | What it is | You need it when… |
 |---|---|---|
@@ -40,6 +41,7 @@ between client and server.
 | `formkrafter-wc` | The UI as Web Components + the 30 built-in bricks | you render or build forms in the browser |
 | `formkrafter-react` | Generated React wrappers | your app is React |
 | `formkrafter-vue` | Generated Vue 3 wrappers | your app is Vue |
+| `formkrafter-react-native` | Native renderer for the same specs | your app is React Native or Expo |
 
 <Aside type="tip">
 The wrappers pull in `formkrafter-wc` and `formkrafter-core` transitively.

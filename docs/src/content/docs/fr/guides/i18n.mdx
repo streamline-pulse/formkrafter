@@ -77,9 +77,10 @@ setFkTranslations({
 ```
 
 <Aside type="caution">
-`setFkTranslations` est lu au montage d'un composant. Appelez-le **avant** de
-monter le builder ; pour changer de langue à l'exécution, remontez le composant
-(par exemple avec une `key` React qui change avec la locale).
+Ne remontez **pas** les composants pour changer de langue — cela efface le
+formulaire en cours de saisie ou de construction. Appelez `setFkTranslations`
+d'abord, puis changez la prop `locale` : le renderer re-résout ses libellés et
+le builder re-rend sa toolbar, sa palette et son panneau en place.
 </Aside>
 
 ## Choisir une locale
@@ -93,7 +94,7 @@ import { setFkTranslations, frFkTranslations } from '@streamline-pulse/formkraft
 const locale = useRouteLocale()            // votre routeur, votre règle
 if (locale === 'fr') setFkTranslations(frFkTranslations)
 
-return <FkFormRender key={locale} spec={spec} locale={locale} />
+return <FkFormRender spec={spec} locale={locale} />
 ```
 
 ## Étapes suivantes

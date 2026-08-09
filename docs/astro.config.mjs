@@ -58,6 +58,7 @@ export default defineConfig({
             { slug: 'guides/nested-forms' },
             { slug: 'guides/theming' },
             { slug: 'guides/i18n' },
+            { slug: 'guides/react-native' },
           ],
         },
         {

@@ -1,0 +1,180 @@
+---
+title: React Native & Expo
+description: Rendez les specs FormKrafter avec des composants natifs — mêmes specs, même validation, même moteur de règles que le web.
+---
+
+import { Aside, Steps, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+`formkrafter-react-native` rend les mêmes specs de formulaire que les
+packages web avec des composants natifs — pas de WebView, pas de Web
+Components. La validation, les règles, les sources d'options et le parcours
+du récapitulatif viennent tous de `formkrafter-core` : un spec construit
+dans le builder web se rend sur téléphone sans modification.
+
+C'est un **renderer** : pas de builder mobile, par choix.
+
+## Installation
+
+<Tabs>
+  <TabItem label="Expo">
+    ```bash
+    npx expo install @streamline-pulse/formkrafter-react-native
+    ```
+  </TabItem>
+  <TabItem label="React Native nu">
+    ```bash
+    npm install @streamline-pulse/formkrafter-react-native
+    ```
+  </TabItem>
+</Tabs>
+
+React ≥18 et React Native ≥0.76 sont des peer dependencies. Rien d'autre
+n'est requis pour les bricks de base — date, fichier et signature vivent
+chacune derrière un [point d'entrée opt-in](#les-bricks-qui-exigent-un-module-natif).
+
+## Premier rendu
+
+<Steps>
+
+1. Enveloppez votre app dans le provider de thème :
+
+   ```tsx
+   import { FkThemeProvider } from '@streamline-pulse/formkrafter-react-native'
+
+   <FkThemeProvider theme={colorScheme === 'dark' ? 'dark' : 'light'}>
+     <App />
+   </FkThemeProvider>
+   ```
+
+2. Rendez un spec :
+
+   ```tsx
+   import { useRef } from 'react'
+   import { FormRenderer } from '@streamline-pulse/formkrafter-react-native'
+   import type { FormRendererHandle } from '@streamline-pulse/formkrafter-react-native'
+
+   function Checkout({ spec }) {
+     const form = useRef<FormRendererHandle>(null)
+
+     return (
+       <FormRenderer
+         ref={form}
+         spec={spec}
+         onDataChange={(data, isValid) => console.log(data, isValid)}
+         onSubmit={(data, isValid) => isValid && send(data)}
+       />
+     )
+   }
+   ```
+
+3. Validez à la demande via la ref :
+
+   ```tsx
+   const result = form.current?.validate()
+   // { valid: boolean, errors: { cléDuChamp: message, … } }
+   ```
+
+</Steps>
+
+Un spec wizard (`panel:stepper`) se rend avec la validation par étape et
+son propre bouton d'envoi, qui appelle votre `onSubmit` — aucun câblage
+supplémentaire. Les lignes de grille comptent dans le verdict global.
+
+## Theming
+
+`FkThemeProvider` accepte `'light'`, `'dark'` ou une table de tokens
+complète — les mêmes valeurs que le web expose en variables CSS :
+
+```tsx
+import { fkDarkTheme } from '@streamline-pulse/formkrafter-react-native'
+
+<FkThemeProvider theme={{ ...fkDarkTheme, colorPrimary: '#e0662d' }}>
+```
+
+## Langues
+
+Deux leviers indépendants, identiques au web :
+
+- **Les textes du chrome** (boutons du stepper, actions de la grille,
+  recherche du select…) viennent du store partagé :
+  `setFkTranslations(frFkTranslations)` depuis `formkrafter-core`.
+- **Les libellés de champs** écrits `{ en: 'Full name', fr: 'Nom complet' }`
+  se résolvent via la prop `locale` de `FormRenderer`.
+
+Basculez les deux sans remontage — les données saisies restent.
+
+## Les bricks qui exigent un module natif
+
+Metro résout les imports statiquement, donc les bricks qui dépendent d'un
+module natif vivent sur leurs propres points d'entrée. Installez le module,
+appelez l'enregistrement une fois au démarrage ; les applications qui se
+passent d'une brick ne résolvent jamais son module.
+
+| Point d'entrée | Module natif | Enregistrement |
+|---|---|---|
+| `…/date` | `@react-native-community/datetimepicker` | `registerNativeDateBricks()` |
+| `…/file` | `expo-document-picker` | `registerNativeFileBrick()` |
+| `…/signature` | `react-native-svg` | `registerNativeSignatureBrick()` |
+
+```tsx
+import { registerNativeDateBricks } from '@streamline-pulse/formkrafter-react-native/date'
+
+registerNativeDateBricks()
+```
+
+Les uploads passent par le `fileUploadService` de core — le même point
+d'injection que le web — et la signature stocke un data URL
+`image/svg+xml` là où le canvas web produit du PNG.
+
+## Bricks personnalisées et UI kits
+
+Le registre est le point d'extension. Une brick reçoit `data`, `error`,
+`disabled`, les `configs` résolues et `onDataChange`, et rend ce qu'elle
+veut — gluestack, NativeBase, Tamagui ou vos propres composants :
+
+```tsx
+import {
+  createNativeBrick,
+  registerNativeBrick,
+} from '@streamline-pulse/formkrafter-react-native'
+
+registerNativeBrick(
+  createNativeBrick({
+    type: 'input',
+    id: 'rating',
+    render: (props) => (
+      <Stars value={props.data} onChange={props.onDataChange} error={props.error} />
+    ),
+  }),
+)
+```
+
+Enregistrez avant le premier rendu pour **remplacer une brick intégrée** —
+les défauts n'écrasent jamais un enregistrement existant. Les bricks sans
+renderer natif affichent un placeholder explicite au lieu d'échouer.
+
+<Aside type="tip">
+Le moteur lui-même est exporté : `FormEngine` est une classe sans framework
+(état, suivi des champs touchés, règles, validation) et `useFormEngine` son
+binding React — utile pour des flux headless ou des renderers maison.
+</Aside>
+
+## Étapes suivantes
+
+<CardGrid>
+  <LinkCard
+    title="Specs de formulaire"
+    href="../form-specs/"
+    description="Le format de spec que les deux renderers partagent."
+  />
+  <LinkCard
+    title="Référence des packages"
+    href="../../reference/packages/"
+    description="Tout ce que le package react-native exporte, et la couverture des bricks."
+  />
+  <LinkCard
+    title="Services"
+    href="../services/"
+    description="Options distantes, uploads de fichiers et formulaires imbriqués — tous injectables."
+  />
+</CardGrid>
