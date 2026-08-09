@@ -1,7 +1,7 @@
 {
   "name": "formkrafter-example-expo",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",

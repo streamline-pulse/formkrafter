@@ -1,5 +1,13 @@
 # @streamline-pulse/formkrafter-core
 
+## 0.10.1
+
+### Patch Changes
+
+- 91b49e8: FetchDataSourceService now throws when a data source returns a non-array
+  payload instead of silently coercing it to an empty list — an API error
+  notice used to hide behind an empty select.
+
 ## 0.10.0
 
 ### Minor Changes
