@@ -1,5 +1,13 @@
 # formkrafter-example-vue
 
+## 0.0.12
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-core@0.12.0
+- @streamline-pulse/formkrafter-vue@0.12.0
+- @streamline-pulse/formkrafter-wc@0.12.0
+
 ## 0.0.11
 
 ### Patch Changes
