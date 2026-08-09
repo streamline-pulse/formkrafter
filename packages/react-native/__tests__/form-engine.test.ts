@@ -100,6 +100,13 @@ describe('FormEngine', () => {
     expect(engine.getSnapshot().data._context).toBe('secret')
   })
 
+  test('an undefined spec never reaches the WeakMap-backed validators', () => {
+    const engine = new FormEngine({ spec: undefined as unknown as typeof spec })
+    expect(engine.validate()).toEqual({ valid: true, errors: {} })
+    engine.setValues({ anything: 'x' })
+    expect(engine.getSnapshot().errors).toEqual({})
+  })
+
   test('submit() runs the onSubmit callback with the verdict', () => {
     let verdict: boolean | undefined
     const engine = new FormEngine({

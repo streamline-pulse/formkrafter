@@ -34,6 +34,8 @@ export const FormRenderer = forwardRef<FormRendererHandle, FormRendererProps>(
       submit: () => engine.submit(),
     }), [engine])
 
+    if (!spec) return null
+
     if (expanding) {
       return <Text style={{ color: theme.colorMuted }}>{fkT('nestedForm.loading')}</Text>
     }

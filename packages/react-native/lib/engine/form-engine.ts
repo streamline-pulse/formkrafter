@@ -108,6 +108,7 @@ export class FormEngine {
 
   /** Touches every key so all errors become visible, then validates. */
   validate(): ValidationResult {
+    if (!this.effectiveSpec()) return { valid: true, errors: {} }
     for (const { brick } of iterateBricks(this.effectiveSpec())) {
       const key = brick.configs?.key
       if (key) this.touched[key] = true
@@ -142,7 +143,7 @@ export class FormEngine {
   private async runExpansion(): Promise<void> {
     this.expandError = undefined
 
-    if (!hasNestedForms(this.spec)) {
+    if (!this.spec || !hasNestedForms(this.spec)) {
       this.expandedSpec = undefined
       this.notify()
       return
@@ -172,6 +173,7 @@ export class FormEngine {
     data: Record<string, unknown>,
   ): Record<string, unknown> {
     let result = data
+    if (!this.effectiveSpec()) return result
 
     for (const { brick } of iterateBricks(this.effectiveSpec())) {
       const key = brick.configs?.key
@@ -187,6 +189,11 @@ export class FormEngine {
   }
 
   private runValidation(): ValidationResult {
+    // A fast-refresh can hand the engine an undefined spec for one frame;
+    // the validator caches are WeakMaps keyed by the spec, so guard here
+    // like the web renderer guards its render.
+    if (!this.effectiveSpec()) return { valid: true, errors: {} }
+
     const presentData = Object.fromEntries(
       Object.entries(this.data).filter(
         ([, value]) => value !== '' && value !== null && value !== undefined,

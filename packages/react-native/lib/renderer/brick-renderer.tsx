@@ -23,6 +23,7 @@ interface BrickRendererProps {
 export function BrickRenderer(props: BrickRendererProps): ReactNode {
   const theme = useFkTheme()
   const { spec, data, errors, locale, engine } = props
+  if (!spec) return null
 
   const brick = getNativeBrick(spec.type, spec.id)
   if (!brick) {

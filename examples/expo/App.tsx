@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import {
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   useColorScheme,
   View,
 } from 'react-native'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import {
   frFkTranslations,
@@ -92,7 +92,8 @@ export default function App() {
 
   return (
     <FkThemeProvider theme={theme}>
-      <SafeAreaView style={[styles.screen, { backgroundColor: theme.colorSurface }]}>
+      <SafeAreaProvider>
+        <SafeAreaView style={[styles.screen, { backgroundColor: theme.colorSurface }]}>
         <StatusBar style={dark ? 'light' : 'dark'} />
         <View style={[styles.header, { borderBottomColor: theme.colorBorder }]}>
           <Text style={{ fontSize: 17, fontWeight: '700', color: theme.colorText }}>
@@ -158,7 +159,8 @@ export default function App() {
             )
           })}
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </FkThemeProvider>
   )
 }
