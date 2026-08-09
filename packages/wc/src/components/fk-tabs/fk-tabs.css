@@ -22,6 +22,7 @@
   padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
   border: none;
   border-bottom: 2px solid transparent;
+  border-radius: 0;
   background: transparent;
   color: var(--fk-color-muted);
   cursor: pointer;
