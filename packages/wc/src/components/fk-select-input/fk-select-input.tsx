@@ -26,6 +26,10 @@ export class FkSelectInput {
   @Prop() multiple = false;
   @Prop() invalid = false;
   @Prop() dataMap?: Record<string, unknown>;
+  // The visible label lives in the brick's field wrapper, which a
+  // role="combobox" div cannot be associated with — the name must be
+  // carried explicitly.
+  @Prop() accessibleLabel?: string;
 
   @Event() selectValueChange!: EventEmitter<string | string[] | undefined>;
 
@@ -339,6 +343,7 @@ export class FkSelectInput {
           class={{ 'fk-select__trigger': true, 'fk-select__trigger--open': this.open }}
           role="combobox"
           tabIndex={this.disabled ? undefined : 0}
+          aria-label={this.accessibleLabel}
           aria-expanded={this.open ? 'true' : 'false'}
           aria-haspopup="listbox"
           aria-controls={`${this.instanceId}-listbox`}
@@ -407,6 +412,7 @@ export class FkSelectInput {
               placeholder={fkT('select.search')}
               value={this.query}
               role="combobox"
+              aria-label={this.accessibleLabel}
               aria-expanded="true"
               aria-autocomplete="list"
               aria-controls={`${this.instanceId}-listbox`}

@@ -366,6 +366,7 @@ export class FkFormBuilder {
             {this.locales.length > 1 ? (
               <select
                 class="fk-builder__tool"
+                aria-label={fkT('builder.editLocale')}
                 onChange={(event) =>
                   (this.editLocale = (event.target as HTMLSelectElement).value)
                 }

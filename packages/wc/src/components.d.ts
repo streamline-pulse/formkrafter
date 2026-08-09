@@ -131,6 +131,7 @@ export namespace Components {
         "fields": string[];
     }
     interface FkSelectInput {
+        "accessibleLabel"?: string;
         "configs"?: Record<string, unknown>;
         "dataMap"?: Record<string, unknown>;
         /**
@@ -678,6 +679,7 @@ declare namespace LocalJSX {
         "onBrickRulesChange"?: (event: FkRulesEditorCustomEvent<BrickRulesChangeDetail>) => void;
     }
     interface FkSelectInput {
+        "accessibleLabel"?: string;
         "configs"?: Record<string, unknown>;
         "dataMap"?: Record<string, unknown>;
         /**
@@ -774,6 +776,7 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "multiple": boolean;
         "invalid": boolean;
+        "accessibleLabel": string;
     }
     interface FkSignatureInputAttributes {
         "value": string;

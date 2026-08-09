@@ -219,6 +219,7 @@ export const selectBrick = createBrick({
       'Select',
       <fk-select-input
         configs={props.configs}
+        accessibleLabel={labelOf(props, 'Select')}
         value={(props.data as string) ?? ''}
         disabled={props.editable || props.disabled}
         invalid={!!props.error}
@@ -250,6 +251,7 @@ export const multiSelectBrick = createBrick({
       'Multi select',
       <fk-select-input
         configs={props.configs}
+        accessibleLabel={labelOf(props, 'Multi select')}
         value={Array.isArray(props.data) ? (props.data as string[]) : []}
         multiple={true}
         disabled={props.editable || props.disabled}
