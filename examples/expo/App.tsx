@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   Pressable,
   SafeAreaView,
@@ -81,11 +81,14 @@ export default function App() {
   const screen = SCREENS.find((entry) => entry.key === active) ?? SCREENS[0]
 
   // The chrome strings (stepper buttons, grid actions, select search…) come
-  // from the shared translation store; the field labels resolve through the
+  // from the shared translation store — switched synchronously so the very
+  // next render reads the new language; field labels resolve through the
   // locale prop.
-  useEffect(() => {
-    setFkTranslations(locale === 'fr' ? frFkTranslations : {})
-  }, [locale])
+  const switchLocale = () => {
+    const next = locale === 'en' ? 'fr' : 'en'
+    setFkTranslations(next === 'fr' ? frFkTranslations : {})
+    setLocale(next)
+  }
 
   return (
     <FkThemeProvider theme={theme}>
@@ -99,7 +102,7 @@ export default function App() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Toggle language"
-              onPress={() => setLocale(locale === 'en' ? 'fr' : 'en')}
+              onPress={switchLocale}
               style={[styles.chip, { borderColor: theme.colorBorder }]}
             >
               <Text style={{ fontWeight: '700', color: theme.colorPrimary }}>
@@ -118,8 +121,10 @@ export default function App() {
         </View>
 
         <View style={styles.body}>
+          {/* Keyed by screen only: a language change must re-label the form,
+              not remount it — the engine keeps the entered data. */}
           <FormScreen
-            key={`${screen.key}-${locale}`}
+            key={screen.key}
             title={screen.title}
             subtitle={screen.subtitle}
             spec={screen.spec}

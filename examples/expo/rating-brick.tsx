@@ -22,7 +22,14 @@ function Stars(props: NativeBrickProps) {
             disabled={props.disabled}
             onPress={() => props.onDataChange(star)}
           >
-            <Text style={{ fontSize: 30 }}>{star <= value ? '★' : '☆'}</Text>
+            <Text
+              style={{
+                fontSize: 30,
+                color: star <= value ? theme.colorPrimary : theme.colorMuted,
+              }}
+            >
+              {star <= value ? '★' : '☆'}
+            </Text>
           </Pressable>
         ))}
       </View>
