@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-core",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Framework-agnostic core for FormKrafter: form specs, RFC 6902 ops with undo/redo, Ajv validation, sandboxed rules engine and injectable services",
   "license": "MIT",
   "type": "module",
