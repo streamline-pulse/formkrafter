@@ -16,7 +16,7 @@
     },
     "docs": {
       "name": "formkrafter-docs",
-      "version": "0.0.10",
+      "version": "0.0.11",
       "dependencies": {
         "@astrojs/starlight": "^0.41.4",
         "@streamline-pulse/formkrafter-core": "workspace:*",
@@ -39,7 +39,7 @@
     },
     "examples/expo": {
       "name": "formkrafter-example-expo",
-      "version": "0.0.6",
+      "version": "0.0.7",
       "dependencies": {
         "@react-native-community/datetimepicker": "9.1.0",
         "@streamline-pulse/formkrafter-core": "workspace:*",
@@ -118,7 +118,7 @@
     },
     "examples/vue": {
       "name": "formkrafter-example-vue",
-      "version": "0.0.9",
+      "version": "0.0.10",
       "dependencies": {
         "@streamline-pulse/formkrafter-core": "workspace:*",
         "@streamline-pulse/formkrafter-vue": "workspace:*",
@@ -135,7 +135,7 @@
     },
     "packages/core": {
       "name": "@streamline-pulse/formkrafter-core",
-      "version": "0.10.1",
+      "version": "0.11.0",
       "dependencies": {
         "acorn": "catalog:",
         "ajv": "catalog:",
@@ -151,7 +151,7 @@
     },
     "packages/react": {
       "name": "@streamline-pulse/formkrafter-react",
-      "version": "0.10.1",
+      "version": "0.11.0",
       "dependencies": {
         "@stencil/react-output-target": "^1.6.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -167,7 +167,7 @@
     },
     "packages/react-native": {
       "name": "@streamline-pulse/formkrafter-react-native",
-      "version": "0.10.1",
+      "version": "0.11.0",
       "dependencies": {
         "@streamline-pulse/formkrafter-core": "workspace:*",
       },
@@ -189,7 +189,7 @@
     },
     "packages/vue": {
       "name": "@streamline-pulse/formkrafter-vue",
-      "version": "0.10.1",
+      "version": "0.11.0",
       "dependencies": {
         "@stencil/vue-output-target": "^0.14.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -204,7 +204,7 @@
     },
     "packages/wc": {
       "name": "@streamline-pulse/formkrafter-wc",
-      "version": "0.10.1",
+      "version": "0.11.0",
       "dependencies": {
         "@atlaskit/pragmatic-drag-and-drop": "catalog:",
         "@codemirror/autocomplete": "^6.20.3",
