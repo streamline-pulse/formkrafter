@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef, watchEffect } from 'vue'
+import { computed, ref, shallowRef, watchEffect } from 'vue'
 import { FkFormBuilder } from '@streamline-pulse/formkrafter-vue'
 import { createBrick, h, registerBrick } from '@streamline-pulse/formkrafter-wc'
 import { services } from '@streamline-pulse/formkrafter-core'
@@ -22,12 +22,15 @@ import {
  * FormKrafter's dark mode is pure CSS cascade: it needs `.dark` or
  * `data-fk-theme="dark"` on an ancestor. Without it the components stay in
  * light mode regardless of the page's own colours.
+ *
+ * The initial value is decided by an inline script in index.html so there is
+ * no flash; here we only mirror and update it. This page's own tokens key off
+ * the same `.dark` class, so the toggle moves the page and the form together.
  */
-const dark = ref(true)
-
-onMounted(() => {
-  dark.value = !window.matchMedia('(prefers-color-scheme: light)').matches
-})
+// Read at setup, not in onMounted: watchEffect runs immediately, so a
+// placeholder default would overwrite what the inline script decided before
+// onMounted ever got to read it back.
+const dark = ref(document.documentElement.classList.contains('dark'))
 
 watchEffect(() => {
   const root = document.documentElement
