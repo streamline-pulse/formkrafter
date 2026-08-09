@@ -1,5 +1,14 @@
 # formkrafter-example-vue
 
+## 0.0.14
+
+### Patch Changes
+
+- Updated dependencies [c9622ff]
+  - @streamline-pulse/formkrafter-wc@0.13.1
+  - @streamline-pulse/formkrafter-vue@0.13.1
+  - @streamline-pulse/formkrafter-core@0.13.1
+
 ## 0.0.13
 
 ### Patch Changes
