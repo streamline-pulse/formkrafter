@@ -43,7 +43,7 @@
     "docs:build": "bun run --cwd docs build",
     "lint:fix": "eslint . --fix",
     "changeset": "changeset",
-    "version-packages": "changeset version && rm -f bun.lock && bun install",
+    "version-packages": "changeset version && bun install",
     "release": "bun run build && bun scripts/release.mjs"
   },
   "devDependencies": {
