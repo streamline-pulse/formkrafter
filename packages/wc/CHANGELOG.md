@@ -1,5 +1,46 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.6.0
+
+### Minor Changes
+
+- 5599714: **Breaking:** `JsRunnerService.validateJs()` now returns `{ valid }` instead of
+  `{ valide }`.
+
+  The misspelling was part of the public interface, so anyone implementing a
+  custom JS runner or reading the result inherited it. The result type is now
+  exported as `JsValidationResult`:
+
+  ```ts
+  import type { JsValidationResult } from "@streamline-pulse/formkrafter-core";
+
+  const { valid, error } = services.jsRunnerService.validateJs(code);
+  ```
+
+  If you read `validation.valide`, rename it to `validation.valid`. If you
+  implement `JsRunnerService` yourself, return `valid` from `validateJs`. Nothing
+  else changes — the semantics and the `error` field are untouched.
+
+  **Also removed:** the `JsRunnerServiceImplementation` export, an unused alias of
+  `SandboxJsRunnerService`. Import `SandboxJsRunnerService` directly.
+
+### Patch Changes
+
+- da9712f: Fix the built-in bricks disappearing when an app registers a custom brick.
+
+  `<fk-form-render>` and `<fk-form-builder>` only registered the 30 built-in
+  bricks when the registry was empty. Registering a custom brick at startup —
+  the flow the docs recommend — left the registry non-empty, so the built-ins
+  never registered and every spec rendered `Brick panel:column not found`, with
+  only the custom brick left in the palette.
+
+  The components now always call `registerDefaultBricks()`, which is idempotent:
+  it tracks whether the defaults are already in place through a `globalThis`
+  flag, mirroring how the registry itself is shared across bundle copies.
+
+- Updated dependencies [5599714]
+  - @streamline-pulse/formkrafter-core@0.6.0
+
 ## 0.5.1
 
 ### Patch Changes
