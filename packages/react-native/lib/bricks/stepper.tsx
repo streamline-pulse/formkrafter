@@ -1,5 +1,5 @@
 import { Children, useState } from 'react'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import { fkT, resolveLocalizedText } from '@streamline-pulse/formkrafter-core'
 import { createNativeBrick } from '../registry'
 import type { NativeBrick, NativeBrickProps } from '../registry'
@@ -44,85 +44,131 @@ function StepperControl(props: NativeBrickProps) {
   const showSubmit = config('showSubmit', false) && active === last
 
   return (
-    <View style={{ gap: theme.spacing * 1.5 }}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={{ flexDirection: 'row', gap: theme.spacing }}>
-          {labels.map((label, index) => {
-            const current = index === active
-            const done = index < active
-            return (
-              <Pressable
-                key={`${index}-${label}`}
-                accessibilityRole="button"
-                accessibilityState={{ selected: current }}
-                onPress={() => goToStep(index)}
+    <View style={{ gap: theme.spacing * 2 }}>
+      {/* Numbered circles joined by connector lines; done steps fill in. */}
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+        {labels.map((label, index) => {
+          const current = index === active
+          const done = index < active
+          return (
+            <View key={`${index}-${label}`} style={{ flex: 1, alignItems: 'center' }}>
+              <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: theme.spacing / 2,
-                  paddingHorizontal: theme.spacing * 1.5,
-                  paddingVertical: theme.spacing,
-                  borderRadius: 999,
-                  borderWidth: 1,
-                  borderColor: current ? theme.colorPrimary : theme.colorBorder,
-                  backgroundColor: current ? `${theme.colorPrimary}18` : 'transparent',
+                  alignSelf: 'stretch',
                 }}
               >
-                <Text
+                <View
                   style={{
-                    fontSize: 12,
-                    fontWeight: '700',
-                    color: current || done ? theme.colorPrimary : theme.colorMuted,
+                    flex: 1,
+                    height: 2,
+                    backgroundColor:
+                      index === 0
+                        ? 'transparent'
+                        : done || current
+                          ? theme.colorPrimary
+                          : theme.colorBorder,
+                  }}
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: current }}
+                  accessibilityLabel={label}
+                  onPress={() => goToStep(index)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    borderWidth: 2,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderColor:
+                      done || current ? theme.colorPrimary : theme.colorBorder,
+                    backgroundColor: done
+                      ? theme.colorPrimary
+                      : current
+                        ? `${theme.colorPrimary}18`
+                        : theme.colorSurface,
                   }}
                 >
-                  {done ? '✓' : index + 1}
-                </Text>
-                <Text
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '700',
+                      color: done
+                        ? '#ffffff'
+                        : current
+                          ? theme.colorPrimary
+                          : theme.colorMuted,
+                    }}
+                  >
+                    {done ? '✓' : index + 1}
+                  </Text>
+                </Pressable>
+                <View
                   style={{
-                    fontSize: 13,
-                    fontWeight: current ? '600' : '400',
-                    color: current ? theme.colorPrimary : theme.colorText,
+                    flex: 1,
+                    height: 2,
+                    backgroundColor:
+                      index === labels.length - 1
+                        ? 'transparent'
+                        : done
+                          ? theme.colorPrimary
+                          : theme.colorBorder,
                   }}
-                >
-                  {label}
-                </Text>
-              </Pressable>
-            )
-          })}
-        </View>
-      </ScrollView>
+                />
+              </View>
+              <Text
+                numberOfLines={1}
+                style={{
+                  marginTop: 6,
+                  fontSize: 11,
+                  fontWeight: current ? '700' : '500',
+                  color: current ? theme.colorPrimary : theme.colorMuted,
+                }}
+              >
+                {label}
+              </Text>
+            </View>
+          )
+        })}
+      </View>
 
       {steps[active] ?? null}
 
       {steps.length > 1 ? (
-        <View style={{ flexDirection: 'row', gap: theme.spacing }}>
-          <Pressable
-            accessibilityRole="button"
-            disabled={active === 0}
-            onPress={() => setActive(Math.max(active - 1, 0))}
-            style={{
-              opacity: active === 0 ? 0.4 : 1,
-              paddingHorizontal: theme.spacing * 2,
-              paddingVertical: theme.spacing * 1.25,
-              borderRadius: theme.radius,
-              borderWidth: 1,
-              borderColor: theme.colorBorder,
-            }}
-          >
-            <Text style={{ color: theme.colorText }}>{fkT('stepper.back')}</Text>
-          </Pressable>
+        <View style={{ flexDirection: 'row', gap: theme.spacing, alignItems: 'center' }}>
+          {active > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setActive(Math.max(active - 1, 0))}
+              style={{
+                paddingHorizontal: theme.spacing * 2,
+                paddingVertical: theme.spacing * 1.5,
+                borderRadius: theme.radius,
+                borderWidth: 1,
+                borderColor: theme.colorBorder,
+              }}
+            >
+              <Text style={{ color: theme.colorText, fontWeight: '500' }}>
+                {fkT('stepper.back')}
+              </Text>
+            </Pressable>
+          ) : null}
           {active < last ? (
             <Pressable
               accessibilityRole="button"
               onPress={() => gate(active) && setActive(Math.min(active + 1, last))}
               style={{
-                paddingHorizontal: theme.spacing * 2,
-                paddingVertical: theme.spacing * 1.25,
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: theme.spacing * 1.5,
                 borderRadius: theme.radius,
                 backgroundColor: theme.colorPrimary,
               }}
             >
-              <Text style={{ color: '#ffffff', fontWeight: '600' }}>
+              <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
                 {fkT('stepper.next')}
               </Text>
             </Pressable>
@@ -132,13 +178,14 @@ function StepperControl(props: NativeBrickProps) {
               accessibilityRole="button"
               onPress={() => gate(active) && props.engine.submit()}
               style={{
-                paddingHorizontal: theme.spacing * 2,
-                paddingVertical: theme.spacing * 1.25,
+                flex: 1,
+                alignItems: 'center',
+                paddingVertical: theme.spacing * 1.5,
                 borderRadius: theme.radius,
                 backgroundColor: theme.colorPrimary,
               }}
             >
-              <Text style={{ color: '#ffffff', fontWeight: '600' }}>
+              <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
                 {fkT('stepper.submit')}
               </Text>
             </Pressable>

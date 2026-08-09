@@ -8,6 +8,7 @@ import { tagsBrick } from './tags'
 import { addressBrick } from './address'
 import { stepperBrick } from './stepper'
 import { contentBrick, hiddenBrick, recapBrick } from './output'
+import { dataGridBrick } from './data-grid'
 import { layoutBricks } from './layout'
 
 const DEFAULTS_KEY = Symbol.for('formkrafter.native.defaultBricksRegistered')
@@ -36,6 +37,7 @@ export function registerDefaultNativeBricks(): void {
     contentBrick,
     hiddenBrick,
     recapBrick,
+    dataGridBrick,
     ...layoutBricks,
   ]
   for (const brick of defaults) {

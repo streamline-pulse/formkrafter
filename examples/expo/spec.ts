@@ -25,14 +25,14 @@ export const wizardSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Identity',
-          configs: { uid: 's-identity', key: 'identity', label: 'Identity' },
+          configs: { uid: 's-identity', key: 'identity', label: { en: 'Identity', fr: 'Identité' } },
           children: [
             {
               type: 'input',
               dataType: 'string',
               id: 'text',
               name: 'Text',
-              configs: { uid: 'u-name', key: 'fullName', label: 'Full name' },
+              configs: { uid: 'u-name', key: 'fullName', label: { en: 'Full name', fr: 'Nom complet' } },
               validations: [{ validator: 'required' }],
             },
             {
@@ -53,7 +53,7 @@ export const wizardSpec = cast({
               dataType: 'string',
               id: 'date',
               name: 'Date',
-              configs: { uid: 'u-birth', key: 'birthdate', label: 'Birth date' },
+              configs: { uid: 'u-birth', key: 'birthdate', label: { en: 'Birth date', fr: 'Date de naissance' } },
               validations: [{ validator: 'required' }],
             },
           ],
@@ -62,7 +62,7 @@ export const wizardSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Profile',
-          configs: { uid: 's-profile', key: 'profile', label: 'Profile' },
+          configs: { uid: 's-profile', key: 'profile', label: { en: 'Profile', fr: 'Profil' } },
           children: [
             {
               type: 'input',
@@ -113,14 +113,14 @@ export const wizardSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Confirm',
-          configs: { uid: 's-confirm', key: 'confirm', label: 'Confirm' },
+          configs: { uid: 's-confirm', key: 'confirm', label: { en: 'Confirm', fr: 'Confirmer' } },
           children: [
             {
               type: 'input',
               dataType: 'boolean',
               id: 'checkbox',
               name: 'Checkbox',
-              configs: { uid: 'u-terms', key: 'terms', label: 'I accept the terms' },
+              configs: { uid: 'u-terms', key: 'terms', label: { en: 'I accept the terms', fr: "J'accepte les conditions" } },
               validations: [{ validator: 'required' }],
             },
           ],
@@ -272,6 +272,120 @@ export const recapSpec = cast({
               name: 'Recap',
               configs: { uid: 'u-recap', label: 'Recap', groupBySections: true },
             },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+/** Remote HTTP options and a data grid — the data-driven bricks. */
+export const dataSpec = cast({
+  type: 'panel',
+  id: 'column',
+  name: 'Form',
+  configs: { uid: 'root', key: 'form' },
+  children: [
+    {
+      type: 'input',
+      dataType: 'string',
+      id: 'select',
+      name: 'Select',
+      configs: {
+        uid: 'u-country',
+        key: 'country',
+        label: { en: 'Country (remote HTTP)', fr: 'Pays (HTTP distant)' },
+        placeholder: { en: 'Pick a country', fr: 'Choisissez un pays' },
+        optionsSource: 'remote',
+        optionsUrl: 'https://restcountries.com/v3.1/all?fields=name',
+        labelKey: 'name.common',
+        valueKey: 'name.common',
+      },
+      validations: [{ validator: 'required' }],
+    },
+    {
+      type: 'collection',
+      dataType: 'array',
+      id: 'data-grid',
+      name: 'Data grid',
+      configs: {
+        uid: 'u-team',
+        key: 'team',
+        label: { en: 'Team members', fr: "Membres de l'équipe" },
+      },
+      children: [
+        {
+          type: 'input',
+          dataType: 'string',
+          id: 'text',
+          name: 'Text',
+          configs: { uid: 'g-name', key: 'name', label: { en: 'Name', fr: 'Nom' } },
+          validations: [{ validator: 'required' }],
+        },
+        {
+          type: 'input',
+          dataType: 'string',
+          id: 'select',
+          name: 'Select',
+          configs: {
+            uid: 'g-role',
+            key: 'role',
+            label: { en: 'Role', fr: 'Rôle' },
+            options: 'Engineer\nDesigner\nManager',
+          },
+        },
+      ],
+    },
+  ],
+})
+
+/** A custom brick registered by the application, next to built-ins. */
+export const customSpec = cast({
+  type: 'panel',
+  id: 'column',
+  name: 'Form',
+  configs: { uid: 'root', key: 'form' },
+  children: [
+    {
+      type: 'output',
+      dataType: 'void',
+      id: 'content',
+      name: 'Content',
+      configs: {
+        uid: 'u-note',
+        content:
+          'The stars below are a custom brick registered with registerNativeBrick.',
+      },
+    },
+    {
+      type: 'input',
+      dataType: 'number',
+      id: 'rating',
+      name: 'Rating',
+      configs: {
+        uid: 'u-rating',
+        key: 'rating',
+        label: { en: 'How was it?', fr: "C'était comment ?" },
+      },
+      validations: [{ validator: 'required' }],
+    },
+    {
+      type: 'input',
+      dataType: 'string',
+      id: 'textarea',
+      name: 'Text area',
+      configs: {
+        uid: 'u-feedback',
+        key: 'feedback',
+        label: { en: 'Tell us more', fr: 'Dites-nous en plus' },
+      },
+      rules: [
+        {
+          name: 'only-when-rated-low',
+          type: 'jsonLogic',
+          logic: { '>': [{ var: 'rating' }, 3] },
+          effects: [
+            { property: { target: 'hidden', type: 'boolean' }, boolean: true },
           ],
         },
       ],

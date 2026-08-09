@@ -4,5 +4,5 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["App.tsx", "index.ts", "spec.ts", "screens"]
+  "include": ["App.tsx", "index.ts", "spec.ts", "rating-brick.tsx", "screens"]
 }

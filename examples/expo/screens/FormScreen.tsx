@@ -8,6 +8,7 @@ export function FormScreen(props: {
   title: string
   subtitle: string
   spec: BrickSpec
+  locale?: string
   initialData?: Record<string, unknown>
   showValidateButton?: boolean
 }) {
@@ -26,6 +27,7 @@ export function FormScreen(props: {
       <FormRenderer
         ref={form}
         spec={props.spec}
+        locale={props.locale}
         data={props.initialData}
         onDataChange={(next) => setData(next)}
         onSubmit={(_next, isValid, errors) =>

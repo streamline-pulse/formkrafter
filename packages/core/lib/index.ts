@@ -22,6 +22,13 @@ export { SelectOption, normalizeOptions } from "./utils/options";
 // Recap summarization, shared by every renderer
 export { RecapItem, collectRecapItems } from "./utils/recap";
 
+// Remote-options plumbing, shared by every renderer
+export {
+    interpolateTemplate,
+    parseHeaderLines,
+    appendSearchParam
+} from "./utils/remote";
+
 // Brick
 export { PanelBrickProps, InputBrickProps, CollectionBrickProps } from "./brick/types";
 export { Brick, BrickProps } from "./brick/brick";

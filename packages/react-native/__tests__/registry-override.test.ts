@@ -12,6 +12,7 @@ mock.module('react-native', () => ({
   Pressable: 'Pressable',
   FlatList: 'FlatList',
   ScrollView: 'ScrollView',
+  ActivityIndicator: 'ActivityIndicator',
   Platform: { OS: 'ios' },
 }))
 

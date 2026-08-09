@@ -1,27 +1,139 @@
-import { useState } from 'react'
-import { FlatList, Modal, Pressable, Text, View } from 'react-native'
-import { fkT, normalizeOptions } from '@streamline-pulse/formkrafter-core'
+import { useEffect, useRef, useState } from 'react'
+import {
+  ActivityIndicator,
+  FlatList,
+  Modal,
+  Pressable,
+  Text,
+  TextInput,
+} from 'react-native'
+import {
+  appendSearchParam,
+  evalBrickCode,
+  fkT,
+  interpolateTemplate,
+  normalizeOptions,
+  parseHeaderLines,
+  services,
+} from '@streamline-pulse/formkrafter-core'
 import type { SelectOption } from '@streamline-pulse/formkrafter-core'
 import { createNativeBrick } from '../registry'
 import type { NativeBrick, NativeBrickProps } from '../registry'
 import { useFkTheme } from '../theme'
 import { Field } from './field'
 
+type Props = NativeBrickProps & { multiple?: boolean }
+
 /**
- * A select rendered as a full-screen sheet — there is no native <select> on
- * mobile. In multiple mode the sheet stays open and rows toggle. Static
- * options only for now; remote/catalog sources arrive with the services
- * integration.
+ * Same option sources as the web select: static, remote (HTTP, with
+ * {token} interpolation from form data, header lines and search-as-you-type
+ * through the configured search param), catalog via optionSourceService,
+ * dataMap paths and sandboxed JS.
  */
-function SelectControl(props: NativeBrickProps & { multiple?: boolean }) {
+function useOptions(props: Props, query: string, open: boolean) {
+  const source = (props.configs.optionsSource as string) ?? 'static'
+  const labelKey =
+    typeof props.configs.labelKey === 'string' ? props.configs.labelKey : 'label'
+  const valueKey =
+    typeof props.configs.valueKey === 'string' ? props.configs.valueKey : 'value'
+
+  const [remote, setRemote] = useState<SelectOption[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string>()
+  const signature = useRef<string>('')
+
+  const searchParam =
+    typeof props.configs.searchParam === 'string' ? props.configs.searchParam : ''
+
+  let url: string | undefined
+  if (source === 'remote' && typeof props.configs.optionsUrl === 'string') {
+    url = interpolateTemplate(props.configs.optionsUrl, props.dataMap)
+    if (searchParam) url = appendSearchParam(url, searchParam, query.trim())
+  }
+  const headers = parseHeaderLines(props.configs.optionsHeaders, props.dataMap)
+  const ref = typeof props.configs.optionsRef === 'string' ? props.configs.optionsRef : ''
+
+  useEffect(() => {
+    if (!open) return
+    if (source !== 'remote' && source !== 'catalog') return
+
+    const key = source === 'remote' ? `${url}|${JSON.stringify(headers ?? {})}` : ref
+    if (!key || key === signature.current) return
+
+    const timer = setTimeout(async () => {
+      signature.current = key
+      setLoading(true)
+      setError(undefined)
+      try {
+        const raw =
+          source === 'remote'
+            ? await services.dataSourceService.fetchOptions(
+                url!,
+                headers ? { headers } : undefined,
+              )
+            : await services.optionSourceService.fetchOptions(ref)
+        setRemote(normalizeOptions(raw, labelKey, valueKey))
+      } catch (cause) {
+        setRemote([])
+        setError(cause instanceof Error ? cause.message : String(cause))
+      } finally {
+        setLoading(false)
+      }
+    }, searchParam ? 250 : 0)
+
+    return () => clearTimeout(timer)
+  })
+
+  let options: SelectOption[]
+  switch (source) {
+    case 'remote':
+    case 'catalog':
+      options = remote
+      break
+    case 'dataMap': {
+      const path = props.configs.optionsPath
+      options = normalizeOptions(
+        typeof path === 'string' ? props.dataMap?.[path] : [],
+        labelKey,
+        valueKey,
+      )
+      break
+    }
+    case 'js': {
+      const code = props.configs.optionsCode
+      if (typeof code !== 'string' || !code) {
+        options = []
+        break
+      }
+      const result = evalBrickCode(code, props.dataMap)
+      options =
+        result instanceof Error ? [] : normalizeOptions(result, labelKey, valueKey)
+      if (result instanceof Error) setError(result.message)
+      break
+    }
+    default:
+      options = normalizeOptions(props.configs.options, labelKey, valueKey)
+  }
+
+  // Remote search filters server-side through the search param; everything
+  // else filters client-side.
+  const filtered =
+    query && !(source === 'remote' && searchParam)
+      ? options.filter((option) =>
+          option.label.toLowerCase().includes(query.toLowerCase()),
+        )
+      : options
+
+  return { options, filtered, loading, error }
+}
+
+function SelectControl(props: Props) {
   const theme = useFkTheme()
   const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState('')
 
-  const options: SelectOption[] = normalizeOptions(
-    props.configs.options,
-    typeof props.configs.labelKey === 'string' ? props.configs.labelKey : 'label',
-    typeof props.configs.valueKey === 'string' ? props.configs.valueKey : 'value',
-  )
+  const { options, filtered, loading, error } = useOptions(props, query, open)
+
   const values = props.multiple
     ? Array.isArray(props.data)
       ? (props.data as string[])
@@ -35,8 +147,13 @@ function SelectControl(props: NativeBrickProps & { multiple?: boolean }) {
         .join(', ')
     : selected?.label
 
+  const close = () => {
+    setOpen(false)
+    setQuery('')
+  }
+
   return (
-    <Field label={props.configs.label} error={props.error}>
+    <Field label={props.configs.label} error={props.error ?? error}>
       <Pressable
         disabled={props.disabled}
         accessibilityRole="button"
@@ -53,76 +170,100 @@ function SelectControl(props: NativeBrickProps & { multiple?: boolean }) {
         }}
       >
         <Text style={{ color: summary ? theme.colorText : theme.colorMuted, fontSize: 15 }}>
-          {summary || (props.configs.placeholder ? String(props.configs.placeholder) : ' ')}
+          {summary ||
+            (props.configs.placeholder ? String(props.configs.placeholder) : ' ')}
         </Text>
       </Pressable>
 
-      <Modal visible={open} animationType="slide" transparent onRequestClose={() => setOpen(false)}>
+      <Modal visible={open} animationType="slide" transparent onRequestClose={close}>
         <Pressable
           style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' }}
-          onPress={() => setOpen(false)}
+          onPress={close}
         >
-          <View
+          <Pressable
             style={{
               backgroundColor: theme.colorSurface,
               borderTopLeftRadius: theme.radius * 2,
               borderTopRightRadius: theme.radius * 2,
-              maxHeight: '60%',
+              maxHeight: '70%',
               paddingVertical: theme.spacing,
             }}
           >
-            <FlatList
-              data={options}
-              keyExtractor={(option) => option.value}
-              ListEmptyComponent={
-                <Text style={{ color: theme.colorMuted, padding: theme.spacing * 2 }}>
-                  {fkT('select.empty')}
-                </Text>
-              }
-              renderItem={({ item }) => {
-                const active = props.multiple
-                  ? values.includes(item.value)
-                  : item.value === props.data
-                return (
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
-                    onPress={() => {
-                      if (!props.multiple) {
-                        props.onDataChange(item.value)
-                        return setOpen(false)
-                      }
-                      props.onDataChange(
-                        active
-                          ? values.filter((value) => value !== item.value)
-                          : [...values, item.value],
-                      )
-                    }}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      paddingHorizontal: theme.spacing * 2,
-                      paddingVertical: theme.spacing * 1.5,
-                      backgroundColor: active ? `${theme.colorPrimary}22` : 'transparent',
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: active ? theme.colorPrimary : theme.colorText,
-                        fontWeight: active ? '600' : '400',
-                      }}
-                    >
-                      {item.label}
-                    </Text>
-                    {props.multiple && active ? (
-                      <Text style={{ color: theme.colorPrimary, fontWeight: '700' }}>✓</Text>
-                    ) : null}
-                  </Pressable>
-                )
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder={fkT('select.search')}
+              placeholderTextColor={theme.colorMuted}
+              accessibilityLabel={fkT('select.search')}
+              style={{
+                marginHorizontal: theme.spacing * 2,
+                marginBottom: theme.spacing,
+                borderWidth: 1,
+                borderColor: theme.colorBorder,
+                borderRadius: theme.radius,
+                paddingHorizontal: theme.spacing * 1.5,
+                paddingVertical: theme.spacing,
+                fontSize: 15,
+                color: theme.colorText,
               }}
             />
-          </View>
+            {loading ? (
+              <ActivityIndicator style={{ padding: theme.spacing * 2 }} />
+            ) : (
+              <FlatList
+                data={filtered}
+                keyExtractor={(option) => option.value}
+                keyboardShouldPersistTaps="handled"
+                ListEmptyComponent={
+                  <Text style={{ color: theme.colorMuted, padding: theme.spacing * 2 }}>
+                    {error ?? fkT('select.empty')}
+                  </Text>
+                }
+                renderItem={({ item }) => {
+                  const active = props.multiple
+                    ? values.includes(item.value)
+                    : item.value === props.data
+                  return (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: active }}
+                      onPress={() => {
+                        if (!props.multiple) {
+                          props.onDataChange(item.value)
+                          return close()
+                        }
+                        props.onDataChange(
+                          active
+                            ? values.filter((value) => value !== item.value)
+                            : [...values, item.value],
+                        )
+                      }}
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingHorizontal: theme.spacing * 2,
+                        paddingVertical: theme.spacing * 1.5,
+                        backgroundColor: active ? `${theme.colorPrimary}22` : 'transparent',
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: active ? theme.colorPrimary : theme.colorText,
+                          fontWeight: active ? '600' : '400',
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                      {props.multiple && active ? (
+                        <Text style={{ color: theme.colorPrimary, fontWeight: '700' }}>✓</Text>
+                      ) : null}
+                    </Pressable>
+                  )
+                }}
+              />
+            )}
+          </Pressable>
         </Pressable>
       </Modal>
     </Field>
