@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "FormKrafter Expo",
+    "slug": "formkrafter-expo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "platforms": ["ios", "android"]
+  }
+}

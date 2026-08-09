@@ -39,6 +39,13 @@ export default tseslint.config(
     },
   },
   {
+    // Metro only loads CommonJS config files.
+    files: ['examples/expo/metro.config.js'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     files: ['packages/wc/**/*.tsx'],
     rules: {
       '@typescript-eslint/no-unused-vars': [

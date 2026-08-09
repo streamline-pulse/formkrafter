@@ -1,11 +1,11 @@
 ---
 title: Packages
-description: Les quatre packages npm, leurs points d'entrée, ce que chacun exporte, et ceux que vous avez réellement besoin d'installer.
+description: Les cinq packages npm, leurs points d'entrée, ce que chacun exporte, et ceux que vous avez réellement besoin d'installer.
 ---
 
 import { Aside, Tabs, TabItem, CardGrid, LinkCard } from '@astrojs/starlight/components'
 
-Les quatre packages sont publiés sous le scope `@streamline-pulse` avec des
+Les cinq packages sont publiés sous le scope `@streamline-pulse` avec des
 **versions synchronisées** — une release les incrémente ensemble, vous n'avez
 donc jamais à réfléchir à un mélange de versions.
 
@@ -16,6 +16,7 @@ donc jamais à réfléchir à un mélange de versions.
 | Une application React | `formkrafter-react` |
 | Une application Vue 3 | `formkrafter-vue` |
 | Du HTML pur, ou un autre framework | `formkrafter-wc` |
+| Une application React Native ou Expo | `formkrafter-react-native` |
 | Un backend qui valide les soumissions | `formkrafter-core` |
 
 <Aside type="tip">
@@ -110,6 +111,25 @@ De fins wrappers générés à partir des mêmes Web Components, avec props et
 
 Voir [composants](../components/) pour la référence complète des props, événements
 et méthodes.
+
+## `formkrafter-react-native`
+
+Un package **renderer uniquement** pour React Native et Expo — pas de Web
+Components, donc pas de builder non plus. Il partage avec le renderer web la
+validation, le moteur de règles et le parsing d'options de core, et rend les
+bricks avec des primitives natives.
+
+| Domaine | Exports |
+|---|---|
+| Rendu | `FormRenderer` (avec `validate()`/`submit()` via une ref), `BrickRenderer` |
+| Moteur | `FormEngine`, `useFormEngine` — la machine à états du renderer, utilisable seule |
+| Registre | `createNativeBrick`, `registerNativeBrick`, `registerNativeBricks`, `getNativeBrick`, `registerDefaultNativeBricks`, `Field` |
+| Theming | `FkThemeProvider`, `useFkTheme`, `fkLightTheme`, `fkDarkTheme` |
+
+La couverture des bricks est un sous-ensemble croissant du build web :
+variantes texte, nombre, case à cocher, select (options statiques) et les
+layouts colonne/ligne/groupe. Les bricks sans renderer natif affichent un
+placeholder explicite au lieu d'échouer.
 
 ## Versionnage et releases
 
