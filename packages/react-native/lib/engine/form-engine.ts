@@ -3,7 +3,7 @@ import {
   getAffectedProperties,
   hasNestedForms,
   iterateBricks,
-  validateBrickSpecDataDetailed,
+  validateFormData,
 } from '@streamline-pulse/formkrafter-core'
 import type {
   BrickSpec,
@@ -16,6 +16,9 @@ export interface FormEngineSnapshot {
   spec: BrickSpec
   expanding: boolean
   expandError?: string
+  /** Bumped by validate(): bricks with private touched state (the data
+   *  grid) use it to surface every error after a global validation. */
+  validationEpoch: number
 }
 
 export interface FormEngineCallbacks {
@@ -53,6 +56,8 @@ export class FormEngine {
   private expandedSpec?: BrickSpec
   private expanding = false
   private expandError?: string
+  private validationEpoch = 0
+  private validationCache?: ValidationResult
 
   private listeners = new Set<() => void>()
   private snapshot!: FormEngineSnapshot
@@ -76,6 +81,7 @@ export class FormEngine {
   setSpec(spec: BrickSpec): void {
     if (spec === this.spec) return
     this.spec = spec
+    this.validationCache = undefined
     this.notify()
     void this.runExpansion()
   }
@@ -83,11 +89,13 @@ export class FormEngine {
   setLocale(locale?: string): void {
     if (locale === this.locale) return
     this.locale = locale
+    this.validationCache = undefined
     this.notify()
   }
 
   setData(data?: Record<string, unknown>): void {
     this.data = { ...data }
+    this.validationCache = undefined
     this.notify()
   }
 
@@ -95,6 +103,7 @@ export class FormEngine {
   setValues(partial: Record<string, unknown>): void {
     this.data = this.applyValueEffects({ ...this.data, ...partial })
     for (const key of Object.keys(partial)) this.touched[key] = true
+    this.validationCache = undefined
 
     const { valid, errors } = this.runValidation()
     this.notify()
@@ -113,6 +122,7 @@ export class FormEngine {
       const key = brick.configs?.key
       if (key) this.touched[key] = true
     }
+    this.validationEpoch++
 
     const result = this.runValidation()
     this.notify()
@@ -194,13 +204,16 @@ export class FormEngine {
     // like the web renderer guards its render.
     if (!this.effectiveSpec()) return { valid: true, errors: {} }
 
-    const presentData = Object.fromEntries(
-      Object.entries(this.data).filter(
-        ([, value]) => value !== '' && value !== null && value !== undefined,
-      ),
+    // validateFormData strips absent values itself and, unlike the web
+    // renderer's DOM-bound path, descends into collection rows — a grid
+    // with an invalid row fails the global verdict. Memoized because the
+    // change path and the snapshot rebuild both need it.
+    this.validationCache ??= validateFormData(
+      this.effectiveSpec(),
+      this.data,
+      this.locale,
     )
-
-    return validateBrickSpecDataDetailed(this.effectiveSpec(), presentData, this.locale)
+    return this.validationCache
   }
 
   private visibleErrors(): Record<string, string> {
@@ -218,6 +231,7 @@ export class FormEngine {
       spec: this.effectiveSpec(),
       expanding: this.expanding,
       expandError: this.expandError,
+      validationEpoch: this.validationEpoch,
     }
   }
 

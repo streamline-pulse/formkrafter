@@ -18,11 +18,13 @@ import {
   fkLightTheme,
 } from '@streamline-pulse/formkrafter-react-native'
 import { registerNativeDateBricks } from '@streamline-pulse/formkrafter-react-native/date'
+import { registerNativeFileBrick } from '@streamline-pulse/formkrafter-react-native/file'
 import { FormScreen } from './screens/FormScreen'
 import { registerRatingBrick } from './rating-brick'
 import { customSpec, dataSpec, recapSpec, simpleSpec, wizardSpec } from './spec'
 
 registerNativeDateBricks()
+registerNativeFileBrick()
 registerRatingBrick()
 
 const SCREENS = [
@@ -39,7 +41,7 @@ const SCREENS = [
     key: 'bricks',
     tab: 'Bricks',
     title: 'Bricks',
-    subtitle: 'Content, tags, select boxes, address and a hidden field.',
+    subtitle: 'Tabs, tags, select boxes, address, a file upload and a hidden field.',
     spec: simpleSpec,
     initialData: { source: 'expo-example' },
     showValidateButton: true,

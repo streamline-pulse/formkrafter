@@ -100,6 +100,45 @@ describe('FormEngine', () => {
     expect(engine.getSnapshot().data._context).toBe('secret')
   })
 
+  test('collection rows count in the global verdict', () => {
+    const gridSpec = {
+      type: 'panel',
+      id: 'column',
+      name: 'Form',
+      configs: { uid: 'root', key: 'form' },
+      children: [
+        {
+          type: 'collection',
+          dataType: 'array',
+          id: 'data-grid',
+          name: 'Data grid',
+          configs: { uid: 'g', key: 'team', label: 'Team' },
+          children: [
+            {
+              type: 'input',
+              dataType: 'string',
+              id: 'text',
+              name: 'Text',
+              configs: { uid: 'g-name', key: 'name', label: 'Name' },
+              validations: [{ validator: 'required' }],
+            },
+          ],
+        },
+      ],
+    } as unknown as BrickSpec
+
+    const engine = new FormEngine({ spec: gridSpec, data: { team: [{}] } })
+    expect(engine.getSnapshot().validationEpoch).toBe(0)
+
+    const result = engine.validate()
+    expect(result.valid).toBe(false)
+    expect(Object.keys(result.errors)).toEqual(['team[0].name'])
+    expect(engine.getSnapshot().validationEpoch).toBe(1)
+
+    engine.setValues({ team: [{ name: 'Ada' }] })
+    expect(engine.validate().valid).toBe(true)
+  })
+
   test('an undefined spec never reaches the WeakMap-backed validators', () => {
     const engine = new FormEngine({ spec: undefined as unknown as typeof spec })
     expect(engine.validate()).toEqual({ valid: true, errors: {} })

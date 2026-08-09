@@ -7,6 +7,7 @@ import { selectBoxesBrick } from './select-boxes'
 import { tagsBrick } from './tags'
 import { addressBrick } from './address'
 import { stepperBrick } from './stepper'
+import { tabsBrick } from './tabs'
 import { contentBrick, hiddenBrick, recapBrick } from './output'
 import { dataGridBrick } from './data-grid'
 import { layoutBricks } from './layout'
@@ -34,6 +35,7 @@ export function registerDefaultNativeBricks(): void {
     tagsBrick,
     addressBrick,
     stepperBrick,
+    tabsBrick,
     contentBrick,
     hiddenBrick,
     recapBrick,

@@ -130,7 +130,7 @@ export const wizardSpec = cast({
   ],
 })
 
-/** A flat form exercising the input bricks outside any wizard. */
+/** A tabbed form exercising the input bricks outside any wizard. */
 export const simpleSpec = cast({
   type: 'panel',
   id: 'column',
@@ -149,43 +149,78 @@ export const simpleSpec = cast({
       },
     },
     {
-      type: 'input',
-      dataType: 'string',
-      id: 'text',
-      name: 'Text',
-      configs: { uid: 'u-company', key: 'company', label: 'Company' },
-      validations: [{ validator: 'required' }],
-    },
-    {
-      type: 'input',
-      dataType: 'array',
-      id: 'tags',
-      name: 'Tags',
-      configs: {
-        uid: 'u-topics',
-        key: 'topics',
-        label: 'Topics',
-        placeholder: 'Type and press return',
-      },
-    },
-    {
-      type: 'input',
-      dataType: 'array',
-      id: 'select-boxes',
-      name: 'Select boxes',
-      configs: {
-        uid: 'u-channels',
-        key: 'channels',
-        label: 'Notify me via',
-        options: 'Email\nSMS\nPush',
-      },
-    },
-    {
-      type: 'input',
-      dataType: 'object',
-      id: 'address',
-      name: 'Address',
-      configs: { uid: 'u-address', key: 'address', label: 'Address' },
+      type: 'panel',
+      id: 'tabs',
+      name: 'Tabs',
+      configs: { uid: 'u-tabs', key: 'sections', validateTabs: true },
+      children: [
+        {
+          type: 'panel',
+          id: 'group',
+          name: 'Fields',
+          configs: { uid: 't-fields', key: 'fields', label: { en: 'Fields', fr: 'Champs' } },
+          children: [
+            {
+              type: 'input',
+              dataType: 'string',
+              id: 'text',
+              name: 'Text',
+              configs: { uid: 'u-company', key: 'company', label: 'Company' },
+              validations: [{ validator: 'required' }],
+            },
+            {
+              type: 'input',
+              dataType: 'array',
+              id: 'tags',
+              name: 'Tags',
+              configs: {
+                uid: 'u-topics',
+                key: 'topics',
+                label: 'Topics',
+                placeholder: 'Type and press return',
+              },
+            },
+            {
+              type: 'input',
+              dataType: 'array',
+              id: 'select-boxes',
+              name: 'Select boxes',
+              configs: {
+                uid: 'u-channels',
+                key: 'channels',
+                label: 'Notify me via',
+                options: 'Email\nSMS\nPush',
+              },
+            },
+          ],
+        },
+        {
+          type: 'panel',
+          id: 'group',
+          name: 'Details',
+          configs: { uid: 't-details', key: 'details', label: { en: 'Details', fr: 'Détails' } },
+          children: [
+            {
+              type: 'input',
+              dataType: 'object',
+              id: 'address',
+              name: 'Address',
+              configs: { uid: 'u-address', key: 'address', label: 'Address' },
+            },
+            {
+              type: 'input',
+              dataType: 'object',
+              id: 'file',
+              name: 'File',
+              configs: {
+                uid: 'u-attachment',
+                key: 'attachment',
+                label: { en: 'Attachment', fr: 'Pièce jointe' },
+              },
+            },
+          ],
+        },
+      ],
     },
     {
       type: 'input',

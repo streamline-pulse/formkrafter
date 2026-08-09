@@ -132,14 +132,17 @@ distant avec recherche et interpolation `{token}`, catalogue, dataMap, JS
 sandboxé), boutons radio, cases à cocher multiples, étiquettes, adresse,
 contenu, champ caché, la grille de données (lignes en cartes, validation par
 ligne), le récapitulatif (même parcours `collectRecapItems` que la brick web)
-et le wizard à étapes avec validation par étape, plus les layouts
-colonne/ligne/groupe. Date, heure et date/heure vivent sur le point d'entrée
-`formkrafter-react-native/date` : elles nécessitent
-`@react-native-community/datetimepicker` (peer optionnelle), donc les
-applications optent avec `registerNativeDateBricks()` et les autres ne
-résolvent jamais le module natif. Encore web uniquement : fichier, signature,
-code et le rendu nested-form. Les bricks sans renderer natif affichent un
-placeholder explicite au lieu d'échouer.
+le wizard à étapes avec validation par étape et le layout à onglets avec sa
+garde de validation avant de quitter, plus les layouts colonne/ligne/groupe —
+et les lignes de grille comptent dans le verdict global de `validate()`. Deux
+points d'entrée portent les bricks qui exigent un module natif, donc les
+applications optent et les autres ne le résolvent jamais :
+`formkrafter-react-native/date` (`@react-native-community/datetimepicker`,
+`registerNativeDateBricks()`) et `formkrafter-react-native/file`
+(`expo-document-picker`, `registerNativeFileBrick()`, upload via le
+`fileUploadService` de core). Encore web uniquement : signature et code. Les
+bricks sans renderer natif affichent un placeholder explicite au lieu
+d'échouer.
 
 ## Versionnage et releases
 

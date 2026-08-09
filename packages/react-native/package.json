@@ -16,6 +16,11 @@
       "types": "./dist/types/date.d.ts",
       "react-native": "./dist/date.js",
       "import": "./dist/date.js"
+    },
+    "./file": {
+      "types": "./dist/types/file.d.ts",
+      "react-native": "./dist/file.js",
+      "import": "./dist/file.js"
     }
   },
   "keywords": [
@@ -52,16 +57,21 @@
   },
   "peerDependencies": {
     "@react-native-community/datetimepicker": ">=8.0.0",
+    "expo-document-picker": ">=13.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-native": ">=0.76.0"
   },
   "peerDependenciesMeta": {
     "@react-native-community/datetimepicker": {
       "optional": true
+    },
+    "expo-document-picker": {
+      "optional": true
     }
   },
   "devDependencies": {
     "@react-native-community/datetimepicker": "^8.6.0",
+    "expo-document-picker": "^14.0.0",
     "@types/react": "catalog:",
     "react": "catalog:",
     "react-native": "^0.86.0",

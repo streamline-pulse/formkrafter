@@ -14,6 +14,7 @@
     "@streamline-pulse/formkrafter-core": "workspace:*",
     "@streamline-pulse/formkrafter-react-native": "workspace:*",
     "expo": "~57.0.0",
+    "expo-document-picker": "~57.0.1",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-native": "0.86.2",
