@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FormKrafter — plain HTML, no build step</title>
+
+    <!--
+      Everything below comes straight from a CDN. No npm install, no bundler,
+      no framework: one stylesheet, one module script, two custom elements.
+      Pin the version so a release never changes this page under you.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.0/dist/formkrafter-wc/formkrafter-wc.css"
+    />
+
+    <script>
+      // FormKrafter's dark mode is pure CSS cascade — it reads `data-fk-theme`
+      // (or a `.dark` class) from any ancestor. Set it before first paint.
+      ;(() => {
+        const dark = !matchMedia('(prefers-color-scheme: light)').matches
+        document.documentElement.dataset.fkTheme = dark ? 'dark' : 'light'
+        document.documentElement.classList.toggle('dark', dark)
+      })()
+    </script>
+
+    <style>
+      :root {
+        --ink: #0e2a29;
+        --muted: #4c6866;
+        --line: rgba(29, 90, 96, 0.14);
+        --accent: #1d5a60;
+        --bg: #fbfdfc;
+        --panel: #f2f7f6;
+        color-scheme: light;
+        font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      :root.dark {
+        --ink: #eaf4f3;
+        --muted: #93a8a7;
+        --line: rgba(120, 190, 185, 0.16);
+        --accent: #4fb8b2;
+        --bg: #081314;
+        --panel: #0d1b1d;
+        color-scheme: dark;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+      }
+
+      .page { max-width: 64rem; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+      h1 { margin: 0; font-size: 1.8rem; letter-spacing: -0.02em; }
+      .lede { color: var(--muted); margin: 0.5rem 0 1rem; }
+
+      .panel {
+        margin-top: 2rem;
+        border: 1px solid var(--line);
+        border-radius: 0.9rem;
+        padding: 1.25rem;
+        background: var(--panel);
+      }
+
+      .panel h2 { margin: 0 0 1rem; font-size: 1.05rem; }
+
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+        gap: 1.25rem;
+        align-items: start;
+      }
+
+      @media (max-width: 860px) {
+        .split { grid-template-columns: 1fr; }
+      }
+
+      .surface {
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        background: var(--bg);
+      }
+
+      .label {
+        margin: 1rem 0 0.35rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      pre {
+        margin: 0;
+        padding: 0.75rem 0.9rem;
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        background: var(--bg);
+        font-size: 0.8rem;
+        overflow-x: auto;
+      }
+
+      button {
+        font: inherit;
+        cursor: pointer;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--ink);
+        padding: 0.45rem 1rem;
+      }
+
+      button.primary {
+        margin-top: 1rem;
+        border: 0;
+        font-weight: 600;
+        background: var(--accent);
+        color: var(--bg);
+      }
+
+      fk-form-builder { display: block; min-height: 32rem; }
+
+      .source { margin-top: 0.75rem; color: var(--muted); font-size: 0.85rem; }
+      code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 0.85em; }
+    </style>
+  </head>
+
+  <body>
+    <main class="page">
+      <header>
+        <h1>FormKrafter — plain HTML</h1>
+        <p class="lede">
+          No npm install, no bundler, no framework. This page is a single HTML
+          file loading the Web Components from a CDN.
+        </p>
+        <button type="button" id="theme" data-testid="toggle-theme">Theme</button>
+      </header>
+
+      <section class="panel">
+        <h2>Renderer</h2>
+        <div class="split">
+          <div class="surface">
+            <fk-form-render id="renderer"></fk-form-render>
+            <button type="button" class="primary" id="validate" data-testid="validate">
+              Validate
+            </button>
+          </div>
+
+          <div>
+            <p class="label">Live data</p>
+            <pre data-testid="data">{}</pre>
+            <p class="label">Verdict</p>
+            <pre data-testid="verdict">—</pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Builder</h2>
+        <p class="lede">
+          Drag bricks from the palette — the renderer above follows every edit.
+        </p>
+        <fk-form-builder id="builder"></fk-form-builder>
+      </section>
+
+      <p class="source">
+        Source:
+        <code>examples/html/public/index.html</code> — the whole demo is that one file.
+      </p>
+    </main>
+
+    <script type="module">
+      // The CDN bundle registers <fk-form-builder> and <fk-form-render> itself.
+      import 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.0/dist/formkrafter-wc/formkrafter-wc.esm.js'
+
+      const spec = {
+        type: 'panel',
+        id: 'column',
+        name: 'Form',
+        configs: { uid: 'root', key: 'contact' },
+        children: [
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Text',
+            configs: { uid: 'f-name', key: 'fullName', label: 'Full name' },
+            validations: [{ validator: 'required' }],
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'email',
+            name: 'Email',
+            configs: { uid: 'f-mail', key: 'email', label: 'Email' },
+            validations: [{ validator: 'required' }, { validator: 'email' }],
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'select',
+            name: 'Select',
+            configs: {
+              uid: 'f-role',
+              key: 'role',
+              label: 'Role',
+              optionsSource: 'static',
+              options: 'Developer\nDesigner\nManager',
+            },
+          },
+        ],
+      }
+
+      const builder = document.getElementById('builder')
+      const renderer = document.getElementById('renderer')
+      const dataOut = document.querySelector('[data-testid="data"]')
+      const verdictOut = document.querySelector('[data-testid="verdict"]')
+
+      // Arrays and objects are properties, not attributes: assign them in JS.
+      builder.spec = spec
+      builder.locales = ['en', 'fr']
+      renderer.spec = spec
+
+      // Events keep their raw camelCase names on the DOM element.
+      builder.addEventListener('specChange', (event) => {
+        if (event.detail.spec) renderer.spec = event.detail.spec
+      })
+
+      renderer.addEventListener('formDataChange', (event) => {
+        dataOut.textContent = JSON.stringify(event.detail.data, null, 2)
+      })
+
+      document.getElementById('validate').addEventListener('click', async () => {
+        const verdict = await renderer.validate()
+        verdictOut.textContent = JSON.stringify(verdict, null, 2)
+      })
+
+      document.getElementById('theme').addEventListener('click', () => {
+        const root = document.documentElement
+        const dark = root.dataset.fkTheme !== 'dark'
+        root.dataset.fkTheme = dark ? 'dark' : 'light'
+        root.classList.toggle('dark', dark)
+      })
+    </script>
+  </body>
+</html>

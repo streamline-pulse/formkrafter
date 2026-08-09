@@ -1,0 +1,15 @@
+{
+  "name": "formkrafter-example-html",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun serve.mjs",
+    "preview": "bun serve.mjs",
+    "build": "echo 'no build step — that is the point'",
+    "deploy:cf": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.120.0"
+  }
+}

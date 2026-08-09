@@ -27,6 +27,9 @@ jobs:
           - name: Vue 3 example
             dir: examples/vue
             build: build
+          - name: Plain HTML example
+            dir: examples/html
+            build: build
     steps:
       - name: Check Cloudflare secrets
         id: secrets

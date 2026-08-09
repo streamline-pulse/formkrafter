@@ -59,12 +59,19 @@ custom elements** — tree-shakeable et ESM uniquement :
   </TabItem>
   <TabItem label="Balise script / CDN">
     ```html
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.0/dist/formkrafter-wc/formkrafter-wc.css"
+    />
     <script
       type="module"
-      src="https://unpkg.com/@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js"
+      src="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.0/dist/formkrafter-wc/formkrafter-wc.esm.js"
     ></script>
     ```
     Un bundle à chargement paresseux qui enregistre les éléments à la demande.
+    Épinglez une version : une URL CDN non épinglée pointe vers la dernière
+    version publiée, donc un changement majeur atteindrait votre page sans
+    prévenir. La [démo HTML pur](../../demo/) est construite exactement ainsi.
   </TabItem>
 </Tabs>
 

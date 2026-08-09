@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 const PORT = 4179
 const VUE_PORT = 4180
+const HTML_PORT = 4181
 
 export default defineConfig({
   testDir: './tests',
@@ -32,7 +33,15 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },
+    {
+      command: `bun serve.mjs`,
+      cwd: '../examples/html',
+      env: { PORT: String(HTML_PORT) },
+      url: `http://localhost:${HTML_PORT}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
   ],
 })
 
-export { VUE_PORT }
+export { VUE_PORT, HTML_PORT }

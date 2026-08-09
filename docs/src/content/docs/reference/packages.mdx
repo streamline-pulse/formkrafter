@@ -59,12 +59,19 @@ build** — tree-shakeable and ESM-only:
   </TabItem>
   <TabItem label="Script tag / CDN">
     ```html
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.0/dist/formkrafter-wc/formkrafter-wc.css"
+    />
     <script
       type="module"
-      src="https://unpkg.com/@streamline-pulse/formkrafter-wc/dist/formkrafter-wc/formkrafter-wc.esm.js"
+      src="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.0/dist/formkrafter-wc/formkrafter-wc.esm.js"
     ></script>
     ```
-    A lazy-loading bundle that registers the elements on demand.
+    A lazy-loading bundle that registers the elements on demand. Pin a version:
+    an unpinned CDN URL resolves to the latest release, so a major bump would
+    reach your page unannounced. The [plain HTML demo](../../demo/) is built
+    exactly this way.
   </TabItem>
 </Tabs>
 

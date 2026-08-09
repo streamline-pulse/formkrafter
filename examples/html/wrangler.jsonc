@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "formkrafter-examples-html",
+  "compatibility_date": "2026-07-25",
+  // Nothing to build: the directory is published as-is.
+  "assets": {
+    "directory": "./public"
+  }
+}
