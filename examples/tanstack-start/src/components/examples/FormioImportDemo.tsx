@@ -7,6 +7,7 @@ import { m } from '#/paraglide/messages'
 
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
 import type { SpecChangeDetail } from '@streamline-pulse/formkrafter-wc'
+import { useLocale } from '#/components/LocaleProvider'
 
 const sampleFormio = {
   display: 'form',
@@ -56,6 +57,9 @@ const sampleFormio = {
 }
 
 export default function FormioImportDemo() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   const [source, setSource] = useState(JSON.stringify(sampleFormio, null, 2))
   const [spec, setSpec] = useState<BrickSpec>()
   const [importedSpec, setImportedSpec] = useState<BrickSpec>()

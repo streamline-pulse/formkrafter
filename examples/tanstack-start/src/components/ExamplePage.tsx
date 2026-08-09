@@ -5,6 +5,7 @@ import { Link } from '@tanstack/react-router'
 import { m } from '#/paraglide/messages'
 import { templates } from '#/examples/catalog'
 import { useHydrated } from '#/lib/use-hydrated'
+import { useLocale } from '#/components/LocaleProvider'
 
 interface ExamplePageProps {
   component: LazyExoticComponent<ComponentType>
@@ -21,6 +22,9 @@ export function ExamplePage({
   intro,
   templateId,
 }: ExamplePageProps) {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   const mounted = useHydrated()
   const [copied, setCopied] = useState(false)
 

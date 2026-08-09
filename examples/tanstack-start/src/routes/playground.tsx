@@ -4,6 +4,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { m } from '#/paraglide/messages'
 import { templates } from '#/examples/catalog'
 import { useHydrated } from '#/lib/use-hydrated'
+import { useLocale } from '#/components/LocaleProvider'
 
 const FormKrafterPlayground = lazy(
   () => import('#/components/FormKrafterPlayground')
@@ -16,6 +17,9 @@ export const Route = createFileRoute('/playground')({
 })
 
 function Playground() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   const { template } = Route.useSearch()
   const mounted = useHydrated()
 

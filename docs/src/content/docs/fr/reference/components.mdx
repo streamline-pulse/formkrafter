@@ -130,6 +130,7 @@ panneau de propriétés.
 | `spec` | `BrickSpec` | — | Spec à charger dans le canvas. Omettez-le pour partir d'un formulaire vide. |
 | `data` | `Record<string, unknown>` | `{}` | Valeurs d'aperçu utilisées pendant l'édition. |
 | `locales` | `string[]` | `[]` | Active le sélecteur de langue d'édition ; les champs du panneau lisent et écrivent alors par locale. |
+| `locale` | `string` | — | La langue du chrome du builder : associée à `setFkTranslations`, la toolbar, la palette et le panneau se re-rendent à la volée — sans remontage. Distincte de la langue d'édition. |
 
 <Aside type="caution">
 `locales` est un tableau : il doit donc être défini comme **propriété DOM**, pas

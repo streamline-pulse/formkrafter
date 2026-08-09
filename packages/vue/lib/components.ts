@@ -41,7 +41,9 @@ export const FkBrickActions: StencilVueComponent<JSX.FkBrickActions> = /*@__PURE
 ]);
 
 
-export const FkBrickList: StencilVueComponent<JSX.FkBrickList> = /*@__PURE__*/ defineContainer<JSX.FkBrickList>('fk-brick-list', defineFkBrickList);
+export const FkBrickList: StencilVueComponent<JSX.FkBrickList> = /*@__PURE__*/ defineContainer<JSX.FkBrickList>('fk-brick-list', defineFkBrickList, [
+  'locale'
+]);
 
 
 export const FkBrickMoldItem: StencilVueComponent<JSX.FkBrickMoldItem> = /*@__PURE__*/ defineContainer<JSX.FkBrickMoldItem>('fk-brick-mold-item', defineFkBrickMoldItem, [
@@ -131,6 +133,7 @@ export const FkFormBuilder: StencilVueComponent<JSX.FkFormBuilder> = /*@__PURE__
   'spec',
   'data',
   'locales',
+  'locale',
   'specChange'
 ], [
   'specChange'
@@ -155,6 +158,7 @@ export const FkPropertyPanel: StencilVueComponent<JSX.FkPropertyPanel> = /*@__PU
   'brick',
   'fields',
   'locales',
+  'locale',
   'editLocale',
   'brickConfigsChange',
   'brickValidationsChange',

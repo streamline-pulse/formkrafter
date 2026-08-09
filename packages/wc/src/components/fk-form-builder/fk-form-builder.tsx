@@ -37,6 +37,9 @@ export class FkFormBuilder {
   @Prop() spec?: BrickSpec;
   @Prop() data?: Record<string, unknown>;
   @Prop() locales: string[] = [];
+  // The chrome language of the builder itself (toolbar, palette, panel) —
+  // distinct from editLocale, which is the content language being edited.
+  @Prop() locale?: string;
 
   @Event() specChange!: EventEmitter<SpecChangeDetail>;
 
@@ -339,7 +342,7 @@ export class FkFormBuilder {
     return (
       <div class="fk-builder">
         <aside class="fk-builder__palette">
-          <fk-brick-list />
+          <fk-brick-list locale={this.locale} />
         </aside>
 
         <main class="fk-builder__main">
@@ -431,6 +434,7 @@ export class FkFormBuilder {
                 brick={selected.brick}
                 fields={this.inputFieldKeys()}
                 locales={this.locales}
+                locale={this.locale}
                 editLocale={this.editLocale}
               />
             ) : (

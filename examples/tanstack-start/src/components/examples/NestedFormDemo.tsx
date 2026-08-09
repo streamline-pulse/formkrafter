@@ -2,10 +2,14 @@ import FormDemo from './FormDemo'
 import { nestedFormSpec } from '#/examples/specs'
 import { registerDemoSpecSource } from '#/examples/nested-source'
 import { m } from '#/paraglide/messages'
+import { useLocale } from '#/components/LocaleProvider'
 
 registerDemoSpecSource()
 
 export default function NestedFormDemo() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   return (
     <div className="space-y-4">
       <FormDemo spec={nestedFormSpec} />

@@ -12,7 +12,7 @@
     -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.2/dist/formkrafter-wc/formkrafter-wc.css"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.10.0/dist/formkrafter-wc/formkrafter-wc.css"
     />
 
     <script>
@@ -141,6 +141,7 @@
           file loading the Web Components from a CDN.
         </p>
         <button type="button" id="theme" data-testid="toggle-theme">Theme</button>
+        <button type="button" id="lang" data-testid="toggle-lang">FR</button>
       </header>
 
       <section class="panel">
@@ -178,7 +179,13 @@
 
     <script type="module">
       // The CDN bundle registers <fk-form-builder> and <fk-form-render> itself.
-      import 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.6.2/dist/formkrafter-wc/formkrafter-wc.esm.js'
+      import 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.10.0/dist/formkrafter-wc/formkrafter-wc.esm.js'
+      // Named exports (i18n, registry) live on the sibling entry — same
+      // chunks, same shared stores.
+      import {
+        setFkTranslations,
+        frFkTranslations,
+      } from 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.10.0/dist/formkrafter-wc/index.esm.js'
 
       const spec = {
         type: 'panel',
@@ -191,7 +198,11 @@
             dataType: 'string',
             id: 'text',
             name: 'Text',
-            configs: { uid: 'f-name', key: 'fullName', label: 'Full name' },
+            configs: {
+              uid: 'f-name',
+              key: 'fullName',
+              label: { en: 'Full name', fr: 'Nom complet' },
+            },
             validations: [{ validator: 'required' }],
           },
           {
@@ -210,7 +221,7 @@
             configs: {
               uid: 'f-role',
               key: 'role',
-              label: 'Role',
+              label: { en: 'Role', fr: 'Rôle' },
               optionsSource: 'static',
               options: 'Developer\nDesigner\nManager',
             },
@@ -227,6 +238,18 @@
       builder.spec = spec
       builder.locales = ['en', 'fr']
       renderer.spec = spec
+
+      // Language switch: the translation store drives the chrome, the locale
+      // property re-resolves localized labels — the entered data stays.
+      let lang = 'en'
+      const langButton = document.getElementById('lang')
+      langButton.addEventListener('click', () => {
+        lang = lang === 'en' ? 'fr' : 'en'
+        langButton.textContent = lang === 'en' ? 'FR' : 'EN'
+        setFkTranslations(lang === 'fr' ? frFkTranslations : {})
+        builder.locale = lang
+        renderer.locale = lang
+      })
 
       // Events keep their raw camelCase names on the DOM element.
       builder.addEventListener('specChange', (event) => {

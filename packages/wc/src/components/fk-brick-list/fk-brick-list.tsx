@@ -1,4 +1,4 @@
-import { Component, Host, State, h } from '@stencil/core';
+import { Component, Host, Prop, State, h } from '@stencil/core';
 import { getBrickMoldsGroupedByCategory } from '../../registry/registry';
 import { fkT, fkTOr } from '../../i18n/i18n';
 
@@ -8,6 +8,10 @@ import { fkT, fkTOr } from '../../i18n/i18n';
   scoped: true,
 })
 export class FkBrickList {
+  // The chrome language: the strings come from the shared translation
+  // store, and this prop changing is what re-renders them on a switch.
+  @Prop() locale?: string;
+
   @State() query = '';
   @State() collapsed: Record<string, boolean> = {};
 

@@ -5,8 +5,12 @@ import type { DataSourceService } from '@streamline-pulse/formkrafter-core'
 import FormDemo from './FormDemo'
 import { authSpec } from '#/examples/specs'
 import { m } from '#/paraglide/messages'
+import { useLocale } from '#/components/LocaleProvider'
 
 export default function AuthContextDemo() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   const [ready, setReady] = useState(false)
 
   useEffect(() => {

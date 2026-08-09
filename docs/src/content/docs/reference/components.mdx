@@ -126,6 +126,7 @@ The drag & drop editor. It renders its own palette, canvas and property panel.
 | `spec` | `BrickSpec` | — | Spec to load into the canvas. Omit to start from an empty form. |
 | `data` | `Record<string, unknown>` | `{}` | Preview values used while editing. |
 | `locales` | `string[]` | `[]` | Enables the edit-language selector; panel fields then read and write per locale. |
+| `locale` | `string` | — | The builder chrome's own language: pair it with `setFkTranslations` and the toolbar, palette and panel re-render on the fly — no remount needed. Distinct from the edit language. |
 
 <Aside type="caution">
 `locales` is an array, so it must be set as a **DOM property**, not an

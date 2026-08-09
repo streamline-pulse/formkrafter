@@ -24,6 +24,9 @@ export class FkPropertyPanel {
   @Prop() brick!: BrickSpec;
   @Prop() fields: string[] = [];
   @Prop() locales: string[] = [];
+  // The chrome language: the strings come from the shared translation
+  // store, and this prop changing is what re-renders them on a switch.
+  @Prop() locale?: string;
   @Prop() editLocale?: string;
 
   @Event() brickConfigsChange!: EventEmitter<BrickConfigsChangeDetail>;

@@ -3,10 +3,14 @@ import { ArrowRight, Hammer } from 'lucide-react'
 
 import { m } from '#/paraglide/messages'
 import { exampleCatalog } from '#/examples/catalog'
+import { useLocale } from '#/components/LocaleProvider'
 
 export const Route = createFileRoute('/')({ component: Home })
 
 function Home() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   return (
     <div className="mx-auto max-w-4xl">
       <header className="mb-10">

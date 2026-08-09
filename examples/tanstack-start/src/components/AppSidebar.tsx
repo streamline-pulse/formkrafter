@@ -19,6 +19,7 @@ import {
 import { m } from '#/paraglide/messages'
 import LocaleSwitcher from '#/components/LocaleSwitcher'
 import ThemeToggle from '#/components/ThemeToggle'
+import { useLocale } from '#/components/LocaleProvider'
 
 const groups = [
   {
@@ -58,6 +59,9 @@ const groups = [
 ]
 
 export default function AppSidebar() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   return (
     <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div className="border-b border-sidebar-border px-4 py-4">

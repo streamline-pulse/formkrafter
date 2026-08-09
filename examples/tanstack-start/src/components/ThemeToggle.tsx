@@ -2,8 +2,12 @@ import { useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 
 import { m } from '#/paraglide/messages'
+import { useLocale } from '#/components/LocaleProvider'
 
 export default function ThemeToggle() {
+  // Subscribes to locale changes: this component reads paraglide
+  // messages during render, and nothing remounts on a language switch.
+  useLocale()
   const [dark, setDark] = useState(false)
 
   useEffect(() => {

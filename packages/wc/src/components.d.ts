@@ -18,6 +18,7 @@ export namespace Components {
         "selected": boolean;
     }
     interface FkBrickList {
+        "locale"?: string;
     }
     interface FkBrickMoldItem {
         "brickMold": BrickMold;
@@ -94,6 +95,7 @@ export namespace Components {
     }
     interface FkFormBuilder {
         "data"?: Record<string, unknown>;
+        "locale"?: string;
         /**
           * @default []
          */
@@ -118,6 +120,7 @@ export namespace Components {
           * @default []
          */
         "fields": string[];
+        "locale"?: string;
         /**
           * @default []
          */
@@ -550,6 +553,7 @@ declare namespace LocalJSX {
         "selected"?: boolean;
     }
     interface FkBrickList {
+        "locale"?: string;
     }
     interface FkBrickMoldItem {
         "brickMold": BrickMold;
@@ -636,6 +640,7 @@ declare namespace LocalJSX {
     }
     interface FkFormBuilder {
         "data"?: Record<string, unknown>;
+        "locale"?: string;
         /**
           * @default []
          */
@@ -662,6 +667,7 @@ declare namespace LocalJSX {
           * @default []
          */
         "fields"?: string[];
+        "locale"?: string;
         /**
           * @default []
          */
@@ -739,6 +745,9 @@ declare namespace LocalJSX {
         "path": string;
         "selected": boolean;
     }
+    interface FkBrickListAttributes {
+        "locale": string;
+    }
     interface FkBrickRenderAttributes {
         "path": string;
         "editable": boolean;
@@ -763,12 +772,16 @@ declare namespace LocalJSX {
         "uploadUrl": string;
         "multiple": boolean;
     }
+    interface FkFormBuilderAttributes {
+        "locale": string;
+    }
     interface FkFormRenderAttributes {
         "editable": boolean;
         "selectedUid": string;
         "locale": string;
     }
     interface FkPropertyPanelAttributes {
+        "locale": string;
         "editLocale": string;
     }
     interface FkSelectInputAttributes {
@@ -793,7 +806,7 @@ declare namespace LocalJSX {
 
     interface IntrinsicElements {
         "fk-brick-actions": Omit<FkBrickActions, keyof FkBrickActionsAttributes> & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes]?: FkBrickActions[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `attr:${K}`]?: FkBrickActionsAttributes[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `prop:${K}`]?: FkBrickActions[K] } & OneOf<"path", FkBrickActions["path"], FkBrickActionsAttributes["path"]>;
-        "fk-brick-list": FkBrickList;
+        "fk-brick-list": Omit<FkBrickList, keyof FkBrickListAttributes> & { [K in keyof FkBrickList & keyof FkBrickListAttributes]?: FkBrickList[K] } & { [K in keyof FkBrickList & keyof FkBrickListAttributes as `attr:${K}`]?: FkBrickListAttributes[K] } & { [K in keyof FkBrickList & keyof FkBrickListAttributes as `prop:${K}`]?: FkBrickList[K] };
         "fk-brick-mold-item": FkBrickMoldItem;
         "fk-brick-not-found": FkBrickNotFound;
         "fk-brick-render": Omit<FkBrickRender, keyof FkBrickRenderAttributes> & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes]?: FkBrickRender[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `attr:${K}`]?: FkBrickRenderAttributes[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `prop:${K}`]?: FkBrickRender[K] };
@@ -802,7 +815,7 @@ declare namespace LocalJSX {
         "fk-drop-area": Omit<FkDropArea, keyof FkDropAreaAttributes> & { [K in keyof FkDropArea & keyof FkDropAreaAttributes]?: FkDropArea[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `attr:${K}`]?: FkDropAreaAttributes[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `prop:${K}`]?: FkDropArea[K] } & OneOf<"path", FkDropArea["path"], FkDropAreaAttributes["path"]>;
         "fk-empty-form": FkEmptyForm;
         "fk-file-input": Omit<FkFileInput, keyof FkFileInputAttributes> & { [K in keyof FkFileInput & keyof FkFileInputAttributes]?: FkFileInput[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `attr:${K}`]?: FkFileInputAttributes[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `prop:${K}`]?: FkFileInput[K] };
-        "fk-form-builder": FkFormBuilder;
+        "fk-form-builder": Omit<FkFormBuilder, keyof FkFormBuilderAttributes> & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes]?: FkFormBuilder[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `attr:${K}`]?: FkFormBuilderAttributes[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `prop:${K}`]?: FkFormBuilder[K] };
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
         "fk-rules-editor": FkRulesEditor;
