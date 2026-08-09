@@ -125,8 +125,13 @@ primitives.
 | Theming | `FkThemeProvider`, `useFkTheme`, `fkLightTheme`, `fkDarkTheme` |
 
 Brick coverage is a growing subset of the web build: text variants, number,
-checkbox, select (static options) and the column/row/group layouts. Bricks
-without a native renderer show an explicit placeholder rather than failing.
+checkbox, select and multi-select (static options), radio, the stepper wizard
+with per-step validation, and the column/row/group layouts. Date, time and
+datetime live on the `formkrafter-react-native/date` entry point: they need
+`@react-native-community/datetimepicker` (an optional peer), so applications
+opt in with `registerNativeDateBricks()` and everyone else never resolves the
+native module. Bricks without a native renderer show an explicit placeholder
+rather than failing.
 
 ## Versioning and releases
 

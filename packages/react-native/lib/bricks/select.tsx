@@ -8,11 +8,12 @@ import { useFkTheme } from '../theme'
 import { Field } from './field'
 
 /**
- * A single-select rendered as a full-screen sheet — there is no native
- * <select> on mobile. Static options only for now; remote/catalog sources
- * arrive with the services integration.
+ * A select rendered as a full-screen sheet — there is no native <select> on
+ * mobile. In multiple mode the sheet stays open and rows toggle. Static
+ * options only for now; remote/catalog sources arrive with the services
+ * integration.
  */
-function SelectControl(props: NativeBrickProps) {
+function SelectControl(props: NativeBrickProps & { multiple?: boolean }) {
   const theme = useFkTheme()
   const [open, setOpen] = useState(false)
 
@@ -21,7 +22,18 @@ function SelectControl(props: NativeBrickProps) {
     typeof props.configs.labelKey === 'string' ? props.configs.labelKey : 'label',
     typeof props.configs.valueKey === 'string' ? props.configs.valueKey : 'value',
   )
+  const values = props.multiple
+    ? Array.isArray(props.data)
+      ? (props.data as string[])
+      : []
+    : []
   const selected = options.find((option) => option.value === props.data)
+  const summary = props.multiple
+    ? options
+        .filter((option) => values.includes(option.value))
+        .map((option) => option.label)
+        .join(', ')
+    : selected?.label
 
   return (
     <Field label={props.configs.label} error={props.error}>
@@ -40,8 +52,8 @@ function SelectControl(props: NativeBrickProps) {
           opacity: props.disabled ? 0.6 : 1,
         }}
       >
-        <Text style={{ color: selected ? theme.colorText : theme.colorMuted, fontSize: 15 }}>
-          {selected?.label ?? (props.configs.placeholder ? String(props.configs.placeholder) : ' ')}
+        <Text style={{ color: summary ? theme.colorText : theme.colorMuted, fontSize: 15 }}>
+          {summary || (props.configs.placeholder ? String(props.configs.placeholder) : ' ')}
         </Text>
       </Pressable>
 
@@ -67,33 +79,48 @@ function SelectControl(props: NativeBrickProps) {
                   {fkT('select.empty')}
                 </Text>
               }
-              renderItem={({ item }) => (
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => {
-                    props.onDataChange(item.value)
-                    setOpen(false)
-                  }}
-                  style={{
-                    paddingHorizontal: theme.spacing * 2,
-                    paddingVertical: theme.spacing * 1.5,
-                    backgroundColor:
-                      item.value === props.data
-                        ? `${theme.colorPrimary}22`
-                        : 'transparent',
-                  }}
-                >
-                  <Text
+              renderItem={({ item }) => {
+                const active = props.multiple
+                  ? values.includes(item.value)
+                  : item.value === props.data
+                return (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                    onPress={() => {
+                      if (!props.multiple) {
+                        props.onDataChange(item.value)
+                        return setOpen(false)
+                      }
+                      props.onDataChange(
+                        active
+                          ? values.filter((value) => value !== item.value)
+                          : [...values, item.value],
+                      )
+                    }}
                     style={{
-                      fontSize: 16,
-                      color: item.value === props.data ? theme.colorPrimary : theme.colorText,
-                      fontWeight: item.value === props.data ? '600' : '400',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      paddingHorizontal: theme.spacing * 2,
+                      paddingVertical: theme.spacing * 1.5,
+                      backgroundColor: active ? `${theme.colorPrimary}22` : 'transparent',
                     }}
                   >
-                    {item.label}
-                  </Text>
-                </Pressable>
-              )}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        color: active ? theme.colorPrimary : theme.colorText,
+                        fontWeight: active ? '600' : '400',
+                      }}
+                    >
+                      {item.label}
+                    </Text>
+                    {props.multiple && active ? (
+                      <Text style={{ color: theme.colorPrimary, fontWeight: '700' }}>✓</Text>
+                    ) : null}
+                  </Pressable>
+                )
+              }}
             />
           </View>
         </Pressable>
@@ -106,4 +133,10 @@ export const selectBrick: NativeBrick = createNativeBrick({
   type: 'input',
   id: 'select',
   render: (props) => <SelectControl {...props} />,
+})
+
+export const multiSelectBrick: NativeBrick = createNativeBrick({
+  type: 'input',
+  id: 'multi-select',
+  render: (props) => <SelectControl {...props} multiple />,
 })

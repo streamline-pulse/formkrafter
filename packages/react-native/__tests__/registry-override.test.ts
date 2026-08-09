@@ -11,6 +11,8 @@ mock.module('react-native', () => ({
   Modal: 'Modal',
   Pressable: 'Pressable',
   FlatList: 'FlatList',
+  ScrollView: 'ScrollView',
+  Platform: { OS: 'ios' },
 }))
 
 const { createNativeBrick, getNativeBrick, registerNativeBrick } = await import(

@@ -10,6 +10,7 @@
     "build": "tsc --noEmit"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "9.1.0",
     "@streamline-pulse/formkrafter-core": "workspace:*",
     "@streamline-pulse/formkrafter-react-native": "workspace:*",
     "expo": "~57.0.0",

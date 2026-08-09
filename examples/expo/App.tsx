@@ -15,8 +15,11 @@ import {
   fkDarkTheme,
   fkLightTheme,
 } from '@streamline-pulse/formkrafter-react-native'
+import { registerNativeDateBricks } from '@streamline-pulse/formkrafter-react-native/date'
 import type { FormRendererHandle } from '@streamline-pulse/formkrafter-react-native'
 import { registrationSpec } from './spec'
+
+registerNativeDateBricks()
 
 export default function App() {
   const scheme = useColorScheme()
@@ -41,6 +44,13 @@ export default function App() {
             ref={form}
             spec={registrationSpec}
             onDataChange={(next) => setData(next)}
+            onSubmit={(_next, isValid, errors) =>
+              setVerdict(
+                isValid
+                  ? 'submitted ✓'
+                  : `invalid — ${Object.keys(errors).join(', ')}`,
+              )
+            }
           />
 
           <Pressable

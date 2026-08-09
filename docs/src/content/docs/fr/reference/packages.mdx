@@ -127,8 +127,13 @@ bricks avec des primitives natives.
 | Theming | `FkThemeProvider`, `useFkTheme`, `fkLightTheme`, `fkDarkTheme` |
 
 La couverture des bricks est un sous-ensemble croissant du build web :
-variantes texte, nombre, case à cocher, select (options statiques) et les
-layouts colonne/ligne/groupe. Les bricks sans renderer natif affichent un
+variantes texte, nombre, case à cocher, select et sélection multiple (options
+statiques), boutons radio, le wizard à étapes avec validation par étape, et
+les layouts colonne/ligne/groupe. Date, heure et date/heure vivent sur le
+point d'entrée `formkrafter-react-native/date` : elles nécessitent
+`@react-native-community/datetimepicker` (peer optionnelle), donc les
+applications optent avec `registerNativeDateBricks()` et les autres ne
+résolvent jamais le module natif. Les bricks sans renderer natif affichent un
 placeholder explicite au lieu d'échouer.
 
 ## Versionnage et releases
