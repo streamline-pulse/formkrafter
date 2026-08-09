@@ -1,5 +1,7 @@
 # @streamline-pulse/formkrafter-core
 
+## 0.13.2
+
 ## 0.13.1
 
 ## 0.13.0
