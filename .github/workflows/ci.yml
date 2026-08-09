@@ -37,6 +37,9 @@ jobs:
       - name: Packed tarball smoke test
         run: bun run smoke:pack
 
+      - name: Size budget
+        run: bun run size
+
       - name: Lint
         run: bun run lint
 
