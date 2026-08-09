@@ -8,11 +8,11 @@ import AxeBuilder from '@axe-core/playwright'
  * failure message lists each violation with the offending nodes.
  */
 
-// The plain-HTML example is deliberately absent: it runs the published CDN
-// build, so a11y fixes only reach it one release after they land — scanning
-// it would keep CI red for exactly that release lag. The workspace build is
-// what the other pages cover.
+// Caution with the plain-HTML page: it runs the published CDN build, so a
+// component a11y fix keeps it red until the release that ships the fix and
+// the pin bump land — drop it from the scan for that window if needed.
 const VUE_APP = 'http://localhost:4180/'
+const HTML_APP = 'http://localhost:4181/'
 
 const scan = async (page: Page) => {
   const results = await new AxeBuilder({ page })
@@ -70,6 +70,12 @@ test.describe('accessibility', () => {
   test('vue example', async ({ page }) => {
     await page.goto(VUE_APP)
     await expect(page.locator('fk-form-render input').first()).toBeVisible()
+    await scan(page)
+  })
+
+  test('plain html example', async ({ page }) => {
+    await page.goto(HTML_APP)
+    await expect(page.locator('fk-form-builder .fk-mold').first()).toBeVisible()
     await scan(page)
   })
 })
