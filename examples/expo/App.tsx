@@ -19,12 +19,14 @@ import {
 } from '@streamline-pulse/formkrafter-react-native'
 import { registerNativeDateBricks } from '@streamline-pulse/formkrafter-react-native/date'
 import { registerNativeFileBrick } from '@streamline-pulse/formkrafter-react-native/file'
+import { registerNativeSignatureBrick } from '@streamline-pulse/formkrafter-react-native/signature'
 import { FormScreen } from './screens/FormScreen'
 import { registerRatingBrick } from './rating-brick'
 import { customSpec, dataSpec, recapSpec, simpleSpec, stressSpec, wizardSpec } from './spec'
 
 registerNativeDateBricks()
 registerNativeFileBrick()
+registerNativeSignatureBrick()
 registerRatingBrick()
 
 const SCREENS = [
@@ -74,7 +76,7 @@ const SCREENS = [
     key: 'custom',
     tab: 'Custom',
     title: 'Custom brick',
-    subtitle: 'An app-registered star rating, driving a rule like any built-in.',
+    subtitle: 'An app-registered star rating driving a rule, and a signature pad.',
     spec: customSpec,
     showValidateButton: true,
   },

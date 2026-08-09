@@ -407,6 +407,18 @@ export const customSpec = cast({
     {
       type: 'input',
       dataType: 'string',
+      id: 'signature',
+      name: 'Signature',
+      configs: {
+        uid: 'u-sign',
+        key: 'signature',
+        label: { en: 'Sign here', fr: 'Signez ici' },
+      },
+      validations: [{ validator: 'required' }],
+    },
+    {
+      type: 'input',
+      dataType: 'string',
       id: 'textarea',
       name: 'Text area',
       configs: {
