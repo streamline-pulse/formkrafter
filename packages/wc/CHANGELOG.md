@@ -1,5 +1,15 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.6.1
+
+### Patch Changes
+
+- c88f6a4: Harden tab buttons against host-page button styling. The components are
+  scoped rather than shadow-DOM, so a global `button { border-radius: … }`
+  rule in the host application leaked into the property-panel tabs and the
+  tabs layout brick. Both now declare their radius explicitly.
+  - @streamline-pulse/formkrafter-core@0.6.1
+
 ## 0.6.0
 
 ### Minor Changes
