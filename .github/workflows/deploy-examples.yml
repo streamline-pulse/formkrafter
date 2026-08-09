@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'examples/tanstack-start/**'
+      - 'examples/**'
       - 'packages/**'
       - '.github/workflows/deploy-examples.yml'
   workflow_dispatch:
@@ -16,6 +16,17 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      # Each example is its own Worker, so one failure must not hide the other.
+      fail-fast: false
+      matrix:
+        include:
+          - name: TanStack Start showcase
+            dir: examples/tanstack-start
+            build: build:cf
+          - name: Vue 3 example
+            dir: examples/vue
+            build: build
     steps:
       - name: Check Cloudflare secrets
         id: secrets
@@ -43,14 +54,14 @@ jobs:
         if: steps.secrets.outputs.ready == 'true'
         run: bun run build
 
-      - name: Build app for Cloudflare
+      - name: Build ${{ matrix.name }}
         if: steps.secrets.outputs.ready == 'true'
-        run: bun run --cwd examples/tanstack-start build:cf
+        run: bun run --cwd ${{ matrix.dir }} ${{ matrix.build }}
 
-      - name: Deploy to Cloudflare Workers
+      - name: Deploy ${{ matrix.name }} to Cloudflare
         if: steps.secrets.outputs.ready == 'true'
         run: bunx wrangler deploy
-        working-directory: examples/tanstack-start
+        working-directory: ${{ matrix.dir }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

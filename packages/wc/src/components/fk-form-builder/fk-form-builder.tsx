@@ -14,10 +14,7 @@ import {
   updateBrickValidations,
 } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, SpecUpdate } from '@streamline-pulse/formkrafter-core';
-import {
-  getBrickMolds,
-  newBrickSpec,
-} from '../../registry/registry';
+import { newBrickSpec } from '../../registry/registry';
 import { registerDefaultBricks } from '../../registry/default-bricks';
 import { fkT } from '../../i18n/i18n';
 import type {
@@ -53,7 +50,7 @@ export class FkFormBuilder {
   private history = new SpecHistory();
 
   componentWillLoad() {
-    if (getBrickMolds().length === 0) registerDefaultBricks();
+    registerDefaultBricks();
     this.editLocale = this.locales[0];
 
     this.currentSpec = this.spec;

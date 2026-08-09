@@ -1003,7 +1003,22 @@ export const nestedFormBrick = createBrick({
   },
 });
 
+/**
+ * Tracks whether the built-in bricks are in the registry, on globalThis so
+ * every bundle copy agrees (same reason the registry itself lives there).
+ *
+ * Callers used to guard with `getBrickMolds().length === 0`, which broke as
+ * soon as an app registered a custom brick at startup — the registry was no
+ * longer empty, so the 30 built-ins never registered and every spec rendered
+ * "Brick panel:column not found".
+ */
+const DEFAULTS_KEY = Symbol.for('formkrafter.wc.defaultBricksRegistered');
+const globalFlags = globalThis as unknown as Record<symbol, boolean | undefined>;
+
 export function registerDefaultBricks(): void {
+  if (globalFlags[DEFAULTS_KEY]) return;
+  globalFlags[DEFAULTS_KEY] = true;
+
   registerBricks([
     textInputBrick,
     emailBrick,

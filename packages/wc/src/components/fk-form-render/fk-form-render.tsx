@@ -14,7 +14,6 @@ import type {
 } from '@streamline-pulse/formkrafter-core';
 import type { DataChangeDetail } from '../../utils/events';
 import { fkT } from '../../i18n/i18n';
-import { getBrickMolds } from '../../registry/registry';
 import { registerDefaultBricks } from '../../registry/default-bricks';
 
 @Component({
@@ -41,7 +40,7 @@ export class FkFormRender {
   @State() expandError?: string;
 
   componentWillLoad() {
-    if (getBrickMolds().length === 0) registerDefaultBricks();
+    registerDefaultBricks();
     this.currentData = { ...this.data };
     return this.runExpansion();
   }

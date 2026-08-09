@@ -107,3 +107,85 @@ fk-form-builder {
   display: block;
   min-height: 34rem;
 }
+
+/* ---- tabs ---- */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.head__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  width: fit-content;
+}
+
+.tab {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+  background: transparent;
+}
+
+.tab--active {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.note {
+  margin: 1rem 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---- demo layout ---- */
+.demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .demo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo__form {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: var(--bg);
+}
+
+/* ---- custom rating brick ---- */
+.fk-rating {
+  display: inline-flex;
+  gap: 0.15rem;
+}
+
+.fk-rating__star {
+  border: 0;
+  background: none;
+  padding: 0 0.1rem;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--accent);
+}

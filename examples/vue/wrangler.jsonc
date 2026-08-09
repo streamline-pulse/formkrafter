@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "formkrafter-examples-vue",
+  "compatibility_date": "2026-07-25",
+  // A static SPA: no Worker script, just the built assets served from the edge.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
