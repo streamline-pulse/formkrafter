@@ -19,21 +19,21 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rm -rf dist && bun build lib/index.ts --outdir dist --format esm --packages external --sourcemap=linked && tsc -p . --emitDeclarationOnly",
+    "build": "rm -rf dist && bun build lib/index.ts --outdir dist --format esm --external acorn --external json-logic-js --external fast-json-patch --sourcemap=linked && tsc -p . --emitDeclarationOnly",
     "prepublishOnly": "cp ../../LICENSE . && bun run build",
     "test": "bun test"
   },
   "dependencies": {
     "acorn": "catalog:",
-    "ajv": "catalog:",
-    "ajv-errors": "catalog:",
-    "json-logic-js": "catalog:",
     "fast-json-patch": "catalog:",
-    "ajv-formats": "catalog:"
+    "json-logic-js": "catalog:"
   },
   "devDependencies": {
-    "typescript": "catalog:",
-    "@types/json-logic-js": "catalog:"
+    "@types/json-logic-js": "catalog:",
+    "ajv": "catalog:",
+    "ajv-errors": "catalog:",
+    "ajv-formats": "catalog:",
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {

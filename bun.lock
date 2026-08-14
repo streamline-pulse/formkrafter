@@ -16,7 +16,7 @@
     },
     "docs": {
       "name": "formkrafter-docs",
-      "version": "0.0.15",
+      "version": "0.0.21",
       "dependencies": {
         "@astrojs/starlight": "^0.41.4",
         "@streamline-pulse/formkrafter-core": "workspace:*",
@@ -39,7 +39,7 @@
     },
     "examples/expo": {
       "name": "formkrafter-example-expo",
-      "version": "0.0.11",
+      "version": "0.0.17",
       "dependencies": {
         "@react-native-community/datetimepicker": "9.1.0",
         "@streamline-pulse/formkrafter-core": "workspace:*",
@@ -124,7 +124,7 @@
     },
     "examples/vue": {
       "name": "formkrafter-example-vue",
-      "version": "0.0.14",
+      "version": "0.0.20",
       "dependencies": {
         "@streamline-pulse/formkrafter-core": "workspace:*",
         "@streamline-pulse/formkrafter-vue": "workspace:*",
@@ -141,23 +141,23 @@
     },
     "packages/core": {
       "name": "@streamline-pulse/formkrafter-core",
-      "version": "0.13.1",
+      "version": "0.15.1",
       "dependencies": {
         "acorn": "catalog:",
-        "ajv": "catalog:",
-        "ajv-errors": "catalog:",
-        "ajv-formats": "catalog:",
         "fast-json-patch": "catalog:",
         "json-logic-js": "catalog:",
       },
       "devDependencies": {
         "@types/json-logic-js": "catalog:",
+        "ajv": "catalog:",
+        "ajv-errors": "catalog:",
+        "ajv-formats": "catalog:",
         "typescript": "catalog:",
       },
     },
     "packages/react": {
       "name": "@streamline-pulse/formkrafter-react",
-      "version": "0.13.1",
+      "version": "0.15.1",
       "dependencies": {
         "@stencil/react-output-target": "^1.6.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -173,7 +173,7 @@
     },
     "packages/react-native": {
       "name": "@streamline-pulse/formkrafter-react-native",
-      "version": "0.13.1",
+      "version": "0.15.1",
       "dependencies": {
         "@streamline-pulse/formkrafter-core": "workspace:*",
       },
@@ -203,7 +203,7 @@
     },
     "packages/vue": {
       "name": "@streamline-pulse/formkrafter-vue",
-      "version": "0.13.1",
+      "version": "0.15.1",
       "dependencies": {
         "@stencil/vue-output-target": "^0.14.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -218,7 +218,7 @@
     },
     "packages/wc": {
       "name": "@streamline-pulse/formkrafter-wc",
-      "version": "0.13.1",
+      "version": "0.15.1",
       "dependencies": {
         "@atlaskit/pragmatic-drag-and-drop": "catalog:",
         "@codemirror/autocomplete": "^6.20.3",
