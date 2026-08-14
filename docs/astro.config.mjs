@@ -30,6 +30,7 @@ export default defineConfig({
         // Adds a section eyebrow above the page title, derived from the
         // sidebar group so it stays translated and in sync automatically.
         PageTitle: './src/components/docs/PageTitle.astro',
+        Footer: './src/components/docs/Footer.astro',
       },
       plugins: [
         // Fails the build on any broken internal link or heading anchor —

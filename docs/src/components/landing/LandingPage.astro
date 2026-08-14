@@ -453,7 +453,11 @@ const t =
   </section>
 
   <footer class="fk-foot">
-    <span>MIT © Streamline Pulse — {t.footTag}</span>
+    <span
+      >MIT © <a href="https://streamline-pulse.com" target="_blank" rel="noreferrer"
+        >Streamline Pulse</a
+      > — {t.footTag}</span
+    >
     <span class="fk-foot-links">
       <a href={`${base}getting-started/`}>{t.navDocs}</a>
       <a href={github} target="_blank" rel="noreferrer">GitHub</a>
@@ -1228,7 +1232,7 @@ const t =
     gap: 1.2rem;
   }
 
-  .fk-foot-links a:hover {
+  .fk-foot a:hover {
     color: var(--fk-ink);
   }
 

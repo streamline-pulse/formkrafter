@@ -1,0 +1,30 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro'
+
+const fr = Astro.currentLocale === 'fr'
+---
+
+<Default><slot /></Default>
+
+<p class="fk-org">
+  {fr ? 'Un projet de ' : 'A project by '}
+  <a href="https://streamline-pulse.com" rel="noopener">Streamline Pulse</a>
+</p>
+
+<style>
+  .fk-org {
+    margin: 0 auto 1.5rem;
+    text-align: center;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+  }
+
+  .fk-org a {
+    color: inherit;
+    text-underline-offset: 0.25em;
+  }
+
+  .fk-org a:hover {
+    color: var(--sl-color-white);
+  }
+</style>
