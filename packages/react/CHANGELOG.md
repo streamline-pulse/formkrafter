@@ -1,5 +1,11 @@
 # @streamline-pulse/formkrafter-react
 
+## 0.15.2
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-wc@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes
