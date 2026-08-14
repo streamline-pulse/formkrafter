@@ -2,6 +2,10 @@ import type { BrickSpec } from "../utils/brick-spec";
 import type { Validation } from "../validators/validation";
 import type { Rule } from "../rules/rule";
 
+export type FormioOptionList = Array<
+    Record<string, unknown> | string | number | boolean
+>;
+
 export interface FormioComponent {
     type?: string;
     key?: string;
@@ -24,10 +28,10 @@ export interface FormioComponent {
     tableView?: boolean;
     components?: FormioComponent[];
     columns?: Array<{ components?: FormioComponent[]; width?: number }>;
-    values?: Array<{ label?: string; value?: string }>;
+    values?: FormioOptionList;
     data?: {
-        values?: Array<{ label?: string; value?: string }>;
-        json?: Array<Record<string, unknown>>;
+        values?: FormioOptionList;
+        json?: FormioOptionList;
         url?: string;
     };
     dataSrc?: string;
@@ -458,6 +462,17 @@ function convertSelect(component: FormioComponent, ctx: Converter): BrickSpec {
     });
 }
 
+function isPlainOptionObject(
+    item: unknown
+): item is Record<string, unknown> {
+    return item != null && typeof item === "object" && !Array.isArray(item);
+}
+
+function scalarOption(item: unknown): { label: string; value: string } {
+    const text = String(item ?? "");
+    return { label: text, value: text };
+}
+
 function jsonOptions(
     component: FormioComponent,
     ctx: Converter
@@ -466,18 +481,25 @@ function jsonOptions(
     const labelKey = labelKeyFromTemplate(component.template) ?? "label";
     let valueKey = component.valueProperty;
     if (!valueKey) {
-        const first = items[0] ?? {};
-        valueKey = "value" in first ? "value" : labelKey;
-        if (valueKey === labelKey) {
-            ctx.warn(
-                `select "${component.key ?? "?"}" has no valueProperty — option labels are used as values`
-            );
+        const firstObject = items.find(isPlainOptionObject);
+        if (firstObject) {
+            valueKey = "value" in firstObject ? "value" : labelKey;
+            if (valueKey === labelKey) {
+                ctx.warn(
+                    `select "${component.key ?? "?"}" has no valueProperty — option labels are used as values`
+                );
+            }
+        } else {
+            valueKey = labelKey;
         }
     }
-    return items.map((item) => ({
-        label: String(item[labelKey] ?? item[valueKey!] ?? ""),
-        value: String(item[valueKey!] ?? item[labelKey] ?? ""),
-    }));
+    return items.map((item) => {
+        if (!isPlainOptionObject(item)) return scalarOption(item);
+        return {
+            label: String(item[labelKey] ?? item[valueKey!] ?? ""),
+            value: String(item[valueKey!] ?? item[labelKey] ?? ""),
+        };
+    });
 }
 
 function labelKeyFromTemplate(template?: string): string | undefined {
@@ -487,12 +509,15 @@ function labelKeyFromTemplate(template?: string): string | undefined {
 }
 
 function staticOptions(
-    values?: Array<{ label?: string; value?: string }>
+    values?: FormioOptionList
 ): Array<{ label: string; value: string }> {
-    return (values ?? []).map((option) => ({
-        label: String(option.label ?? option.value ?? ""),
-        value: String(option.value ?? option.label ?? ""),
-    }));
+    return (values ?? []).map((option) => {
+        if (!isPlainOptionObject(option)) return scalarOption(option);
+        return {
+            label: String(option.label ?? option.value ?? ""),
+            value: String(option.value ?? option.label ?? ""),
+        };
+    });
 }
 
 const LARGE_OPTIONS_THRESHOLD = 100;

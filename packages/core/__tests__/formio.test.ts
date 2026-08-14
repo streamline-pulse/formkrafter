@@ -140,6 +140,112 @@ describe("convertFormioForm", () => {
         expect(author.configs?.searchParam).toBe("q");
     });
 
+    test("select dataSrc json: scalar string items become label/value pairs", () => {
+        const { spec, warnings } = convertFormioForm({
+            components: [
+                {
+                    type: "select",
+                    key: "pdfFormat",
+                    label: "PDF format",
+                    dataSrc: "json",
+                    data: { json: ["A0", "A1", "LETTER", "Custom"] },
+                },
+            ],
+        });
+
+        const select = brickById(spec, "pdfFormat");
+        expect(select.configs?.optionsSource).toBe("static");
+        // label === value → compact newline string
+        expect(select.configs?.options).toBe("A0\nA1\nLETTER\nCustom");
+        expect(warnings).toEqual([]);
+    });
+
+    test("select dataSrc json: object items keep label/valueProperty mapping", () => {
+        const { spec } = convertFormioForm({
+            components: [
+                {
+                    type: "select",
+                    key: "country",
+                    dataSrc: "json",
+                    valueProperty: "code",
+                    template: "<span>{{ item.label }}</span>",
+                    data: {
+                        json: [
+                            { code: "BJ", label: "Bénin" },
+                            { code: "TG", label: "Togo" },
+                        ],
+                    },
+                },
+            ],
+        });
+
+        expect(brickById(spec, "country").configs?.options).toEqual([
+            { label: "Bénin", value: "BJ" },
+            { label: "Togo", value: "TG" },
+        ]);
+    });
+
+    test("select dataSrc json: mixed scalars and objects, empty list does not crash", () => {
+        const mixed = convertFormioForm({
+            components: [
+                {
+                    type: "select",
+                    key: "mixed",
+                    dataSrc: "json",
+                    data: {
+                        json: [
+                            "A0",
+                            { label: "Custom", value: "custom" },
+                            42,
+                            true,
+                        ],
+                    },
+                },
+            ],
+        });
+
+        expect(brickById(mixed.spec, "mixed").configs?.options).toEqual([
+            { label: "A0", value: "A0" },
+            { label: "Custom", value: "custom" },
+            { label: "42", value: "42" },
+            { label: "true", value: "true" },
+        ]);
+
+        const empty = convertFormioForm({
+            components: [
+                {
+                    type: "select",
+                    key: "empty",
+                    dataSrc: "json",
+                    data: { json: [] },
+                },
+            ],
+        });
+
+        expect(brickById(empty.spec, "empty").configs?.options).toEqual([]);
+    });
+
+    test("scalar values lists survive dataSrc values and radio", () => {
+        const { spec } = convertFormioForm({
+            components: [
+                {
+                    type: "select",
+                    key: "size",
+                    dataSrc: "values",
+                    data: { values: ["A0", "A1"] },
+                },
+                {
+                    type: "radio",
+                    key: "plan",
+                    values: ["free", "pro"],
+                },
+            ],
+        });
+
+        expect(brickById(spec, "size").configs?.options).toBe("A0\nA1");
+        expect(brickById(spec, "plan").configs?.options).toBe("free\npro");
+    });
+
     test("layout: panels, columns, tabs, datagrid", () => {
         const { spec, warnings } = convertFormioForm({
             components: [

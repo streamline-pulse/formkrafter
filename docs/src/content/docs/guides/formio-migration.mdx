@@ -51,7 +51,7 @@ on one of your own forms.
 | datagrid / editgrid | `data-grid` with per-row validation |
 | `validate.*` (required, min/max, lengths, pattern, custom JS) | Validators; custom JS is auto-wrapped for the sandbox (`data`/`row` become `dataMap`) |
 | `conditional` (show/when/eq) and JavaScript `logic` triggers | [Rules](../rules/); a conditional takes precedence over an always-hidden flag |
-| Select `dataSrc: url / json` | Remote or static options (`valueProperty` → `valueKey`, item templates → `labelKey`, dotted paths supported) |
+| Select `dataSrc: url / json` | Remote or static options (`valueProperty` → `valueKey`, item templates → `labelKey`, dotted paths supported). Lists of plain strings or numbers convert to matching label/value pairs |
 | File components (`storage: url`, `multiple`) | `file` brick with `uploadUrl` / `multiple` configs |
 | Nested `form` components | [nested-form bricks](../nested-forms/) with `specRef` |
 | Content / HTML components | `content` bricks, conditionals preserved |
