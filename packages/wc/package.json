@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-wc",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "type": "module",
   "description": "FormKrafter web components (Stencil)",
   "main": "dist/components/index.js",
