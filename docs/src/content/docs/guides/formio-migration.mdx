@@ -61,15 +61,21 @@ wizards, conditional file uploads, cascaded selects and custom validators.
 
 ## What you gain in weight
 
-Methodology: bundles minified and gzipped; FormKrafter v0.5.0 measured with
-`bun build --minify` from the published package, Form.io `@formio/js` v5.5.0
-measured from its official CDN bundles (July 2026).
+Methodology: gzipped bytes a page actually downloads. FormKrafter v0.16.0
+measured in headless Chromium against the published lazy-loading bundle, JS and
+CSS together; Form.io `@formio/js` v5.5.0 measured from its official CDN
+bundles (July 2026).
 
 | | FormKrafter | Form.io |
 |---|---|---|
-| Builder (renderer included) | **~215 KB** | ~470 KB (`formio.full.min.js`) |
-| Renderer only | ~205 KB | ~415 KB (`formio.form.min.js`) |
-| Required CSS | 6 KB, optional | 129 KB + Bootstrap |
+| Builder (renderer included) | **~130 KB** | ~470 KB (`formio.full.min.js`) |
+| Renderer only | ~130 KB | ~415 KB (`formio.form.min.js`) |
+| Required CSS | 1.6 KB, optional | 129 KB + Bootstrap |
+
+The two FormKrafter rows are identical on purpose: the lazy-loading bundle ships
+its components in shared chunks, so a renderer-only page downloads the same set
+as one running the builder. What stays out until you open a rules or JS-options
+editor is the code editor, roughly 100 KB gzipped on its own.
 
 ## What you gain at runtime
 

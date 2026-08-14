@@ -16,10 +16,10 @@ const t =
         navDocs: 'Docs',
         navDemo: 'Démo',
         navStart: 'Commencer',
-        pill: 'v0.5 · MIT · Web Components · React · Vue',
+        pill: 'MIT · Web Components · React · Vue · React Native',
         h1a: 'Construisez vos formulaires',
         h1b: 'une fois, exécutez-les partout',
-        lede: "Un builder de formulaires drag & drop et son renderer, utilisables en HTML pur, React ou Vue — avec validation, règles dynamiques, formulaires imbriqués et i18n intégrés.",
+        lede: "Un builder de formulaires drag & drop et son renderer, utilisables en HTML pur, React, Vue ou React Native — avec validation, règles dynamiques, formulaires imbriqués et i18n intégrés.",
         ctaStart: 'Commencer →',
         ctaDemo: 'Voir la démo live',
         install: 'bun add @streamline-pulse/formkrafter-react',
@@ -41,7 +41,7 @@ const t =
           {
             n: '03',
             title: 'Afficher',
-            text: 'Un seul spec, trois renderers : Web Components nus, React ou Vue — au choix par app, une seule source de vérité.',
+            text: 'Un seul spec, quatre renderers : Web Components nus, React, Vue ou React Native — au choix par app, une seule source de vérité.',
             code: `<FkFormRender spec={spec} />`,
           },
         ],
@@ -75,7 +75,7 @@ const t =
           {
             icon: '⚡',
             title: 'Léger, vraiment',
-            text: '~215 Ko gzippé pour le builder complet. Éditeur de code en lazy, zéro framework CSS.',
+            text: '~130 Ko gzippés pour une page qui fait tourner le builder complet. Éditeur de code en lazy, zéro framework CSS.',
           },
           {
             icon: '🛡️',
@@ -103,10 +103,10 @@ const t =
         codeFile: 'App.tsx',
         migEyebrow: 'Migration',
         migTitle: 'Vous venez de Form.io ?',
-        migText: 'Divisez par ~2 le poids gzippé de votre stack, abandonnez Bootstrap, et voyez vos définitions stockées fondre de 3 à 5× sur des exports de production réels.',
+        migText: 'Divisez par ~3,5 le poids gzippé de votre stack, abandonnez Bootstrap, et voyez vos définitions stockées fondre de 3 à 5,5× sur des exports de production réels.',
         migCta: 'Guide de migration',
-        migFig1: '470 Ko → 215 Ko',
-        migFig2: 'specs ÷ 3–5',
+        migFig1: '470 Ko → 130 Ko',
+        migFig2: 'specs ÷ 3–5,5',
         usesEyebrow: 'Cas d’usage',
         usesTitle: 'Là où ça sert, vraiment.',
         uses: [
@@ -130,16 +130,16 @@ const t =
         ctaTitle: 'Prêt à construire ?',
         ctaText: 'Ajoutez FormKrafter à l’app que vous avez déjà.',
         ctaStar: 'Star sur GitHub',
-        footTag: 'Construit en Web Components, propulsé par Stencil.',
+        footTag: 'Web Components propulsés par Stencil sur le web, primitives natives sur mobile.',
       }
     : {
         navDocs: 'Docs',
         navDemo: 'Demo',
         navStart: 'Get started',
-        pill: 'v0.5 · MIT · Web Components · React · Vue',
+        pill: 'MIT · Web Components · React · Vue · React Native',
         h1a: 'Build forms once,',
         h1b: 'run them everywhere',
-        lede: 'A drag & drop form builder and renderer that works in plain HTML, React or Vue — with validation, dynamic rules, nested forms and i18n built in.',
+        lede: 'A drag & drop form builder and renderer that works in plain HTML, React, Vue or React Native — with validation, dynamic rules, nested forms and i18n built in.',
         ctaStart: 'Get started →',
         ctaDemo: 'Try the live demo',
         install: 'bun add @streamline-pulse/formkrafter-react',
@@ -161,7 +161,7 @@ const t =
           {
             n: '03',
             title: 'Render',
-            text: 'One spec, three renderers: plain Web Components, React, or Vue — pick per app, keep one source of truth.',
+            text: 'One spec, four renderers: plain Web Components, React, Vue or React Native — pick per app, keep one source of truth.',
             code: `<FkFormRender spec={spec} />`,
           },
         ],
@@ -195,7 +195,7 @@ const t =
           {
             icon: '⚡',
             title: 'Actually lightweight',
-            text: '~215 KB gzipped for the full builder. Lazy-loaded code editor, zero CSS framework.',
+            text: '~130 KB gzipped for a page running the full builder. Lazy-loaded code editor, zero CSS framework.',
           },
           {
             icon: '🛡️',
@@ -223,10 +223,10 @@ const t =
         codeFile: 'App.tsx',
         migEyebrow: 'Migration',
         migTitle: 'Coming from Form.io?',
-        migText: 'Roughly halve your gzipped form-stack weight, drop Bootstrap, and watch stored definitions shrink 3–5× on real production exports.',
+        migText: 'Cut your gzipped form-stack weight by ~3.5×, drop Bootstrap, and watch stored definitions shrink 3–5.5× on real production exports.',
         migCta: 'Migration guide',
-        migFig1: '470 KB → 215 KB',
-        migFig2: 'specs ÷ 3–5',
+        migFig1: '470 KB → 130 KB',
+        migFig2: 'specs ÷ 3–5,5',
         usesEyebrow: 'Use cases',
         usesTitle: 'Where it actually earns its keep.',
         uses: [
@@ -250,7 +250,7 @@ const t =
         ctaTitle: 'Ready to build?',
         ctaText: 'Add FormKrafter to the app you already have.',
         ctaStar: 'Star on GitHub',
-        footTag: 'Built with Web Components, powered by Stencil.',
+        footTag: 'Stencil-powered Web Components on the web, native primitives on mobile.',
       }
 ---
 
@@ -280,7 +280,7 @@ const t =
   <!-- HERO -->
   <main class="fk-hero">
     <div class="fk-hero-copy">
-      <span class="fk-pill"><span class="fk-pill-dot"></span> {t.pill}</span>
+      <span class="fk-pill">{t.pill}</span>
       <h1 class="fk-title">{t.h1a}<br /><span class="fk-grad">{t.h1b}</span></h1>
       <p class="fk-lede">{t.lede}</p>
       <div class="fk-cta">
@@ -655,14 +655,6 @@ const t =
     font-size: 0.78rem;
     color: var(--fk-muted);
     background: color-mix(in srgb, var(--fk-ink) 3%, transparent);
-  }
-
-  .fk-pill-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--fk-accent);
-    box-shadow: 0 0 10px var(--fk-accent);
   }
 
   .fk-title {

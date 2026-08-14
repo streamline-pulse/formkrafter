@@ -63,15 +63,22 @@ validateurs personnalisés.
 
 ## Ce que vous gagnez en poids
 
-Méthodologie : bundles minifiés et gzippés ; FormKrafter v0.5.0 mesuré avec
-`bun build --minify` depuis le package publié, Form.io `@formio/js` v5.5.0
-mesuré depuis ses bundles CDN officiels (juillet 2026).
+Méthodologie : octets gzippés qu'une page télécharge réellement. FormKrafter
+v0.16.0 mesuré sous Chromium headless contre le bundle publié à chargement
+paresseux, JS et CSS confondus ; Form.io `@formio/js` v5.5.0 mesuré depuis ses
+bundles CDN officiels (juillet 2026).
 
 | | FormKrafter | Form.io |
 |---|---|---|
-| Builder (renderer inclus) | **~215 Ko** | ~470 Ko (`formio.full.min.js`) |
-| Renderer seul | ~205 Ko | ~415 Ko (`formio.form.min.js`) |
-| CSS nécessaire | 6 Ko, optionnel | 129 Ko + Bootstrap |
+| Builder (renderer inclus) | **~130 Ko** | ~470 Ko (`formio.full.min.js`) |
+| Renderer seul | ~130 Ko | ~415 Ko (`formio.form.min.js`) |
+| CSS nécessaire | 1,6 Ko, optionnel | 129 Ko + Bootstrap |
+
+Les deux lignes FormKrafter sont identiques à dessein : le bundle à chargement
+paresseux répartit ses composants en chunks partagés, si bien qu'une page qui ne
+fait que rendre télécharge le même ensemble qu'une page portant le builder. Ce
+qui reste dehors jusqu'à l'ouverture d'un éditeur de règles ou d'options JS,
+c'est l'éditeur de code — une centaine de Ko gzippés à lui seul.
 
 ## Ce que vous gagnez à l'exécution
 
