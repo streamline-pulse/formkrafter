@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-react",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "React bindings for FormKrafter web components",
   "license": "MIT",
   "type": "module",
