@@ -1,3 +1,4 @@
+import { stripBrickUids } from "../ops/uids";
 import type { BrickSpec } from "../utils/brick-spec";
 import type { Validation } from "../validators/validation";
 import type { Rule } from "../rules/rule";
@@ -157,7 +158,7 @@ export function convertFormioForm(form: FormioForm): FormioConversionResult {
         );
     }
 
-    return { spec, warnings };
+    return { spec: stripBrickUids(spec), warnings };
 }
 
 function convertComponents(

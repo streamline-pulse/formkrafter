@@ -22,6 +22,13 @@ export { SelectOption, normalizeOptions } from "./utils/options";
 // Recap summarization, shared by every renderer
 export { RecapItem, collectRecapItems } from "./utils/recap";
 
+// Brick identity, owned by the builder rather than the stored spec
+export {
+    ensureBrickUids,
+    stripBrickUids,
+    stripUidsFromPatches
+} from "./ops/uids";
+
 // Remote-options plumbing, shared by every renderer
 export {
     interpolateTemplate,

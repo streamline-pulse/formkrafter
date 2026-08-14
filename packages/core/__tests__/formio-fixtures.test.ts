@@ -55,7 +55,7 @@ describe("public Form.io fixtures", () => {
             expect(unexpected).toEqual([]);
 
             for (const { brick } of iterateBricks(spec)) {
-                expect(brick.configs?.uid).toBeTruthy();
+                expect(brick.configs?.uid).toBeUndefined();
                 expect(brick.configs?.key).toBeTruthy();
             }
 

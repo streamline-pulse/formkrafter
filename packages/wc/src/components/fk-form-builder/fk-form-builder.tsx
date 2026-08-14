@@ -4,16 +4,23 @@ import {
   SpecHistory,
   addBrick,
   duplicateBrick,
+  ensureBrickUids,
   getBrickAt,
   iterateBricks,
   moveBrick,
   removeBrick,
+  stripBrickUids,
+  stripUidsFromPatches,
   updateBrickConfigs,
   updateBrickRules,
   updateBrickStyles,
   updateBrickValidations,
 } from '@streamline-pulse/formkrafter-core';
-import type { BrickSpec, SpecUpdate } from '@streamline-pulse/formkrafter-core';
+import type {
+  BrickSpec,
+  Operation,
+  SpecUpdate,
+} from '@streamline-pulse/formkrafter-core';
 import { newBrickSpec } from '../../registry/registry';
 import { registerDefaultBricks } from '../../registry/default-bricks';
 import { fkT } from '../../i18n/i18n';
@@ -56,13 +63,13 @@ export class FkFormBuilder {
     registerDefaultBricks();
     this.editLocale = this.locales[0];
 
-    this.currentSpec = this.spec;
+    this.currentSpec = this.spec && ensureBrickUids(this.spec);
     this.currentData = { ...this.data };
   }
 
   @Watch('spec')
   syncSpec(next?: BrickSpec) {
-    this.currentSpec = next;
+    this.currentSpec = next && ensureBrickUids(next);
     this.history.clear();
   }
 
@@ -219,22 +226,10 @@ export class FkFormBuilder {
 
       this.selectedUid = undefined;
       this.importError = undefined;
-      this.setRootSpec(this.ensureUids(parsed));
+      this.setRootSpec(parsed);
     } catch {
       if (!silent) this.flashImportError(fkT('builder.importInvalid'));
     }
-  }
-
-  private ensureUids(spec: BrickSpec): BrickSpec {
-    const clone = structuredClone(spec);
-
-    for (const { brick } of iterateBricks(clone)) {
-      if (!brick.configs?.uid) {
-        brick.configs = { ...brick.configs, uid: crypto.randomUUID() };
-      }
-    }
-
-    return clone;
   }
 
   private flashImportError(message: string) {
@@ -279,23 +274,35 @@ export class FkFormBuilder {
   }
 
   private setRootSpec(spec?: BrickSpec) {
-    this.currentSpec = spec;
+    this.currentSpec = spec && ensureBrickUids(spec);
     this.history.clear();
-    this.specChange.emit({ spec, patches: [], inverse: [] });
+    this.emitSpecChange(this.currentSpec);
   }
 
   private applyUpdate(update: SpecUpdate) {
     this.history.record(update);
     this.currentSpec = update.spec;
+    this.emitSpecChange(update.spec, update.patches, update.inverse);
+  }
+
+  private emitSpecChange(
+    spec?: BrickSpec,
+    patches: Operation[] = [],
+    inverse: Operation[] = []
+  ) {
     this.specChange.emit({
-      spec: update.spec,
-      patches: update.patches,
-      inverse: update.inverse,
+      spec: spec && stripBrickUids(spec),
+      patches: stripUidsFromPatches(patches),
+      inverse: stripUidsFromPatches(inverse),
     });
   }
 
   private specJson(): string {
-    return JSON.stringify(this.currentSpec, null, 2);
+    return JSON.stringify(
+      this.currentSpec && stripBrickUids(this.currentSpec),
+      null,
+      2
+    );
   }
 
   private copySpec = async () => {
@@ -325,7 +332,7 @@ export class FkFormBuilder {
     if (spec === undefined) return;
 
     this.currentSpec = spec;
-    this.specChange.emit({ spec, patches: [], inverse: [] });
+    this.emitSpecChange(spec);
   };
 
   private redo = () => {
@@ -335,7 +342,7 @@ export class FkFormBuilder {
     if (spec === undefined) return;
 
     this.currentSpec = spec;
-    this.specChange.emit({ spec, patches: [], inverse: [] });
+    this.emitSpecChange(spec);
   };
 
   render() {

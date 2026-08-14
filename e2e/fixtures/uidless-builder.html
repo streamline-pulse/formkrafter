@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — builder on a uid-less spec</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 24px; font-family: ui-sans-serif, system-ui, sans-serif; }
+      fk-form-builder { display: block; min-height: 32rem; }
+    </style>
+  </head>
+  <body>
+    <fk-form-builder id="builder"></fk-form-builder>
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const spec = {
+        type: 'panel',
+        id: 'column',
+        name: 'Form',
+        configs: { key: 'form' },
+        children: [
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Text',
+            configs: { key: 'fullName', label: 'Name' },
+          },
+        ],
+      }
+
+      const builder = document.getElementById('builder')
+      builder.spec = spec
+
+      window.__specs = []
+      window.__patches = []
+      builder.addEventListener('specChange', (event) => {
+        window.__specs.push(event.detail.spec)
+        window.__patches.push(...event.detail.patches)
+      })
+      window.__ready = true
+    </script>
+  </body>
+</html>

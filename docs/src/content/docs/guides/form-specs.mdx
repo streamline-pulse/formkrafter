@@ -38,12 +38,13 @@ The two properties you touch most live inside `configs`:
 
 | Config | Role | Notes |
 |---|---|---|
-| `uid` | Identity of the node | Stable across edits. Operations address bricks by `uid`; duplicating a brick regenerates it. |
+| `uid` | Identity of the node **while editing** | The builder owns it: it hydrates missing ones when a spec loads and strips them from everything it emits. Stored specs do not need it. |
 | `key` | Name of the field in the form data | What ends up in your payload. A brick without a `key` holds no data. |
 
 <Aside type="caution">
-`uid` and `key` are not interchangeable. Renaming a `key` changes your data
-shape; changing a `uid` breaks the patch history pointing at that node.
+`uid` and `key` are not interchangeable. `key` is your data shape and belongs
+in the stored spec; `uid` is a builder-session detail. Patches address bricks
+by JSON path, not by `uid`, so a regenerated `uid` breaks nothing.
 </Aside>
 
 ## A complete spec
@@ -55,14 +56,14 @@ A form with a text field and a select, both required:
   "type": "panel",
   "id": "column",
   "name": "Contact",
-  "configs": { "uid": "root", "key": "contact" },
+  "configs": { "key": "contact" },
   "children": [
     {
       "type": "input",
       "dataType": "string",
       "id": "text",
       "name": "Text",
-      "configs": { "uid": "f1", "key": "fullName", "label": "Full name" },
+      "configs": { "key": "fullName", "label": "Full name" },
       "validations": [{ "validator": "required" }]
     },
     {
@@ -71,7 +72,6 @@ A form with a text field and a select, both required:
       "id": "select",
       "name": "Select",
       "configs": {
-        "uid": "f2",
         "key": "role",
         "label": "Role",
         "optionsSource": "static",

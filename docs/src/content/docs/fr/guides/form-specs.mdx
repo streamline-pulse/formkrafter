@@ -39,13 +39,14 @@ Les deux propriétés que vous manipulez le plus vivent dans `configs` :
 
 | Config | Rôle | Notes |
 |---|---|---|
-| `uid` | Identité du nœud | Stable au fil des éditions. Les opérations adressent les bricks par `uid` ; dupliquer une brick le régénère. |
+| `uid` | Identité du nœud **pendant l'édition** | Le builder en est propriétaire : il complète ceux qui manquent au chargement et les retire de tout ce qu'il émet. Les specs stockés n'en ont pas besoin. |
 | `key` | Nom du champ dans les données du formulaire | Ce qui se retrouve dans votre payload. Une brick sans `key` ne porte aucune donnée. |
 
 <Aside type="caution">
-`uid` et `key` ne sont pas interchangeables. Renommer une `key` change la forme
-de vos données ; changer un `uid` casse l'historique de patches qui pointe vers
-ce nœud.
+`uid` et `key` ne sont pas interchangeables. `key` définit la forme de vos
+données et a sa place dans le spec stocké ; `uid` est un détail de session du
+builder. Les patches adressent les bricks par chemin JSON, pas par `uid` : un
+`uid` régénéré ne casse rien.
 </Aside>
 
 ## Un spec complet
@@ -57,14 +58,14 @@ Un formulaire avec un champ texte et un select, tous deux obligatoires :
   "type": "panel",
   "id": "column",
   "name": "Contact",
-  "configs": { "uid": "root", "key": "contact" },
+  "configs": { "key": "contact" },
   "children": [
     {
       "type": "input",
       "dataType": "string",
       "id": "text",
       "name": "Text",
-      "configs": { "uid": "f1", "key": "fullName", "label": "Nom complet" },
+      "configs": { "key": "fullName", "label": "Nom complet" },
       "validations": [{ "validator": "required" }]
     },
     {
@@ -73,7 +74,6 @@ Un formulaire avec un champ texte et un select, tous deux obligatoires :
       "id": "select",
       "name": "Select",
       "configs": {
-        "uid": "f2",
         "key": "role",
         "label": "Rôle",
         "optionsSource": "static",
