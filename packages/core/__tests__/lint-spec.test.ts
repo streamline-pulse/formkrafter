@@ -118,3 +118,23 @@ describe("validateFormData warnings", () => {
         expect(result.warnings).toBeUndefined();
     });
 });
+
+describe("schema compile failures", () => {
+    test("a schema that cannot compile surfaces as a warning instead of passing silently", () => {
+        const broken = spec([
+            {
+                type: "input",
+                dataType: "string",
+                id: "text",
+                name: "Text",
+                configs: { key: "nom" },
+                validations: [{ validator: "pattern", value: "(" }],
+            },
+        ]);
+
+        const result = validateFormData(broken, {});
+        expect(result.warnings?.some((w) => w.includes("failed to compile"))).toBe(
+            true
+        );
+    });
+});

@@ -33,6 +33,16 @@ export type ValidationResult = {
     warnings?: string[];
 };
 
+const compileFailures = new WeakMap<BrickSpec, string>();
+
+const recordCompileFailure = (brickSpec: BrickSpec, error: unknown): void => {
+    const reason = error instanceof Error ? error.message : String(error);
+    compileFailures.set(
+        brickSpec,
+        `the validation schema failed to compile, so no rule was enforced: ${reason}`
+    );
+};
+
 const compiledValidator = (
     brickSpec: BrickSpec,
     locale?: string
@@ -52,7 +62,8 @@ const compiledValidator = (
 
         try {
             validate = ajv.compile(schema);
-        } catch {
+        } catch (error) {
+            recordCompileFailure(brickSpec, error);
             return undefined;
         }
         byLocale.set(cacheKey, validate);
@@ -234,7 +245,9 @@ export const validateFormData = (
         });
     }
 
-    const warnings = validationWarnings(brickSpec);
+    const warnings = [...validationWarnings(brickSpec)];
+    const compileFailure = compileFailures.get(brickSpec);
+    if (compileFailure) warnings.push(compileFailure);
     const result: ValidationResult = {
         valid: Object.keys(errors).length === 0,
         errors,
