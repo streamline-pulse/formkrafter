@@ -1,6 +1,6 @@
 {
   "name": "@streamline-pulse/formkrafter-react-native",
-  "version": "0.13.4",
+  "version": "0.14.0",
   "description": "React Native renderer for FormKrafter form specs",
   "license": "MIT",
   "type": "module",
