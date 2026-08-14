@@ -46,7 +46,7 @@ const t =
           },
         ],
         fwEyebrow: 'Intégrations',
-        fwTitle: 'Un comportement, trois façons de le brancher.',
+        fwTitle: 'Un comportement, quatre façons de le brancher.',
         frameworks: [
           {
             name: 'Web Components',
@@ -62,6 +62,11 @@ const t =
             name: 'Vue 3',
             text: 'Même surface, composants Vue natifs.',
             install: 'bun add @streamline-pulse/formkrafter-vue',
+          },
+          {
+            name: 'React Native',
+            text: 'Renderer en primitives natives pour React Native et Expo. Mêmes specs, mêmes règles, même validation.',
+            install: 'bun add @streamline-pulse/formkrafter-react-native',
           },
         ],
         whyEyebrow: 'Atouts',
@@ -166,7 +171,7 @@ const t =
           },
         ],
         fwEyebrow: 'Integrations',
-        fwTitle: 'One behavior, three ways to wire it in.',
+        fwTitle: 'One behavior, four ways to wire it in.',
         frameworks: [
           {
             name: 'Web Components',
@@ -182,6 +187,11 @@ const t =
             name: 'Vue 3',
             text: 'Same surface, native Vue components.',
             install: 'bun add @streamline-pulse/formkrafter-vue',
+          },
+          {
+            name: 'React Native',
+            text: 'A native-primitive renderer for React Native and Expo. Same specs, same rules, same validation.',
+            install: 'bun add @streamline-pulse/formkrafter-react-native',
           },
         ],
         whyEyebrow: 'Why',
@@ -968,15 +978,21 @@ const t =
   /* ---- framework cards ---- */
   .fk-frameworks {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     gap: 1rem;
   }
 
   .fk-fw-card {
+    display: flex;
+    flex-direction: column;
     border: 1px solid var(--fk-line);
     border-radius: 14px;
     padding: 1.4rem;
     background: color-mix(in srgb, var(--fk-ink) 2%, transparent);
+  }
+
+  .fk-fw-card > p {
+    flex: 1;
   }
 
   .fk-fw-card h3 {
