@@ -4,6 +4,7 @@ import addFormats from "ajv-formats";
 import type { BrickSpec } from "../utils/brick-spec";
 import { buildValidationSchema, iterateSchemaBricks } from "../utils/brick-spec";
 import { resolveLocalizedText } from "../utils/localized-text";
+import { validationWarnings } from "../utils/lint-spec";
 import { defaultValidationMessage } from "./default-messages";
 import { evalBrickCode, getAffectedProperties } from "../brick/utils";
 
@@ -29,6 +30,7 @@ export type Validator =
 export type ValidationResult = {
     valid: boolean;
     errors: Record<string, string>;
+    warnings?: string[];
 };
 
 const compiledValidator = (
@@ -232,5 +234,11 @@ export const validateFormData = (
         });
     }
 
-    return { valid: Object.keys(errors).length === 0, errors };
+    const warnings = validationWarnings(brickSpec);
+    const result: ValidationResult = {
+        valid: Object.keys(errors).length === 0,
+        errors,
+    };
+    if (warnings.length) result.warnings = warnings;
+    return result;
 };

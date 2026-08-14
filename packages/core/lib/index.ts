@@ -22,6 +22,9 @@ export { SelectOption, normalizeOptions } from "./utils/options";
 // Recap summarization, shared by every renderer
 export { RecapItem, collectRecapItems } from "./utils/recap";
 
+// Spec diagnostics
+export { SpecIssue, SpecIssueCode, lintSpec } from "./utils/lint-spec";
+
 // Brick identity, owned by the builder rather than the stored spec
 export {
     ensureBrickUids,
