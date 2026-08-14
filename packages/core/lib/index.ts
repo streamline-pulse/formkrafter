@@ -111,7 +111,7 @@ export {
 } from "./i18n";
 
 // Spec operations
-export { pointerFromPath, pointerOfUid, getBrickAt } from "./ops/pointer";
+export { pointerFromPath, getBrickAt } from "./ops/pointer";
 export {
     SpecUpdate,
     addBrick,

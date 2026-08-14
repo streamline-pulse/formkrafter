@@ -4,7 +4,7 @@ import type { BrickBaseConfigs } from "../utils/common-brick-props";
 import type { BrickStyles } from "../utils/brick-styles";
 import type { Validation } from "../validators/validation";
 import type { Rule } from "../rules/rule";
-import { getBrickAt, pointerFromPath, pointerOfUid } from "./pointer";
+import { getBrickAt, pointerFromPath } from "./pointer";
 
 export type SpecUpdate = {
   spec: BrickSpec;
@@ -28,20 +28,13 @@ const requireBrickAt = (spec: BrickSpec, path: string): BrickSpec => {
   return brick;
 };
 
-const requireBrickByUid = (
+const requireBrickForUpdate = (
   spec: BrickSpec,
-  uid: string
-): { pointer: string; brick: BrickSpec } => {
-  const pointer = pointerOfUid(spec, uid);
-  if (pointer === undefined) throw new Error(`No brick with uid "${uid}"`);
-
-  let brick = spec;
-  for (const segment of pointer.split("/children/").slice(1)) {
-    brick = brick.children![Number(segment)];
-  }
-
-  return { pointer, brick };
-};
+  path: string
+): { pointer: string; brick: BrickSpec } => ({
+  pointer: pointerFromPath(path),
+  brick: requireBrickAt(spec, path),
+});
 
 const toJsonValue = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
@@ -178,10 +171,10 @@ const setBrickSection = (
 
 export function updateBrickConfigs(
   spec: BrickSpec,
-  uid: string,
+  path: string,
   configs: BrickBaseConfigs & Record<string, unknown>
 ): SpecUpdate {
-  const { pointer, brick } = requireBrickByUid(spec, uid);
+  const { pointer, brick } = requireBrickForUpdate(spec, path);
   const merged = { ...brick.configs, ...configs };
 
   return setBrickSection(spec, pointer, "configs", merged, brick.configs);
@@ -189,10 +182,10 @@ export function updateBrickConfigs(
 
 export function updateBrickStyles(
   spec: BrickSpec,
-  uid: string,
+  path: string,
   styles: BrickStyles<string>
 ): SpecUpdate {
-  const { pointer, brick } = requireBrickByUid(spec, uid);
+  const { pointer, brick } = requireBrickForUpdate(spec, path);
   const merged = { ...brick.styles, ...styles };
 
   return setBrickSection(spec, pointer, "styles", merged, brick.styles);
@@ -200,20 +193,20 @@ export function updateBrickStyles(
 
 export function updateBrickValidations(
   spec: BrickSpec,
-  uid: string,
+  path: string,
   validations: Validation[]
 ): SpecUpdate {
-  const { pointer, brick } = requireBrickByUid(spec, uid);
+  const { pointer, brick } = requireBrickForUpdate(spec, path);
 
   return setBrickSection(spec, pointer, "validations", validations, brick.validations);
 }
 
 export function updateBrickRules(
   spec: BrickSpec,
-  uid: string,
+  path: string,
   rules: Rule[]
 ): SpecUpdate {
-  const { pointer, brick } = requireBrickByUid(spec, uid);
+  const { pointer, brick } = requireBrickForUpdate(spec, path);
 
   return setBrickSection(spec, pointer, "rules", rules, brick.rules);
 }

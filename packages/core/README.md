@@ -4,7 +4,7 @@ The framework-agnostic heart of FormKrafter: form **specs**, immutable **mutatio
 
 ## The spec
 
-A form is a tree of `BrickSpec` nodes. Each brick has a `type` (`input`, `panel`, `collection`, `output`, `action`), an `id` (which registered brick renders it), `configs` (with a unique `uid` and a data `key`), plus optional `validations`, `rules`, `styles`, and `children`.
+A form is a tree of `BrickSpec` nodes. Each brick has a `type` (`input`, `panel`, `collection`, `output`, `action`), an `id` (which registered brick renders it), `configs` (with a data `key`), plus optional `validations`, `rules`, `styles`, and `children`.
 
 ```mermaid
 flowchart TD
@@ -40,7 +40,7 @@ flowchart LR
     H -->|redo → apply patches| S1[spec']
 ```
 
-Available ops: `addBrick`, `removeBrick`, `moveBrick`, `duplicateBrick` (fresh uids), `updateBrickConfigs`, `updateBrickStyles`, `updateBrickValidations`, `updateBrickRules`. Addressing helpers: `getBrickAt(spec, path)`, `pointerOfUid(spec, uid)`, `iterateBricks(spec)`.
+Available ops: `addBrick`, `removeBrick`, `moveBrick`, `duplicateBrick`, `updateBrickConfigs`, `updateBrickStyles`, `updateBrickValidations`, `updateBrickRules`. Addressing helpers: `getBrickAt(spec, path)`, `pointerFromPath(path)`, `iterateBricks(spec)`.
 
 Patches are plain RFC 6902 — persist them, sync them, audit them.
 

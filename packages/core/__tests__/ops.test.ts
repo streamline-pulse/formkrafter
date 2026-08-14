@@ -3,7 +3,6 @@ import { iterateBricks, type BrickSpec } from "../lib/utils/brick-spec";
 import {
   getBrickAt,
   pointerFromPath,
-  pointerOfUid,
 } from "../lib/ops/pointer";
 import {
   addBrick,
@@ -68,15 +67,16 @@ describe("pointer", () => {
     expect(pointerFromPath("0.2.0")).toBe("/children/2/children/0");
   });
 
-  test("pointerOfUid finds nested bricks", () => {
-    expect(pointerOfUid(form(), "u-root")).toBe("");
-    expect(pointerOfUid(form(), "u-4")).toBe("/children/2/children/0");
-    expect(pointerOfUid(form(), "missing")).toBeUndefined();
-  });
-
   test("getBrickAt resolves dot paths", () => {
     expect(getBrickAt(form(), "0.2.0")?.id).toBe("city");
     expect(getBrickAt(form(), "0.9")).toBeUndefined();
+  });
+
+  test("a malformed path resolves to nothing rather than to the root", () => {
+    for (const path of ["", "9", "0.", "0.x", "root", "not-a-path"]) {
+      expect(getBrickAt(form(), path)).toBeUndefined();
+    }
+    expect(() => updateBrickConfigs(form(), "not-a-path", {})).toThrow();
   });
 });
 
@@ -123,7 +123,7 @@ describe("ops", () => {
     addBrick(spec, input("email", "u-5"), "0");
     removeBrick(spec, "0.1");
     moveBrick(spec, "0.0", "0.2");
-    updateBrickConfigs(spec, "u-1", { label: "First name" });
+    updateBrickConfigs(spec, "0.0", { label: "First name" });
     expect(JSON.stringify(spec)).toBe(before);
   });
 
@@ -205,7 +205,7 @@ describe("ops", () => {
   });
 
   test("updateBrickConfigs merges and patches only the configs", () => {
-    const update = updateBrickConfigs(form(), "u-4", { label: "City" });
+    const update = updateBrickConfigs(form(), "0.2.0", { label: "City" });
     expect(getBrickAt(update.spec, "0.2.0")?.configs).toEqual({
       uid: "u-4",
       key: "city",
@@ -218,13 +218,13 @@ describe("ops", () => {
   test("updateBrickRules adds the section when absent, inverse removes it", () => {
     const spec = form();
     const rules = [{ name: "r", type: "jsonLogic" as const, logic: true }];
-    const update = updateBrickRules(spec, "u-1", rules);
+    const update = updateBrickRules(spec, "0.0", rules);
     expect(getBrickAt(update.spec, "0.0")?.rules).toEqual(rules);
     expect(update.inverse).toEqual([{ op: "remove", path: "/children/0/rules" }]);
   });
 
-  test("update by unknown uid throws", () => {
-    expect(() => updateBrickConfigs(form(), "nope", {})).toThrow();
+  test("update at an unknown path throws", () => {
+    expect(() => updateBrickConfigs(form(), "0.9", {})).toThrow();
   });
 });
 

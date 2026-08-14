@@ -18,22 +18,22 @@ export interface BrickDropDetail {
 
 export interface BrickConfigsChangeDetail {
   configs: BrickBaseConfigs & Record<string, unknown>;
-  uid?: string;
+  path?: string;
 }
 
 export interface BrickStylesChangeDetail {
   styles: BrickStyles<string>;
-  uid?: string;
+  path?: string;
 }
 
 export interface BrickValidationsChangeDetail {
   validations: Validation[];
-  uid?: string;
+  path?: string;
 }
 
 export interface BrickRulesChangeDetail {
   rules: Rule[];
-  uid?: string;
+  path?: string;
 }
 
 export interface BrickPathDetail {

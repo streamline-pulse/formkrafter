@@ -43,7 +43,7 @@ export namespace Components {
          */
         "path": string;
         "rootSpec"?: BrickSpec;
-        "selectedUid"?: string;
+        "selectedPath"?: string;
         "utils": Utils;
     }
     interface FkCodeEditor {
@@ -109,7 +109,7 @@ export namespace Components {
          */
         "editable": boolean;
         "locale"?: string;
-        "selectedUid"?: string;
+        "selectedPath"?: string;
         "spec": BrickSpec;
         "validate": () => Promise<ValidationResult>;
     }
@@ -125,6 +125,7 @@ export namespace Components {
           * @default []
          */
         "locales": string[];
+        "path"?: string;
     }
     interface FkRulesEditor {
         "brick": BrickSpec;
@@ -132,6 +133,7 @@ export namespace Components {
           * @default []
          */
         "fields": string[];
+        "path"?: string;
     }
     interface FkSelectInput {
         "accessibleLabel"?: string;
@@ -585,7 +587,7 @@ declare namespace LocalJSX {
          */
         "path"?: string;
         "rootSpec"?: BrickSpec;
-        "selectedUid"?: string;
+        "selectedPath"?: string;
         "utils": Utils;
     }
     interface FkCodeEditor {
@@ -657,7 +659,7 @@ declare namespace LocalJSX {
         "locale"?: string;
         "onFormDataChange"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "onFormSubmit"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
-        "selectedUid"?: string;
+        "selectedPath"?: string;
         "spec": BrickSpec;
     }
     interface FkPropertyPanel {
@@ -675,6 +677,7 @@ declare namespace LocalJSX {
         "onBrickConfigsChange"?: (event: FkPropertyPanelCustomEvent<BrickConfigsChangeDetail>) => void;
         "onBrickStylesChange"?: (event: FkPropertyPanelCustomEvent<BrickStylesChangeDetail>) => void;
         "onBrickValidationsChange"?: (event: FkPropertyPanelCustomEvent<BrickValidationsChangeDetail>) => void;
+        "path"?: string;
     }
     interface FkRulesEditor {
         "brick": BrickSpec;
@@ -683,6 +686,7 @@ declare namespace LocalJSX {
          */
         "fields"?: string[];
         "onBrickRulesChange"?: (event: FkRulesEditorCustomEvent<BrickRulesChangeDetail>) => void;
+        "path"?: string;
     }
     interface FkSelectInput {
         "accessibleLabel"?: string;
@@ -751,7 +755,7 @@ declare namespace LocalJSX {
     interface FkBrickRenderAttributes {
         "path": string;
         "editable": boolean;
-        "selectedUid": string;
+        "selectedPath": string;
         "locale": string;
     }
     interface FkCodeEditorAttributes {
@@ -777,12 +781,16 @@ declare namespace LocalJSX {
     }
     interface FkFormRenderAttributes {
         "editable": boolean;
-        "selectedUid": string;
+        "selectedPath": string;
         "locale": string;
     }
     interface FkPropertyPanelAttributes {
+        "path": string;
         "locale": string;
         "editLocale": string;
+    }
+    interface FkRulesEditorAttributes {
+        "path": string;
     }
     interface FkSelectInputAttributes {
         "value": string | string[];
@@ -818,7 +826,7 @@ declare namespace LocalJSX {
         "fk-form-builder": Omit<FkFormBuilder, keyof FkFormBuilderAttributes> & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes]?: FkFormBuilder[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `attr:${K}`]?: FkFormBuilderAttributes[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `prop:${K}`]?: FkFormBuilder[K] };
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
-        "fk-rules-editor": FkRulesEditor;
+        "fk-rules-editor": Omit<FkRulesEditor, keyof FkRulesEditorAttributes> & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes]?: FkRulesEditor[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `attr:${K}`]?: FkRulesEditorAttributes[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `prop:${K}`]?: FkRulesEditor[K] };
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
         "fk-signature-input": Omit<FkSignatureInput, keyof FkSignatureInputAttributes> & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes]?: FkSignatureInput[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `attr:${K}`]?: FkSignatureInputAttributes[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `prop:${K}`]?: FkSignatureInput[K] };
         "fk-stepper": Omit<FkStepper, keyof FkStepperAttributes> & { [K in keyof FkStepper & keyof FkStepperAttributes]?: FkStepper[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `attr:${K}`]?: FkStepperAttributes[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `prop:${K}`]?: FkStepper[K] };

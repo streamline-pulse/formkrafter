@@ -22,7 +22,7 @@ interface BrickSpec {
   name: string                  // human label, shown in the builder
 
   dataType?: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array' | 'null' | 'void'
-  configs?: { uid?: string; key?: string } & Record<string, unknown>
+  configs?: { key?: string } & Record<string, unknown>
   styles?: Record<string, unknown>
   validations?: Validation[]
   rules?: Rule[]
@@ -112,16 +112,20 @@ is the first child of the third child of the root.
 | `addBrick` | `(spec, brick, parentPath, index?)` | — |
 | `removeBrick` | `(spec, path)` | throws on the root path `"0"` |
 | `moveBrick` | `(spec, from, to)` | throws when moving a brick into its own subtree |
-| `duplicateBrick` | `(spec, path)` | regenerates `uid`s recursively |
-| `updateBrickConfigs` | `(spec, uid, configs)` | **merged** into existing configs |
-| `updateBrickStyles` | `(spec, uid, styles)` | **merged** |
-| `updateBrickValidations` | `(spec, uid, validations)` | **replaced** wholesale |
-| `updateBrickRules` | `(spec, uid, rules)` | **replaced** wholesale |
+| `duplicateBrick` | `(spec, path)` | — |
+| `updateBrickConfigs` | `(spec, path, configs)` | **merged** into existing configs |
+| `updateBrickStyles` | `(spec, path, styles)` | **merged** |
+| `updateBrickValidations` | `(spec, path, validations)` | **replaced** wholesale |
+| `updateBrickRules` | `(spec, path, rules)` | **replaced** wholesale |
 
 <Aside>
 Configs and styles are merged, validations and rules are replaced. To remove a
 single validation, pass the full array without it.
 </Aside>
+
+Every operation addresses bricks the same way, by path. A path that does not
+resolve to a brick throws rather than falling back to the root, so a typo can
+never edit the wrong node.
 
 ### Undo and redo
 
@@ -159,14 +163,14 @@ on a server, or drive your own history stack.
 ## Walking a spec
 
 ```ts
-import { iterateBricks, getBrickAt, pointerOfUid } from '@streamline-pulse/formkrafter-core'
+import { iterateBricks, getBrickAt, pointerFromPath } from '@streamline-pulse/formkrafter-core'
 
 for (const { brick, path } of iterateBricks(spec)) {
   console.log(path, brick.configs?.key)
 }
 
-getBrickAt(spec, '0.1')        // the brick at a dot-path
-pointerOfUid(spec, 'f2')       // JSON Pointer for a uid, or undefined
+getBrickAt(spec, '0.1')        // the brick at a dot-path, or undefined
+pointerFromPath('0.1')         // the matching JSON Pointer
 ```
 
 ## Next steps

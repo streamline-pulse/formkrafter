@@ -22,6 +22,7 @@ type PanelTab = 'config' | 'validation' | 'styles' | 'rules';
 })
 export class FkPropertyPanel {
   @Prop() brick!: BrickSpec;
+  @Prop() path?: string;
   @Prop() fields: string[] = [];
   @Prop() locales: string[] = [];
   // The chrome language: the strings come from the shared translation
@@ -87,24 +88,21 @@ export class FkPropertyPanel {
   }
 
   private emitConfigs(patch: Record<string, unknown>) {
-    const uid = this.brick.configs?.uid;
-    if (!uid) return;
+    if (!this.path) return;
 
-    this.brickConfigsChange.emit({ configs: patch, uid });
+    this.brickConfigsChange.emit({ configs: patch, path: this.path });
   }
 
   private emitValidations(validations: Validation[]) {
-    const uid = this.brick.configs?.uid;
-    if (!uid) return;
+    if (!this.path) return;
 
-    this.brickValidationsChange.emit({ validations, uid });
+    this.brickValidationsChange.emit({ validations, path: this.path });
   }
 
   private emitStyles(patch: Record<string, unknown>) {
-    const uid = this.brick.configs?.uid;
-    if (!uid) return;
+    if (!this.path) return;
 
-    this.brickStylesChange.emit({ styles: patch, uid });
+    this.brickStylesChange.emit({ styles: patch, path: this.path });
   }
 
   private validationOf(validator: Validator): Validation | undefined {
@@ -573,7 +571,7 @@ export class FkPropertyPanel {
         {this.activeTab === 'styles' ? this.renderStylesTab() : null}
         {this.activeTab === 'rules' ? (
           <section class="fk-props__section">
-            <fk-rules-editor brick={this.brick} fields={this.fields} />
+            <fk-rules-editor brick={this.brick} path={this.path} fields={this.fields} />
           </section>
         ) : null}
       </div>

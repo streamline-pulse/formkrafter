@@ -12,11 +12,11 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   extends CommonBrickProps<Configs, Styles> {
   onConfigsChange?: (
     configs: BrickBaseConfigs & Record<string, unknown>,
-    uid?: string
+    path?: string
   ) => void;
   onStylesChange?: (
     styles: Record<string, unknown>,
-    uid?: string
+    path?: string
   ) => void;
   data?: DataType;
   dataMap?: Record<string, unknown>;
@@ -34,9 +34,9 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   brickSpec?: BrickSpec;
   editable?: boolean;
   validations?: Validation[];
-  onValidationsChange?: (validations: Validation[], uid?: string) => void;
+  onValidationsChange?: (validations: Validation[], path?: string) => void;
   rules?: Rule[];
-  onRulesChange?: (rules: Rule[], uid?: string) => void;
+  onRulesChange?: (rules: Rule[], path?: string) => void;
   utils: Utils;
 }
 

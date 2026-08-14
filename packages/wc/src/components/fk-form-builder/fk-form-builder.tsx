@@ -144,32 +144,32 @@ export class FkFormBuilder {
   @Listen('brickConfigsChange')
   handleConfigsChange(event: CustomEvent<BrickConfigsChangeDetail>) {
     event.stopPropagation();
-    if (!this.currentSpec || !event.detail.uid) return;
+    if (!this.currentSpec || !event.detail.path) return;
 
     this.applyUpdate(
-      updateBrickConfigs(this.currentSpec, event.detail.uid, event.detail.configs)
+      updateBrickConfigs(this.currentSpec, event.detail.path, event.detail.configs)
     );
   }
 
   @Listen('brickStylesChange')
   handleStylesChange(event: CustomEvent<BrickStylesChangeDetail>) {
     event.stopPropagation();
-    if (!this.currentSpec || !event.detail.uid) return;
+    if (!this.currentSpec || !event.detail.path) return;
 
     this.applyUpdate(
-      updateBrickStyles(this.currentSpec, event.detail.uid, event.detail.styles)
+      updateBrickStyles(this.currentSpec, event.detail.path, event.detail.styles)
     );
   }
 
   @Listen('brickValidationsChange')
   handleValidationsChange(event: CustomEvent<BrickValidationsChangeDetail>) {
     event.stopPropagation();
-    if (!this.currentSpec || !event.detail.uid) return;
+    if (!this.currentSpec || !event.detail.path) return;
 
     this.applyUpdate(
       updateBrickValidations(
         this.currentSpec,
-        event.detail.uid,
+        event.detail.path,
         event.detail.validations
       )
     );
@@ -178,10 +178,10 @@ export class FkFormBuilder {
   @Listen('brickRulesChange')
   handleRulesChange(event: CustomEvent<BrickRulesChangeDetail>) {
     event.stopPropagation();
-    if (!this.currentSpec || !event.detail.uid) return;
+    if (!this.currentSpec || !event.detail.path) return;
 
     this.applyUpdate(
-      updateBrickRules(this.currentSpec, event.detail.uid, event.detail.rules)
+      updateBrickRules(this.currentSpec, event.detail.path, event.detail.rules)
     );
   }
 
@@ -346,6 +346,8 @@ export class FkFormBuilder {
   };
 
   render() {
+    const selected = this.findSelected();
+
     return (
       <div class="fk-builder">
         <aside class="fk-builder__palette">
@@ -424,7 +426,7 @@ export class FkFormBuilder {
                 spec={this.currentSpec}
                 data={this.currentData}
                 editable={true}
-                selectedUid={this.selectedUid}
+                selectedPath={selected?.path}
                 locale={this.editLocale}
               />
             ) : (
@@ -434,20 +436,18 @@ export class FkFormBuilder {
         </main>
 
         <aside class="fk-builder__inspector">
-          {(() => {
-            const selected = this.findSelected();
-            return selected ? (
-              <fk-property-panel
-                brick={selected.brick}
-                fields={this.inputFieldKeys()}
-                locales={this.locales}
-                locale={this.locale}
-                editLocale={this.editLocale}
-              />
-            ) : (
-              <p class="fk-builder__hint">{fkT('builder.hint')}</p>
-            );
-          })()}
+          {selected ? (
+            <fk-property-panel
+              brick={selected.brick}
+              path={selected.path}
+              fields={this.inputFieldKeys()}
+              locales={this.locales}
+              locale={this.locale}
+              editLocale={this.editLocale}
+            />
+          ) : (
+            <p class="fk-builder__hint">{fkT('builder.hint')}</p>
+          )}
         </aside>
       </div>
     );

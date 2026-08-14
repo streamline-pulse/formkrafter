@@ -24,6 +24,7 @@ type RuleMode = 'simple' | 'json' | 'javaScript';
 })
 export class FkRulesEditor {
   @Prop() brick!: BrickSpec;
+  @Prop() path?: string;
   @Prop() fields: string[] = [];
 
   @Event() brickRulesChange!: EventEmitter<BrickRulesChangeDetail>;
@@ -37,10 +38,9 @@ export class FkRulesEditor {
   }
 
   private commit(rules: Rule[]) {
-    const uid = this.brick.configs?.uid;
-    if (!uid) return;
+    if (!this.path) return;
 
-    this.brickRulesChange.emit({ rules, uid });
+    this.brickRulesChange.emit({ rules, path: this.path });
   }
 
   private updateRule(index: number, patch: Partial<Rule>) {

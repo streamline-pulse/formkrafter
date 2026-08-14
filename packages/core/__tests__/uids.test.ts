@@ -5,7 +5,6 @@ import {
     stripUidsFromPatches,
 } from "../lib/ops/uids";
 import { addBrick, updateBrickConfigs } from "../lib/ops/ops";
-import { pointerOfUid } from "../lib/ops/pointer";
 import type { BrickSpec } from "../lib/utils/brick-spec";
 
 const bare = (): BrickSpec =>
@@ -63,12 +62,10 @@ describe("ensureBrickUids", () => {
         expect(source.children![0].configs?.uid).toBeUndefined();
     });
 
-    test("hydrated bricks are addressable by the uid-keyed ops", () => {
+    test("hydration leaves the tree addressable by path", () => {
         const hydrated = ensureBrickUids(bare());
-        const uid = hydrated.children![0].configs!.uid as string;
 
-        expect(pointerOfUid(hydrated, uid)).toBe("/children/0");
-        const updated = updateBrickConfigs(hydrated, uid, { label: "Full name" });
+        const updated = updateBrickConfigs(hydrated, "0.0", { label: "Full name" });
         expect(updated.spec.children![0].configs?.label).toBe("Full name");
     });
 });
@@ -107,7 +104,7 @@ describe("stripUidsFromPatches", () => {
             } as unknown as BrickSpec,
             "0"
         );
-        const configsChange = updateBrickConfigs(hydrated, uid, { label: "X" });
+        const configsChange = updateBrickConfigs(hydrated, "0.0", { label: "X" });
 
         const cleaned = stripUidsFromPatches([
             ...added.patches,

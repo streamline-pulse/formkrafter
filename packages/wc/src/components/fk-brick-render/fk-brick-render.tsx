@@ -31,7 +31,7 @@ export class FkBrickRender {
   @Prop() dataMap?: Record<string, unknown>;
   @Prop() path: string = '0';
   @Prop() editable: boolean = false;
-  @Prop() selectedUid?: string;
+  @Prop() selectedPath?: string;
   @Prop() errors: Record<string, string> = {};
   @Prop() locale?: string;
   @Prop() utils!: Utils;
@@ -59,7 +59,6 @@ export class FkBrickRender {
     if (!editing && affected.hidden === true) return null;
 
     const isContainer = spec.type === 'panel' || spec.type === 'collection';
-    const uid = spec.configs?.uid;
 
     const childNodes: VNode[] = (spec.children ?? []).map((childSpec, index) => (
       <fk-brick-render
@@ -71,7 +70,7 @@ export class FkBrickRender {
         locale={this.locale}
         path={`${this.path}.${index}`}
         editable={this.editable}
-        selectedUid={this.selectedUid}
+        selectedPath={this.selectedPath}
         utils={this.utils}
       />
     ));
@@ -101,17 +100,20 @@ export class FkBrickRender {
         const wrapped = wrapBrickData(spec, value);
         if (wrapped !== undefined) this.brickDataChange.emit(wrapped);
       },
-      onConfigsChange: (configs, changedUid) =>
-        this.brickConfigsChange.emit({ configs, uid: changedUid ?? uid }),
-      onStylesChange: (styles, changedUid) =>
+      onConfigsChange: (configs, changedPath) =>
+        this.brickConfigsChange.emit({ configs, path: changedPath ?? this.path }),
+      onStylesChange: (styles, changedPath) =>
         this.brickStylesChange.emit({
           styles: styles as Record<string, unknown>,
-          uid: changedUid ?? uid,
+          path: changedPath ?? this.path,
         }),
-      onValidationsChange: (validations: Validation[], changedUid?: string) =>
-        this.brickValidationsChange.emit({ validations, uid: changedUid ?? uid }),
-      onRulesChange: (rules, changedUid) =>
-        this.brickRulesChange.emit({ rules, uid: changedUid ?? uid }),
+      onValidationsChange: (validations: Validation[], changedPath?: string) =>
+        this.brickValidationsChange.emit({
+          validations,
+          path: changedPath ?? this.path,
+        }),
+      onRulesChange: (rules, changedPath) =>
+        this.brickRulesChange.emit({ rules, path: changedPath ?? this.path }),
       onDelete: (path) => this.brickRemove.emit({ path }),
       onDuplicate: (path) => this.brickDuplicate.emit({ path }),
     };
@@ -123,7 +125,7 @@ export class FkBrickRender {
     return (
       <fk-brick-actions
         path={this.path}
-        selected={uid !== undefined && uid === this.selectedUid}
+        selected={this.path === this.selectedPath}
       >
         {node}
       </fk-brick-actions>

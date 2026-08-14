@@ -27,7 +27,7 @@ export class FkFormRender {
   @Prop() spec!: BrickSpec;
   @Prop() data?: Record<string, unknown>;
   @Prop() editable: boolean = false;
-  @Prop() selectedUid?: string;
+  @Prop() selectedPath?: string;
   @Prop() locale?: string;
 
   @Event() formDataChange!: EventEmitter<DataChangeDetail>;
@@ -232,7 +232,7 @@ export class FkFormRender {
           locale={this.locale}
           path="0"
           editable={this.editable}
-          selectedUid={this.selectedUid}
+          selectedPath={this.selectedPath}
           utils={this.utils}
         />
       </form>

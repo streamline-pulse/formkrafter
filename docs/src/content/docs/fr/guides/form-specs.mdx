@@ -23,7 +23,7 @@ interface BrickSpec {
   name: string                  // libellé humain, affiché dans le builder
 
   dataType?: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array' | 'null' | 'void'
-  configs?: { uid?: string; key?: string } & Record<string, unknown>
+  configs?: { key?: string } & Record<string, unknown>
   styles?: Record<string, unknown>
   validations?: Validation[]
   rules?: Rule[]
@@ -115,17 +115,21 @@ enfant de la racine.
 | `addBrick` | `(spec, brick, parentPath, index?)` | — |
 | `removeBrick` | `(spec, path)` | lève une erreur sur le chemin racine `"0"` |
 | `moveBrick` | `(spec, from, to)` | lève une erreur si l'on déplace une brick dans son propre sous-arbre |
-| `duplicateBrick` | `(spec, path)` | régénère les `uid` récursivement |
-| `updateBrickConfigs` | `(spec, uid, configs)` | **fusionné** dans les configs existantes |
-| `updateBrickStyles` | `(spec, uid, styles)` | **fusionné** |
-| `updateBrickValidations` | `(spec, uid, validations)` | **remplacé** intégralement |
-| `updateBrickRules` | `(spec, uid, rules)` | **remplacé** intégralement |
+| `duplicateBrick` | `(spec, path)` | — |
+| `updateBrickConfigs` | `(spec, path, configs)` | **fusionné** dans les configs existantes |
+| `updateBrickStyles` | `(spec, path, styles)` | **fusionné** |
+| `updateBrickValidations` | `(spec, path, validations)` | **remplacé** intégralement |
+| `updateBrickRules` | `(spec, path, rules)` | **remplacé** intégralement |
 
 <Aside>
 Les configs et les styles sont fusionnés, les validations et les règles sont
 remplacées. Pour retirer une seule validation, passez le tableau complet sans
 elle.
 </Aside>
+
+Toutes les opérations adressent les bricks de la même façon, par chemin. Un
+chemin qui ne résout vers aucune brick lève une erreur au lieu de retomber sur
+la racine : une faute de frappe ne peut donc jamais modifier le mauvais nœud.
 
 ### Undo et redo
 
@@ -164,14 +168,14 @@ patches, les rejouer sur un serveur, ou piloter votre propre pile d'historique.
 ## Parcourir un spec
 
 ```ts
-import { iterateBricks, getBrickAt, pointerOfUid } from '@streamline-pulse/formkrafter-core'
+import { iterateBricks, getBrickAt, pointerFromPath } from '@streamline-pulse/formkrafter-core'
 
 for (const { brick, path } of iterateBricks(spec)) {
   console.log(path, brick.configs?.key)
 }
 
-getBrickAt(spec, '0.1')        // la brick au chemin pointé
-pointerOfUid(spec, 'f2')       // le JSON Pointer d'un uid, ou undefined
+getBrickAt(spec, '0.1')        // la brick au chemin pointé, ou undefined
+pointerFromPath('0.1')         // le JSON Pointer correspondant
 ```
 
 ## Étapes suivantes
