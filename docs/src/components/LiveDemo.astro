@@ -32,7 +32,7 @@ const { mode = 'builder', validateLabel } = Astro.props
     type: 'panel',
     id: 'column',
     name: 'Form',
-    configs: { uid: 'demo-root', key: 'form' },
+    configs: { key: 'form' },
     children: [
       {
         type: 'input',
@@ -40,7 +40,6 @@ const { mode = 'builder', validateLabel } = Astro.props
         id: 'text',
         name: 'Text',
         configs: {
-          uid: 'demo-name',
           key: 'name',
           label: { en: 'Full name', fr: 'Nom complet' },
         },
@@ -52,7 +51,6 @@ const { mode = 'builder', validateLabel } = Astro.props
         id: 'select',
         name: 'Select',
         configs: {
-          uid: 'demo-role',
           key: 'role',
           label: { en: 'Role', fr: 'Rôle' },
           optionsSource: 'static',

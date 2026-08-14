@@ -34,7 +34,9 @@ workers.
 |---|---|
 | Spec ops | `addBrick`, `removeBrick`, `moveBrick`, `duplicateBrick`, `updateBrickConfigs`, `updateBrickStyles`, `updateBrickValidations`, `updateBrickRules`, `SpecHistory` |
 | Addressing | `getBrickAt`, `pointerOfUid`, `pointerFromPath`, `iterateBricks`, `iterateSchemaBricks` |
+| Builder uids | `ensureBrickUids`, `stripBrickUids`, `stripUidsFromPatches` |
 | Validation | `validateFormData`, `validateBrickSpecData`, `validateBrickSpecDataDetailed`, `buildValidationSchema`, `registerValidationMessages`, `defaultValidationMessage` |
+| Spec health | `lintSpec`, `SpecIssue`, `SpecIssueCode` |
 | Rules | `runSandboxed`, `evalBrickCode`, `getAffectedProperties`, `SandboxJsRunnerService`, `UnsafeEvalJsRunnerService` |
 | Services | `services`, `FetchDataSourceService`, `Base64FileUploadService`, `UrlFileUploadService`, `FetchSpecSourceService`, `FetchOptionSourceService` |
 | Nested forms | `expandSpec`, `hasNestedForms` |
@@ -62,11 +64,11 @@ build** — tree-shakeable and ESM-only:
     ```html
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/formkrafter-wc.css"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/formkrafter-wc.css"
     />
     <script
       type="module"
-      src="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/formkrafter-wc.esm.js"
+      src="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/formkrafter-wc.esm.js"
     ></script>
     ```
     A lazy-loading bundle that registers the elements on demand. Pin a version:

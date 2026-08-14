@@ -37,6 +37,14 @@ Chaque brick porte un tableau `validations`. Ils sont compilés en JSON Schema
 `message` est optionnel et peut être localisé — voir
 [messages et locales](#messages-et-locales) plus bas.
 
+<Aside type="note">
+Ajv est embarqué **dans** `formkrafter-core` — vous ne l'installez jamais, et la
+version que votre application résout pour son propre usage ne peut pas atteindre
+celle sur laquelle tourne la validation. Deux copies d'Ajv dans un arbre de
+dépendances suffisaient auparavant à casser la compilation en silence, ce qui est
+précisément la panne que `warnings` signale désormais.
+</Aside>
+
 ## Validateurs personnalisés
 
 Quand les onze validateurs intégrés ne suffisent pas, `custom` exécute un
@@ -127,6 +135,62 @@ main rate facilement :
 Valider côté serveur n'est pas optionnel. Le verdict du navigateur est un
 confort d'UX ; seul `validateFormData` sur votre backend est une garantie.
 </Aside>
+
+## Quand une règle n'est pas appliquée
+
+Un spec peut porter des validations qui ne s'exécutent jamais. `valid: true`
+signifie alors *rien n'a objecté*, et non *les règles sont passées* — une nuance
+qui reste invisible jusqu'à ce que de mauvaises données soient déjà stockées.
+`validateFormData` la remonte via `warnings` :
+
+```ts
+const { valid, errors, warnings } = validateFormData(spec, payload)
+
+if (warnings) {
+  console.warn(`${formId} accepte des soumissions sans certaines de ses règles :`)
+  for (const warning of warnings) console.warn(`  • ${warning}`)
+}
+```
+
+`warnings` est absent sur un spec sain : sa seule présence est le signal. Il ne
+change jamais `valid` — le verdict tient, il est simplement plus faible qu'il
+n'en a l'air. Deux causes le produisent : un champ portant des `validations`
+mais pas de `dataType`, ce qui ne laisse rien pour construire un schéma, et un
+schéma dont la compilation a échoué, par exemple un `pattern` à la regex
+invalide.
+
+<Aside type="caution">
+Journalisez ces avertissements là où vous lisez vraiment. Un spec qui cesse
+silencieusement d'appliquer ses règles continue de renvoyer `valid: true` et
+paraît parfaitement sain vu de l'extérieur.
+</Aside>
+
+## Linter les specs avant leur mise en service
+
+`warnings` attrape le problème au moment de la soumission. `lintSpec` l'attrape
+avant même que le spec ne soit stocké — il parcourt un spec et renvoie tout ce
+qui y est structurellement faux, sans aucune donnée :
+
+```ts
+import { lintSpec } from '@streamline-pulse/formkrafter-core'
+
+for (const issue of lintSpec(spec)) {
+  console.error(`[${issue.code}] ${issue.path} — ${issue.message}`)
+}
+```
+
+| `issue.code` | Signification |
+|---|---|
+| `validations-without-data-type` | La brick a des règles mais pas de `dataType` : aucune n'est appliquée |
+| `input-without-key` | La valeur n'a nulle part où aller dans les données du formulaire |
+| `duplicate-key` | Deux bricks écrivent sur la même clé ; une valeur écrase l'autre |
+| `collection-without-children` | Une collection sans brick à répéter |
+
+Chaque problème porte `code`, `path`, `key` et un `message` lisible. Un tableau
+vide signifie que le spec est sain. C'est assez peu coûteux pour tourner en CI
+sur chaque spec que vous semez ou générez, et sortir en erreur sur un résultat
+non vide transforme toute une classe de bugs de données silencieux en build
+rouge.
 
 ## Étapes suivantes
 

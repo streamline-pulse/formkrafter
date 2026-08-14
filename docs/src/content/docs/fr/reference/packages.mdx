@@ -34,7 +34,9 @@ Node, Bun et workers.
 |---|---|
 | Ops sur les specs | `addBrick`, `removeBrick`, `moveBrick`, `duplicateBrick`, `updateBrickConfigs`, `updateBrickStyles`, `updateBrickValidations`, `updateBrickRules`, `SpecHistory` |
 | Adressage | `getBrickAt`, `pointerOfUid`, `pointerFromPath`, `iterateBricks`, `iterateSchemaBricks` |
+| Uids du builder | `ensureBrickUids`, `stripBrickUids`, `stripUidsFromPatches` |
 | Validation | `validateFormData`, `validateBrickSpecData`, `validateBrickSpecDataDetailed`, `buildValidationSchema`, `registerValidationMessages`, `defaultValidationMessage` |
+| Santé des specs | `lintSpec`, `SpecIssue`, `SpecIssueCode` |
 | Règles | `runSandboxed`, `evalBrickCode`, `getAffectedProperties`, `SandboxJsRunnerService`, `UnsafeEvalJsRunnerService` |
 | Services | `services`, `FetchDataSourceService`, `Base64FileUploadService`, `UrlFileUploadService`, `FetchSpecSourceService`, `FetchOptionSourceService` |
 | Formulaires imbriqués | `expandSpec`, `hasNestedForms` |
@@ -62,11 +64,11 @@ custom elements** — tree-shakeable et ESM uniquement :
     ```html
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/formkrafter-wc.css"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/formkrafter-wc.css"
     />
     <script
       type="module"
-      src="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/formkrafter-wc.esm.js"
+      src="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/formkrafter-wc.esm.js"
     ></script>
     ```
     Un bundle à chargement paresseux qui enregistre les éléments à la demande.

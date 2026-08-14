@@ -36,6 +36,13 @@ Each brick carries a `validations` array. They compile to a JSON Schema
 `message` is optional and may be localized — see
 [messages and locales](#messages-and-locales) below.
 
+<Aside type="note">
+Ajv ships **inside** `formkrafter-core` — you never install it, and the version
+your application resolves for its own use cannot reach the one validation runs
+on. Two Ajv copies in a dependency tree used to be enough to break compilation
+silently, which is exactly the failure `warnings` now reports.
+</Aside>
+
 ## Custom validators
 
 When the eleven built-ins are not enough, `custom` runs a snippet in the
@@ -122,6 +129,59 @@ hand-written backend check:
 Validating on the server is not optional. The browser verdict is a UX
 affordance; only `validateFormData` on your backend is a guarantee.
 </Aside>
+
+## When a rule is not enforced
+
+A spec can carry validations that never run. `valid: true` then means *nothing
+objected*, not *the rules passed* — a distinction that stays invisible until
+bad data is already stored. `validateFormData` reports it through `warnings`:
+
+```ts
+const { valid, errors, warnings } = validateFormData(spec, payload)
+
+if (warnings) {
+  console.warn(`${formId} accepts submissions without some of its rules:`)
+  for (const warning of warnings) console.warn(`  • ${warning}`)
+}
+```
+
+`warnings` is absent on a healthy spec, so its mere presence is the signal. It
+never changes `valid`: the verdict stands, it is just weaker than it looks. Two
+causes produce it — an input carrying `validations` but no `dataType`, which
+leaves nothing to build a schema from, and a schema that failed to compile, for
+instance a `pattern` whose regex is invalid.
+
+<Aside type="caution">
+Log warnings somewhere you actually read. A spec that silently stops enforcing
+its rules keeps returning `valid: true` and looks perfectly healthy from the
+outside.
+</Aside>
+
+## Linting specs before they ship
+
+`warnings` catches the problem at submission time. `lintSpec` catches it before
+the spec is ever stored — it walks a spec and returns everything structurally
+wrong with it, with no data required:
+
+```ts
+import { lintSpec } from '@streamline-pulse/formkrafter-core'
+
+for (const issue of lintSpec(spec)) {
+  console.error(`[${issue.code}] ${issue.path} — ${issue.message}`)
+}
+```
+
+| `issue.code` | What it means |
+|---|---|
+| `validations-without-data-type` | The brick has rules but no `dataType`, so none of them are enforced |
+| `input-without-key` | The value has nowhere to go in the form data |
+| `duplicate-key` | Two bricks write to the same key; one value overwrites the other |
+| `collection-without-children` | A collection with no bricks to repeat |
+
+Each issue carries `code`, `path`, `key` and a human-readable `message`. An
+empty array means the spec is sound. It is cheap enough to run in CI over every
+spec you seed or generate, and exiting non-zero on a non-empty result turns a
+class of silent data bugs into a failed build.
 
 ## Next steps
 

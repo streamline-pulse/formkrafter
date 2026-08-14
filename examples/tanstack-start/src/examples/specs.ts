@@ -4,7 +4,7 @@ const column = (key: string, children: BrickSpec[]): BrickSpec => ({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: `${key}-root`, key },
+  configs: { key },
   children,
 })
 
@@ -14,7 +14,7 @@ export const contactSpec: BrickSpec = column('contact', [
     dataType: 'string',
     id: 'text',
     name: 'Name',
-    configs: { uid: 'c-name', key: 'name', label: 'Full name' },
+    configs: { key: 'name', label: 'Full name' },
     validations: [{ validator: 'required' }],
   },
   {
@@ -22,7 +22,7 @@ export const contactSpec: BrickSpec = column('contact', [
     dataType: 'string',
     id: 'email',
     name: 'Email',
-    configs: { uid: 'c-email', key: 'email', label: 'Email' },
+    configs: { key: 'email', label: 'Email' },
     validations: [{ validator: 'required' }, { validator: 'email' }],
   },
   {
@@ -30,7 +30,7 @@ export const contactSpec: BrickSpec = column('contact', [
     dataType: 'string',
     id: 'textarea',
     name: 'Message',
-    configs: { uid: 'c-message', key: 'message', label: 'Message' },
+    configs: { key: 'message', label: 'Message' },
     validations: [{ validator: 'minLength', value: 10 }],
   },
 ])
@@ -41,7 +41,6 @@ export const wizardSpec: BrickSpec = column('wizard', [
     id: 'stepper',
     name: 'Wizard',
     configs: {
-      uid: 'w-stepper',
       key: 'steps',
       validateSteps: true,
       allowStepClick: false,
@@ -52,14 +51,14 @@ export const wizardSpec: BrickSpec = column('wizard', [
         type: 'panel',
         id: 'group',
         name: 'Identity',
-        configs: { uid: 'w-s1', key: 's1', label: 'Identity' },
+        configs: { key: 's1', label: 'Identity' },
         children: [
           {
             type: 'input',
             dataType: 'string',
             id: 'text',
             name: 'Name',
-            configs: { uid: 'w-name', key: 'name', label: 'Full name' },
+            configs: { key: 'name', label: 'Full name' },
             validations: [{ validator: 'required' }],
           },
           {
@@ -67,7 +66,7 @@ export const wizardSpec: BrickSpec = column('wizard', [
             dataType: 'string',
             id: 'email',
             name: 'Email',
-            configs: { uid: 'w-email', key: 'email', label: 'Email' },
+            configs: { key: 'email', label: 'Email' },
             validations: [{ validator: 'required' }, { validator: 'email' }],
           },
         ],
@@ -76,21 +75,21 @@ export const wizardSpec: BrickSpec = column('wizard', [
         type: 'panel',
         id: 'group',
         name: 'Details',
-        configs: { uid: 'w-s2', key: 's2', label: 'Details' },
+        configs: { key: 's2', label: 'Details' },
         children: [
           {
             type: 'input',
             dataType: 'string',
             id: 'phone',
             name: 'Phone',
-            configs: { uid: 'w-phone', key: 'phone', label: 'Phone' },
+            configs: { key: 'phone', label: 'Phone' },
           },
           {
             type: 'input',
             dataType: 'string',
             id: 'text',
             name: 'City',
-            configs: { uid: 'w-city', key: 'city', label: 'City' },
+            configs: { key: 'city', label: 'City' },
             validations: [{ validator: 'required' }],
           },
         ],
@@ -99,7 +98,7 @@ export const wizardSpec: BrickSpec = column('wizard', [
         type: 'panel',
         id: 'group',
         name: 'Confirm',
-        configs: { uid: 'w-s3', key: 's3', label: 'Confirm' },
+        configs: { key: 's3', label: 'Confirm' },
         children: [
           {
             type: 'output',
@@ -107,7 +106,6 @@ export const wizardSpec: BrickSpec = column('wizard', [
             id: 'content',
             name: 'Content',
             configs: {
-              uid: 'w-note',
               key: 'note',
               content: 'Almost done — confirm and submit.',
             },
@@ -117,7 +115,7 @@ export const wizardSpec: BrickSpec = column('wizard', [
             dataType: 'boolean',
             id: 'checkbox',
             name: 'Consent',
-            configs: { uid: 'w-consent', key: 'consent', label: 'I confirm my details' },
+            configs: { key: 'consent', label: 'I confirm my details' },
             validations: [{ validator: 'required' }],
           },
         ],
@@ -133,7 +131,6 @@ export const i18nSpec: BrickSpec = column('i18n', [
     id: 'text',
     name: 'Name',
     configs: {
-      uid: 'l-name',
       key: 'name',
       label: { en: 'Full name', fr: 'Nom complet' },
       placeholder: { en: 'Ada Lovelace', fr: 'Ada Lovelace' },
@@ -151,7 +148,6 @@ export const i18nSpec: BrickSpec = column('i18n', [
     id: 'select',
     name: 'Role',
     configs: {
-      uid: 'l-role',
       key: 'role',
       label: { en: 'Role', fr: 'Rôle' },
       optionsSource: 'static',
@@ -176,7 +172,6 @@ export const remoteSpec: BrickSpec = column('remote', [
     id: 'select',
     name: 'Author',
     configs: {
-      uid: 'r-author',
       key: 'author',
       label: 'Author (jsonplaceholder /users)',
       optionsSource: 'remote',
@@ -192,7 +187,6 @@ export const remoteSpec: BrickSpec = column('remote', [
     id: 'select',
     name: 'Post',
     configs: {
-      uid: 'r-post',
       key: 'post',
       label: 'Their posts (/posts?userId={author})',
       optionsSource: 'remote',
@@ -209,7 +203,7 @@ export const gridSpec: BrickSpec = column('grid', [
     dataType: 'array',
     id: 'data-grid',
     name: 'Contacts',
-    configs: { uid: 'g-grid', key: 'contacts', label: 'Team contacts' },
+    configs: { key: 'contacts', label: 'Team contacts' },
     validations: [{ validator: 'minItems', value: 1 }],
     children: [
       {
@@ -217,7 +211,7 @@ export const gridSpec: BrickSpec = column('grid', [
         dataType: 'string',
         id: 'text',
         name: 'Name',
-        configs: { uid: 'g-name', key: 'name', label: 'Name' },
+        configs: { key: 'name', label: 'Name' },
         validations: [{ validator: 'required' }],
       },
       {
@@ -225,7 +219,7 @@ export const gridSpec: BrickSpec = column('grid', [
         dataType: 'string',
         id: 'email',
         name: 'Email',
-        configs: { uid: 'g-email', key: 'email', label: 'Email' },
+        configs: { key: 'email', label: 'Email' },
         validations: [{ validator: 'email' }],
       },
       {
@@ -234,7 +228,6 @@ export const gridSpec: BrickSpec = column('grid', [
         id: 'select',
         name: 'Role',
         configs: {
-          uid: 'g-role',
           key: 'role',
           label: 'Role',
           optionsSource: 'static',
@@ -252,7 +245,6 @@ export const authSpec: BrickSpec = column('auth', [
     id: 'select',
     name: 'Secured options',
     configs: {
-      uid: 'a-secured',
       key: 'secured',
       label: 'Secured select',
       optionsSource: 'remote',
@@ -265,7 +257,7 @@ export const authSpec: BrickSpec = column('auth', [
     dataType: 'string',
     id: 'text',
     name: 'Note',
-    configs: { uid: 'a-note', key: 'note', label: 'Public field' },
+    configs: { key: 'note', label: 'Public field' },
   },
 ])
 
@@ -276,7 +268,6 @@ export const rulesSpec: BrickSpec = column('rules', [
     id: 'select',
     name: 'Channel',
     configs: {
-      uid: 'ru-channel',
       key: 'channel',
       label: 'Preferred channel',
       optionsSource: 'static',
@@ -288,7 +279,7 @@ export const rulesSpec: BrickSpec = column('rules', [
     dataType: 'string',
     id: 'text',
     name: 'Other channel',
-    configs: { uid: 'ru-other', key: 'other', label: 'Which one?' },
+    configs: { key: 'other', label: 'Which one?' },
     rules: [
       {
         name: 'hide unless Other',
@@ -303,14 +294,14 @@ export const rulesSpec: BrickSpec = column('rules', [
     dataType: 'boolean',
     id: 'checkbox',
     name: 'Lock',
-    configs: { uid: 'ru-lock', key: 'lock', label: 'Lock the nickname' },
+    configs: { key: 'lock', label: 'Lock the nickname' },
   },
   {
     type: 'input',
     dataType: 'string',
     id: 'text',
     name: 'Nickname',
-    configs: { uid: 'ru-nick', key: 'nickname', label: 'Nickname' },
+    configs: { key: 'nickname', label: 'Nickname' },
     rules: [
       {
         name: 'disable when locked',
@@ -325,14 +316,14 @@ export const rulesSpec: BrickSpec = column('rules', [
     dataType: 'number',
     id: 'number',
     name: 'Quantity',
-    configs: { uid: 'ru-qty', key: 'quantity', label: 'Quantity' },
+    configs: { key: 'quantity', label: 'Quantity' },
   },
   {
     type: 'input',
     dataType: 'string',
     id: 'text',
     name: 'Tier',
-    configs: { uid: 'ru-tier', key: 'tier', label: 'Tier (computed by a JS rule)' },
+    configs: { key: 'tier', label: 'Tier (computed by a JS rule)' },
     rules: [
       {
         name: 'compute tier',
@@ -355,14 +346,14 @@ export const ratingSpec: BrickSpec = column('rating', [
     dataType: 'string',
     id: 'text',
     name: 'Name',
-    configs: { uid: 'cb-name', key: 'name', label: 'Your name' },
+    configs: { key: 'name', label: 'Your name' },
   },
   {
     type: 'input',
     dataType: 'number',
     id: 'rating',
     name: 'Rating',
-    configs: { uid: 'cb-rating', key: 'rating', label: 'How was it?' },
+    configs: { key: 'rating', label: 'How was it?' },
     validations: [
       { validator: 'required' },
       { validator: 'min', value: 3, message: 'We aim for at least 3 stars 😉' },
@@ -376,21 +367,21 @@ export const addressSubSpec: BrickSpec = column('addressSub', [
     dataType: 'string',
     id: 'text',
     name: 'Street',
-    configs: { uid: 'ns-street', key: 'street', label: { en: 'Street', fr: 'Rue' } },
+    configs: { key: 'street', label: { en: 'Street', fr: 'Rue' } },
     validations: [{ validator: 'required' }],
   },
   {
     type: 'panel',
     id: 'row',
     name: 'Row',
-    configs: { uid: 'ns-row', key: 'cityRow' },
+    configs: { key: 'cityRow' },
     children: [
       {
         type: 'input',
         dataType: 'string',
         id: 'text',
         name: 'City',
-        configs: { uid: 'ns-city', key: 'city', label: { en: 'City', fr: 'Ville' } },
+        configs: { key: 'city', label: { en: 'City', fr: 'Ville' } },
         validations: [{ validator: 'required' }],
       },
       {
@@ -398,7 +389,7 @@ export const addressSubSpec: BrickSpec = column('addressSub', [
         dataType: 'string',
         id: 'text',
         name: 'Zip',
-        configs: { uid: 'ns-zip', key: 'zip', label: { en: 'Zip code', fr: 'Code postal' } },
+        configs: { key: 'zip', label: { en: 'Zip code', fr: 'Code postal' } },
       },
     ],
   },
@@ -411,7 +402,6 @@ export const emergencyContactSubSpec: BrickSpec = column('emergencySub', [
     id: 'text',
     name: 'Contact name',
     configs: {
-      uid: 'ne-name',
       key: 'contactName',
       label: { en: 'Contact name', fr: 'Nom du contact' },
     },
@@ -423,7 +413,6 @@ export const emergencyContactSubSpec: BrickSpec = column('emergencySub', [
     id: 'phone',
     name: 'Contact phone',
     configs: {
-      uid: 'ne-phone',
       key: 'contactPhone',
       label: { en: 'Contact phone', fr: 'Téléphone du contact' },
       mask: '99 99 99 99',
@@ -438,7 +427,6 @@ export const nestedFormSpec: BrickSpec = column('nestedHost', [
     id: 'text',
     name: 'Full name',
     configs: {
-      uid: 'nh-name',
       key: 'fullName',
       label: { en: 'Full name', fr: 'Nom complet' },
     },
@@ -449,7 +437,6 @@ export const nestedFormSpec: BrickSpec = column('nestedHost', [
     id: 'nested-form',
     name: 'Nested form',
     configs: {
-      uid: 'nh-address',
       key: 'address',
       label: { en: 'Delivery address', fr: 'Adresse de livraison' },
       specRef: 'adresse',
@@ -460,7 +447,6 @@ export const nestedFormSpec: BrickSpec = column('nestedHost', [
     id: 'nested-form',
     name: 'Nested form',
     configs: {
-      uid: 'nh-emergency',
       key: 'emergency',
       label: { en: 'Emergency contact', fr: "Contact d'urgence" },
       specRef: 'contact-urgence',

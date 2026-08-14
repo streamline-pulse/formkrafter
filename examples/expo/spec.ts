@@ -7,14 +7,13 @@ export const wizardSpec = cast({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: 'root', key: 'form' },
+  configs: { key: 'form' },
   children: [
     {
       type: 'panel',
       id: 'stepper',
       name: 'Wizard',
       configs: {
-        uid: 'wizard',
         key: 'steps',
         validateSteps: true,
         allowStepClick: true,
@@ -25,14 +24,14 @@ export const wizardSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Identity',
-          configs: { uid: 's-identity', key: 'identity', label: { en: 'Identity', fr: 'Identité' } },
+          configs: { key: 'identity', label: { en: 'Identity', fr: 'Identité' } },
           children: [
             {
               type: 'input',
               dataType: 'string',
               id: 'text',
               name: 'Text',
-              configs: { uid: 'u-name', key: 'fullName', label: { en: 'Full name', fr: 'Nom complet' } },
+              configs: { key: 'fullName', label: { en: 'Full name', fr: 'Nom complet' } },
               validations: [{ validator: 'required' }],
             },
             {
@@ -41,7 +40,6 @@ export const wizardSpec = cast({
               id: 'email',
               name: 'Email',
               configs: {
-                uid: 'u-email',
                 key: 'email',
                 label: 'Email',
                 placeholder: 'you@example.com',
@@ -53,7 +51,7 @@ export const wizardSpec = cast({
               dataType: 'string',
               id: 'date',
               name: 'Date',
-              configs: { uid: 'u-birth', key: 'birthdate', label: { en: 'Birth date', fr: 'Date de naissance' } },
+              configs: { key: 'birthdate', label: { en: 'Birth date', fr: 'Date de naissance' } },
               validations: [{ validator: 'required' }],
             },
           ],
@@ -62,7 +60,7 @@ export const wizardSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Profile',
-          configs: { uid: 's-profile', key: 'profile', label: { en: 'Profile', fr: 'Profil' } },
+          configs: { key: 'profile', label: { en: 'Profile', fr: 'Profil' } },
           children: [
             {
               type: 'input',
@@ -70,7 +68,6 @@ export const wizardSpec = cast({
               id: 'radio',
               name: 'Radio',
               configs: {
-                uid: 'u-role',
                 key: 'role',
                 label: 'Role',
                 options: 'Engineer\nDesigner\nManager',
@@ -83,7 +80,6 @@ export const wizardSpec = cast({
               id: 'multi-select',
               name: 'Multi select',
               configs: {
-                uid: 'u-skills',
                 key: 'skills',
                 label: 'Skills',
                 placeholder: 'Pick a few',
@@ -95,7 +91,7 @@ export const wizardSpec = cast({
               dataType: 'string',
               id: 'text',
               name: 'Text',
-              configs: { uid: 'u-team', key: 'team', label: 'Team (engineers only)' },
+              configs: { key: 'team', label: 'Team (engineers only)' },
               rules: [
                 {
                   name: 'engineers-only',
@@ -113,14 +109,14 @@ export const wizardSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Confirm',
-          configs: { uid: 's-confirm', key: 'confirm', label: { en: 'Confirm', fr: 'Confirmer' } },
+          configs: { key: 'confirm', label: { en: 'Confirm', fr: 'Confirmer' } },
           children: [
             {
               type: 'input',
               dataType: 'boolean',
               id: 'checkbox',
               name: 'Checkbox',
-              configs: { uid: 'u-terms', key: 'terms', label: { en: 'I accept the terms', fr: "J'accepte les conditions" } },
+              configs: { key: 'terms', label: { en: 'I accept the terms', fr: "J'accepte les conditions" } },
               validations: [{ validator: 'required' }],
             },
           ],
@@ -135,7 +131,7 @@ export const simpleSpec = cast({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: 'root', key: 'form' },
+  configs: { key: 'form' },
   children: [
     {
       type: 'output',
@@ -143,7 +139,6 @@ export const simpleSpec = cast({
       id: 'content',
       name: 'Content',
       configs: {
-        uid: 'u-intro',
         content:
           'Every brick below is a native component.\nSame spec format as the web.',
       },
@@ -152,20 +147,20 @@ export const simpleSpec = cast({
       type: 'panel',
       id: 'tabs',
       name: 'Tabs',
-      configs: { uid: 'u-tabs', key: 'sections', validateTabs: true },
+      configs: { key: 'sections', validateTabs: true },
       children: [
         {
           type: 'panel',
           id: 'group',
           name: 'Fields',
-          configs: { uid: 't-fields', key: 'fields', label: { en: 'Fields', fr: 'Champs' } },
+          configs: { key: 'fields', label: { en: 'Fields', fr: 'Champs' } },
           children: [
             {
               type: 'input',
               dataType: 'string',
               id: 'text',
               name: 'Text',
-              configs: { uid: 'u-company', key: 'company', label: 'Company' },
+              configs: { key: 'company', label: 'Company' },
               validations: [{ validator: 'required' }],
             },
             {
@@ -174,7 +169,6 @@ export const simpleSpec = cast({
               id: 'tags',
               name: 'Tags',
               configs: {
-                uid: 'u-topics',
                 key: 'topics',
                 label: 'Topics',
                 placeholder: 'Type and press return',
@@ -186,7 +180,6 @@ export const simpleSpec = cast({
               id: 'select-boxes',
               name: 'Select boxes',
               configs: {
-                uid: 'u-channels',
                 key: 'channels',
                 label: 'Notify me via',
                 options: 'Email\nSMS\nPush',
@@ -198,14 +191,14 @@ export const simpleSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Details',
-          configs: { uid: 't-details', key: 'details', label: { en: 'Details', fr: 'Détails' } },
+          configs: { key: 'details', label: { en: 'Details', fr: 'Détails' } },
           children: [
             {
               type: 'input',
               dataType: 'object',
               id: 'address',
               name: 'Address',
-              configs: { uid: 'u-address', key: 'address', label: 'Address' },
+              configs: { key: 'address', label: 'Address' },
             },
             {
               type: 'input',
@@ -213,7 +206,6 @@ export const simpleSpec = cast({
               id: 'file',
               name: 'File',
               configs: {
-                uid: 'u-attachment',
                 key: 'attachment',
                 label: { en: 'Attachment', fr: 'Pièce jointe' },
               },
@@ -227,7 +219,7 @@ export const simpleSpec = cast({
       dataType: 'string',
       id: 'hidden',
       name: 'Hidden',
-      configs: { uid: 'u-source', key: 'source' },
+      configs: { key: 'source' },
     },
   ],
 })
@@ -237,14 +229,13 @@ export const recapSpec = cast({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: 'root', key: 'form' },
+  configs: { key: 'form' },
   children: [
     {
       type: 'panel',
       id: 'stepper',
       name: 'Wizard',
       configs: {
-        uid: 'wizard',
         key: 'steps',
         validateSteps: true,
         showSubmit: true,
@@ -254,14 +245,14 @@ export const recapSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Order',
-          configs: { uid: 's-order', key: 'order', label: 'Order' },
+          configs: { key: 'order', label: 'Order' },
           children: [
             {
               type: 'input',
               dataType: 'string',
               id: 'text',
               name: 'Text',
-              configs: { uid: 'u-item', key: 'item', label: 'Item' },
+              configs: { key: 'item', label: 'Item' },
               validations: [{ validator: 'required' }],
             },
             {
@@ -269,7 +260,7 @@ export const recapSpec = cast({
               dataType: 'number',
               id: 'number',
               name: 'Number',
-              configs: { uid: 'u-qty', key: 'quantity', label: 'Quantity' },
+              configs: { key: 'quantity', label: 'Quantity' },
               validations: [{ validator: 'required' }, { validator: 'min', value: 1 }],
             },
             {
@@ -278,7 +269,6 @@ export const recapSpec = cast({
               id: 'select',
               name: 'Select',
               configs: {
-                uid: 'u-shipping',
                 key: 'shipping',
                 label: 'Shipping',
                 options: 'Standard\nExpress',
@@ -290,7 +280,7 @@ export const recapSpec = cast({
               dataType: 'boolean',
               id: 'checkbox',
               name: 'Checkbox',
-              configs: { uid: 'u-gift', key: 'gift', label: 'Gift wrap' },
+              configs: { key: 'gift', label: 'Gift wrap' },
             },
           ],
         },
@@ -298,14 +288,14 @@ export const recapSpec = cast({
           type: 'panel',
           id: 'group',
           name: 'Review',
-          configs: { uid: 's-review', key: 'review', label: 'Review' },
+          configs: { key: 'review', label: 'Review' },
           children: [
             {
               type: 'output',
               dataType: 'void',
               id: 'recap',
               name: 'Recap',
-              configs: { uid: 'u-recap', label: 'Recap', groupBySections: true },
+              configs: { label: 'Recap', groupBySections: true },
             },
           ],
         },
@@ -319,7 +309,7 @@ export const dataSpec = cast({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: 'root', key: 'form' },
+  configs: { key: 'form' },
   children: [
     {
       type: 'input',
@@ -327,7 +317,6 @@ export const dataSpec = cast({
       id: 'select',
       name: 'Select',
       configs: {
-        uid: 'u-country',
         key: 'country',
         label: { en: 'Country (remote HTTP)', fr: 'Pays (HTTP distant)' },
         placeholder: { en: 'Pick a country', fr: 'Choisissez un pays' },
@@ -344,7 +333,6 @@ export const dataSpec = cast({
       id: 'data-grid',
       name: 'Data grid',
       configs: {
-        uid: 'u-team',
         key: 'team',
         label: { en: 'Team members', fr: "Membres de l'équipe" },
       },
@@ -354,7 +342,7 @@ export const dataSpec = cast({
           dataType: 'string',
           id: 'text',
           name: 'Text',
-          configs: { uid: 'g-name', key: 'name', label: { en: 'Name', fr: 'Nom' } },
+          configs: { key: 'name', label: { en: 'Name', fr: 'Nom' } },
           validations: [{ validator: 'required' }],
         },
         {
@@ -363,7 +351,6 @@ export const dataSpec = cast({
           id: 'select',
           name: 'Select',
           configs: {
-            uid: 'g-role',
             key: 'role',
             label: { en: 'Role', fr: 'Rôle' },
             options: 'Engineer\nDesigner\nManager',
@@ -379,7 +366,7 @@ export const customSpec = cast({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: 'root', key: 'form' },
+  configs: { key: 'form' },
   children: [
     {
       type: 'output',
@@ -387,7 +374,6 @@ export const customSpec = cast({
       id: 'content',
       name: 'Content',
       configs: {
-        uid: 'u-note',
         content:
           'The stars below are a custom brick registered with registerNativeBrick.',
       },
@@ -398,7 +384,6 @@ export const customSpec = cast({
       id: 'rating',
       name: 'Rating',
       configs: {
-        uid: 'u-rating',
         key: 'rating',
         label: { en: 'How was it?', fr: "C'était comment ?" },
       },
@@ -410,7 +395,6 @@ export const customSpec = cast({
       id: 'signature',
       name: 'Signature',
       configs: {
-        uid: 'u-sign',
         key: 'signature',
         label: { en: 'Sign here', fr: 'Signez ici' },
       },
@@ -422,7 +406,6 @@ export const customSpec = cast({
       id: 'textarea',
       name: 'Text area',
       configs: {
-        uid: 'u-feedback',
         key: 'feedback',
         label: { en: 'Tell us more', fr: 'Dites-nous en plus' },
       },
@@ -445,18 +428,16 @@ export const stressSpec = cast({
   type: 'panel',
   id: 'column',
   name: 'Form',
-  configs: { uid: 'root', key: 'form' },
+  configs: { key: 'form' },
   children: Array.from({ length: 12 }, (_, section) => ({
     type: 'panel',
     id: 'group',
     name: 'Group',
     configs: {
-      uid: `s${section}`,
       key: `section${section}`,
       label: `Section ${section + 1}`,
     },
     children: Array.from({ length: 8 }, (_, field) => {
-      const uid = `s${section}-f${field}`
       const key = `field_${section}_${field}`
       const kinds = ['text', 'email', 'number', 'select', 'checkbox', 'radio', 'textarea', 'text']
       const id = kinds[field]
@@ -466,7 +447,6 @@ export const stressSpec = cast({
         id,
         name: id,
         configs: {
-          uid,
           key,
           label: `Field ${section + 1}.${field + 1}`,
           ...(id === 'select' || id === 'radio'

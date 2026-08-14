@@ -12,7 +12,7 @@
     -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/formkrafter-wc.css"
+      href="https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/formkrafter-wc.css"
     />
 
     <script>
@@ -179,19 +179,19 @@
 
     <script type="module">
       // The CDN bundle registers <fk-form-builder> and <fk-form-render> itself.
-      import 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/formkrafter-wc.esm.js'
+      import 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/formkrafter-wc.esm.js'
       // Named exports (i18n, registry) live on the sibling entry — same
       // chunks, same shared stores.
       import {
         setFkTranslations,
         frFkTranslations,
-      } from 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.14.0/dist/formkrafter-wc/index.esm.js'
+      } from 'https://cdn.jsdelivr.net/npm/@streamline-pulse/formkrafter-wc@0.15.2/dist/formkrafter-wc/index.esm.js'
 
       const spec = {
         type: 'panel',
         id: 'column',
         name: 'Form',
-        configs: { uid: 'root', key: 'contact' },
+        configs: { key: 'contact' },
         children: [
           {
             type: 'input',
@@ -199,7 +199,6 @@
             id: 'text',
             name: 'Text',
             configs: {
-              uid: 'f-name',
               key: 'fullName',
               label: { en: 'Full name', fr: 'Nom complet' },
             },
@@ -210,7 +209,7 @@
             dataType: 'string',
             id: 'email',
             name: 'Email',
-            configs: { uid: 'f-mail', key: 'email', label: 'Email' },
+            configs: { key: 'email', label: 'Email' },
             validations: [{ validator: 'required' }, { validator: 'email' }],
           },
           {
@@ -219,7 +218,6 @@
             id: 'select',
             name: 'Select',
             configs: {
-              uid: 'f-role',
               key: 'role',
               label: { en: 'Role', fr: 'Rôle' },
               optionsSource: 'static',
