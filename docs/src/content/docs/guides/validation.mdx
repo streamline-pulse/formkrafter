@@ -36,13 +36,6 @@ Each brick carries a `validations` array. They compile to a JSON Schema
 `message` is optional and may be localized — see
 [messages and locales](#messages-and-locales) below.
 
-<Aside type="note">
-Ajv ships **inside** `formkrafter-core` — you never install it, and the version
-your application resolves for its own use cannot reach the one validation runs
-on. Two Ajv copies in a dependency tree used to be enough to break compilation
-silently, which is exactly the failure `warnings` now reports.
-</Aside>
-
 ## Custom validators
 
 When the eleven built-ins are not enough, `custom` runs a snippet in the

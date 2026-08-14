@@ -37,14 +37,6 @@ Chaque brick porte un tableau `validations`. Ils sont compilés en JSON Schema
 `message` est optionnel et peut être localisé — voir
 [messages et locales](#messages-et-locales) plus bas.
 
-<Aside type="note">
-Ajv est embarqué **dans** `formkrafter-core` — vous ne l'installez jamais, et la
-version que votre application résout pour son propre usage ne peut pas atteindre
-celle sur laquelle tourne la validation. Deux copies d'Ajv dans un arbre de
-dépendances suffisaient auparavant à casser la compilation en silence, ce qui est
-précisément la panne que `warnings` signale désormais.
-</Aside>
-
 ## Validateurs personnalisés
 
 Quand les onze validateurs intégrés ne suffisent pas, `custom` exécute un

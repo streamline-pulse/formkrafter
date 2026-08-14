@@ -34,18 +34,9 @@ interface BrickSpec {
 }
 ```
 
-The two properties you touch most live inside `configs`:
-
-| Config | Role | Notes |
-|---|---|---|
-| `uid` | Identity of the node **while editing** | The builder owns it: it hydrates missing ones when a spec loads and strips them from everything it emits. Stored specs do not need it. |
-| `key` | Name of the field in the form data | What ends up in your payload. A brick without a `key` holds no data. |
-
-<Aside type="caution">
-`uid` and `key` are not interchangeable. `key` is your data shape and belongs
-in the stored spec; `uid` is a builder-session detail. Patches address bricks
-by JSON path, not by `uid`, so a regenerated `uid` breaks nothing.
-</Aside>
+The property you touch most lives inside `configs`: **`key`**, the name of the
+field in the form data. It is what ends up in your payload, and a brick without
+a `key` holds no data.
 
 ## A complete spec
 

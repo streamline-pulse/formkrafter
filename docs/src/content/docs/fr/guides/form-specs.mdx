@@ -35,19 +35,9 @@ interface BrickSpec {
 }
 ```
 
-Les deux propriétés que vous manipulez le plus vivent dans `configs` :
-
-| Config | Rôle | Notes |
-|---|---|---|
-| `uid` | Identité du nœud **pendant l'édition** | Le builder en est propriétaire : il complète ceux qui manquent au chargement et les retire de tout ce qu'il émet. Les specs stockés n'en ont pas besoin. |
-| `key` | Nom du champ dans les données du formulaire | Ce qui se retrouve dans votre payload. Une brick sans `key` ne porte aucune donnée. |
-
-<Aside type="caution">
-`uid` et `key` ne sont pas interchangeables. `key` définit la forme de vos
-données et a sa place dans le spec stocké ; `uid` est un détail de session du
-builder. Les patches adressent les bricks par chemin JSON, pas par `uid` : un
-`uid` régénéré ne casse rien.
-</Aside>
+La propriété que vous manipulez le plus vit dans `configs` : **`key`**, le nom du
+champ dans les données du formulaire. C'est ce qui se retrouve dans votre
+payload, et une brick sans `key` ne porte aucune donnée.
 
 ## Un spec complet
 
