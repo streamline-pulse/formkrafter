@@ -15,6 +15,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '') + '/'
       content="Framework-agnostic drag & drop form builder — Web Components, React, Vue. Forms are portable JSON specs: sandboxed rules, server-side validation, nested forms, i18n, Form.io migration."
     />
     <link rel="canonical" href={new URL(base, Astro.site).href} />
+    <link rel="icon" href={`favicon.svg`} />
     <script is:inline>
       ;(() => {
         const stored = typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme')

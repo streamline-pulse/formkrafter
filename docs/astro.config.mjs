@@ -10,6 +10,7 @@ export default defineConfig({
       title: 'FormKrafter',
       description:
         'Framework-agnostic drag & drop form builder — Web Components, React, Vue.',
+      favicon: '/favicon.svg',
       defaultLocale: 'root',
       locales: {
         root: { label: 'English', lang: 'en' },
