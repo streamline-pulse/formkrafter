@@ -676,10 +676,22 @@ declare namespace LocalJSX {
         "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
           * @default false
          */
         "editable"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
         "locale"?: string;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
         "onFormDataChange"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "onFormSubmit"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "onValidityChange"?: (event: FkFormRenderCustomEvent<ValidityChangeDetail>) => void;

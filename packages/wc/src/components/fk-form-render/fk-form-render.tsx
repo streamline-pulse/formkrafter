@@ -1,4 +1,15 @@
-import { Component, Element, Event, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
+import {
+  AttachInternals,
+  Component,
+  Element,
+  Event,
+  Listen,
+  Method,
+  Prop,
+  State,
+  Watch,
+  h,
+} from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import {
   defaultFormData,
@@ -21,6 +32,7 @@ import { registerDefaultBricks } from '../../registry/default-bricks';
   tag: 'fk-form-render',
   styleUrl: 'fk-form-render.css',
   scoped: true,
+  formAssociated: true,
 })
 export class FkFormRender {
   @Element() host!: HTMLElement;
@@ -46,6 +58,8 @@ export class FkFormRender {
   @State() expandError?: string;
 
   private lastValidity?: string;
+
+  @AttachInternals() internals?: ElementInternals;
 
   componentWillLoad() {
     registerDefaultBricks();
@@ -75,6 +89,36 @@ export class FkFormRender {
 
     this.lastValidity = signature;
     this.validityChange.emit({ valid, errors });
+    this.reportToForm(valid, errors);
+  }
+
+  private reportToForm(valid: boolean, errors: Record<string, string>) {
+    if (!this.internals?.setValidity) return;
+
+    try {
+      this.internals.setFormValue(JSON.stringify(this.publicData()));
+      if (valid) {
+        this.internals.setValidity({});
+      } else {
+        this.internals.setValidity(
+          { customError: true },
+          Object.values(errors)[0] ?? fkT('form.invalid'),
+          this.host.querySelector('input, select, textarea') ?? undefined
+        );
+      }
+    } catch {
+      // ElementInternals is absent or partial: the element still works, it
+      // just does not participate in the surrounding form.
+    }
+  }
+
+  @Listen('submit', { target: 'window' })
+  handleHostFormSubmit(event: Event) {
+    const form = this.internals?.form;
+    if (!form || event.target !== form) return;
+
+    event.preventDefault();
+    void this.submit();
   }
 
   private seeded(data?: Record<string, unknown>): Record<string, unknown> {

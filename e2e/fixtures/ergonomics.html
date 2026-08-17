@@ -10,7 +10,11 @@
     </style>
   </head>
   <body>
-    <fk-form-render id="renderer"></fk-form-render>
+    <form id="host">
+      <fk-form-render id="renderer"></fk-form-render>
+    </form>
+
+    <button type="submit" form="host" data-testid="native">Native submit</button>
 
     <p>external button, bound to validityChange — no ref, no validate() call</p>
     <button type="button" data-testid="external" disabled>Send</button>

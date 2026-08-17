@@ -57,7 +57,7 @@ test.describe('renderer ergonomics', () => {
 
   test('showSubmit renders a working built-in button', async ({ page }) => {
     await page.getByLabel('Full name').fill('Ada')
-    await page.getByRole('button', { name: 'Submit' }).click()
+    await page.getByRole('button', { name: 'Submit', exact: true }).click()
     await expect(page.getByTestId('submits')).toHaveText('1')
   })
 
@@ -85,6 +85,39 @@ test.describe('renderer ergonomics', () => {
 
     await expect(page.getByLabel('Full name')).toBeDisabled()
     await expect(page.getByLabel('Nickname')).toBeDisabled()
-    await expect(page.getByRole('button', { name: 'Submit' })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: 'Submit', exact: true })).toHaveCount(0)
+  })
+})
+
+test.describe('form association', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(`${FIXTURES}/ergonomics.html`)
+    await expect(page.getByLabel('Full name')).toBeVisible()
+  })
+
+  test('an external native submit button drives the element', async ({
+    page,
+  }) => {
+    await page.getByTestId('native').click()
+    await expect(page.getByTestId('submits')).toHaveText('0')
+
+    await page.getByLabel('Full name').fill('Ada')
+    await page.getByTestId('native').click()
+    await expect(page.getByTestId('submits')).toHaveText('1')
+  })
+
+  test('the element reports its validity to the surrounding form', async ({
+    page,
+  }) => {
+    const invalid = await page.evaluate(
+      () => (document.getElementById('host') as HTMLFormElement).checkValidity()
+    )
+    expect(invalid).toBe(false)
+
+    await page.getByLabel('Full name').fill('Ada')
+    const valid = await page.evaluate(
+      () => (document.getElementById('host') as HTMLFormElement).checkValidity()
+    )
+    expect(valid).toBe(true)
   })
 })
