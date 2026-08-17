@@ -5,9 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
+import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 import { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
-export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail } from "./utils/events";
+export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 export { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export namespace Components {
     interface FkBrickActions {
@@ -42,6 +42,10 @@ export namespace Components {
           * @default '0'
          */
         "path": string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
         "rootSpec"?: BrickSpec;
         "selectedPath"?: string;
         "utils": Utils;
@@ -111,8 +115,18 @@ export namespace Components {
          */
         "editable": boolean;
         "locale"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
         "selectedPath"?: string;
+        /**
+          * @default false
+         */
+        "showSubmit": boolean;
         "spec": BrickSpec;
+        "submit": () => Promise<ValidationResult>;
+        "submitLabel"?: string;
         "validate": () => Promise<ValidationResult>;
     }
     interface FkPropertyPanel {
@@ -401,6 +415,7 @@ declare global {
     interface HTMLFkFormRenderElementEventMap {
         "formDataChange": DataChangeDetail;
         "formSubmit": DataChangeDetail;
+        "validityChange": ValidityChangeDetail;
     }
     interface HTMLFkFormRenderElement extends Components.FkFormRender, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkFormRenderElementEventMap>(type: K, listener: (this: HTMLFkFormRenderElement, ev: FkFormRenderCustomEvent<HTMLFkFormRenderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -588,6 +603,10 @@ declare namespace LocalJSX {
           * @default '0'
          */
         "path"?: string;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
         "rootSpec"?: BrickSpec;
         "selectedPath"?: string;
         "utils": Utils;
@@ -663,8 +682,18 @@ declare namespace LocalJSX {
         "locale"?: string;
         "onFormDataChange"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "onFormSubmit"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
+        "onValidityChange"?: (event: FkFormRenderCustomEvent<ValidityChangeDetail>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
         "selectedPath"?: string;
+        /**
+          * @default false
+         */
+        "showSubmit"?: boolean;
         "spec": BrickSpec;
+        "submitLabel"?: string;
     }
     interface FkPropertyPanel {
         "brick": BrickSpec;
@@ -759,6 +788,7 @@ declare namespace LocalJSX {
     interface FkBrickRenderAttributes {
         "path": string;
         "editable": boolean;
+        "readOnly": boolean;
         "selectedPath": string;
         "locale": string;
     }
@@ -785,6 +815,9 @@ declare namespace LocalJSX {
     }
     interface FkFormRenderAttributes {
         "editable": boolean;
+        "readOnly": boolean;
+        "showSubmit": boolean;
+        "submitLabel": string;
         "selectedPath": string;
         "locale": string;
     }

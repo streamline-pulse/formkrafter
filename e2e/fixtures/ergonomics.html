@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — readOnly, submit(), showSubmit, validityChange</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 24px; font-family: ui-sans-serif, system-ui, sans-serif; }
+      pre { padding: 0.5rem; border: 1px solid #ccc; }
+    </style>
+  </head>
+  <body>
+    <fk-form-render id="renderer"></fk-form-render>
+
+    <p>external button, bound to validityChange — no ref, no validate() call</p>
+    <button type="button" data-testid="external" disabled>Send</button>
+
+    <p>validityChange events</p>
+    <pre data-testid="validity">—</pre>
+    <pre data-testid="validity-count">0</pre>
+    <p>submits</p>
+    <pre data-testid="submits">0</pre>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const renderer = document.getElementById('renderer')
+      renderer.showSubmit = true
+
+      renderer.spec = {
+        type: 'panel',
+        id: 'column',
+        name: 'Form',
+        configs: { key: 'form' },
+        children: [
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Name',
+            configs: { key: 'fullName', label: 'Full name' },
+            validations: [{ validator: 'required' }],
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Nickname',
+            configs: { key: 'nickname', label: 'Nickname' },
+          },
+        ],
+      }
+
+      const external = document.querySelector('[data-testid="external"]')
+      const out = document.querySelector('[data-testid="validity"]')
+      const count = document.querySelector('[data-testid="validity-count"]')
+      const submits = document.querySelector('[data-testid="submits"]')
+
+      let seen = 0
+      renderer.addEventListener('validityChange', (event) => {
+        seen += 1
+        count.textContent = String(seen)
+        out.textContent = JSON.stringify(event.detail)
+        external.disabled = !event.detail.valid
+      })
+
+      let sent = 0
+      renderer.addEventListener('formSubmit', () => {
+        sent += 1
+        submits.textContent = String(sent)
+      })
+
+      external.addEventListener('click', () => renderer.submit())
+    </script>
+  </body>
+</html>

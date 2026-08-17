@@ -46,6 +46,11 @@ export interface SpecChangeDetail {
   inverse: Operation[];
 }
 
+export interface ValidityChangeDetail {
+  valid: boolean;
+  errors: Record<string, string>;
+}
+
 export interface DataChangeDetail {
   data: Record<string, unknown>;
   isValid: boolean;

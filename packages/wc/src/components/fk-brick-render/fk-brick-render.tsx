@@ -31,6 +31,7 @@ export class FkBrickRender {
   @Prop() dataMap?: Record<string, unknown>;
   @Prop() path: string = '0';
   @Prop() editable: boolean = false;
+  @Prop() readOnly: boolean = false;
   @Prop() selectedPath?: string;
   @Prop() errors: Record<string, string> = {};
   @Prop() locale?: string;
@@ -70,6 +71,7 @@ export class FkBrickRender {
         locale={this.locale}
         path={`${this.path}.${index}`}
         editable={this.editable}
+        readOnly={this.readOnly}
         selectedPath={this.selectedPath}
         utils={this.utils}
       />
@@ -89,7 +91,7 @@ export class FkBrickRender {
       dataMap: this.dataMap,
       rootSpec: this.rootSpec ?? this.brickSpec,
       error: spec.configs?.key ? this.errors[spec.configs.key] : undefined,
-      disabled: editing ? false : affected.disabled === true,
+      disabled: editing ? false : this.readOnly || affected.disabled === true,
       path: this.path,
       editable: editing,
       children: childNodes,

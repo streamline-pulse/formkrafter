@@ -61,6 +61,7 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'dataMap',
   'path',
   'editable',
+  'readOnly',
   'selectedPath',
   'errors',
   'locale',
@@ -146,13 +147,18 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'data',
   'context',
   'editable',
+  'readOnly',
+  'showSubmit',
+  'submitLabel',
   'selectedPath',
   'locale',
   'formDataChange',
-  'formSubmit'
+  'formSubmit',
+  'validityChange'
 ], [
   'formDataChange',
-  'formSubmit'
+  'formSubmit',
+  'validityChange'
 ]);
 
 

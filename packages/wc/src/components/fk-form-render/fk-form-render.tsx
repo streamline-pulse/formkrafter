@@ -13,7 +13,7 @@ import type {
   Utils,
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core';
-import type { DataChangeDetail } from '../../utils/events';
+import type { DataChangeDetail, ValidityChangeDetail } from '../../utils/events';
 import { fkT } from '../../i18n/i18n';
 import { registerDefaultBricks } from '../../registry/default-bricks';
 
@@ -29,17 +29,23 @@ export class FkFormRender {
   @Prop() data?: Record<string, unknown>;
   @Prop() context?: Record<string, unknown>;
   @Prop() editable: boolean = false;
+  @Prop() readOnly: boolean = false;
+  @Prop() showSubmit: boolean = false;
+  @Prop() submitLabel?: string;
   @Prop() selectedPath?: string;
   @Prop() locale?: string;
 
   @Event() formDataChange!: EventEmitter<DataChangeDetail>;
   @Event() formSubmit!: EventEmitter<DataChangeDetail>;
+  @Event() validityChange!: EventEmitter<ValidityChangeDetail>;
 
   @State() currentData: Record<string, unknown> = {};
   @State() touched: Record<string, boolean> = {};
   @State() expandedSpec?: BrickSpec;
   @State() expanding = false;
   @State() expandError?: string;
+
+  private lastValidity?: string;
 
   componentWillLoad() {
     registerDefaultBricks();
@@ -56,6 +62,19 @@ export class FkFormRender {
   onSpecChange() {
     this.currentData = this.seeded(this.data);
     void this.runExpansion();
+  }
+
+  componentDidLoad() {
+    this.emitValidity();
+  }
+
+  private emitValidity(result?: ValidationResult) {
+    const { valid, errors } = result ?? this.runValidation();
+    const signature = `${valid}|${Object.keys(errors).sort().join(',')}`;
+    if (signature === this.lastValidity) return;
+
+    this.lastValidity = signature;
+    this.validityChange.emit({ valid, errors });
   }
 
   private seeded(data?: Record<string, unknown>): Record<string, unknown> {
@@ -124,6 +143,7 @@ export class FkFormRender {
       isValid: valid,
       errors,
     });
+    this.emitValidity({ valid, errors });
   }
 
   private applyValueEffects(
@@ -168,10 +188,25 @@ export class FkFormRender {
     }
 
     const result = { valid, errors };
+    this.emitValidity(result);
     this.formDataChange.emit({
       data: this.publicData(),
       isValid: result.valid,
       errors: result.errors,
+    });
+
+    return result;
+  }
+
+  @Method()
+  async submit(): Promise<ValidationResult> {
+    const result = await this.validate();
+    if (!result.valid) return result;
+
+    this.formSubmit.emit({
+      data: this.publicData(),
+      isValid: true,
+      errors: {},
     });
 
     return result;
@@ -189,15 +224,7 @@ export class FkFormRender {
   @Listen('stepperSubmit')
   async handleStepperSubmit(event: CustomEvent<void>) {
     event.stopPropagation();
-
-    const result = await this.validate();
-    if (!result.valid) return;
-
-    this.formSubmit.emit({
-      data: this.publicData(),
-      isValid: true,
-      errors: {},
-    });
+    await this.submit();
   }
 
   private runValidation(): ValidationResult {
@@ -255,9 +282,22 @@ export class FkFormRender {
           locale={this.locale}
           path="0"
           editable={this.editable}
+          readOnly={this.readOnly}
           selectedPath={this.selectedPath}
           utils={this.utils}
         />
+        {this.showSubmit && !this.editable && !this.readOnly ? (
+          <button
+            type="submit"
+            class="fk-form__submit"
+            onClick={(event) => {
+              event.preventDefault();
+              void this.submit();
+            }}
+          >
+            {this.submitLabel ?? fkT('form.submit')}
+          </button>
+        ) : null}
       </form>
     );
   }

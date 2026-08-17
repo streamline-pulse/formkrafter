@@ -16,6 +16,23 @@ import type { WcBrickProps } from './create-brick';
 const labelOf = (props: WcBrickProps, fallback: string): string =>
   (props.configs?.label as string) ?? props.configs?.key ?? fallback;
 
+const isRequired = (props: WcBrickProps): boolean =>
+  props.validations?.some((validation) => validation.validator === 'required') ===
+  true;
+
+const labelNode = (props: WcBrickProps, fallback: string): VNode =>
+  isRequired(props) ? (
+    <span class="fk-field__label">
+      {labelOf(props, fallback)}
+      <span class="fk-field__required" aria-hidden="true">
+        *
+      </span>
+      <span class="fk-visually-hidden">{fkT('field.required')}</span>
+    </span>
+  ) : (
+    <span class="fk-field__label">{labelOf(props, fallback)}</span>
+  );
+
 const adorned = (props: WcBrickProps, control: VNode): VNode => {
   const prefix = props.configs?.prefix as string | undefined;
   const suffix = props.configs?.suffix as string | undefined;
@@ -37,12 +54,16 @@ const fieldError = (props: WcBrickProps): VNode | null =>
     </span>
   ) : null;
 
-const invalidAttr = (props: WcBrickProps): { 'aria-invalid'?: string } =>
-  props.error ? { 'aria-invalid': 'true' } : {};
+const invalidAttr = (
+  props: WcBrickProps
+): { 'aria-invalid'?: string; 'aria-required'?: string } => ({
+  ...(props.error ? { 'aria-invalid': 'true' } : {}),
+  ...(isRequired(props) ? { 'aria-required': 'true' } : {}),
+});
 
 const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
   <div class="fk-field" style={asInlineStyle(props.styles)}>
-    <span class="fk-field__label">{labelOf(props, fallback)}</span>
+    {labelNode(props, fallback)}
     {control}
     {fieldError(props)}
   </div>
@@ -50,7 +71,7 @@ const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNod
 
 const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
   <label class="fk-field" style={asInlineStyle(props.styles)}>
-    <span class="fk-field__label">{labelOf(props, fallback)}</span>
+    {labelNode(props, fallback)}
     {control}
     {fieldError(props)}
   </label>

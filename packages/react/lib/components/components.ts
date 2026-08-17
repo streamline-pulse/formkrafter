@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type SpecChangeDetail, type UploadedFile } from "@streamline-pulse/formkrafter-wc";
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
@@ -181,7 +181,8 @@ export const FkFormBuilder: StencilReactComponent<FkFormBuilderElement, FkFormBu
 
 export type FkFormRenderEvents = {
     onFormDataChange: EventName<FkFormRenderCustomEvent<DataChangeDetail>>,
-    onFormSubmit: EventName<FkFormRenderCustomEvent<DataChangeDetail>>
+    onFormSubmit: EventName<FkFormRenderCustomEvent<DataChangeDetail>>,
+    onValidityChange: EventName<FkFormRenderCustomEvent<ValidityChangeDetail>>
 };
 
 export const FkFormRender: StencilReactComponent<FkFormRenderElement, FkFormRenderEvents, Components.FkFormRender, 'spec'> = /*@__PURE__*/ createComponent<FkFormRenderElement, FkFormRenderEvents, Components.FkFormRender, 'spec'>({
@@ -191,7 +192,8 @@ export const FkFormRender: StencilReactComponent<FkFormRenderElement, FkFormRend
     react: React,
     events: {
         onFormDataChange: 'formDataChange',
-        onFormSubmit: 'formSubmit'
+        onFormSubmit: 'formSubmit',
+        onValidityChange: 'validityChange'
     } as FkFormRenderEvents,
     defineCustomElement: defineFkFormRender
 });
