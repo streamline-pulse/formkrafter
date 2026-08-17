@@ -4,6 +4,10 @@ import {
     interpolateTemplate,
     parseHeaderLines,
 } from "../lib/utils/remote";
+import {
+    validateBrickSpecDataDetailed,
+    validateFormData,
+} from "../lib/validators/validator";
 
 describe("interpolateTemplate", () => {
     test("flat tokens keep working byte-for-byte", () => {
@@ -74,5 +78,58 @@ describe("appendSearchParam", () => {
         expect(appendSearchParam("/a", "q", "x y")).toBe("/a?q=x%20y");
         expect(appendSearchParam("/a?p=1", "q", "x")).toBe("/a?p=1&q=x");
         expect(appendSearchParam("/a", "q", "")).toBe("/a");
+    });
+});
+
+describe("rule scope during validation", () => {
+    const spec = {
+        type: "panel",
+        id: "column",
+        name: "F",
+        configs: { key: "f" },
+        children: [
+            {
+                type: "input",
+                dataType: "string",
+                id: "text",
+                name: "Seats",
+                configs: { key: "seats" },
+                validations: [{ validator: "required" }],
+                rules: [
+                    {
+                        name: "pro only",
+                        type: "jsonLogic",
+                        logic: { "!=": [{ var: "tenant.plan" }, "pro"] },
+                        effects: [
+                            { property: { target: "hidden", type: "boolean" }, boolean: true },
+                        ],
+                    },
+                ],
+            },
+        ],
+    } as never;
+
+    test("a rule driven by context sees it when the scope is passed", () => {
+        expect(
+            validateBrickSpecDataDetailed(spec, {}, undefined, {
+                tenant: { plan: "pro" },
+            }).valid
+        ).toBe(false);
+
+        expect(
+            validateBrickSpecDataDetailed(spec, {}, undefined, {
+                tenant: { plan: "free" },
+            }).valid
+        ).toBe(true);
+    });
+
+    test("without a scope the rule cannot see context and the field reads as hidden", () => {
+        expect(validateBrickSpecDataDetailed(spec, {}).valid).toBe(true);
+    });
+
+    test("validateFormData merges the scope over the payload", () => {
+        expect(
+            validateFormData(spec, {}, undefined, { tenant: { plan: "pro" } }).valid
+        ).toBe(false);
     });
 });

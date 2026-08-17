@@ -152,7 +152,8 @@ const hiddenKeys = (
 export const validateBrickSpecDataDetailed = (
     brickSpec: BrickSpec,
     data: unknown,
-    locale?: string
+    locale?: string,
+    ruleScope?: Record<string, unknown>
 ): ValidationResult => {
     const errors: Record<string, string> = {};
     const validate = compiledValidator(brickSpec, locale);
@@ -171,9 +172,10 @@ export const validateBrickSpecDataDetailed = (
     }
 
     const dataMap =
-        typeof data === "object" && data !== null
+        ruleScope ??
+        (typeof data === "object" && data !== null
             ? (data as Record<string, unknown>)
-            : undefined;
+            : undefined);
     for (const key of hiddenKeys(brickSpec, dataMap)) {
         delete errors[key];
     }
@@ -219,11 +221,13 @@ const rowSpecOf = (collection: BrickSpec): BrickSpec => {
 export const validateFormData = (
     brickSpec: BrickSpec,
     data: unknown,
-    locale?: string
+    locale?: string,
+    ruleScope?: Record<string, unknown>
 ): ValidationResult => {
     const present = stripEmpty(data);
+    const scope = ruleScope ? { ...present, ...ruleScope } : undefined;
     const errors = {
-        ...validateBrickSpecDataDetailed(brickSpec, present, locale).errors,
+        ...validateBrickSpecDataDetailed(brickSpec, present, locale, scope).errors,
     };
 
     for (const brick of iterateSchemaBricks(brickSpec)) {

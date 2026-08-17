@@ -198,7 +198,12 @@ export class FkFormRender {
       )
     );
 
-    return validateBrickSpecDataDetailed(this.effectiveSpec(), presentData, this.locale);
+    return validateBrickSpecDataDetailed(
+      this.effectiveSpec(),
+      presentData,
+      this.locale,
+      this.context ? this.dataMap(presentData) : undefined
+    );
   }
 
   private visibleErrors(): Record<string, string> {
