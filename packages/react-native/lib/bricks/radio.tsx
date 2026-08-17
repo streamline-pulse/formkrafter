@@ -14,7 +14,8 @@ function RadioControl(props: NativeBrickProps) {
   )
 
   return (
-    <Field label={props.configs.label} error={props.error}>
+    <Field label={props.configs.label} error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}>
       <View accessibilityRole="radiogroup" style={{ gap: theme.spacing / 2 }}>
         {options.map((option) => {
           const checked = option.value === props.data

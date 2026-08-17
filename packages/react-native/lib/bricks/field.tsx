@@ -1,11 +1,13 @@
 import { Text, View } from 'react-native'
 import type { ReactNode } from 'react'
+import { fkT } from '@streamline-pulse/formkrafter-core'
 import { useFkTheme } from '../theme.js'
 
 /** The native counterpart of the web build's .fk-field wrapper. */
 export function Field(props: {
   label?: unknown
   error?: string
+  required?: boolean
   inline?: boolean
   children: ReactNode
 }) {
@@ -26,8 +28,16 @@ export function Field(props: {
       }
     >
       {label ? (
-        <Text style={{ fontSize: 14, fontWeight: '500', color: theme.colorText }}>
+        <Text
+          accessibilityLabel={
+            props.required ? `${label} ${fkT('field.required')}` : undefined
+          }
+          style={{ fontSize: 14, fontWeight: '500', color: theme.colorText }}
+        >
           {label}
+          {props.required ? (
+            <Text style={{ color: theme.colorDanger }}> *</Text>
+          ) : null}
         </Text>
       ) : null}
       {props.children}

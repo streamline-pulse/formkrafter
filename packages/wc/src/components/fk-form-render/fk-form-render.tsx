@@ -1,5 +1,4 @@
 import {
-  AttachInternals,
   Component,
   Element,
   Event,
@@ -59,10 +58,11 @@ export class FkFormRender {
 
   private lastValidity?: string;
 
-  @AttachInternals() internals?: ElementInternals;
+  private internals?: ElementInternals;
 
   componentWillLoad() {
     registerDefaultBricks();
+    this.attachFormInternals();
     this.currentData = this.seeded(this.data);
     return this.runExpansion();
   }
@@ -90,6 +90,19 @@ export class FkFormRender {
     this.lastValidity = signature;
     this.validityChange.emit({ valid, errors });
     this.reportToForm(valid, errors);
+  }
+
+  private attachFormInternals() {
+    const host = this.host as HTMLElement & {
+      attachInternals?: () => ElementInternals;
+    };
+    if (typeof host.attachInternals !== 'function') return;
+
+    try {
+      this.internals = host.attachInternals();
+    } catch {
+      this.internals = undefined;
+    }
   }
 
   private reportToForm(valid: boolean, errors: Record<string, string>) {

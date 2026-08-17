@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+import type { BrickSpec, Validation } from '@streamline-pulse/formkrafter-core'
 import type { FormEngine } from './engine/form-engine.js'
 
 export interface NativeBrickProps {
@@ -8,6 +8,7 @@ export interface NativeBrickProps {
   configs: Record<string, unknown>
   data: unknown
   dataMap: Record<string, unknown>
+  validations?: Validation[]
   error?: string
   disabled: boolean
   locale?: string

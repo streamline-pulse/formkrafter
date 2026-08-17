@@ -56,6 +56,7 @@ export function renderBrick(options: RenderBrickOptions): ReactNode {
     locale,
     data: getBrickData(spec, scope),
     dataMap,
+    validations: spec.validations,
     error: key ? errors[key] : undefined,
     disabled: options.disabled === true || affected.disabled === true,
     engine,

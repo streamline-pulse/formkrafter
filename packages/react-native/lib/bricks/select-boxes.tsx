@@ -15,7 +15,8 @@ function SelectBoxesControl(props: NativeBrickProps) {
   )
 
   return (
-    <Field label={props.configs.label} error={props.error}>
+    <Field label={props.configs.label} error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}>
       <View style={{ gap: theme.spacing / 2 }}>
         {options.map((option) => {
           const checked = selected.includes(option.value)

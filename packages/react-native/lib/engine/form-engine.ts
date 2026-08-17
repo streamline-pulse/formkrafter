@@ -33,6 +33,7 @@ export interface FormEngineCallbacks {
     isValid: boolean,
     errors: Record<string, string>,
   ) => void
+  onValidityChange?: (valid: boolean, errors: Record<string, string>) => void
 }
 
 export interface FormEngineOptions extends FormEngineCallbacks {
@@ -62,6 +63,22 @@ export class FormEngine {
 
   private listeners = new Set<() => void>()
 
+  private lastValidity?: string
+
+  private emitValidity(valid?: boolean, errors?: Record<string, string>): void {
+    if (!this.callbacks.onValidityChange) return
+
+    const verdict =
+      valid === undefined || errors === undefined
+        ? this.runValidation()
+        : { valid, errors }
+    const signature = `${verdict.valid}|${Object.keys(verdict.errors).sort().join(',')}`
+    if (signature === this.lastValidity) return
+
+    this.lastValidity = signature
+    this.callbacks.onValidityChange(verdict.valid, verdict.errors)
+  }
+
   private seeded(data?: Record<string, unknown>): Record<string, unknown> {
     return { ...defaultFormData(this.expandedSpec ?? this.spec), ...data }
   }
@@ -71,8 +88,13 @@ export class FormEngine {
     this.spec = options.spec
     this.locale = options.locale
     this.data = this.seeded(options.data)
-    this.callbacks = { onDataChange: options.onDataChange, onSubmit: options.onSubmit }
+    this.callbacks = {
+      onDataChange: options.onDataChange,
+      onSubmit: options.onSubmit,
+      onValidityChange: options.onValidityChange,
+    }
     this.rebuildSnapshot()
+    this.emitValidity()
     void this.runExpansion()
   }
 
@@ -113,6 +135,7 @@ export class FormEngine {
     const { valid, errors } = this.runValidation()
     this.notify()
     this.callbacks.onDataChange?.(this.publicData(), valid, errors)
+    this.emitValidity(valid, errors)
   }
 
   touch(keys: string[]): void {
@@ -132,6 +155,7 @@ export class FormEngine {
     const result = this.runValidation()
     this.notify()
     this.callbacks.onDataChange?.(this.publicData(), result.valid, result.errors)
+    this.emitValidity(result.valid, result.errors)
     return result
   }
 

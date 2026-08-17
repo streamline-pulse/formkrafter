@@ -9,12 +9,13 @@ function CheckboxControl(props: {
   value: boolean
   disabled: boolean
   error?: string
+  required?: boolean
   onChange: (value: boolean) => void
 }) {
   const theme = useFkTheme()
 
   return (
-    <Field error={props.error}>
+    <Field error={props.error} required={props.required}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing }}>
         <Switch
           value={props.value}
@@ -42,6 +43,7 @@ export const checkboxBrick: NativeBrick = createNativeBrick({
       value={props.data === true}
       disabled={props.disabled}
       error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}
       onChange={props.onDataChange}
     />
   ),

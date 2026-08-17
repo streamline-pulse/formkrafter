@@ -14,7 +14,8 @@ function TextControl(props: NativeBrickProps & {
   const theme = useFkTheme()
 
   return (
-    <Field label={props.configs.label} error={props.error}>
+    <Field label={props.configs.label} error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}>
       <TextInput
         value={props.data === undefined || props.data === null ? '' : String(props.data)}
         editable={!props.disabled}

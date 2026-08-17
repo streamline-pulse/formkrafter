@@ -18,7 +18,8 @@ function TagsControl(props: NativeBrickProps) {
   }
 
   return (
-    <Field label={props.configs.label} error={props.error}>
+    <Field label={props.configs.label} error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}>
       <View
         style={{
           flexDirection: 'row',

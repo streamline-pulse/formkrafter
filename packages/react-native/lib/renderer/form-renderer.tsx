@@ -15,6 +15,7 @@ export interface FormRendererProps extends FormEngineCallbacks {
   spec: BrickSpec
   data?: Record<string, unknown>
   context?: Record<string, unknown>
+  readOnly?: boolean
   locale?: string
 }
 
@@ -52,6 +53,7 @@ export const FormRenderer = forwardRef<FormRendererHandle, FormRendererProps>(
           spec={spec}
           data={data}
           context={props.context}
+          readOnly={props.readOnly}
           errors={errors}
           locale={props.locale}
           engine={engine}

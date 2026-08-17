@@ -155,7 +155,11 @@ function SelectControl(props: Props) {
   }
 
   return (
-    <Field label={props.configs.label} error={props.error ?? error}>
+    <Field
+      label={props.configs.label}
+      error={props.error ?? error}
+      required={props.validations?.some((v) => v.validator === 'required')}
+    >
       <Pressable
         disabled={props.disabled}
         accessibilityRole="button"
