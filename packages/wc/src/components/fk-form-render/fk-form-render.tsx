@@ -1,6 +1,7 @@
 import { Component, Element, Event, Listen, Method, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import {
+  defaultFormData,
   expandSpec,
   getAffectedProperties,
   hasNestedForms,
@@ -42,18 +43,23 @@ export class FkFormRender {
 
   componentWillLoad() {
     registerDefaultBricks();
-    this.currentData = { ...this.data };
+    this.currentData = this.seeded(this.data);
     return this.runExpansion();
   }
 
   @Watch('data')
   syncData(next?: Record<string, unknown>) {
-    this.currentData = { ...next };
+    this.currentData = this.seeded(next);
   }
 
   @Watch('spec')
   onSpecChange() {
+    this.currentData = this.seeded(this.data);
     void this.runExpansion();
+  }
+
+  private seeded(data?: Record<string, unknown>): Record<string, unknown> {
+    return { ...defaultFormData(this.effectiveSpec()), ...data };
   }
 
   private effectiveSpec(): BrickSpec {
@@ -73,7 +79,10 @@ export class FkFormRender {
 
     try {
       const expanded = await expandSpec(source);
-      if (this.spec === source) this.expandedSpec = expanded;
+      if (this.spec === source) {
+        this.expandedSpec = expanded;
+        this.currentData = this.seeded(this.currentData);
+      }
     } catch (error) {
       if (this.spec === source) {
         this.expandedSpec = undefined;

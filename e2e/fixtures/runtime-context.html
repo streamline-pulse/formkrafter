@@ -80,6 +80,14 @@
             type: 'input',
             dataType: 'string',
             id: 'text',
+            name: 'Country',
+            configs: { key: 'country', label: 'Country', defaultValue: 'Benin' },
+            validations: [{ validator: 'required' }],
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
             name: 'Seats',
             configs: { key: 'seats', label: 'Seats' },
             rules: [

@@ -56,6 +56,22 @@ export function* iterateSchemaBricks(spec?: BrickSpec): Generator<BrickSpec> {
     }
 }
 
+export function defaultFormData(
+    spec?: BrickSpec
+): Record<string, unknown> {
+    const defaults: Record<string, unknown> = {};
+
+    for (const brick of iterateSchemaBricks(spec)) {
+        const key = brick.configs?.key;
+        const value = brick.configs?.defaultValue;
+        if (key && value !== undefined && !(key in defaults)) {
+            defaults[key] = value;
+        }
+    }
+
+    return defaults;
+}
+
 export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
     if (!brickSpecs) return;
 

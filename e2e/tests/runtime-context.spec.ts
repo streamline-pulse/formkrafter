@@ -38,6 +38,25 @@ test.describe('runtime context', () => {
     await expect(page.getByLabel('Seats')).toBeHidden()
   })
 
+  test('a required field with a defaultValue is valid untouched, and the default ships', async ({
+    page,
+  }) => {
+    await expect(page.getByLabel('Country')).toHaveValue('Benin')
+
+    const verdict = await page.evaluate(async () => {
+      const el = document.getElementById('renderer') as HTMLElement & {
+        validate: () => Promise<{ valid: boolean }>
+      }
+      return el.validate()
+    })
+    expect(verdict.valid).toBe(true)
+
+    const data = JSON.parse(
+      (await page.getByTestId('data').textContent()) ?? '{}'
+    )
+    expect(data.country).toBe('Benin')
+  })
+
   test('context never reaches the emitted data', async ({ page }) => {
     await page.getByLabel('Full name').fill('Ada')
 
@@ -46,7 +65,7 @@ test.describe('runtime context', () => {
       (await page.getByTestId('data').textContent()) ?? '{}'
     )
 
-    expect(data).toEqual({ fullName: 'Ada' })
+    expect(data.fullName).toBe('Ada')
     expect(data).not.toHaveProperty('tenant')
     expect(data).not.toHaveProperty('_apiBase')
     expect(data).not.toHaveProperty('api')

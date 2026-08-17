@@ -10,7 +10,8 @@ export {
     BrickSpec,
     buildValidationSchema,
     iterateBricks,
-    iterateSchemaBricks
+    iterateSchemaBricks,
+    defaultFormData,
 } from "./utils/brick-spec";
 
 // Per-brick data plumbing, shared by every renderer

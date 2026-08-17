@@ -1,4 +1,5 @@
 import {
+  defaultFormData,
   expandSpec,
   getAffectedProperties,
   hasNestedForms,
@@ -60,12 +61,16 @@ export class FormEngine {
   private validationCache?: ValidationResult
 
   private listeners = new Set<() => void>()
+
+  private seeded(data?: Record<string, unknown>): Record<string, unknown> {
+    return { ...defaultFormData(this.expandedSpec ?? this.spec), ...data }
+  }
   private snapshot!: FormEngineSnapshot
 
   constructor(options: FormEngineOptions) {
     this.spec = options.spec
     this.locale = options.locale
-    this.data = { ...options.data }
+    this.data = this.seeded(options.data)
     this.callbacks = { onDataChange: options.onDataChange, onSubmit: options.onSubmit }
     this.rebuildSnapshot()
     void this.runExpansion()
@@ -94,7 +99,7 @@ export class FormEngine {
   }
 
   setData(data?: Record<string, unknown>): void {
-    this.data = { ...data }
+    this.data = this.seeded(data)
     this.validationCache = undefined
     this.notify()
   }
@@ -165,7 +170,10 @@ export class FormEngine {
 
     try {
       const expanded = await expandSpec(source)
-      if (this.spec === source) this.expandedSpec = expanded
+      if (this.spec === source) {
+        this.expandedSpec = expanded
+        this.data = this.seeded(this.data)
+      }
     } catch (error) {
       if (this.spec === source) {
         this.expandedSpec = undefined
