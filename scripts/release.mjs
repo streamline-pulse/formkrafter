@@ -21,11 +21,33 @@ for (const dir of packages) {
   }
 
   console.log(`publishing ${id}`)
-  const publish = spawnSync('bun', ['publish', '--cwd', `packages/${dir}`], {
-    stdio: 'inherit',
-  })
-  if (publish.status !== 0) {
-    console.error(`failed to publish ${id}`)
+
+  // The registry answers 5xx often enough that a single transient failure once
+  // left vue a version behind its siblings while the other four went out. Each
+  // attempt re-checks the registry first: a publish that landed before the
+  // error is reported as already there rather than retried into a conflict.
+  let published = false
+  for (let attempt = 1; attempt <= 3 && !published; attempt++) {
+    if (attempt > 1) {
+      const seen = spawnSync('npm', ['view', id, 'version'], { stdio: 'pipe' })
+      if (seen.status === 0) {
+        console.log(`${id} landed despite the error — continuing`)
+        published = true
+        break
+      }
+      const wait = attempt * 5
+      console.log(`retry ${attempt}/3 for ${id} in ${wait}s`)
+      spawnSync('sleep', [String(wait)], { stdio: 'inherit' })
+    }
+
+    const publish = spawnSync('bun', ['publish', '--cwd', `packages/${dir}`], {
+      stdio: 'inherit',
+    })
+    published = publish.status === 0
+  }
+
+  if (!published) {
+    console.error(`failed to publish ${id} after 3 attempts`)
     process.exit(1)
   }
   console.log(`New tag: v${pkg.version}`)
