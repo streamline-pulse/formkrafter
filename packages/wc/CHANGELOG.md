@@ -1,5 +1,69 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.18.0
+
+### Minor Changes
+
+- 7ebaee6: Materialize configs.defaultValue into form data
+
+  `defaultValue` was written by the Form.io converter and read by nothing: no
+  brick displayed it and it never entered the form data, so a defaulted field
+  rendered empty and a `required` one failed validation until the user retyped
+  the value that was supposed to be there already.
+
+  Both renderers now seed their data from the spec's defaults on load, on a spec
+  change, and after nested forms expand. Host `data` always wins per key, so
+  passing a value for a defaulted field still overrides it. Defaults inside a
+  collection stay out: those belong to a row, not to the form.
+
+  `defaultFormData(spec)` is exported for hosts that need the same seed
+  server-side.
+
+- c4e444f: Build a form screen without touching a ref
+
+  `fk-form-render` gains a `validityChange` event, emitted on first render and on
+  every change with the full verdict. Binding a host button's `disabled` to it
+  needs no ref and no `validate()` call — the standard screen loses its imperative
+  plumbing.
+
+  Also: `submit()` as a public method (validates, emits `formSubmit` only when
+  valid, returns the verdict either way), `readOnly` to render every control
+  disabled and hide the built-in action, and `showSubmit` / `submitLabel` for
+  screens that want no external button at all.
+
+  `fk-form-render` is also a form-associated custom element: it participates in a
+  surrounding `<form>`, so an external `<button type="submit" form="…">` drives it
+  through the platform, `checkValidity()` reflects the form's state, and the
+  submitted value is exposed through `setFormValue`. Where `ElementInternals` is
+  missing the element behaves exactly as before.
+
+  Required fields are finally marked: an asterisk next to the label, a
+  screen-reader-only "(required)", and `aria-required` on the control. Nothing
+  distinguished them before, visually or for assistive technology.
+
+### Patch Changes
+
+- e1fc027: Evaluate visibility rules against context when validating
+
+  Validation resolved hidden bricks from the submitted payload alone. A rule
+  reading a value that lives in `context` saw nothing, concluded the brick was
+  hidden and dropped its errors — so a field the renderer displays because of that
+  context validated as absent, and `validate()` answered valid on a visibly empty
+  required field.
+
+  `validateBrickSpecDataDetailed` and `validateFormData` take an optional rule
+  scope, kept separate from the data being validated so context never becomes part
+  of the payload. The renderer passes its merged map. Backends validating a spec
+  whose rules read context should pass the same scope as the fourth argument.
+
+  Bricks hidden by a rule reading form data were already excluded; only the
+  context path was blind.
+
+- Updated dependencies [7ebaee6]
+- Updated dependencies [c4e444f]
+- Updated dependencies [e1fc027]
+  - @streamline-pulse/formkrafter-core@0.18.0
+
 ## 0.17.1
 
 ### Patch Changes
