@@ -43,6 +43,7 @@ import type {
 export class FkFormBuilder {
   @Prop() spec?: BrickSpec;
   @Prop() data?: Record<string, unknown>;
+  @Prop() context?: Record<string, unknown>;
   @Prop() locales: string[] = [];
   // The chrome language of the builder itself (toolbar, palette, panel) —
   // distinct from editLocale, which is the content language being edited.
@@ -425,6 +426,7 @@ export class FkFormBuilder {
               <fk-form-render
                 spec={this.currentSpec}
                 data={this.currentData}
+                context={this.context}
                 editable={true}
                 selectedPath={selected?.path}
                 locale={this.editLocale}

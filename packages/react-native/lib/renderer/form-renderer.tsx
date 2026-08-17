@@ -14,6 +14,7 @@ import { useFkTheme } from '../theme.js'
 export interface FormRendererProps extends FormEngineCallbacks {
   spec: BrickSpec
   data?: Record<string, unknown>
+  context?: Record<string, unknown>
   locale?: string
 }
 
@@ -50,6 +51,7 @@ export const FormRenderer = forwardRef<FormRendererHandle, FormRendererProps>(
         <BrickRenderer
           spec={spec}
           data={data}
+          context={props.context}
           errors={errors}
           locale={props.locale}
           engine={engine}

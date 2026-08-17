@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — runtime context</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 24px; font-family: ui-sans-serif, system-ui, sans-serif; }
+      pre { padding: 0.5rem; border: 1px solid #ccc; }
+    </style>
+  </head>
+  <body>
+    <fk-form-render id="renderer"></fk-form-render>
+
+    <p>last formDataChange</p>
+    <pre data-testid="data">—</pre>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const renderer = document.getElementById('renderer')
+
+      renderer.context = {
+        _apiBase: '',
+        tenant: { plan: 'pro' },
+      }
+
+      renderer.spec = {
+        type: 'panel',
+        id: 'column',
+        name: 'Form',
+        configs: { key: 'form' },
+        children: [
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Name',
+            configs: { key: 'fullName', label: 'Full name' },
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'select',
+            name: 'City',
+            configs: {
+              key: 'city',
+              label: 'City',
+              optionsSource: 'remote',
+              optionsUrl: '{_apiBase}/context-options.json',
+            },
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: 'Seats',
+            configs: { key: 'seats', label: 'Seats' },
+            rules: [
+              {
+                name: 'pro only',
+                type: 'jsonLogic',
+                logic: { '!=': [{ var: 'tenant.plan' }, 'pro'] },
+                effects: [
+                  { property: { target: 'hidden', type: 'boolean' }, boolean: true },
+                ],
+              },
+            ],
+          },
+        ],
+      }
+
+      const out = document.querySelector('[data-testid="data"]')
+      renderer.addEventListener('formDataChange', (event) => {
+        out.textContent = JSON.stringify(event.detail.data)
+      })
+    </script>
+  </body>
+</html>

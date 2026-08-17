@@ -26,6 +26,7 @@ export class FkFormRender {
 
   @Prop() spec!: BrickSpec;
   @Prop() data?: Record<string, unknown>;
+  @Prop() context?: Record<string, unknown>;
   @Prop() editable: boolean = false;
   @Prop() selectedPath?: string;
   @Prop() locale?: string;
@@ -90,6 +91,12 @@ export class FkFormRender {
     );
   }
 
+  private dataMap(
+    data: Record<string, unknown> = this.currentData
+  ): Record<string, unknown> {
+    return this.context ? { ...data, ...this.context } : data;
+  }
+
   @Listen('brickDataChange')
   handleBrickDataChange(event: CustomEvent<Record<string, unknown>>) {
     event.stopPropagation();
@@ -119,7 +126,7 @@ export class FkFormRender {
       const key = brick.configs?.key;
       if (!key || !brick.rules?.length) continue;
 
-      const affected = getAffectedProperties(brick.rules, result);
+      const affected = getAffectedProperties(brick.rules, this.dataMap(result));
       if (affected.value !== undefined && result[key] !== affected.value) {
         result = { ...result, [key]: affected.value };
       }
@@ -175,10 +182,12 @@ export class FkFormRender {
     event.stopPropagation();
 
     const result = await this.validate();
+    if (!result.valid) return;
+
     this.formSubmit.emit({
       data: this.publicData(),
-      isValid: result.valid,
-      errors: result.errors,
+      isValid: true,
+      errors: {},
     });
   }
 
@@ -227,7 +236,7 @@ export class FkFormRender {
           brickSpec={this.effectiveSpec()}
           rootSpec={this.effectiveSpec()}
           data={this.currentData}
-          dataMap={this.currentData}
+          dataMap={this.dataMap()}
           errors={this.visibleErrors()}
           locale={this.locale}
           path="0"

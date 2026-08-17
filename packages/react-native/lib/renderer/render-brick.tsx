@@ -14,6 +14,7 @@ export interface RenderBrickOptions {
   spec: BrickSpec
   /** The data the brick reads from: form data, or a grid row's scope. */
   scope: Record<string, unknown>
+  context?: Record<string, unknown>
   errors: Record<string, string>
   locale?: string
   engine: FormEngine
@@ -32,7 +33,8 @@ export interface RenderBrickOptions {
  * Returns null when a rule hides the brick.
  */
 export function renderBrick(options: RenderBrickOptions): ReactNode {
-  const { spec, scope, errors, locale, engine } = options
+  const { spec, scope, context, errors, locale, engine } = options
+  const dataMap = context ? { ...scope, ...context } : scope
 
   const brick = getNativeBrick(spec.type, spec.id)
   if (!brick) {
@@ -43,7 +45,7 @@ export function renderBrick(options: RenderBrickOptions): ReactNode {
     )
   }
 
-  const affected = getAffectedProperties(spec.rules, scope)
+  const affected = getAffectedProperties(spec.rules, dataMap)
   if (affected.hidden === true) return null
 
   const key = spec.configs?.key
@@ -53,7 +55,7 @@ export function renderBrick(options: RenderBrickOptions): ReactNode {
     configs: resolveLocalizedRecord(spec.configs, locale) ?? {},
     locale,
     data: getBrickData(spec, scope),
-    dataMap: scope,
+    dataMap,
     error: key ? errors[key] : undefined,
     disabled: options.disabled === true || affected.disabled === true,
     engine,

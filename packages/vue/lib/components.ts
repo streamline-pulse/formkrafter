@@ -132,6 +132,7 @@ export const FkFileInput: StencilVueComponent<JSX.FkFileInput> = /*@__PURE__*/ d
 export const FkFormBuilder: StencilVueComponent<JSX.FkFormBuilder> = /*@__PURE__*/ defineContainer<JSX.FkFormBuilder>('fk-form-builder', defineFkFormBuilder, [
   'spec',
   'data',
+  'context',
   'locales',
   'locale',
   'specChange'
@@ -143,6 +144,7 @@ export const FkFormBuilder: StencilVueComponent<JSX.FkFormBuilder> = /*@__PURE__
 export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/ defineContainer<JSX.FkFormRender>('fk-form-render', defineFkFormRender, [
   'spec',
   'data',
+  'context',
   'editable',
   'selectedPath',
   'locale',

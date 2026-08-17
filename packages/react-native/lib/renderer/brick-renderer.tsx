@@ -7,6 +7,7 @@ import { renderBrick } from './render-brick.js'
 interface BrickRendererProps {
   spec: BrickSpec
   data: Record<string, unknown>
+  context?: Record<string, unknown>
   errors: Record<string, string>
   locale?: string
   engine: FormEngine
@@ -15,7 +16,7 @@ interface BrickRendererProps {
 /** The recursive walker, ported from fk-brick-render minus the builder paths. */
 export function BrickRenderer(props: BrickRendererProps): ReactNode {
   const theme = useFkTheme()
-  const { spec, data, errors, locale, engine } = props
+  const { spec, data, context, errors, locale, engine } = props
   if (!spec) return null
 
   const children = (spec.children ?? []).map((child, index) => (
@@ -23,6 +24,7 @@ export function BrickRenderer(props: BrickRendererProps): ReactNode {
       key={child.configs?.uid ?? `${spec.configs?.uid ?? 'brick'}-${index}`}
       spec={child}
       data={data}
+      context={context}
       errors={errors}
       locale={locale}
       engine={engine}
@@ -32,6 +34,7 @@ export function BrickRenderer(props: BrickRendererProps): ReactNode {
   return renderBrick({
     spec,
     scope: data,
+    context,
     errors,
     locale,
     engine,

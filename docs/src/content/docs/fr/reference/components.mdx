@@ -49,15 +49,32 @@ Rend un spec sous forme de formulaire fonctionnel.
 |---|---|---|---|
 | `spec` | `BrickSpec` | — | **Obligatoire.** Le formulaire à afficher. |
 | `data` | `Record<string, unknown>` | `{}` | Valeurs initiales, indexées par la `key` des bricks. |
+| `context` | `Record<string, unknown>` | — | Valeurs d'exécution pour les règles et l'interpolation d'URL. Jamais une valeur de champ, jamais émis. |
 | `editable` | `boolean` | `false` | Rendu en mode builder (contours de sélection, zones de dépôt). Utilisé par le builder lui-même. |
 | `selectedPath` | `string` | — | Quelle brick apparaît sélectionnée en mode editable, par chemin. |
 | `locale` | `string` | — | Locale utilisée pour résoudre les libellés et messages de validation localisés. |
 
+#### Contexte d'exécution
+
+Un formulaire a souvent besoin de valeurs que l'hôte connaît et que
+l'utilisateur ne doit pas fournir : une adresse d'API, un plan client, un jeton
+d'authentification. Passez-les via `context`, un sac tenu séparé des données du
+formulaire :
+
+```tsx
+<FkFormRender spec={spec} data={values} context={{ apiBase, tenant }} />
+```
+
+Les règles et l'interpolation de `optionsUrl` / `optionsHeaders` lisent
+`context` et `data` comme une seule map, `context` l'emportant en cas de
+collision de nom. Rien de ce que contient `context` n'est validé, écrit par un
+effet de valeur, ou présent dans `formDataChange` / `formSubmit`. La même prop
+existe sur `fk-form-builder`, où elle alimente l'aperçu.
+
 <Aside type="tip">
-Les clés préfixées d'un underscore — `data={{ _authToken }}` — sont lisibles en
-interne par les règles et l'interpolation d'URL, mais elles sont **retirées de
-tous les payloads émis**. C'est la façon supportée de passer du contexte sans
-qu'il fuite dans vos données soumises.
+Les clés préfixées d'un underscore — `data={{ _authToken }}` — se comportent de
+la même façon et restent supportées. Préférez `context` pour le nouveau code :
+il dit ce qu'est la valeur au lieu de reposer sur une convention de nommage.
 </Aside>
 
 ### Événements
@@ -65,7 +82,7 @@ qu'il fuite dans vos données soumises.
 | Événement | Detail | Se déclenche quand |
 |---|---|---|
 | `formDataChange` | `{ data, isValid, errors }` | Un champ change, et après `validate()` |
-| `formSubmit` | `{ data, isValid, errors }` | Le bouton Soumettre du stepper est pressé, après une passe de validation interne |
+| `formSubmit` | `{ data, isValid, errors }` | Le formulaire est soumis **et valide**. Un formulaire invalide ne l'émet jamais : `isValid` vaut donc toujours `true` et `errors` est toujours vide. |
 
 ```ts
 interface DataChangeDetail {
@@ -129,6 +146,7 @@ panneau de propriétés.
 |---|---|---|---|
 | `spec` | `BrickSpec` | — | Spec à charger dans le canvas. Omettez-le pour partir d'un formulaire vide. |
 | `data` | `Record<string, unknown>` | `{}` | Valeurs d'aperçu utilisées pendant l'édition. |
+| `context` | `Record<string, unknown>` | — | Valeurs d'exécution pour l'aperçu, même contrat que sur le renderer. |
 | `locales` | `string[]` | `[]` | Active le sélecteur de langue d'édition ; les champs du panneau lisent et écrivent alors par locale. |
 | `locale` | `string` | — | La langue du chrome du builder : associée à `setFkTranslations`, la toolbar, la palette et le panneau se re-rendent à la volée — sans remontage. Distincte de la langue d'édition. |
 

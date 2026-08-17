@@ -47,15 +47,31 @@ Renders a spec as a working form.
 |---|---|---|---|
 | `spec` | `BrickSpec` | — | **Required.** The form to render. |
 | `data` | `Record<string, unknown>` | `{}` | Initial values, keyed by brick `key`. |
+| `context` | `Record<string, unknown>` | — | Runtime values for rules and URL interpolation. Never a field value, never emitted. |
 | `editable` | `boolean` | `false` | Render in builder mode (selection outlines, drop zones). Used by the builder itself. |
 | `selectedPath` | `string` | — | Which brick shows as selected in editable mode, by path. |
 | `locale` | `string` | — | Locale used to resolve localized labels and validation messages. |
 
+#### Runtime context
+
+Forms often need values the host knows and the user must not supply: an API
+host, a tenant plan, an auth token. Pass them as `context` — a bag kept
+separate from form data:
+
+```tsx
+<FkFormRender spec={spec} data={values} context={{ apiBase, tenant }} />
+```
+
+Rules and `optionsUrl` / `optionsHeaders` interpolation read `context` and
+`data` as one map, `context` winning on a name clash. Nothing in `context` is
+ever validated, written by a value effect, or present in `formDataChange` /
+`formSubmit`. The same prop exists on `fk-form-builder`, feeding its live
+preview.
+
 <Aside type="tip">
-Keys prefixed with an underscore — `data={{ _authToken }}` — are readable
-internally by rules and URL interpolation, but are **stripped from every
-emitted payload**. That is the supported way to pass context without leaking it
-into your submitted data.
+Keys prefixed with an underscore — `data={{ _authToken }}` — behave the same
+way and remain supported. Prefer `context` for new code: it says what the value
+is instead of relying on a naming convention.
 </Aside>
 
 ### Events
@@ -63,7 +79,7 @@ into your submitted data.
 | Event | Detail | Fires when |
 |---|---|---|
 | `formDataChange` | `{ data, isValid, errors }` | Any field changes, and after `validate()` |
-| `formSubmit` | `{ data, isValid, errors }` | The stepper's Submit button is pressed, after an internal validation pass |
+| `formSubmit` | `{ data, isValid, errors }` | The form is submitted **and valid**. An invalid form never emits it, so `isValid` is always `true` and `errors` always empty. |
 
 ```ts
 interface DataChangeDetail {
@@ -125,6 +141,7 @@ The drag & drop editor. It renders its own palette, canvas and property panel.
 |---|---|---|---|
 | `spec` | `BrickSpec` | — | Spec to load into the canvas. Omit to start from an empty form. |
 | `data` | `Record<string, unknown>` | `{}` | Preview values used while editing. |
+| `context` | `Record<string, unknown>` | — | Runtime values for the live preview, same contract as on the renderer. |
 | `locales` | `string[]` | `[]` | Enables the edit-language selector; panel fields then read and write per locale. |
 | `locale` | `string` | — | The builder chrome's own language: pair it with `setFkTranslations` and the toolbar, palette and panel re-render on the fly — no remount needed. Distinct from the edit language. |
 

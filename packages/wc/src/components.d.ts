@@ -94,6 +94,7 @@ export namespace Components {
         "value"?: UploadedFile | UploadedFile[];
     }
     interface FkFormBuilder {
+        "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         "locale"?: string;
         /**
@@ -103,6 +104,7 @@ export namespace Components {
         "spec"?: BrickSpec;
     }
     interface FkFormRender {
+        "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         /**
           * @default false
@@ -641,6 +643,7 @@ declare namespace LocalJSX {
         "value"?: UploadedFile | UploadedFile[];
     }
     interface FkFormBuilder {
+        "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         "locale"?: string;
         /**
@@ -651,6 +654,7 @@ declare namespace LocalJSX {
         "spec"?: BrickSpec;
     }
     interface FkFormRender {
+        "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         /**
           * @default false
