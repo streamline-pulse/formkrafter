@@ -6,7 +6,14 @@
 "@streamline-pulse/formkrafter-react-native": minor
 ---
 
-Runtime context, and formSubmit now implies valid
+Remote option envelopes, runtime context, and formSubmit now implies valid
+
+`dataSourceService.fetchOptions` accepted a bare JSON array and threw on
+anything else, so every paginated API — `{ data: [...], page, total }` — failed
+with *"Data source did not return an array"* despite a correct 200. A payload
+whose `data` property is an array is now unwrapped automatically, and
+`optionsPath` addresses any other envelope with a dotted path. A payload
+matching neither still throws loudly: the point was never to coerce silently.
 
 `fk-form-render` and `fk-form-builder` take a `context` prop: host-supplied
 runtime values — an API host, a tenant plan, a token — that rules and

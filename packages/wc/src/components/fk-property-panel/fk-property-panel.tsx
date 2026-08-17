@@ -216,6 +216,9 @@ export class FkPropertyPanel {
         this.textField(fkT('panel.url'), configs.optionsUrl, (value) =>
           this.emitConfigs({ optionsUrl: value })
         ),
+        this.textField(fkT('panel.responsePath'), configs.optionsPath, (value) =>
+          this.emitConfigs({ optionsPath: value || undefined })
+        ),
         <label class="fk-props__field">
           <span class="fk-props__label">{fkT('panel.headers')}</span>
           <textarea

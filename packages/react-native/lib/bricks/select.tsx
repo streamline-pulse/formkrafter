@@ -67,10 +67,12 @@ function useOptions(props: Props, query: string, open: boolean) {
       try {
         const raw =
           source === 'remote'
-            ? await services.dataSourceService.fetchOptions(
-                url!,
-                headers ? { headers } : undefined,
-              )
+            ? await services.dataSourceService.fetchOptions(url!, {
+                ...(headers ? { headers } : {}),
+                ...(props.configs.optionsPath
+                  ? { path: props.configs.optionsPath as string }
+                  : {}),
+              })
             : await services.optionSourceService.fetchOptions(ref)
         setRemote(normalizeOptions(raw, labelKey, valueKey))
       } catch (cause) {

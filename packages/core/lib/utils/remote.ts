@@ -1,4 +1,4 @@
-function resolvePath(source: Record<string, unknown>, path: string): unknown {
+export function resolvePath(source: Record<string, unknown>, path: string): unknown {
   if (Object.prototype.hasOwnProperty.call(source, path)) return source[path];
 
   let current: unknown = source;

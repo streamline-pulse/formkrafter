@@ -71,6 +71,12 @@ URL      {api.base}/employees?dept={department}
 Headers  Authorization: Bearer {auth.token}
 ```
 
+The response may be a bare JSON array or an envelope: a payload whose `data`
+property is an array is unwrapped automatically, which covers most paginated
+APIs. For any other shape, point `optionsPath` at the array — `result.items`.
+A payload matching none of these still fails loudly rather than showing an
+empty select.
+
 Tokens may be dotted paths, so nested context needs no flattening. A key
 containing a dot is matched first, then the path is walked; inherited
 properties are never reachable. A token that resolves to nothing becomes an

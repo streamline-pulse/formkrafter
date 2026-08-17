@@ -205,9 +205,10 @@ export class FkSelectInput {
 
     try {
       this.remoteError = undefined;
+      const path = this.configs?.optionsPath as string | undefined;
       this.remoteOptions = await services.dataSourceService.fetchOptions(
         url,
-        headers ? { headers } : undefined
+        headers || path ? { ...(headers ? { headers } : {}), ...(path ? { path } : {}) } : undefined
       );
     } catch (error) {
       this.remoteOptions = [];

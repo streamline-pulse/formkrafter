@@ -1,0 +1,8 @@
+{
+  "result": {
+    "items": [
+      { "label": "Gamma", "value": "gamma" },
+      { "label": "Delta", "value": "delta" }
+    ]
+  }
+}

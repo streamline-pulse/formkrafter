@@ -13,6 +13,18 @@ test.describe('runtime context', () => {
     await expect(page.getByRole('option', { name: 'Porto-Novo' })).toBeVisible()
   })
 
+  test('a paginated { data: [...] } envelope resolves with no config', async ({
+    page,
+  }) => {
+    await page.getByRole('combobox', { name: 'Envelope' }).click()
+    await expect(page.getByRole('option', { name: 'Beta' })).toBeVisible()
+  })
+
+  test('optionsPath addresses a non-standard envelope', async ({ page }) => {
+    await page.getByRole('combobox', { name: 'Nested' }).click()
+    await expect(page.getByRole('option', { name: 'Delta' })).toBeVisible()
+  })
+
   test('context feeds visibility rules', async ({ page }) => {
     await expect(page.getByLabel('Seats')).toBeVisible()
 

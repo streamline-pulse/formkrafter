@@ -54,6 +54,31 @@
           {
             type: 'input',
             dataType: 'string',
+            id: 'select',
+            name: 'Envelope',
+            configs: {
+              key: 'envelope',
+              label: 'Envelope',
+              optionsSource: 'remote',
+              optionsUrl: '{api.base}/envelope-options.json',
+            },
+          },
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'select',
+            name: 'Nested',
+            configs: {
+              key: 'nested',
+              label: 'Nested',
+              optionsSource: 'remote',
+              optionsUrl: '{api.base}/nested-options.json',
+              optionsPath: 'result.items',
+            },
+          },
+          {
+            type: 'input',
+            dataType: 'string',
             id: 'text',
             name: 'Seats',
             configs: { key: 'seats', label: 'Seats' },

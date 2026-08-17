@@ -1,0 +1,10 @@
+{
+  "data": [
+    { "label": "Alpha", "value": "alpha" },
+    { "label": "Beta", "value": "beta" }
+  ],
+  "page": 1,
+  "pages": 1,
+  "perPage": 50,
+  "total": 2
+}

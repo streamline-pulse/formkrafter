@@ -1,5 +1,37 @@
+import { resolvePath } from "../utils/remote";
+
 export interface DataSourceRequestOptions {
   headers?: Record<string, string>;
+  path?: string;
+}
+
+function optionsFromPayload(
+  json: unknown,
+  url: string,
+  path?: string
+): unknown[] {
+  if (path) {
+    const picked =
+      json !== null && typeof json === "object"
+        ? resolvePath(json as Record<string, unknown>, path)
+        : undefined;
+
+    if (!Array.isArray(picked)) {
+      throw new Error(
+        `Data source has no array at "${path}": ${url}`
+      );
+    }
+    return picked;
+  }
+
+  if (Array.isArray(json)) return json;
+
+  if (json !== null && typeof json === "object") {
+    const envelope = (json as Record<string, unknown>).data;
+    if (Array.isArray(envelope)) return envelope;
+  }
+
+  throw new Error(`Data source did not return an array: ${url}`);
 }
 
 export interface DataSourceServiceDefaults {
@@ -28,7 +60,7 @@ export class FetchDataSourceService implements DataSourceService {
     if (Object.keys(headers).length) init.headers = headers;
     if (this.defaults.credentials) init.credentials = this.defaults.credentials;
 
-    const key = `${url}|${JSON.stringify(init)}`;
+    const key = `${url}|${JSON.stringify(init)}|${options?.path ?? ""}`;
     let pending = this.cache.get(key);
 
     if (!pending) {
@@ -39,15 +71,10 @@ export class FetchDataSourceService implements DataSourceService {
           }
           return response.json();
         })
-        .then((json: unknown) => {
-          // Silently coercing a non-array payload to [] once hid a
-          // deprecated-API error notice behind an empty select; failing
-          // loudly puts the real message in front of the user.
-          if (!Array.isArray(json)) {
-            throw new Error(`Data source did not return an array: ${url}`);
-          }
-          return json;
-        })
+        // Silently coercing an unusable payload to [] once hid a
+        // deprecated-API error notice behind an empty select; failing
+        // loudly puts the real message in front of the user.
+        .then((json: unknown) => optionsFromPayload(json, url, options?.path))
         .catch((error: unknown) => {
           this.cache.delete(key);
           throw error;

@@ -75,6 +75,12 @@ URL      {api.base}/employees?dept={department}
 Headers  Authorization: Bearer {auth.token}
 ```
 
+La réponse peut être un tableau JSON nu ou une enveloppe : un payload dont la
+propriété `data` est un tableau est déballé automatiquement, ce qui couvre la
+plupart des API paginées. Pour toute autre forme, pointez `optionsPath` sur le
+tableau — `result.items`. Un payload ne correspondant à aucun de ces cas échoue
+bruyamment plutôt que d'afficher un select vide.
+
 Les tokens acceptent les chemins pointés : un contexte imbriqué n'a donc pas
 besoin d'être aplati. Une clé contenant un point est cherchée en premier, puis
 le chemin est parcouru ; les propriétés héritées ne sont jamais atteignables. Un
