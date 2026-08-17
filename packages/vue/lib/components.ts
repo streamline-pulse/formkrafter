@@ -215,6 +215,7 @@ export const FkSignatureInput: StencilVueComponent<JSX.FkSignatureInput> = /*@__
 export const FkStepper: StencilVueComponent<JSX.FkStepper> = /*@__PURE__*/ defineContainer<JSX.FkStepper>('fk-stepper', defineFkStepper, [
   'stepLabels',
   'editable',
+  'readOnly',
   'spec',
   'dataMap',
   'locale',

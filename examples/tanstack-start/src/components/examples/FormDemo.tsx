@@ -1,5 +1,4 @@
-import { useRef, useState } from 'react'
-import type { ComponentRef } from 'react'
+import { useState } from 'react'
 import { FkFormRender } from '@streamline-pulse/formkrafter-react'
 import '@streamline-pulse/formkrafter-wc/styles.css'
 
@@ -12,6 +11,7 @@ import type { DataChangeDetail } from '@streamline-pulse/formkrafter-wc'
 interface FormDemoProps {
   spec: BrickSpec
   data?: Record<string, unknown>
+  context?: Record<string, unknown>
   localeOverride?: string
   showValidate?: boolean
 }
@@ -19,38 +19,34 @@ interface FormDemoProps {
 export default function FormDemo({
   spec,
   data,
+  context,
   localeOverride,
   showValidate = true,
 }: FormDemoProps) {
   const { locale } = useLocale()
-  const renderRef = useRef<ComponentRef<typeof FkFormRender>>(null)
   const [verdict, setVerdict] = useState<ValidationResult>()
   const [submitted, setSubmitted] = useState<DataChangeDetail>()
 
-  async function validate() {
-    const element = renderRef.current
-    if (!element) return
-    setVerdict(await element.validate())
-  }
-
   return (
     <div className="space-y-4">
-      <div className="border-border bg-card rounded-lg border p-4">
+      <form id="fk-demo" className="border-border bg-card rounded-lg border p-4">
         <FkFormRender
-          ref={renderRef}
           spec={spec}
           locale={localeOverride ?? locale}
           data={data}
+          context={context}
+          onValidityChange={(event) => setVerdict(event.detail)}
           onFormSubmit={(event) => setSubmitted(event.detail)}
         />
-      </div>
+      </form>
 
       {showValidate ? (
         <div className="flex items-center gap-3">
           <button
-            type="button"
-            onClick={validate}
-            className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm font-semibold hover:opacity-90"
+            type="submit"
+            form="fk-demo"
+            disabled={!verdict?.valid}
+            className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm font-semibold hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {m.demo_validate()}
           </button>

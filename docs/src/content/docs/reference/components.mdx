@@ -48,6 +48,9 @@ Renders a spec as a working form.
 | `spec` | `BrickSpec` | — | **Required.** The form to render. |
 | `data` | `Record<string, unknown>` | `{}` | Initial values, keyed by brick `key`. |
 | `context` | `Record<string, unknown>` | — | Runtime values for rules and URL interpolation. Never a field value, never emitted. |
+| `readOnly` | `boolean` | `false` | Render every control disabled and hide the built-in action. |
+| `showSubmit` | `boolean` | `false` | Render a built-in submit button. |
+| `submitLabel` | `string` | — | Overrides that button's label. |
 | `editable` | `boolean` | `false` | Render in builder mode (selection outlines, drop zones). Used by the builder itself. |
 | `selectedPath` | `string` | — | Which brick shows as selected in editable mode, by path. |
 | `locale` | `string` | — | Locale used to resolve localized labels and validation messages. |
@@ -74,12 +77,19 @@ way and remain supported. Prefer `context` for new code: it says what the value
 is instead of relying on a naming convention.
 </Aside>
 
+<Aside type="note">
+A brick carrying a `required` validation is marked automatically: an asterisk
+after its label, a screen-reader-only "(required)", and `aria-required` on the
+control. Nothing to configure.
+</Aside>
+
 ### Events
 
 | Event | Detail | Fires when |
 |---|---|---|
 | `formDataChange` | `{ data, isValid, errors }` | Any field changes, and after `validate()` |
 | `formSubmit` | `{ data, isValid, errors }` | The form is submitted **and valid**. An invalid form never emits it, so `isValid` is always `true` and `errors` always empty. |
+| `validityChange` | `{ valid, errors }` | On first render and whenever the verdict changes |
 
 ```ts
 interface DataChangeDetail {
@@ -94,6 +104,31 @@ interface DataChangeDetail {
 ```ts
 await element.validate(): Promise<ValidationResult>
 ```
+
+```ts
+await element.submit(): Promise<ValidationResult>
+```
+
+`submit()` validates, emits `formSubmit` only if the form is valid, and returns
+the verdict either way.
+
+### Without a ref
+
+`fk-form-render` is a form-associated custom element and reports its validity
+continuously, so a complete screen needs neither a ref nor a `validate()` call:
+
+```html
+<form id="checkout">
+  <fk-form-render id="form"></fk-form-render>
+</form>
+<button type="submit" form="checkout">Send</button>
+```
+
+The external button drives the element through the platform, and
+`checkValidity()` on the form reflects the spec's rules. Binding a button's
+`disabled` to `validityChange` works the same way with no form at all. Where
+`ElementInternals` is unavailable the element behaves as it did before.
+
 
 `validate()` marks every keyed brick as touched (so errors become visible),
 validates the flat data, awaits row-level validation on every data grid, merges

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — read-only review of a submission</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 24px; font-family: ui-sans-serif, system-ui, sans-serif; }
+      pre { padding: 0.5rem; border: 1px solid #ccc; }
+    </style>
+  </head>
+  <body>
+    <fk-form-render id="renderer"></fk-form-render>
+
+    <p>submits</p>
+    <pre data-testid="submits">0</pre>
+    <p>last submit payload</p>
+    <pre data-testid="payload">—</pre>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const step = (key, label, validations) => ({
+        type: 'panel',
+        id: 'group',
+        name: label,
+        configs: { key: `step-${key}`, label },
+        children: [
+          {
+            type: 'input',
+            dataType: 'string',
+            id: 'text',
+            name: label,
+            configs: { key, label },
+            ...(validations ? { validations } : {}),
+          },
+        ],
+      })
+
+      const renderer = document.getElementById('renderer')
+
+      renderer.readOnly = true
+      renderer.data = { fullName: 'Ada Lovelace', city: 'Cotonou' }
+
+      renderer.spec = {
+        type: 'panel',
+        id: 'column',
+        name: 'Form',
+        configs: { key: 'form' },
+        children: [
+          {
+            type: 'panel',
+            id: 'stepper',
+            name: 'Wizard',
+            configs: { key: 'wizard', validateSteps: true, showSubmit: true },
+            children: [
+              step('fullName', 'Full name', [{ validator: 'required' }]),
+              step('city', 'City'),
+            ],
+          },
+        ],
+      }
+
+      const submits = document.querySelector('[data-testid="submits"]')
+      const payload = document.querySelector('[data-testid="payload"]')
+
+      let count = 0
+      renderer.addEventListener('formSubmit', (event) => {
+        count += 1
+        submits.textContent = String(count)
+        payload.textContent = JSON.stringify(event.detail)
+      })
+    </script>
+  </body>
+</html>

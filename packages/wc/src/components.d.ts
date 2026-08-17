@@ -183,6 +183,10 @@ export namespace Components {
          */
         "editable": boolean;
         "locale"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
         "spec"?: BrickSpec;
         /**
           * @default []
@@ -769,6 +773,10 @@ declare namespace LocalJSX {
         "locale"?: string;
         "onStepTouch"?: (event: FkStepperCustomEvent<{ keys: string[] }>) => void;
         "onStepperSubmit"?: (event: FkStepperCustomEvent<void>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
         "spec"?: BrickSpec;
         /**
           * @default []
@@ -854,6 +862,7 @@ declare namespace LocalJSX {
     }
     interface FkStepperAttributes {
         "editable": boolean;
+        "readOnly": boolean;
         "locale": string;
     }
     interface FkTabsAttributes {

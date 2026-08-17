@@ -17,6 +17,7 @@ export class FkStepper {
 
   @Prop() stepLabels: string[] = [];
   @Prop() editable = false;
+  @Prop() readOnly = false;
   @Prop() spec?: BrickSpec;
   @Prop() dataMap?: Record<string, unknown>;
   @Prop() locale?: string;
@@ -99,7 +100,11 @@ export class FkStepper {
   private next = (event: MouseEvent) => {
     event.preventDefault();
 
-    if (this.config('validateSteps', false) && !this.stepValid(this.active)) {
+    if (
+      !this.readOnly &&
+      this.config('validateSteps', false) &&
+      !this.stepValid(this.active)
+    ) {
       this.stepTouch.emit({ keys: this.stepKeys(this.active) });
       return;
     }
@@ -115,7 +120,11 @@ export class FkStepper {
   private submit = (event: MouseEvent) => {
     event.preventDefault();
 
-    if (this.config('validateSteps', false) && !this.stepValid(this.active)) {
+    if (
+      !this.readOnly &&
+      this.config('validateSteps', false) &&
+      !this.stepValid(this.active)
+    ) {
       this.stepTouch.emit({ keys: this.stepKeys(this.active) });
       return;
     }
@@ -124,7 +133,7 @@ export class FkStepper {
   };
 
   private goToStep(index: number) {
-    if (this.editable || index <= this.active) {
+    if (this.editable || this.readOnly || index <= this.active) {
       this.active = index;
       return;
     }
@@ -200,7 +209,7 @@ export class FkStepper {
                 {fkT('stepper.next')}
               </button>
             ) : null}
-            {showSubmit ? (
+            {showSubmit && !this.readOnly ? (
               <button
                 type="button"
                 class="fk-stepper__button fk-stepper__button--primary"

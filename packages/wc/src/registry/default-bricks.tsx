@@ -648,6 +648,7 @@ export const stepperBrick = createBrick({
       <fk-stepper
         stepLabels={labels}
         editable={props.editable}
+        readOnly={props.disabled === true}
         spec={props.brickSpec}
         dataMap={props.dataMap}
         locale={props.locale}

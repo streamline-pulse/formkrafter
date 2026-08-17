@@ -50,6 +50,9 @@ Rend un spec sous forme de formulaire fonctionnel.
 | `spec` | `BrickSpec` | — | **Obligatoire.** Le formulaire à afficher. |
 | `data` | `Record<string, unknown>` | `{}` | Valeurs initiales, indexées par la `key` des bricks. |
 | `context` | `Record<string, unknown>` | — | Valeurs d'exécution pour les règles et l'interpolation d'URL. Jamais une valeur de champ, jamais émis. |
+| `readOnly` | `boolean` | `false` | Rend tous les contrôles désactivés et masque l'action intégrée. |
+| `showSubmit` | `boolean` | `false` | Affiche un bouton de soumission intégré. |
+| `submitLabel` | `string` | — | Remplace le libellé de ce bouton. |
 | `editable` | `boolean` | `false` | Rendu en mode builder (contours de sélection, zones de dépôt). Utilisé par le builder lui-même. |
 | `selectedPath` | `string` | — | Quelle brick apparaît sélectionnée en mode editable, par chemin. |
 | `locale` | `string` | — | Locale utilisée pour résoudre les libellés et messages de validation localisés. |
@@ -77,12 +80,19 @@ la même façon et restent supportées. Préférez `context` pour le nouveau cod
 il dit ce qu'est la valeur au lieu de reposer sur une convention de nommage.
 </Aside>
 
+<Aside type="note">
+Une brick portant une validation `required` est marquée automatiquement : un
+astérisque après son libellé, un « (obligatoire) » réservé aux lecteurs
+d'écran, et `aria-required` sur le contrôle. Rien à configurer.
+</Aside>
+
 ### Événements
 
 | Événement | Detail | Se déclenche quand |
 |---|---|---|
 | `formDataChange` | `{ data, isValid, errors }` | Un champ change, et après `validate()` |
 | `formSubmit` | `{ data, isValid, errors }` | Le formulaire est soumis **et valide**. Un formulaire invalide ne l'émet jamais : `isValid` vaut donc toujours `true` et `errors` est toujours vide. |
+| `validityChange` | `{ valid, errors }` | Au premier rendu et à chaque changement de verdict |
 
 ```ts
 interface DataChangeDetail {
@@ -97,6 +107,32 @@ interface DataChangeDetail {
 ```ts
 await element.validate(): Promise<ValidationResult>
 ```
+
+```ts
+await element.submit(): Promise<ValidationResult>
+```
+
+`submit()` valide, n'émet `formSubmit` que si le formulaire est valide, et
+renvoie le verdict dans les deux cas.
+
+### Sans ref
+
+`fk-form-render` est un custom element associé aux formulaires et remonte sa
+validité en continu : un écran complet n'a donc besoin ni de ref ni d'appel à
+`validate()` :
+
+```html
+<form id="checkout">
+  <fk-form-render id="form"></fk-form-render>
+</form>
+<button type="submit" form="checkout">Envoyer</button>
+```
+
+Le bouton externe pilote l'élément via la plateforme, et `checkValidity()` sur
+le formulaire reflète les règles du spec. Lier le `disabled` d'un bouton à
+`validityChange` fonctionne pareil, sans formulaire du tout. Là où
+`ElementInternals` n'est pas disponible, l'élément se comporte comme avant.
+
 
 `validate()` marque chaque brick porteuse d'une key comme touchée (pour que les
 erreurs deviennent visibles), valide les données à plat, attend la validation
