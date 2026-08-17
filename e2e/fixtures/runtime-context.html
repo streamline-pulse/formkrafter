@@ -22,6 +22,7 @@
 
       renderer.context = {
         _apiBase: '',
+        api: { base: '' },
         tenant: { plan: 'pro' },
       }
 
@@ -47,7 +48,7 @@
               key: 'city',
               label: 'City',
               optionsSource: 'remote',
-              optionsUrl: '{_apiBase}/context-options.json',
+              optionsUrl: '{api.base}/context-options.json',
             },
           },
           {

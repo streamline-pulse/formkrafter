@@ -67,12 +67,25 @@ service : un formulaire peut donc envoyer ses pièces jointes ailleurs.
 ## Options distantes et authentification
 
 Un select peut charger ses options depuis une URL, en interpolant des
-placeholders `{key}` depuis les données courantes du formulaire :
+placeholders `{key}` depuis le `context` d'exécution et les données courantes du
+formulaire — `context` d'abord :
 
 ```txt title="Config de la brick"
-URL      /api/employees?dept={department}
-Headers  Authorization: Bearer {_authToken}
+URL      {api.base}/employees?dept={department}
+Headers  Authorization: Bearer {auth.token}
 ```
+
+Les tokens acceptent les chemins pointés : un contexte imbriqué n'a donc pas
+besoin d'être aplati. Une clé contenant un point est cherchée en premier, puis
+le chemin est parcouru ; les propriétés héritées ne sont jamais atteignables. Un
+token qui ne résout rien devient une chaîne vide. C'est toute la grammaire — pas
+d'expressions, pas de valeurs par défaut, pas d'échappement.
+
+<Aside type="caution">
+Les doubles accolades (`{{valeur}}`) ne sont **pas** une syntaxe de template
+ici — elles appartiennent au templeter côté serveur. Une grammaire par côté,
+délibérément.
+</Aside>
 
 Deux schémas d'authentification, qui se composent :
 
@@ -87,19 +100,20 @@ Deux schémas d'authentification, qui se composent :
    services.dataSourceService = new FetchDataSourceService({ credentials: 'include' })
    ```
 
-2. **Token de contexte** — quand l'API est cross-origin. L'hôte l'injecte comme
-   donnée préfixée d'un underscore sur le renderer.
+2. **Token de contexte** — quand l'API est cross-origin. L'hôte l'injecte via
+   la prop `context` du renderer.
 
    ```tsx
-   <FkFormRender spec={spec} data={{ _authToken: token }} />
+   <FkFormRender spec={spec} context={{ auth: { token } }} />
    ```
 
 </Steps>
 
 <Aside type="tip">
-Les clés préfixées d'un underscore sont lisibles par les règles et
-l'interpolation d'URL, mais elles sont **retirées de tous les payloads émis** —
-elles ne fuitent jamais dans vos données soumises.
+Tout ce que contient `context` est lisible par les règles et l'interpolation
+d'URL et n'est **jamais** dans un payload émis. Les clés `data` préfixées d'un
+underscore se comportent pareil et restent supportées — voir
+[la référence des composants](../../reference/components/#contexte-dexécution).
 </Aside>
 
 ## Un singleton à l'échelle de la page, par conception

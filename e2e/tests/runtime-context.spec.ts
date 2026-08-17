@@ -8,7 +8,7 @@ test.describe('runtime context', () => {
     await expect(page.getByLabel('Full name')).toBeVisible()
   })
 
-  test('context feeds remote option interpolation', async ({ page }) => {
+  test('a dotted path in optionsUrl resolves through context', async ({ page }) => {
     await page.getByRole('combobox', { name: 'City' }).click()
     await expect(page.getByRole('option', { name: 'Porto-Novo' })).toBeVisible()
   })
@@ -20,7 +20,7 @@ test.describe('runtime context', () => {
       const el = document.getElementById('renderer') as HTMLElement & {
         context?: Record<string, unknown>
       }
-      el.context = { _apiBase: '', tenant: { plan: 'free' } }
+      el.context = { _apiBase: '', api: { base: '' }, tenant: { plan: 'free' } }
     })
 
     await expect(page.getByLabel('Seats')).toBeHidden()
@@ -37,5 +37,6 @@ test.describe('runtime context', () => {
     expect(data).toEqual({ fullName: 'Ada' })
     expect(data).not.toHaveProperty('tenant')
     expect(data).not.toHaveProperty('_apiBase')
+    expect(data).not.toHaveProperty('api')
   })
 })

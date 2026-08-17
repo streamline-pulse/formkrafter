@@ -64,12 +64,23 @@ form can send its attachments somewhere else.
 ## Remote options and auth
 
 A select can load its options from a URL, interpolating `{key}` placeholders
-from the current form data:
+from the runtime `context` and the current form data — `context` first:
 
 ```txt title="Brick config"
-URL      /api/employees?dept={department}
-Headers  Authorization: Bearer {_authToken}
+URL      {api.base}/employees?dept={department}
+Headers  Authorization: Bearer {auth.token}
 ```
+
+Tokens may be dotted paths, so nested context needs no flattening. A key
+containing a dot is matched first, then the path is walked; inherited
+properties are never reachable. A token that resolves to nothing becomes an
+empty string. That is the whole grammar — no expressions, no defaults, no
+escaping.
+
+<Aside type="caution">
+Double braces (`{{value}}`) are **not** template syntax here — that belongs to
+the server-side templater. One grammar per side, on purpose.
+</Aside>
 
 Two auth patterns, which compose:
 
@@ -84,19 +95,20 @@ Two auth patterns, which compose:
    services.dataSourceService = new FetchDataSourceService({ credentials: 'include' })
    ```
 
-2. **Context token** — when the API is cross-origin. The host injects it as
-   underscore-prefixed data on the renderer.
+2. **Context token** — when the API is cross-origin. The host injects it
+   through the renderer's `context` prop.
 
    ```tsx
-   <FkFormRender spec={spec} data={{ _authToken: token }} />
+   <FkFormRender spec={spec} context={{ auth: { token } }} />
    ```
 
 </Steps>
 
 <Aside type="tip">
-Underscore-prefixed keys are readable by rules and URL interpolation but are
-**stripped from every emitted payload** — they never leak into your submitted
-data.
+Anything in `context` is readable by rules and URL interpolation and is **never
+part of an emitted payload**. Underscore-prefixed `data` keys behave the same
+way and remain supported — see
+[the components reference](../../reference/components/#runtime-context).
 </Aside>
 
 ## A page-wide singleton, by design

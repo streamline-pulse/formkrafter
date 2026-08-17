@@ -17,6 +17,12 @@ value effect, or emitted in `formDataChange` / `formSubmit`. `FormRenderer` in
 
 The `_`-prefix convention still works and stays supported.
 
+Interpolation tokens accept dotted paths, so nested context needs no
+flattening: `{api.base}/employees?dept={department}`. A key containing a dot is
+matched before the path is walked, inherited properties stay unreachable, and a
+token resolving to nothing is still an empty string — existing flat templates
+are unchanged.
+
 `formSubmit` no longer fires when the form is invalid. It previously emitted
 unconditionally after its validation pass, carrying `isValid: false`, which
 forced hosts to re-validate defensively. Anything relying on being notified of

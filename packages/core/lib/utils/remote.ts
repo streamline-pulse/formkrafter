@@ -1,9 +1,22 @@
+function resolvePath(source: Record<string, unknown>, path: string): unknown {
+  if (Object.prototype.hasOwnProperty.call(source, path)) return source[path];
+
+  let current: unknown = source;
+  for (const segment of path.split('.')) {
+    if (current === null || typeof current !== 'object') return undefined;
+    if (!Object.prototype.hasOwnProperty.call(current, segment)) return undefined;
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return current;
+}
+
 export function interpolateTemplate(
   template: string,
   dataMap?: Record<string, unknown>
 ): string {
-  return template.replace(/\{(\w+)\}/g, (_, token: string) => {
-    const value = dataMap?.[token];
+  return template.replace(/\{([\w.]+)\}/g, (_, token: string) => {
+    const value = dataMap && resolvePath(dataMap, token);
     return value === undefined || value === null ? '' : String(value);
   });
 }
