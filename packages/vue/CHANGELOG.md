@@ -1,5 +1,22 @@
 # @streamline-pulse/formkrafter-vue
 
+## 0.19.0
+
+### Minor Changes
+
+- 2b1c1d6: Accept `disabled` alongside `readOnly`
+
+  `fk-form-render` takes a `disabled` prop with the same effect as `readOnly`.
+  Both render every control with the HTML `disabled` attribute, never `readonly`:
+  `readonly` has no meaning on a select, a checkbox or a radio, so honouring the
+  HTML distinction would lock text fields one way and everything else another.
+  Layout and navigation stay interactive either way.
+
+### Patch Changes
+
+- Updated dependencies [2b1c1d6]
+  - @streamline-pulse/formkrafter-wc@0.19.0
+
 ## 0.18.1
 
 ### Patch Changes
