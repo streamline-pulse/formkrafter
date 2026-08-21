@@ -1,12 +1,3 @@
-/**
- * Date, time and datetime bricks, on a separate entry point on purpose:
- * they need @react-native-community/datetimepicker, a native module Metro
- * resolves statically. Applications that want them install the picker and
- * call registerNativeDateBricks(); everyone else never resolves it.
- *
- * Stored formats match the web bricks: 'YYYY-MM-DD', 'HH:mm' and
- * 'YYYY-MM-DDTHH:mm'.
- */
 import { createElement, useState } from 'react'
 import { Platform, Pressable, Text, View } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -33,11 +24,6 @@ const parse = (mode: Mode, raw: unknown): Date => {
   return Number.isNaN(parsed.getTime()) ? new Date() : parsed
 }
 
-/**
- * Under react-native-web the community picker renders nothing useful; the
- * browser has native date inputs, so use them — same controls and same
- * stored formats as the web-components build.
- */
 function WebDateControl(props: NativeBrickProps & { mode: Mode }) {
   const theme = useFkTheme()
   const value = typeof props.data === 'string' ? props.data : ''
@@ -70,7 +56,6 @@ function WebDateControl(props: NativeBrickProps & { mode: Mode }) {
 
 function DateControl(props: NativeBrickProps & { mode: Mode }) {
   const theme = useFkTheme()
-  // Android has no datetime picker: chain a date phase then a time phase.
   const [phase, setPhase] = useState<'closed' | Mode>('closed')
   const [pendingDate, setPendingDate] = useState<Date>()
 
@@ -102,8 +87,6 @@ function DateControl(props: NativeBrickProps & { mode: Mode }) {
         )
       : picked
 
-    // On iOS the spinner stays open and fires on every tick; the value
-    // updates live and the OK button below closes it.
     if (Platform.OS === 'android') setPhase('closed')
     setPendingDate(undefined)
     props.onDataChange(format(props.mode, result))

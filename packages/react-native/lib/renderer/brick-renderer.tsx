@@ -14,7 +14,6 @@ interface BrickRendererProps {
   engine: FormEngine
 }
 
-/** The recursive walker, ported from fk-brick-render minus the builder paths. */
 export function BrickRenderer(props: BrickRendererProps): ReactNode {
   const theme = useFkTheme()
   const { spec, data, context, readOnly, errors, locale, engine } = props

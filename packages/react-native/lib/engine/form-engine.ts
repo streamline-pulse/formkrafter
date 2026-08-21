@@ -17,8 +17,6 @@ export interface FormEngineSnapshot {
   spec: BrickSpec
   expanding: boolean
   expandError?: string
-  /** Bumped by validate(): bricks with private touched state (the data
-   *  grid) use it to surface every error after a global validation. */
   validationEpoch: number
 }
 
@@ -42,12 +40,6 @@ export interface FormEngineOptions extends FormEngineCallbacks {
   locale?: string
 }
 
-/**
- * The renderer's brain, ported from fk-form-render: data state, touched
- * tracking, nested-form expansion, value effects from rules, and validation.
- * It is a plain class with a subscribe/snapshot surface so React consumes it
- * through useSyncExternalStore and tests consume it with no framework at all.
- */
 export class FormEngine {
   callbacks: FormEngineCallbacks
 
@@ -126,7 +118,6 @@ export class FormEngine {
     this.notify()
   }
 
-  /** A brick reported a value; mirrors the brickDataChange path. */
   setValues(partial: Record<string, unknown>): void {
     this.data = this.applyValueEffects({ ...this.data, ...partial })
     for (const key of Object.keys(partial)) this.touched[key] = true
@@ -143,7 +134,6 @@ export class FormEngine {
     this.notify()
   }
 
-  /** Touches every key so all errors become visible, then validates. */
   validate(): ValidationResult {
     if (!this.effectiveSpec()) return { valid: true, errors: {} }
     for (const { brick } of iterateBricks(this.effectiveSpec())) {
@@ -231,15 +221,8 @@ export class FormEngine {
   }
 
   private runValidation(): ValidationResult {
-    // A fast-refresh can hand the engine an undefined spec for one frame;
-    // the validator caches are WeakMaps keyed by the spec, so guard here
-    // like the web renderer guards its render.
     if (!this.effectiveSpec()) return { valid: true, errors: {} }
 
-    // validateFormData strips absent values itself and, unlike the web
-    // renderer's DOM-bound path, descends into collection rows — a grid
-    // with an invalid row fails the global verdict. Memoized because the
-    // change path and the snapshot rebuild both need it.
     this.validationCache ??= validateFormData(
       this.effectiveSpec(),
       this.data,

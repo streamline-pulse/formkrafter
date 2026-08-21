@@ -1,12 +1,3 @@
-/**
- * The signature brick, on a separate entry point on purpose: it needs
- * react-native-svg, a native module Metro resolves statically.
- * Applications that want it install the module and call
- * registerNativeSignatureBrick(); everyone else never resolves it.
- *
- * The stored value is a data URL, like the web brick — image/svg+xml here
- * where the canvas-based web brick produces image/png.
- */
 import { useRef, useState } from 'react'
 import { PanResponder, Pressable, Text, View } from 'react-native'
 import Svg, { Path, SvgXml } from 'react-native-svg'
@@ -27,8 +18,6 @@ const toDataUrl = (
   const body = paths
     .map((d) => `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`)
     .join('')
-  // The background is baked into the SVG so a dark-theme signature stays
-  // readable wherever the stored image is displayed later.
   const xml = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${HEIGHT}" viewBox="0 0 ${width} ${HEIGHT}"><rect width="100%" height="100%" fill="${background}"/>${body}</svg>`
   const encode = (globalThis as { btoa?: (raw: string) => string }).btoa
   if (!encode) throw new Error('No base64 encoder available')
@@ -63,8 +52,6 @@ function SignatureControl(props: NativeBrickProps) {
   })
   live.current.paths = paths
   live.current.width = width
-  // The responder is created once; the theme can change after — read the
-  // colors through the ref so a switched theme serializes correctly.
   live.current.ink = ink
   live.current.surface = theme.colorSurface
 
@@ -93,8 +80,6 @@ function SignatureControl(props: NativeBrickProps) {
     }),
   ).current
 
-  // A value that arrived from outside (initial data, another device) has no
-  // local stroke state — re-render it straight from the stored SVG.
   const external = paths.length === 0 && !current ? fromDataUrl(props.data) : undefined
 
   const clear = () => {

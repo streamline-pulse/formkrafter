@@ -1,12 +1,3 @@
-/**
- * The file brick, on a separate entry point on purpose: it needs
- * expo-document-picker, a native module Metro resolves statically.
- * Applications that want it install the picker and call
- * registerNativeFileBrick(); everyone else never resolves it.
- *
- * Uploads go through core's fileUploadService — the same injection point
- * as the web brick — and the stored value has the same UploadedFile shape.
- */
 import { useState } from 'react'
 import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'

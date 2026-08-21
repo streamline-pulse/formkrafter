@@ -10,12 +10,6 @@ import { Field } from './field.js'
 
 type Row = Record<string, unknown>
 
-/**
- * Rows render as cards — the collection's child bricks re-rendered against
- * row-scoped data through the same registry as everything else, so a custom
- * brick inside a grid needs nothing special. Row errors surface as the row
- * is touched, mirroring the web grid.
- */
 function DataGridControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const [touched, setTouched] = useState<Record<number, Record<string, boolean>>>({})
@@ -47,8 +41,6 @@ function DataGridControl(props: NativeBrickProps) {
       ),
     )
     const all = validateBrickSpecDataDetailed(rowSpec(), present, props.locale).errors
-    // After a global validate() every error is visible, touched or not —
-    // that is what the epoch in the engine snapshot signals.
     if (props.engine.getSnapshot().validationEpoch > 0) return all
     const rowTouched = touched[index] ?? {}
     return Object.fromEntries(
@@ -136,8 +128,6 @@ function DataGridControl(props: NativeBrickProps) {
                 <View key={child.configs?.uid ?? child.configs?.key}>
                   {renderBrick({
                     spec: child,
-                    // Rules resolve per row, the row's values shadowing the
-                    // form data — exactly how the web grid scopes them.
                     scope: { ...props.dataMap, ...row },
                     errors,
                     locale: props.locale,

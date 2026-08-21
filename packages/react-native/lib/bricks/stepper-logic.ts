@@ -4,7 +4,6 @@ import {
 } from '@streamline-pulse/formkrafter-core'
 import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
 
-/** Every data key reachable inside one step — what a failed advance touches. */
 export function stepKeys(step: BrickSpec): string[] {
   const keys: string[] = []
   for (const brick of iterateSchemaBricks(step)) {
@@ -22,7 +21,6 @@ const wrap = (step: BrickSpec, index: number): BrickSpec =>
     children: [step],
   }) as BrickSpec
 
-/** Ported from fk-stepper: validate one step against the present data only. */
 export function stepValid(
   step: BrickSpec,
   index: number,

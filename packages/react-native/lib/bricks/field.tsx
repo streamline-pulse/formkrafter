@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import { fkT } from '@streamline-pulse/formkrafter-core'
 import { useFkTheme } from '../theme.js'
 
-/** The native counterpart of the web build's .fk-field wrapper. */
 export function Field(props: {
   label?: unknown
   error?: string

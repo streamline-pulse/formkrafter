@@ -10,8 +10,6 @@ function Column(props: NativeBrickProps) {
 
 function Row(props: NativeBrickProps) {
   const theme = useFkTheme()
-  // Phone screens are too narrow for real columns; the row keeps its
-  // children side by side but lets them wrap.
   return (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing }}>
       {props.children}

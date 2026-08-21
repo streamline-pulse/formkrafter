@@ -149,6 +149,7 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'context',
   'editable',
   'readOnly',
+  'disabled',
   'showSubmit',
   'submitLabel',
   'selectedPath',

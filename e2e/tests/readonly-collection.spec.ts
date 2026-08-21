@@ -47,3 +47,25 @@ test.describe('readOnly inside collections', () => {
     expect(active).toBe(0)
   })
 })
+
+test.describe('disabled is an equivalent of readOnly', () => {
+  test('the disabled prop locks the whole tree the same way', async ({
+    page,
+  }) => {
+    await page.goto(`${FIXTURES}/readonly-collection.html`)
+    await expect(page.getByLabel('Name')).toBeVisible()
+
+    await page.evaluate(() => {
+      const el = document.getElementById('renderer') as HTMLElement & {
+        readOnly?: boolean
+        disabled?: boolean
+      }
+      el.readOnly = false
+      el.disabled = true
+    })
+
+    await expect(page.getByLabel('Name')).toBeDisabled()
+    await expect(page.getByLabel('Left operand')).toBeDisabled()
+    await expect(page.getByLabel('Deep')).toBeDisabled()
+  })
+})

@@ -24,12 +24,6 @@ import { Field } from './field.js'
 
 type Props = NativeBrickProps & { multiple?: boolean }
 
-/**
- * Same option sources as the web select: static, remote (HTTP, with
- * {token} interpolation from form data, header lines and search-as-you-type
- * through the configured search param), catalog via optionSourceService,
- * dataMap paths and sandboxed JS.
- */
 function useOptions(props: Props, query: string, open: boolean) {
   const source = (props.configs.optionsSource as string) ?? 'static'
   const labelKey =
@@ -117,8 +111,6 @@ function useOptions(props: Props, query: string, open: boolean) {
       options = normalizeOptions(props.configs.options, labelKey, valueKey)
   }
 
-  // Remote search filters server-side through the search param; everything
-  // else filters client-side.
   const filtered =
     query && !(source === 'remote' && searchParam)
       ? options.filter((option) =>

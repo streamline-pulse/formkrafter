@@ -4,7 +4,6 @@ import type { FormEngine } from './engine/form-engine.js'
 
 export interface NativeBrickProps {
   spec: BrickSpec
-  /** Configs with localized text already resolved for the current locale. */
   configs: Record<string, unknown>
   data: unknown
   dataMap: Record<string, unknown>
@@ -25,8 +24,6 @@ export interface NativeBrick {
 
 export const createNativeBrick = (brick: NativeBrick): NativeBrick => brick
 
-// Same global-singleton pattern as the wc registry: the store survives the
-// package being bundled more than once.
 const REGISTRY_KEY = Symbol.for('formkrafter.native.registry')
 const globalStore = globalThis as unknown as Record<
   symbol,

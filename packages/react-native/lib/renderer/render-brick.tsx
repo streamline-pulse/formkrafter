@@ -12,7 +12,6 @@ import type { FormEngine } from '../engine/form-engine.js'
 
 export interface RenderBrickOptions {
   spec: BrickSpec
-  /** The data the brick reads from: form data, or a grid row's scope. */
   scope: Record<string, unknown>
   context?: Record<string, unknown>
   errors: Record<string, string>
@@ -20,18 +19,10 @@ export interface RenderBrickOptions {
   engine: FormEngine
   disabled?: boolean
   children?: ReactNode
-  /** Where the brick's value goes — wrapped under its key already. */
   onValue: (patch: Record<string, unknown>) => void
-  /** Rendered instead of the brick when no native renderer is registered. */
   missingColor: string
 }
 
-/**
- * The single place a brick is looked up, given its rule-resolved props and
- * rendered. Both the form walker and the data grid go through it, so rules,
- * localized configs and the missing-brick placeholder cannot drift apart.
- * Returns null when a rule hides the brick.
- */
 export function renderBrick(options: RenderBrickOptions): ReactNode {
   const { spec, scope, context, errors, locale, engine } = options
   const dataMap = context ? { ...scope, ...context } : scope

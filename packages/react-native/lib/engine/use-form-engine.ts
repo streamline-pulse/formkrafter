@@ -9,8 +9,6 @@ export interface UseFormEngineResult extends FormEngineSnapshot {
 export function useFormEngine(options: FormEngineOptions): UseFormEngineResult {
   const [engine] = useState(() => new FormEngine(options))
 
-  // Callbacks are re-assigned every render so they never go stale; the
-  // engine reads them at call time.
   engine.callbacks = {
     onDataChange: options.onDataChange,
     onSubmit: options.onSubmit,

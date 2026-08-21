@@ -6,8 +6,6 @@ import type { NativeBrick, NativeBrickProps } from '../registry.js'
 import { useFkTheme } from '../theme.js'
 import { stepKeys, stepValid } from './stepper-logic.js'
 
-/** The tabs layout: underline navigation, one pane visible, optional
- *  validate-before-leaving gate — the same contract as the web fk-tabs. */
 function TabsControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const [active, setActive] = useState(0)

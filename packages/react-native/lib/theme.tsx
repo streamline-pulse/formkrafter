@@ -1,11 +1,6 @@
 import { createContext, useContext } from 'react'
 import type { ReactNode } from 'react'
 
-/**
- * The CSS custom properties of the web build, as a JS token table — React
- * Native has no CSS variables. Values mirror packages/wc/src/global/
- * formkrafter.css, including the WCAG-checked light primary.
- */
 export interface FkTheme {
   colorPrimary: string
   colorSurface: string

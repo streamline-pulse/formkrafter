@@ -22,11 +22,6 @@ function ContentControl(props: NativeBrickProps) {
   )
 }
 
-/**
- * The recap walks the root spec through core's collectRecapItems — the same
- * summarization as the web brick. Collections render as stacked cards
- * rather than tables: phone screens have no width for columns.
- */
 function RecapControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const items = collectRecapItems(
@@ -140,8 +135,6 @@ export const recapBrick: NativeBrick = createNativeBrick({
   render: (props) => <RecapControl {...props} />,
 })
 
-// The value flows through the engine's data whether or not anything renders;
-// a hidden field simply has nothing to show.
 export const hiddenBrick: NativeBrick = createNativeBrick({
   type: 'input',
   id: 'hidden',

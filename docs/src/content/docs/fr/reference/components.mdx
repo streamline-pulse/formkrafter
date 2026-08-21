@@ -51,6 +51,7 @@ Rend un spec sous forme de formulaire fonctionnel.
 | `data` | `Record<string, unknown>` | `{}` | Valeurs initiales, indexées par la `key` des bricks. |
 | `context` | `Record<string, unknown>` | — | Valeurs d'exécution pour les règles et l'interpolation d'URL. Jamais une valeur de champ, jamais émis. |
 | `readOnly` | `boolean` | `false` | Rend tous les contrôles désactivés et masque l'action intégrée. |
+| `disabled` | `boolean` | `false` | Même effet que `readOnly`. |
 | `showSubmit` | `boolean` | `false` | Affiche un bouton de soumission intégré. |
 | `submitLabel` | `string` | — | Remplace le libellé de ce bouton. |
 | `editable` | `boolean` | `false` | Rendu en mode builder (contours de sélection, zones de dépôt). Utilisé par le builder lui-même. |
@@ -84,6 +85,16 @@ il dit ce qu'est la valeur au lieu de reposer sur une convention de nommage.
 Une brick portant une validation `required` est marquée automatiquement : un
 astérisque après son libellé, un « (obligatoire) » réservé aux lecteurs
 d'écran, et `aria-required` sur le contrôle. Rien à configurer.
+</Aside>
+
+<Aside type="note">
+`readOnly` et `disabled` sont équivalents et rendent tous deux les contrôles
+avec l'attribut HTML `disabled` — et non `readonly`. La distinction que fait
+HTML entre les deux ne survit pas à un formulaire de contrôles mélangés :
+`readonly` n'a aucun sens sur un `<select>`, une case à cocher ou un bouton
+radio, si bien que l'honorer verrouillerait les champs texte d'une façon et tout
+le reste d'une autre. Un attribut, un comportement, partout. Les layouts et la
+navigation restent interactifs : un wizard en consultation reste navigable.
 </Aside>
 
 ### Événements

@@ -41,6 +41,7 @@ export class FkFormRender {
   @Prop() context?: Record<string, unknown>;
   @Prop() editable: boolean = false;
   @Prop() readOnly: boolean = false;
+  @Prop() disabled: boolean = false;
   @Prop() showSubmit: boolean = false;
   @Prop() submitLabel?: string;
   @Prop() selectedPath?: string;
@@ -339,11 +340,11 @@ export class FkFormRender {
           locale={this.locale}
           path="0"
           editable={this.editable}
-          readOnly={this.readOnly}
+          readOnly={this.readOnly || this.disabled}
           selectedPath={this.selectedPath}
           utils={this.utils}
         />
-        {this.showSubmit && !this.editable && !this.readOnly ? (
+        {this.showSubmit && !this.editable && !this.readOnly && !this.disabled ? (
           <button
             type="submit"
             class="fk-form__submit"

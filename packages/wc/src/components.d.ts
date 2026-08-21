@@ -117,6 +117,10 @@ export namespace Components {
         /**
           * @default false
          */
+        "disabled": boolean;
+        /**
+          * @default false
+         */
         "editable": boolean;
         "locale"?: string;
         /**
@@ -688,7 +692,7 @@ declare namespace LocalJSX {
         "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         /**
-          * If `true`, the user cannot interact with the element.
+          * @default false
          */
         "disabled"?: boolean;
         /**
@@ -845,6 +849,7 @@ declare namespace LocalJSX {
     interface FkFormRenderAttributes {
         "editable": boolean;
         "readOnly": boolean;
+        "disabled": boolean;
         "showSubmit": boolean;
         "submitLabel": string;
         "selectedPath": string;
