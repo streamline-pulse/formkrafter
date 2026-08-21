@@ -259,7 +259,7 @@ export class FkFormRender {
   @Method()
   async submit(): Promise<ValidationResult> {
     const result = await this.validate();
-    if (!result.valid) return result;
+    if (!result.valid || this.readOnly || this.disabled) return result;
 
     this.formSubmit.emit({
       data: this.publicData(),
@@ -340,7 +340,8 @@ export class FkFormRender {
           locale={this.locale}
           path="0"
           editable={this.editable}
-          readOnly={this.readOnly || this.disabled}
+          readOnly={this.readOnly}
+          disabled={this.disabled}
           selectedPath={this.selectedPath}
           utils={this.utils}
         />

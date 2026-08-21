@@ -62,6 +62,7 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'path',
   'editable',
   'readOnly',
+  'disabled',
   'selectedPath',
   'errors',
   'locale',

@@ -75,7 +75,7 @@ test.describe('renderer ergonomics', () => {
     await expect(page.locator('.fk-field__required').first()).toBeVisible()
   })
 
-  test('readOnly disables every control', async ({ page }) => {
+  test('readOnly locks every control', async ({ page }) => {
     await page.evaluate(() => {
       const el = document.getElementById('renderer') as HTMLElement & {
         readOnly?: boolean
@@ -83,8 +83,8 @@ test.describe('renderer ergonomics', () => {
       el.readOnly = true
     })
 
-    await expect(page.getByLabel('Full name')).toBeDisabled()
-    await expect(page.getByLabel('Nickname')).toBeDisabled()
+    await expect(page.getByLabel('Full name')).toHaveJSProperty('readOnly', true)
+    await expect(page.getByLabel('Nickname')).toHaveJSProperty('readOnly', true)
     await expect(page.getByRole('button', { name: 'Submit', exact: true })).toHaveCount(0)
   })
 })

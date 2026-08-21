@@ -445,3 +445,10 @@ select.fk-field__input {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Read-only is information, not unavailability: keep the field legible and
+   selectable, and only hint that it will not accept typing. */
+.fk-field__input[readonly] {
+  background: color-mix(in srgb, var(--fk-color-text) 3%, var(--fk-color-surface));
+  cursor: default;
+}

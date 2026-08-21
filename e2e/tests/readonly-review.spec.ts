@@ -11,7 +11,8 @@ test.describe('read-only review of a submission', () => {
   test('values are visible but frozen', async ({ page }) => {
     const name = page.getByLabel('Full name')
     await expect(name).toHaveValue('Ada Lovelace')
-    await expect(name).toBeDisabled()
+    await expect(name).toHaveJSProperty('readOnly', true)
+    await expect(name).toHaveAttribute('aria-readonly', 'true')
   })
 
   test('every step stays navigable despite the validation gate', async ({

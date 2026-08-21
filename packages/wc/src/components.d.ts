@@ -32,6 +32,10 @@ export namespace Components {
         /**
           * @default false
          */
+        "disabled": boolean;
+        /**
+          * @default false
+         */
         "editable": boolean;
         /**
           * @default {}
@@ -598,6 +602,10 @@ declare namespace LocalJSX {
         /**
           * @default false
          */
+        "disabled"?: boolean;
+        /**
+          * @default false
+         */
         "editable"?: boolean;
         /**
           * @default {}
@@ -821,6 +829,7 @@ declare namespace LocalJSX {
         "path": string;
         "editable": boolean;
         "readOnly": boolean;
+        "disabled": boolean;
         "selectedPath": string;
         "locale": string;
     }

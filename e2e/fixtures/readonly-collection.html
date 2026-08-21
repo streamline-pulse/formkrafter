@@ -26,6 +26,18 @@
             configs: { key: 'name', label: 'Name' },
           },
           {
+            id: 'textarea', name: 'Textarea', type: 'input', dataType: 'string',
+            configs: { key: 'body', label: 'Body' },
+          },
+          {
+            id: 'select', name: 'Select', type: 'input', dataType: 'string',
+            configs: { key: 'kind', label: 'Kind', optionsSource: 'static', options: 'A\nB' },
+          },
+          {
+            id: 'checkbox', name: 'Checkbox', type: 'input', dataType: 'boolean',
+            configs: { key: 'flag', label: 'Flag' },
+          },
+          {
             id: 'group', name: 'Group', type: 'panel',
             configs: { key: 'settings' },
             children: [
@@ -56,6 +68,8 @@
 
       renderer.data = {
         name: 'Tri (RH)',
+        body: 'Vos congés ont été refusés',
+        flag: true,
         conditions: [
           { leftOperand: '{{S6$demandeAcceptable}}', nested: [{ deep: 'buried' }] },
         ],

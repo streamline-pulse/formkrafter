@@ -175,6 +175,7 @@ export class FkDataGrid {
                   errors={this.visibleRowErrors(index)}
                   locale={this.locale}
                   readOnly={this.readOnly}
+                  disabled={this.disabled && !this.readOnly}
                   path={`grid.${index}.${childIndex}`}
                   utils={this.utils}
                 />

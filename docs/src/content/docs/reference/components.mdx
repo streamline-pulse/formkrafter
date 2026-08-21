@@ -49,7 +49,7 @@ Renders a spec as a working form.
 | `data` | `Record<string, unknown>` | `{}` | Initial values, keyed by brick `key`. |
 | `context` | `Record<string, unknown>` | — | Runtime values for rules and URL interpolation. Never a field value, never emitted. |
 | `readOnly` | `boolean` | `false` | Render every control disabled and hide the built-in action. |
-| `disabled` | `boolean` | `false` | Same effect as `readOnly`. |
+| `disabled` | `boolean` | `false` | Renders every control unavailable — the `disabled` attribute throughout. |
 | `showSubmit` | `boolean` | `false` | Render a built-in submit button. |
 | `submitLabel` | `string` | — | Overrides that button's label. |
 | `editable` | `boolean` | `false` | Render in builder mode (selection outlines, drop zones). Used by the builder itself. |
@@ -85,13 +85,14 @@ control. Nothing to configure.
 </Aside>
 
 <Aside type="note">
-`readOnly` and `disabled` are equivalent and both render every control with the
-HTML `disabled` attribute — not `readonly`. The distinction HTML draws between
-the two does not survive a form of mixed controls: `readonly` has no meaning on
-a `<select>`, a checkbox or a radio, so honouring it would lock text fields one
-way and everything else another. One attribute, one behaviour, everywhere.
-Layout and navigation stay interactive: a wizard in review mode is still
-navigable.
+`readOnly` means *this value cannot be changed*, `disabled` means *this control
+is unavailable* — and they render differently. `readOnly` puts the HTML
+`readonly` attribute on text inputs and textareas, so the value stays
+selectable, copyable and reachable by keyboard, which is what a review panel
+needs. Controls HTML has no `readonly` for — select, checkbox, radio, file —
+fall back to `disabled` and carry `aria-readonly` so assistive technology hears
+the distinction. Collection actions (add, remove, reorder) stay `disabled`
+either way: they are actions, not values. Submission is neutralised under both.
 </Aside>
 
 ### Events

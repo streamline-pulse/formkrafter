@@ -29,6 +29,7 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   path: string;
   error?: string;
   disabled?: boolean;
+  readOnly?: boolean;
   locale?: string;
   children?: unknown;
   brickSpec?: BrickSpec;

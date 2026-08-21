@@ -54,6 +54,21 @@ const fieldError = (props: WcBrickProps): VNode | null =>
     </span>
   ) : null;
 
+const lock = (
+  props: WcBrickProps,
+  readonlyCapable: boolean
+): Record<string, unknown> => {
+  if (props.editable) return { disabled: true };
+
+  if (props.readOnly) {
+    return readonlyCapable
+      ? { readOnly: true, 'aria-readonly': 'true' }
+      : { disabled: true, 'aria-readonly': 'true' };
+  }
+
+  return { disabled: props.disabled === true };
+};
+
 const invalidAttr = (
   props: WcBrickProps
 ): { 'aria-invalid'?: string; 'aria-required'?: string } => ({
@@ -104,7 +119,7 @@ const createTextVariant = (params: {
           type={params.inputType}
           value={(props.data as string) ?? ''}
           placeholder={props.configs?.placeholder as string}
-          disabled={props.editable || props.disabled}
+          {...lock(props, true)}
           onInput={(event) => {
             const input = event.target as HTMLInputElement;
             const mask = props.configs?.mask as string | undefined;
@@ -161,7 +176,7 @@ export const textareaBrick = createBrick({
         class="fk-field__input fk-field__input--textarea"
         value={(props.data as string) ?? ''}
         placeholder={props.configs?.placeholder as string}
-        disabled={props.editable || props.disabled}
+        {...lock(props, true)}
         onInput={(event) =>
           props.onDataChange?.((event.target as HTMLTextAreaElement).value)
         }
@@ -188,7 +203,7 @@ export const numberBrick = createBrick({
         type="number"
         value={props.data == null ? '' : String(props.data)}
         placeholder={props.configs?.placeholder as string}
-        disabled={props.editable || props.disabled}
+        {...lock(props, true)}
         onInput={(event) => {
           const raw = (event.target as HTMLInputElement).value;
           props.onDataChange?.(raw === '' ? undefined : Number(raw));
@@ -214,7 +229,7 @@ export const dateBrick = createBrick({
         class="fk-field__input"
         type="date"
         value={(props.data as string) ?? ''}
-        disabled={props.editable || props.disabled}
+        {...lock(props, true)}
         onInput={(event) => {
           const raw = (event.target as HTMLInputElement).value;
           props.onDataChange?.(raw === '' ? undefined : raw);
@@ -242,7 +257,7 @@ export const selectBrick = createBrick({
         configs={props.configs}
         accessibleLabel={labelOf(props, 'Select')}
         value={(props.data as string) ?? ''}
-        disabled={props.editable || props.disabled}
+        {...lock(props, false)}
         invalid={!!props.error}
         dataMap={props.dataMap}
         onSelectValueChange={(
@@ -275,7 +290,7 @@ export const multiSelectBrick = createBrick({
         accessibleLabel={labelOf(props, 'Multi select')}
         value={Array.isArray(props.data) ? (props.data as string[]) : []}
         multiple={true}
-        disabled={props.editable || props.disabled}
+        {...lock(props, false)}
         invalid={!!props.error}
         dataMap={props.dataMap}
         onSelectValueChange={(
@@ -327,7 +342,7 @@ export const selectBoxesBrick = createBrick({
               <input
                 type="checkbox"
                 checked={selected.includes(option.value)}
-                disabled={props.editable || props.disabled}
+                {...lock(props, false)}
                 onChange={(event) => {
                   const checked = (event.target as HTMLInputElement).checked;
                   const next = checked
@@ -366,7 +381,7 @@ export const tagsBrick = createBrick({
             <button
               type="button"
               class="fk-tags__remove"
-              disabled={props.editable || props.disabled}
+              {...lock(props, false)}
               onClick={() => {
                 const next = tags.filter((value) => value !== tag);
                 props.onDataChange?.(next.length ? next : undefined);
@@ -380,7 +395,7 @@ export const tagsBrick = createBrick({
           class="fk-tags__input"
           type="text"
           placeholder="Add a tag…"
-          disabled={props.editable || props.disabled}
+          {...lock(props, true)}
           onKeyDown={(event) => {
             if (event.key !== 'Enter') return;
             event.preventDefault();
@@ -411,7 +426,7 @@ export const signatureBrick = createBrick({
       'Signature',
       <fk-signature-input
         value={(props.data as string) ?? undefined}
-        disabled={props.editable || props.disabled}
+        {...lock(props, false)}
         onSignatureChange={(event: CustomEvent<string | undefined>) => {
           event.stopPropagation();
           props.onDataChange?.(event.detail);
@@ -467,7 +482,7 @@ export const radioBrick = createBrick({
               type="radio"
               name={props.configs?.key ?? props.path}
               checked={props.data === option.value}
-              disabled={props.editable || props.disabled}
+              {...lock(props, false)}
               onChange={() => props.onDataChange?.(option.value)}
             />
             <span>{option.label}</span>
@@ -510,7 +525,7 @@ export const addressBrick = createBrick({
               class="fk-field__input"
               type="text"
               value={(value[part.key] as string) ?? ''}
-              disabled={props.editable || props.disabled}
+              {...lock(props, true)}
               onInput={(event) => {
                 const raw = (event.target as HTMLInputElement).value;
                 const next = { ...value, [part.key]: raw || undefined };
@@ -545,7 +560,7 @@ export const fileBrick = createBrick({
         accept={props.configs?.accept as string}
         uploadUrl={props.configs?.uploadUrl as string}
         multiple={props.configs?.multiple === true}
-        disabled={props.editable || props.disabled}
+        {...lock(props, false)}
         onFileValueChange={(event: CustomEvent<unknown>) => {
           event.stopPropagation();
           props.onDataChange?.(event.detail);
@@ -578,8 +593,8 @@ export const dataGridBrick = createBrick({
         <fk-data-grid
           spec={props.brickSpec}
           value={props.data}
-          disabled={props.disabled}
-          readOnly={props.disabled === true}
+          disabled={props.disabled === true || props.readOnly === true}
+          readOnly={props.readOnly === true}
           locale={props.locale}
           utils={props.utils}
           onGridValueChange={(
@@ -674,7 +689,7 @@ export const checkboxBrick = createBrick({
         class="fk-field__checkbox"
         type="checkbox"
         checked={props.data === true}
-        disabled={props.editable || props.disabled}
+        {...lock(props, false)}
         onChange={(event) =>
           props.onDataChange?.((event.target as HTMLInputElement).checked)
         }
