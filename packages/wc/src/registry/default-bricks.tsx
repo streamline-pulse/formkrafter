@@ -579,6 +579,7 @@ export const dataGridBrick = createBrick({
           spec={props.brickSpec}
           value={props.data}
           disabled={props.disabled}
+          readOnly={props.disabled === true}
           locale={props.locale}
           utils={props.utils}
           onGridValueChange={(

@@ -98,6 +98,7 @@ export const FkDataGrid: StencilVueComponent<JSX.FkDataGrid> = /*@__PURE__*/ def
   'spec',
   'value',
   'disabled',
+  'readOnly',
   'locale',
   'utils',
   'gridValueChange'

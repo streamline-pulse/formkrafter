@@ -70,6 +70,10 @@ export namespace Components {
          */
         "disabled": boolean;
         "locale"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
         "spec": BrickSpec;
         "utils": Utils;
         "validateRows": () => Promise<ValidationResult>;
@@ -637,6 +641,10 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "locale"?: string;
         "onGridValueChange"?: (event: FkDataGridCustomEvent<Array<Record<string, unknown>> | undefined>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
         "spec": BrickSpec;
         "utils": Utils;
         "value"?: unknown;
@@ -818,6 +826,7 @@ declare namespace LocalJSX {
     }
     interface FkDataGridAttributes {
         "disabled": boolean;
+        "readOnly": boolean;
         "locale": string;
     }
     interface FkDropAreaAttributes {

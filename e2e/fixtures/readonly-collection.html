@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — readOnly reaches inside collections</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 24px; font-family: ui-sans-serif, system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <fk-form-render id="renderer"></fk-form-render>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const renderer = document.getElementById('renderer')
+      renderer.readOnly = true
+
+      renderer.spec = {
+        id: 'column', name: 'Form', type: 'panel',
+        configs: { key: 'form' },
+        children: [
+          {
+            id: 'text', name: 'Text', type: 'input', dataType: 'string',
+            configs: { key: 'name', label: 'Name' },
+          },
+          {
+            id: 'group', name: 'Group', type: 'panel',
+            configs: { key: 'settings' },
+            children: [
+              {
+                id: 'data-grid', name: 'Data grid', type: 'collection', dataType: 'array',
+                configs: { key: 'conditions' },
+                children: [
+                  {
+                    id: 'text', name: 'Text', type: 'input', dataType: 'string',
+                    configs: { key: 'leftOperand', label: 'Left operand' },
+                  },
+                  {
+                    id: 'data-grid', name: 'Nested grid', type: 'collection', dataType: 'array',
+                    configs: { key: 'nested' },
+                    children: [
+                      {
+                        id: 'text', name: 'Text', type: 'input', dataType: 'string',
+                        configs: { key: 'deep', label: 'Deep' },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      }
+
+      renderer.data = {
+        name: 'Tri (RH)',
+        conditions: [
+          { leftOperand: '{{S6$demandeAcceptable}}', nested: [{ deep: 'buried' }] },
+        ],
+      }
+    </script>
+  </body>
+</html>

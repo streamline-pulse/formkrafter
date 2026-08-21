@@ -17,6 +17,7 @@ export class FkDataGrid {
   @Prop() spec!: BrickSpec;
   @Prop() value?: unknown;
   @Prop() disabled = false;
+  @Prop() readOnly = false;
   @Prop() locale?: string;
   @Prop() utils!: Utils;
 
@@ -173,6 +174,7 @@ export class FkDataGrid {
                   dataMap={row}
                   errors={this.visibleRowErrors(index)}
                   locale={this.locale}
+                  readOnly={this.readOnly}
                   path={`grid.${index}.${childIndex}`}
                   utils={this.utils}
                 />
