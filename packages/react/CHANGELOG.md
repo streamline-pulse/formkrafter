@@ -1,5 +1,30 @@
 # @streamline-pulse/formkrafter-react
 
+## 0.20.0
+
+### Minor Changes
+
+- 0031564: `readOnly` renders `readonly`, not `disabled`
+
+  A read-only form was rendered entirely with `disabled`, which is the wrong
+  statement: it says _unavailable_, greys the value out, drops it from the tab
+  order and — the blocking part — makes it impossible to select or copy. A review
+  panel exists precisely so someone can read and copy what was submitted.
+
+  `readOnly` now puts `readonly` on text inputs and textareas, with
+  `aria-readonly`. Controls HTML defines no `readonly` for — select, checkbox,
+  radio, file — keep `disabled` and gain `aria-readonly`. Collection actions stay
+  `disabled`: they are actions, not values. Submission is neutralised under
+  `readOnly`, which it was not before.
+
+  `disabled` is now a distinct prop meaning _unavailable_, rendering `disabled`
+  throughout, and is no longer a synonym for `readOnly`.
+
+### Patch Changes
+
+- Updated dependencies [0031564]
+  - @streamline-pulse/formkrafter-wc@0.20.0
+
 ## 0.19.0
 
 ### Minor Changes
