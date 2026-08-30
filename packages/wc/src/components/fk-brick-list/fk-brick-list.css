@@ -53,7 +53,7 @@
 }
 
 .fk-palette__count {
-  margin-left: auto;
+  margin-inline-start: auto;
   font-weight: 600;
   color: var(--fk-color-muted);
 }

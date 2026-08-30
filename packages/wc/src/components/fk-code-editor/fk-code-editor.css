@@ -16,7 +16,7 @@
 }
 
 :host .cm-gutters {
-  border-right: 1px solid var(--fk-color-border);
+  border-inline-end: 1px solid var(--fk-color-border);
   background: color-mix(in srgb, var(--fk-color-surface) 70%, transparent);
   color: var(--fk-color-muted);
 }

@@ -11,10 +11,10 @@ Status key: ✅ met, with evidence · 🟠 partial, with the gap named · ❌ no
 |---|---|
 | Accessibility (WCAG 2.1 AA) | ✅ |
 | Multilingual | ✅ |
-| Right-to-left | ❌ |
+| Right-to-left | ✅ |
 | Mobile-first, responsive | 🟠 |
 | Form patterns | ✅ |
-| Design system integration | 🟠 |
+| Design system integration | ✅ |
 | Usability testing | ❌ |
 
 ---
@@ -63,13 +63,26 @@ Locale keys are ordinary BCP 47 tags. Nothing in the library restricts the set.
 
 See [the i18n guide](https://formkrafter.com/guides/i18n/).
 
-## Right-to-left ❌
+## Right-to-left ✅
 
-**Not supported and not tested.** The stylesheets use physical properties in
-places (`margin-inline-start` is used for the required marker, but layout
-elsewhere is not systematically logical), and no RTL locale is exercised in the
-test suite. An Arabic or Hebrew deployment would need this work first; it is
-stated here rather than left for someone to discover.
+Every stylesheet uses **logical properties** — `margin-inline`, `inset-inline`,
+`border-inline-end`, `text-align: start|end`. No physical `left`/`right`
+property remains in the component styles, so setting `dir="rtl"` on the document
+mirrors the layout with no per-locale CSS.
+
+Verified by [`rtl.spec.ts`](../../e2e/tests/rtl.spec.ts) against an Arabic form
+covering text, textarea, select and a data grid:
+
+- the direction reaches every rendered control;
+- nothing overflows its container;
+- the required marker keeps its logical position;
+- **the layout mirrors** — each field sits the same distance from the *start*
+  edge in LTR and in RTL, which is the assertion that actually catches a
+  physical property. Verified falsifiable: adding a single `margin-left` fails
+  it, where the direction check alone did not.
+
+Not covered: RTL-specific typography and the bidirectional handling of mixed
+Arabic and Latin content, which are the host page's responsibility.
 
 ## Mobile-first, responsive 🟠
 
@@ -106,7 +119,7 @@ form *authoring* on a phone should treat this as unmet.
 | Review before submit | The recap brick summarises answers; read-only mode renders a submitted file with navigation intact |
 | Local formats | Dates, numbers and phone numbers are per-brick configuration, not hard-coded |
 
-## Design system integration 🟠
+## Design system integration ✅
 
 Theming is **CSS custom properties** — colours, spacing, radius, typography —
 overridable from the host page, with light and dark handled by the same tokens
@@ -114,10 +127,18 @@ overridable from the host page, with light and dark handled by the same tokens
 opt-in and small (1.6 KB gzipped): a host that wants to style everything itself
 can skip it and target the class names.
 
-**The gap: no worked example against a government design system.** Mapping the
-tokens onto GOV.UK Frontend or USWDS is the demonstration a GovStack evaluator
-would find most convincing, and it does not exist yet. Nothing in the
-architecture prevents it — that claim is untested until the example is built.
+**Worked example: GOV.UK Frontend.**
+[`e2e/fixtures/govuk-theme.html`](../../e2e/fixtures/govuk-theme.html) renders a
+licence application styled with the GOV.UK Design System palette, typography
+scale, square corners, 2px black borders, the yellow focus state and the green
+submit button. The entire mapping is custom properties plus class-name styling
+in the host page: **no brick is overridden and nothing is forked**, so a
+government design system adopts the renderer without changing the library.
+
+[`design-system.spec.ts`](../../e2e/tests/design-system.spec.ts) asserts that
+the tokens reach the controls, that the focus state is the design system's and
+not the default, that validation and submission still work under the theme, and
+that the accessibility affordances survive it.
 
 ## Usability testing ❌
 
