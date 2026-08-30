@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { appendFileSync, mkdirSync } from 'node:fs'
+import { dirname } from 'node:path'
+
+// A11Y_REPORT=<path> also records each scan, so the conformance dossier can be
+// regenerated from a real run instead of transcribed by hand.
+const REPORT = process.env.A11Y_REPORT
 
 /**
  * Automated accessibility gate. axe cannot prove a page accessible, but
@@ -24,6 +30,22 @@ const scan = async (page: Page) => {
     help: v.help,
     nodes: v.nodes.slice(0, 5).map((n) => n.target.join(' ')),
   }))
+  if (REPORT) {
+    mkdirSync(dirname(REPORT), { recursive: true })
+    appendFileSync(
+      REPORT,
+      `${JSON.stringify({
+        scan: test.info().titlePath.slice(1).join(' — '),
+        url: page.url(),
+        engine: `axe-core ${results.testEngine.version}`,
+        tags: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+        passes: results.passes.length,
+        incomplete: results.incomplete.length,
+        violations: summary,
+      })}\n`
+    )
+  }
+
   expect(summary, JSON.stringify(summary, null, 2)).toEqual([])
 }
 
