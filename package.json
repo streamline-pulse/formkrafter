@@ -46,7 +46,8 @@
     "version-packages": "changeset version && bun install && bun scripts/sync-lock-versions.mjs",
     "release": "bun run build && bun scripts/release.mjs",
     "check:lock-versions": "bun scripts/sync-lock-versions.mjs --check",
-    "a11y:report": "rm -f e2e/a11y-results.jsonl && A11Y_REPORT=a11y-results.jsonl bun run --filter formkrafter-e2e test tests/a11y.spec.ts && node scripts/a11y-report.mjs"
+    "a11y:report": "rm -f e2e/a11y-results.jsonl && A11Y_REPORT=a11y-results.jsonl bun run --filter formkrafter-e2e test tests/a11y.spec.ts && node scripts/a11y-report.mjs",
+    "licence:report": "node scripts/licence-report.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
