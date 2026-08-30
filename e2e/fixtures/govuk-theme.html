@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — themed as GOV.UK Frontend</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      /*
+        FormKrafter themed with GOV.UK Frontend's design tokens. Nothing is
+        forked and no brick is overridden: the whole mapping is the custom
+        properties below, taken from the GOV.UK Design System palette and
+        typography scale.
+      */
+      :root {
+        --govuk-blue: #1d70b8;
+        --govuk-black: #0b0c0c;
+        --govuk-mid-grey: #b1b4b6;
+        --govuk-dark-grey: #505a5f;
+        --govuk-red: #d4351c;
+        --govuk-white: #ffffff;
+
+        --fk-color-primary: var(--govuk-blue);
+        --fk-color-surface: var(--govuk-white);
+        --fk-color-border: var(--govuk-black);
+        --fk-color-text: var(--govuk-black);
+        --fk-color-muted: var(--govuk-dark-grey);
+        --fk-color-danger: var(--govuk-red);
+        --fk-radius: 0;
+        --fk-spacing: 10px;
+      }
+
+      body {
+        margin: 0;
+        padding: 40px 20px;
+        background: var(--govuk-white);
+        color: var(--govuk-black);
+        font-family: 'GDS Transport', arial, sans-serif;
+        font-size: 19px;
+        line-height: 1.31579;
+      }
+
+      .govuk-width-container { max-width: 640px; margin: 0 auto; }
+
+      h1 { font-size: 32px; font-weight: 700; margin: 0 0 30px; }
+
+      /* GOV.UK marks inputs with a 2px black border and a thick yellow focus
+         state — both reachable from the class names, with no brick changes. */
+      .fk-field__input {
+        border-width: 2px;
+        font-size: 19px;
+        padding: 5px;
+      }
+
+      .fk-field__input:focus {
+        outline: 3px solid #ffdd00;
+        outline-offset: 0;
+        box-shadow: inset 0 0 0 2px var(--govuk-black);
+        border-color: var(--govuk-black);
+      }
+
+      .fk-field__label { font-weight: 700; font-size: 19px; }
+
+      .fk-field__error {
+        font-weight: 700;
+        color: var(--govuk-red);
+      }
+
+      .fk-form__submit {
+        background: #00703c;
+        color: var(--govuk-white);
+        border-radius: 0;
+        box-shadow: 0 2px 0 #002d18;
+        font-size: 19px;
+        padding: 8px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="govuk-width-container">
+      <h1>Apply for a provisional licence</h1>
+      <fk-form-render id="renderer" show-submit></fk-form-render>
+    </div>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const renderer = document.getElementById('renderer')
+      renderer.showSubmit = true
+
+      renderer.spec = {
+        type: 'panel', id: 'column', name: 'Form',
+        configs: { key: 'application' },
+        children: [
+          {
+            type: 'input', dataType: 'string', id: 'text', name: 'Name',
+            configs: { key: 'fullName', label: 'Full name' },
+            validations: [{ validator: 'required' }],
+          },
+          {
+            type: 'input', dataType: 'string', id: 'email', name: 'Email',
+            configs: { key: 'email', label: 'Email address' },
+            validations: [{ validator: 'required' }, { validator: 'email' }],
+          },
+          {
+            type: 'input', dataType: 'string', id: 'select', name: 'Nation',
+            configs: {
+              key: 'nation', label: 'Where do you live?',
+              optionsSource: 'static',
+              options: 'England\nScotland\nWales\nNorthern Ireland',
+            },
+            validations: [{ validator: 'required' }],
+          },
+        ],
+      }
+    </script>
+  </body>
+</html>

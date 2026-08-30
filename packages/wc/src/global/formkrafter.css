@@ -292,7 +292,7 @@ select.fk-field__input {
 .fk-recap__value {
   color: var(--fk-color-text);
   margin: 0;
-  text-align: right;
+  text-align: end;
   overflow-wrap: anywhere;
 }
 
@@ -329,7 +329,7 @@ select.fk-field__input {
 }
 
 .fk-recap__table th {
-  text-align: left;
+  text-align: start;
   font-weight: 600;
   color: var(--fk-color-muted);
   padding: calc(var(--fk-spacing) * 0.75) var(--fk-spacing);

@@ -102,3 +102,40 @@ cd examples/tanstack-start && bun run dev   # :3000
 ```
 
 > After changing `packages/*`, run `bun run build` at the root **and restart** the example's dev server — Vite caches linked workspace modules.
+
+## Who uses it
+
+FormKrafter runs in production, independently and across the Streamline Pulse
+suite — see [ADOPTERS.md](ADOPTERS.md). It has no telemetry and no licence
+check, so that list is the only honest measure of adoption we can offer.
+
+## Governance
+
+FormKrafter is published by **Streamline Pulse**, which holds the copyright
+(MIT, see [LICENSE](LICENSE)) and controls the `@streamline-pulse` npm scope,
+the `streamline-pulse/formkrafter` repository and the `formkrafter.com` domain
+the documentation is served from.
+
+**Who decides.** The Streamline Pulse maintainers review and merge every change.
+There is no separate committer tier today: the maintainer team is the decision
+body, and it is listed on the repository's
+[contributors graph](https://github.com/streamline-pulse/formkrafter/graphs/contributors).
+
+**Where decisions happen.** In the open, on this repository — issues for defects
+and proposals, pull requests for the change itself. A change that alters public
+behaviour carries a [changeset](.changeset) explaining it, and that text becomes
+the published changelog entry. Nothing ships through a private channel.
+
+**How to take part.** [CONTRIBUTING.md](CONTRIBUTING.md) covers the setup, the
+checks a change must pass and how to propose one. Participation is governed by
+the [Code of Conduct](CODE_OF_CONDUCT.md); vulnerabilities follow
+[SECURITY.md](SECURITY.md).
+
+**Releases.** Automated with Changesets from `main`: one release pull request
+per batch, all five packages versioned together, published from CI
+([release.yml](.github/workflows/release.yml)). Every published version is
+reachable from npm and tagged in this repository.
+
+**Forking.** The MIT licence grants the right to fork, redistribute and run
+FormKrafter without asking, including for a public administration that needs to
+keep control of its own deployment.

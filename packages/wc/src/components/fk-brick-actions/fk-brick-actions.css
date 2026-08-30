@@ -23,8 +23,7 @@
   content: '';
   position: absolute;
   top: -2px;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   height: 3px;
   border-radius: 2px;
   background: var(--fk-color-primary);
@@ -33,7 +32,7 @@
 .fk-actions__toolbar {
   position: absolute;
   top: calc(var(--fk-spacing) / -2);
-  right: var(--fk-spacing);
+  inset-inline-end: var(--fk-spacing);
   z-index: 1;
   display: none;
   gap: 2px;
