@@ -103,6 +103,12 @@ cd examples/tanstack-start && bun run dev   # :3000
 
 > After changing `packages/*`, run `bun run build` at the root **and restart** the example's dev server — Vite caches linked workspace modules.
 
+## Who uses it
+
+FormKrafter runs in production, independently and across the Streamline Pulse
+suite — see [ADOPTERS.md](ADOPTERS.md). It has no telemetry and no licence
+check, so that list is the only honest measure of adoption we can offer.
+
 ## Governance
 
 FormKrafter is published by **Streamline Pulse**, which holds the copyright
