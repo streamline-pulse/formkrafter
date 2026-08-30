@@ -20,6 +20,7 @@
   font-size: 0.85rem;
   font-weight: 500;
   padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  min-height: 24px;
   border: none;
   border-bottom: 2px solid transparent;
   border-radius: 0;
