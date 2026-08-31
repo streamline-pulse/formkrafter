@@ -1,5 +1,12 @@
 # @streamline-pulse/formkrafter-react
 
+## 0.21.0
+
+### Patch Changes
+
+- Updated dependencies [4d041ad]
+  - @streamline-pulse/formkrafter-wc@0.21.0
+
 ## 0.20.0
 
 ### Minor Changes
