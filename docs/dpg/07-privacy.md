@@ -74,7 +74,7 @@ emitted payload.
 | Claim | Where |
 |---|---|
 | Two network call sites in the whole surface, both integrator-directed | Table above |
-| No storage API in the published packages | `grep -rE "localStorage\|sessionStorage\|indexedDB\|document.cookie" packages/*/lib packages/*/src` returns nothing |
+| No storage API in the published packages | `grep -rE "localStorage\|sessionStorage\|indexedDB\|document.cookie" packages/*/lib packages/*/src --exclude=index.html` returns nothing. The only match in the repository is [`packages/wc/src/index.html`](../../packages/wc/src/index.html), Stencil's dev-server harness page, which is not published: [`packages/wc/package.json`](../../packages/wc/package.json) ships `dist/` and `LICENSE` only. |
 | Outbound calls are injection points | [`packages/core/lib/services/`](../../packages/core/lib/services/) |
 | Context values never reach an emitted payload | [`e2e/tests/runtime-context.spec.ts`](../../e2e/tests/runtime-context.spec.ts) |
 | Server-side revalidation is documented as required | [validation guide](https://formkrafter.com/guides/validation/) |
