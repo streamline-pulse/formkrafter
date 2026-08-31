@@ -88,6 +88,14 @@ version, and which renderer (Web Components, React, Vue, React Native).
 For anything with a security impact, follow [SECURITY.md](SECURITY.md) instead
 of opening an issue.
 
+## Licensing of contributions
+
+Contributions are accepted under the project's own licence: by opening a pull
+request you agree that your contribution is licensed under the
+[MIT Licence](LICENSE), on the same terms as the rest of FormKrafter. There is
+no separate contributor licence agreement to sign, and you keep the copyright to
+what you wrote.
+
 ## Governance and conduct
 
 Decisions and the release process are described in the
