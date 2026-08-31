@@ -156,6 +156,6 @@ conditional field in the builder without documentation.
 
 FormKrafter enforces accessibility and small-screen behaviour on every commit
 rather than asserting them, and the artefacts are regenerable
-([`bun run a11y:report`](../../package.json)). Three gaps are real and named:
-right-to-left, builder ergonomics on a phone, and the absence of usability
-testing. None is hidden behind a green tick.
+([`bun run a11y:report`](../../package.json)). Two gaps are real and named:
+builder ergonomics on a phone, and the absence of usability testing. Neither is
+hidden behind a green tick.
