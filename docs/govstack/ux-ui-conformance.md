@@ -1,9 +1,14 @@
-# GovStack UX/UI Building Block — conformance note
+# Accessibility and UX audit
 
-The GovStack UX/UI Building Block is a set of **guidelines**, not an API with a
-compliance harness: there is nothing to certify against. This note therefore
-documents, section by section, what FormKrafter does, with a link to the code or
-the test that shows it — and states plainly where it falls short.
+This note documents, section by section, what FormKrafter does for
+accessibility, internationalisation, small screens, form patterns and design
+system integration — with a link to the code or the test that shows it — and
+states plainly where it falls short.
+
+The sections follow the areas commonly covered for user-facing public services.
+Nothing here is a claim of conformance to a GovStack building block: building
+blocks are software modules that expose APIs, and user interfaces are outside
+their scope. See [FormKrafter and GovStack](sandbox-positioning.md).
 
 Status key: ✅ met, with evidence · 🟠 partial, with the gap named · ❌ not done.
 

@@ -23,9 +23,10 @@ in this repository — never at an intention.
   first.
 - [Accessibility report](../govstack/accessibility-report.md) — generated from a
   real run of the automated gate.
-- [GovStack UX/UI conformance](../govstack/ux-ui-conformance.md) — including
-  three named gaps.
-- [GovStack sandbox positioning](../govstack/sandbox-positioning.md).
+- [Accessibility and UX audit](../govstack/ux-ui-conformance.md) — including
+  two named gaps.
+- [FormKrafter and GovStack](../govstack/sandbox-positioning.md) — why this
+  project claims no building block mapping.
 
 ## Regenerating the generated pages
 

@@ -65,8 +65,6 @@ FormKrafter is used in production today, listed in
   procedure, and Pulse Insight provides dynamic data collection with
   server-side revalidation.
 
-That suite is itself aligned with the GovStack Workflow Building Block. See
-[the sandbox positioning note](../govstack/sandbox-positioning.md).
 
 ## What this project does not claim
 
