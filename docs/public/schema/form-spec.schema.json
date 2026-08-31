@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formkrafter.com/schema/form-spec.schema.json",
+  "title": "FormKrafter form spec",
+  "description": "A form is a tree of bricks. The same document drives the builder, every renderer and server-side validation, and is portable JSON with no FormKrafter-specific encoding.",
+  "$ref": "#/$defs/brick",
+
+  "$defs": {
+    "brick": {
+      "type": "object",
+      "required": ["type", "id", "name"],
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/brickType",
+          "description": "What role the node plays in the tree."
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Which registered brick renders this node, for example \"text\", \"select\", \"data-grid\"."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human label for the node, shown in the builder."
+        },
+        "dataType": {
+          "$ref": "#/$defs/jsonSchemaType",
+          "description": "The JSON type the brick's value takes. Validation rules are only enforced when it is present."
+        },
+        "category": {
+          "type": "string",
+          "description": "Palette grouping in the builder."
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Whether the builder lets this node be edited. Defaults to true."
+        },
+        "unWrapData": {
+          "type": "boolean",
+          "description": "Whether the brick's value is spread into the parent record rather than nested under its key."
+        },
+        "isPrivate": {
+          "type": "boolean",
+          "description": "Hides the brick from the builder palette."
+        },
+        "validators": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/validator" },
+          "description": "Validators the brick offers in the builder. The rules actually enforced live in \"validations\"."
+        },
+        "validations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/validation" }
+        },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" }
+        },
+        "configs": {
+          "$ref": "#/$defs/configs"
+        },
+        "configsForm": {
+          "$ref": "#/$defs/brick",
+          "description": "A spec describing the brick's own configuration form, used by the builder."
+        },
+        "styles": {
+          "type": "object",
+          "description": "Style tokens applied to the brick, as CSS-like key/value pairs.",
+          "additionalProperties": true
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/brick" },
+          "description": "Child bricks. A collection's children describe one repeating row."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "brickType": {
+      "enum": ["panel", "input", "collection", "output", "action"]
+    },
+
+    "jsonSchemaPrimitiveType": {
+      "enum": ["string", "number", "integer", "boolean", "object", "array", "null", "void"]
+    },
+
+    "jsonSchemaType": {
+      "oneOf": [
+        { "$ref": "#/$defs/jsonSchemaPrimitiveType" },
+        { "type": "array", "items": { "$ref": "#/$defs/jsonSchemaPrimitiveType" } }
+      ]
+    },
+
+    "validator": {
+      "enum": [
+        "required",
+        "minLength",
+        "maxLength",
+        "min",
+        "max",
+        "pattern",
+        "minItems",
+        "maxItems",
+        "email",
+        "url",
+        "custom"
+      ]
+    },
+
+    "validation": {
+      "type": "object",
+      "required": ["validator"],
+      "properties": {
+        "validator": { "$ref": "#/$defs/validator" },
+        "message": {
+          "$ref": "#/$defs/localizedText",
+          "description": "Overrides the built-in message for this rule."
+        },
+        "value": {
+          "description": "The rule's argument: a number for min/max and lengths, a regular expression source for pattern. Absent for required, email and url."
+        },
+        "customValidator": {
+          "type": "string",
+          "description": "Sandboxed expression evaluated when validator is \"custom\"."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "rule": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "enum": ["jsonLogic", "javaScript"] },
+        "logic": {
+          "description": "A JsonLogic expression, evaluated against the form data merged with the host's runtime context."
+        },
+        "code": {
+          "type": "string",
+          "description": "Source evaluated in the AST sandbox when type is \"javaScript\"."
+        },
+        "effects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/effect" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "effect": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "property": {
+          "type": "object",
+          "required": ["target", "type"],
+          "properties": {
+            "target": {
+              "type": "string",
+              "description": "The property the rule drives, for example \"hidden\", \"disabled\", \"value\"."
+            },
+            "type": { "enum": ["logic", "code", "boolean", "string"] }
+          },
+          "additionalProperties": false
+        },
+        "logic": {},
+        "code": { "type": "string" },
+        "boolean": { "type": "boolean" },
+        "string": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "configs": {
+      "type": "object",
+      "description": "Brick configuration. Only key and uid are defined for every brick; each brick id adds its own, so unknown properties are allowed on purpose.",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "The field's name in the form data. A brick without a key holds no value."
+        },
+        "uid": {
+          "type": "string",
+          "description": "Identity of the node while the builder is editing it. Stored specs do not need it: the builder hydrates missing ones and strips them from everything it emits."
+        },
+        "label": { "$ref": "#/$defs/localizedText" },
+        "placeholder": { "$ref": "#/$defs/localizedText" },
+        "defaultValue": {
+          "description": "Seeded into the form data on load for keys the host did not supply."
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "localizedText": {
+      "description": "Either a plain string, or an object keyed by locale.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      ]
+    }
+  }
+}

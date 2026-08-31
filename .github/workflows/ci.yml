@@ -27,6 +27,8 @@ jobs:
 
       - name: Check the CDN pins match the released version
         run: bun run check:cdn-pins
+      - name: Check the published schema is served
+        run: bun run check:schema
 
       - name: Build packages
         run: bun run build
