@@ -68,6 +68,7 @@ test.describe('visual', () => {
   test('vue example', async ({ page }) => {
     await page.goto(VUE_APP)
     await expect(page.locator('fk-form-render input').first()).toBeVisible()
+    await expect(page.locator('fk-form-builder fk-brick-actions').first()).toBeVisible()
     await settled(page)
     await expect(page).toHaveScreenshot('vue-home.png', { fullPage: true })
   })
@@ -75,6 +76,7 @@ test.describe('visual', () => {
   test('plain html example', async ({ page }) => {
     await page.goto(HTML_APP)
     await expect(page.locator('fk-form-builder .fk-mold').first()).toBeVisible()
+    await expect(page.locator('fk-form-builder fk-brick-actions').first()).toBeVisible()
     await settled(page)
     await expect(page).toHaveScreenshot('html-home.png', { fullPage: true })
   })
