@@ -25,6 +25,9 @@ jobs:
       - name: Check the lockfile pins the workspace versions
         run: bun run check:lock-versions
 
+      - name: Check the CDN pins match the released version
+        run: bun run check:cdn-pins
+
       - name: Build packages
         run: bun run build
 
