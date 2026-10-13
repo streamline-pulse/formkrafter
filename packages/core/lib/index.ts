@@ -23,6 +23,9 @@ export { SelectOption, normalizeOptions } from "./utils/options";
 // Recap summarization, shared by every renderer
 export { RecapItem, collectRecapItems } from "./utils/recap";
 
+// Field introspection, for backends and assistants that read or fill a form
+export { FieldDescriptor, CollectFieldsOptions, collectFields } from "./utils/fields";
+
 // Spec diagnostics
 export { SpecIssue, SpecIssueCode, lintSpec } from "./utils/lint-spec";
 
