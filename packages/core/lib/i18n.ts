@@ -137,6 +137,9 @@ const en: FkTranslations = {
   'brick.column.name': 'Column',
   'brick.stepper.name': 'Stepper',
   'brick.tabs.name': 'Tabs',
+  'review.incorrect': 'Incorrect',
+  'review.comment': 'Comment for the person who corrects it',
+  'review.flagged': 'To correct',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -276,6 +279,9 @@ export const frFkTranslations: FkTranslations = {
   'brick.column.name': 'Colonne',
   'brick.stepper.name': 'Étapes',
   'brick.tabs.name': 'Onglets',
+  'review.incorrect': 'Incorrect',
+  'review.comment': 'Commentaire pour la personne qui corrige',
+  'review.flagged': 'À corriger',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');

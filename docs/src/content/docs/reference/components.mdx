@@ -48,13 +48,30 @@ Renders a spec as a working form.
 | `spec` | `BrickSpec` | — | **Required.** The form to render. |
 | `data` | `Record<string, unknown>` | `{}` | Initial values, keyed by brick `key`. |
 | `context` | `Record<string, unknown>` | — | Runtime values for rules and URL interpolation. Never a field value, never emitted. |
-| `readOnly` | `boolean` | `false` | Render every control disabled and hide the built-in action. |
+| `readOnly` | `boolean` | `false` | Values cannot be changed: `readonly` on text controls, `disabled` elsewhere; hides the built-in action. |
 | `disabled` | `boolean` | `false` | Renders every control unavailable — the `disabled` attribute throughout. |
 | `showSubmit` | `boolean` | `false` | Render a built-in submit button. |
 | `submitLabel` | `string` | — | Overrides that button's label. |
 | `editable` | `boolean` | `false` | Render in builder mode (selection outlines, drop zones). Used by the builder itself. |
 | `selectedPath` | `string` | — | Which brick shows as selected in editable mode, by path. |
 | `locale` | `string` | — | Locale used to resolve localized labels and validation messages. |
+| `annotations` | `FieldAnnotations` | — | Reviewer notes, keyed by brick `key`: `{ incorrect?, comment? }`. Shown under the matching fields. |
+| `editableKeys` | `string[]` | — | When set, only these keys stay editable; every other field renders read-only. |
+
+#### Guided correction
+
+A reviewer's verdict (see `<fk-form-review>` below) comes back as a map of
+annotations. Hand it to the renderer and lock everything that was not flagged:
+
+```tsx
+import { flaggedKeys } from '@streamline-pulse/formkrafter-core'
+
+<FkFormRender spec={spec} data={previous} annotations={reviews} editableKeys={flaggedKeys(reviews)} />
+```
+
+Flagged fields show a "To correct" badge and the comment under the control.
+`editableKeys` applies to inputs and collections; the rows of an editable
+collection stay fully editable.
 
 #### Runtime context
 
@@ -177,6 +194,35 @@ the results and emits `formDataChange`. It returns `{ valid, errors }`.
     ```
   </TabItem>
 </Tabs>
+
+## `<fk-form-review>` <Badge text="new" variant="tip" />
+
+Renders a filled form read-only and lets a reviewer flag each field as
+incorrect and comment it. It delegates rendering to `<fk-form-render>`, so
+nested forms, rules and localized labels behave the same.
+
+### Props
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `spec` | `BrickSpec` | — | **Required.** The form that was filled. |
+| `data` | `Record<string, unknown>` | `{}` | The values under review. |
+| `context` | `Record<string, unknown>` | — | Same as on the renderer. |
+| `reviews` | `FieldAnnotations` | `{}` | Annotations to start from, for instance a previous pass. |
+| `locale` | `string` | — | Locale for labels. |
+
+### Events
+
+| Event | Detail | Fires when |
+|---|---|---|
+| `reviewChange` | `{ reviews, flagged }` | A flag or a comment changes. `reviews` is the full map, `flagged` the keys marked incorrect. |
+
+```tsx
+<FkFormReview spec={spec} data={submitted} onReviewChange={(e) => setReviews(e.detail.reviews)} />
+```
+
+Fields inside a data grid are reviewed as one: the flag and comment apply to
+the whole collection. The native renderer does not implement review yet.
 
 ## `<fk-form-builder>` <Badge text="stable" variant="success" />
 

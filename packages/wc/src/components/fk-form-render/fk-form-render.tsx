@@ -19,6 +19,7 @@ import {
   validateBrickSpecDataDetailed,
 } from '@streamline-pulse/formkrafter-core';
 import type {
+  FieldAnnotations,
   BrickSpec,
   Utils,
   ValidationResult,
@@ -46,6 +47,12 @@ export class FkFormRender {
   @Prop() submitLabel?: string;
   @Prop() selectedPath?: string;
   @Prop() locale?: string;
+  /** Reviewer notes shown under the matching fields (by brick key). */
+  @Prop() annotations?: FieldAnnotations;
+  /** When set, only these keys stay editable; every other field renders read-only. */
+  @Prop() editableKeys?: string[];
+  /** Used by fk-form-review: render the flag and comment controls under each field. */
+  @Prop() reviewable: boolean = false;
 
   @Event() formDataChange!: EventEmitter<DataChangeDetail>;
   @Event() formSubmit!: EventEmitter<DataChangeDetail>;
@@ -337,6 +344,9 @@ export class FkFormRender {
           data={this.currentData}
           dataMap={this.dataMap()}
           errors={this.visibleErrors()}
+          annotations={this.annotations}
+          editableKeys={this.editableKeys}
+          reviewable={this.reviewable}
           locale={this.locale}
           path="0"
           editable={this.editable}

@@ -1,3 +1,4 @@
+import type { FieldAnnotation, FieldAnnotations } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickBaseConfigs,
   BrickMold,
@@ -44,6 +45,17 @@ export interface SpecChangeDetail {
   spec?: BrickSpec;
   patches: Operation[];
   inverse: Operation[];
+}
+
+export interface BrickReviewChangeDetail {
+  key: string;
+  annotation: FieldAnnotation;
+}
+
+export interface ReviewChangeDetail {
+  reviews: FieldAnnotations;
+  /** Keys flagged as incorrect, in spec order of first flagging. */
+  flagged: string[];
 }
 
 export interface ValidityChangeDetail {

@@ -76,21 +76,97 @@ const invalidAttr = (
   ...(isRequired(props) ? { 'aria-required': 'true' } : {}),
 });
 
+const isFlagged = (props: WcBrickProps): boolean =>
+  props.review ? props.review.value.incorrect === true : props.annotation?.incorrect === true;
+
+const fieldClass = (props: WcBrickProps, extra = ''): string =>
+  ['fk-field', extra, isFlagged(props) ? 'fk-field--flagged' : ''].filter(Boolean).join(' ');
+
+// Under a field: the reviewer's controls (review mode), or the note left for
+// whoever corrects the value (annotated render). Nothing when neither applies.
+const fieldNote = (props: WcBrickProps): VNode | null => {
+  const review = props.review;
+  if (review) {
+    const flagged = review.value.incorrect === true;
+    return (
+      <div class="fk-review">
+        <label class="fk-review__flag">
+          <input
+            type="checkbox"
+            class="fk-field__checkbox"
+            checked={flagged}
+            onChange={(event) =>
+              review.onChange({
+                ...review.value,
+                incorrect: (event.target as HTMLInputElement).checked,
+              })
+            }
+          />
+          <span>{fkT('review.incorrect')}</span>
+        </label>
+        {flagged ? (
+          <textarea
+            class="fk-field__input fk-review__comment"
+            rows={2}
+            placeholder={fkT('review.comment')}
+            aria-label={fkT('review.comment')}
+            value={review.value.comment ?? ''}
+            onInput={(event) =>
+              review.onChange({
+                ...review.value,
+                comment: (event.target as HTMLTextAreaElement).value,
+              })
+            }
+          />
+        ) : null}
+      </div>
+    );
+  }
+
+  const annotation = props.annotation;
+  if (!annotation || (annotation.incorrect !== true && !annotation.comment)) return null;
+  return (
+    <div class="fk-review fk-review--note" role="note">
+      {annotation.incorrect === true ? (
+        <span class="fk-review__badge">{fkT('review.flagged')}</span>
+      ) : null}
+      {annotation.comment ? <p class="fk-review__text">{annotation.comment}</p> : null}
+    </div>
+  );
+};
+
 const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
-  <div class="fk-field" style={asInlineStyle(props.styles)}>
+  <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
     {labelNode(props, fallback)}
     {control}
     {fieldError(props)}
+    {fieldNote(props)}
   </div>
 );
 
-const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
-  <label class="fk-field" style={asInlineStyle(props.styles)}>
-    {labelNode(props, fallback)}
-    {control}
-    {fieldError(props)}
-  </label>
-);
+// A <label> may wrap one control only: with a note, the label shrinks to the
+// control and the note sits beside it.
+const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => {
+  const note = fieldNote(props);
+  if (!note)
+    return (
+      <label class={fieldClass(props)} style={asInlineStyle(props.styles)}>
+        {labelNode(props, fallback)}
+        {control}
+        {fieldError(props)}
+      </label>
+    );
+  return (
+    <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
+      <label class="fk-field__main">
+        {labelNode(props, fallback)}
+        {control}
+      </label>
+      {fieldError(props)}
+      {note}
+    </div>
+  );
+};
 
 const createTextVariant = (params: {
   id: string;
@@ -334,7 +410,7 @@ export const selectBoxesBrick = createBrick({
     const selected = Array.isArray(props.data) ? (props.data as string[]) : [];
 
     return (
-      <div class="fk-field" style={asInlineStyle(props.styles)}>
+      <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
         <span class="fk-field__label">{labelOf(props, 'Select boxes')}</span>
         <div class="fk-radio-group">
           {staticOptions(props).map((option) => (
@@ -356,6 +432,7 @@ export const selectBoxesBrick = createBrick({
           ))}
         </div>
         {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+        {fieldNote(props)}
       </div>
     );
   },
@@ -473,7 +550,7 @@ export const radioBrick = createBrick({
   category: 'Inputs',
   defaultConfigs: { label: 'Radio', options: 'Option 1\nOption 2' },
   render: (props) => (
-    <div class="fk-field" style={asInlineStyle(props.styles)}>
+    <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
       <span class="fk-field__label">{labelOf(props, 'Radio')}</span>
       <div class="fk-radio-group" role="radiogroup" {...invalidAttr(props)}>
         {staticOptions(props).map((option) => (
@@ -490,6 +567,7 @@ export const radioBrick = createBrick({
         ))}
       </div>
       {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+      {fieldNote(props)}
     </div>
   ),
 });
@@ -664,7 +742,7 @@ export const stepperBrick = createBrick({
       <fk-stepper
         stepLabels={labels}
         editable={props.editable}
-        readOnly={props.disabled === true}
+        readOnly={props.readOnly === true || props.disabled === true}
         spec={props.brickSpec}
         dataMap={props.dataMap}
         locale={props.locale}
@@ -683,21 +761,46 @@ export const checkboxBrick = createBrick({
   name: 'Checkbox',
   category: 'Inputs',
   defaultConfigs: { label: 'Checkbox' },
-  render: (props) => (
-    <label class="fk-field fk-field--inline" style={asInlineStyle(props.styles)}>
-      <input
-        class="fk-field__checkbox"
-        type="checkbox"
-        checked={props.data === true}
-        {...lock(props, false)}
-        onChange={(event) =>
-          props.onDataChange?.((event.target as HTMLInputElement).checked)
-        }
-      />
-      <span class="fk-field__label">{labelOf(props, 'Checkbox')}</span>
-      {props.error ? <span class="fk-field__error">{props.error}</span> : null}
-    </label>
-  ),
+  render: (props) => {
+    const control = (
+      <label class="fk-field--inline fk-field__main">
+        <input
+          class="fk-field__checkbox"
+          type="checkbox"
+          checked={props.data === true}
+          {...lock(props, false)}
+          onChange={(event) =>
+            props.onDataChange?.((event.target as HTMLInputElement).checked)
+          }
+        />
+        <span class="fk-field__label">{labelOf(props, 'Checkbox')}</span>
+      </label>
+    );
+    const note = fieldNote(props);
+    if (!note)
+      return (
+        <label class={fieldClass(props, 'fk-field--inline')} style={asInlineStyle(props.styles)}>
+          <input
+            class="fk-field__checkbox"
+            type="checkbox"
+            checked={props.data === true}
+            {...lock(props, false)}
+            onChange={(event) =>
+              props.onDataChange?.((event.target as HTMLInputElement).checked)
+            }
+          />
+          <span class="fk-field__label">{labelOf(props, 'Checkbox')}</span>
+          {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+        </label>
+      );
+    return (
+      <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
+        {control}
+        {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+        {note}
+      </div>
+    );
+  },
 });
 
 export const groupBrick = createBrick({

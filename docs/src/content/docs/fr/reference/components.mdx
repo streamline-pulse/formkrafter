@@ -50,13 +50,31 @@ Rend un spec sous forme de formulaire fonctionnel.
 | `spec` | `BrickSpec` | — | **Obligatoire.** Le formulaire à afficher. |
 | `data` | `Record<string, unknown>` | `{}` | Valeurs initiales, indexées par la `key` des bricks. |
 | `context` | `Record<string, unknown>` | — | Valeurs d'exécution pour les règles et l'interpolation d'URL. Jamais une valeur de champ, jamais émis. |
-| `readOnly` | `boolean` | `false` | Rend tous les contrôles désactivés et masque l'action intégrée. |
+| `readOnly` | `boolean` | `false` | Les valeurs ne peuvent plus changer : `readonly` sur les contrôles texte, `disabled` ailleurs ; masque l'action intégrée. |
 | `disabled` | `boolean` | `false` | Rend tous les contrôles indisponibles — attribut `disabled` partout. |
 | `showSubmit` | `boolean` | `false` | Affiche un bouton de soumission intégré. |
 | `submitLabel` | `string` | — | Remplace le libellé de ce bouton. |
 | `editable` | `boolean` | `false` | Rendu en mode builder (contours de sélection, zones de dépôt). Utilisé par le builder lui-même. |
 | `selectedPath` | `string` | — | Quelle brick apparaît sélectionnée en mode editable, par chemin. |
 | `locale` | `string` | — | Locale utilisée pour résoudre les libellés et messages de validation localisés. |
+| `annotations` | `FieldAnnotations` | — | Notes du réviseur, indexées par la `key` des bricks : `{ incorrect?, comment? }`. Affichées sous les champs concernés. |
+| `editableKeys` | `string[]` | — | Si défini, seules ces clés restent modifiables ; tous les autres champs sont en lecture seule. |
+
+#### Correction guidée
+
+Le verdict d'un réviseur (voir `<fk-form-review>` plus bas) revient sous forme
+d'une carte d'annotations. Passez-la au rendu et verrouillez tout ce qui n'a
+pas été signalé :
+
+```tsx
+import { flaggedKeys } from '@streamline-pulse/formkrafter-core'
+
+<FkFormRender spec={spec} data={previous} annotations={reviews} editableKeys={flaggedKeys(reviews)} />
+```
+
+Les champs signalés affichent un badge « À corriger » et le commentaire sous le
+contrôle. `editableKeys` s'applique aux champs et aux collections ; les lignes
+d'une collection modifiable restent entièrement modifiables.
 
 #### Contexte d'exécution
 
@@ -184,6 +202,37 @@ ligne par ligne de chaque data grid, fusionne les résultats et émet
     ```
   </TabItem>
 </Tabs>
+
+## `<fk-form-review>` <Badge text="nouveau" variant="tip" />
+
+Affiche un formulaire rempli en lecture seule et laisse un réviseur signaler
+chaque champ comme incorrect et le commenter. Le rendu est délégué à
+`<fk-form-render>` : formulaires imbriqués, règles et libellés localisés se
+comportent de la même façon.
+
+### Props
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `spec` | `BrickSpec` | — | **Obligatoire.** Le formulaire qui a été rempli. |
+| `data` | `Record<string, unknown>` | `{}` | Les valeurs à relire. |
+| `context` | `Record<string, unknown>` | — | Comme sur le rendu. |
+| `reviews` | `FieldAnnotations` | `{}` | Annotations de départ, par exemple une relecture précédente. |
+| `locale` | `string` | — | Locale des libellés. |
+
+### Événements
+
+| Événement | Detail | Se déclenche quand |
+|---|---|---|
+| `reviewChange` | `{ reviews, flagged }` | Un signalement ou un commentaire change. `reviews` est la carte complète, `flagged` les clés marquées incorrectes. |
+
+```tsx
+<FkFormReview spec={spec} data={submitted} onReviewChange={(e) => setReviews(e.detail.reviews)} />
+```
+
+Les champs d'une grille sont relus en bloc : le signalement et le commentaire
+portent sur toute la collection. Le rendu natif n'implémente pas encore la
+revue.
 
 ## `<fk-form-builder>` <Badge text="stable" variant="success" />
 

@@ -5,10 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
-import { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
-export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
-export { BrickMold, BrickSpec, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
+import { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
+export { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export namespace Components {
     interface FkBrickActions {
         "path": string;
@@ -26,6 +26,7 @@ export namespace Components {
     interface FkBrickNotFound {
     }
     interface FkBrickRender {
+        "annotations"?: FieldAnnotations;
         "brickSpec": BrickSpec;
         "data"?: Record<string, unknown>;
         "dataMap"?: Record<string, unknown>;
@@ -37,6 +38,7 @@ export namespace Components {
           * @default false
          */
         "editable": boolean;
+        "editableKeys"?: string[];
         /**
           * @default {}
          */
@@ -50,6 +52,10 @@ export namespace Components {
           * @default false
          */
         "readOnly": boolean;
+        /**
+          * @default false
+         */
+        "reviewable": boolean;
         "rootSpec"?: BrickSpec;
         "selectedPath"?: string;
         "utils": Utils;
@@ -116,6 +122,10 @@ export namespace Components {
         "spec"?: BrickSpec;
     }
     interface FkFormRender {
+        /**
+          * Reviewer notes shown under the matching fields (by brick key).
+         */
+        "annotations"?: FieldAnnotations;
         "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         /**
@@ -126,11 +136,20 @@ export namespace Components {
           * @default false
          */
         "editable": boolean;
+        /**
+          * When set, only these keys stay editable; every other field renders read-only.
+         */
+        "editableKeys"?: string[];
         "locale"?: string;
         /**
           * @default false
          */
         "readOnly": boolean;
+        /**
+          * Used by fk-form-review: render the flag and comment controls under each field.
+          * @default false
+         */
+        "reviewable": boolean;
         "selectedPath"?: string;
         /**
           * @default false
@@ -140,6 +159,21 @@ export namespace Components {
         "submit": () => Promise<ValidationResult>;
         "submitLabel"?: string;
         "validate": () => Promise<ValidationResult>;
+    }
+    /**
+     * A filled form, read-only, where a reviewer flags fields as incorrect and
+     * comments them. Rendering is delegated to fk-form-render; this element only
+     * holds the review map and emits it.
+     */
+    interface FkFormReview {
+        "context"?: Record<string, unknown>;
+        "data"?: Record<string, unknown>;
+        "locale"?: string;
+        /**
+          * Existing annotations to start from (by brick key).
+         */
+        "reviews"?: FieldAnnotations;
+        "spec": BrickSpec;
     }
     interface FkPropertyPanel {
         "brick": BrickSpec;
@@ -251,6 +285,10 @@ export interface FkFormRenderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkFormRenderElement;
 }
+export interface FkFormReviewCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkFormReviewElement;
+}
 export interface FkPropertyPanelCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkPropertyPanelElement;
@@ -322,6 +360,7 @@ declare global {
         "brickRulesChange": BrickRulesChangeDetail;
         "brickRemove": BrickPathDetail;
         "brickDuplicate": BrickPathDetail;
+        "brickReviewChange": BrickReviewChangeDetail;
     }
     interface HTMLFkBrickRenderElement extends Components.FkBrickRender, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkBrickRenderElementEventMap>(type: K, listener: (this: HTMLFkBrickRenderElement, ev: FkBrickRenderCustomEvent<HTMLFkBrickRenderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -447,6 +486,28 @@ declare global {
         prototype: HTMLFkFormRenderElement;
         new (): HTMLFkFormRenderElement;
     };
+    interface HTMLFkFormReviewElementEventMap {
+        "reviewChange": ReviewChangeDetail;
+    }
+    /**
+     * A filled form, read-only, where a reviewer flags fields as incorrect and
+     * comments them. Rendering is delegated to fk-form-render; this element only
+     * holds the review map and emits it.
+     */
+    interface HTMLFkFormReviewElement extends Components.FkFormReview, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkFormReviewElementEventMap>(type: K, listener: (this: HTMLFkFormReviewElement, ev: FkFormReviewCustomEvent<HTMLFkFormReviewElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkFormReviewElementEventMap>(type: K, listener: (this: HTMLFkFormReviewElement, ev: FkFormReviewCustomEvent<HTMLFkFormReviewElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkFormReviewElement: {
+        prototype: HTMLFkFormReviewElement;
+        new (): HTMLFkFormReviewElement;
+    };
     interface HTMLFkPropertyPanelElementEventMap {
         "brickConfigsChange": BrickConfigsChangeDetail;
         "brickValidationsChange": BrickValidationsChangeDetail;
@@ -565,6 +626,7 @@ declare global {
         "fk-file-input": HTMLFkFileInputElement;
         "fk-form-builder": HTMLFkFormBuilderElement;
         "fk-form-render": HTMLFkFormRenderElement;
+        "fk-form-review": HTMLFkFormReviewElement;
         "fk-property-panel": HTMLFkPropertyPanelElement;
         "fk-rules-editor": HTMLFkRulesEditorElement;
         "fk-select-input": HTMLFkSelectInputElement;
@@ -596,6 +658,7 @@ declare namespace LocalJSX {
     interface FkBrickNotFound {
     }
     interface FkBrickRender {
+        "annotations"?: FieldAnnotations;
         "brickSpec": BrickSpec;
         "data"?: Record<string, unknown>;
         "dataMap"?: Record<string, unknown>;
@@ -607,6 +670,7 @@ declare namespace LocalJSX {
           * @default false
          */
         "editable"?: boolean;
+        "editableKeys"?: string[];
         /**
           * @default {}
          */
@@ -616,6 +680,7 @@ declare namespace LocalJSX {
         "onBrickDataChange"?: (event: FkBrickRenderCustomEvent<Record<string, unknown>>) => void;
         "onBrickDuplicate"?: (event: FkBrickRenderCustomEvent<BrickPathDetail>) => void;
         "onBrickRemove"?: (event: FkBrickRenderCustomEvent<BrickPathDetail>) => void;
+        "onBrickReviewChange"?: (event: FkBrickRenderCustomEvent<BrickReviewChangeDetail>) => void;
         "onBrickRulesChange"?: (event: FkBrickRenderCustomEvent<BrickRulesChangeDetail>) => void;
         "onBrickStylesChange"?: (event: FkBrickRenderCustomEvent<BrickStylesChangeDetail>) => void;
         "onBrickValidationsChange"?: (event: FkBrickRenderCustomEvent<BrickValidationsChangeDetail>) => void;
@@ -627,6 +692,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "readOnly"?: boolean;
+        /**
+          * @default false
+         */
+        "reviewable"?: boolean;
         "rootSpec"?: BrickSpec;
         "selectedPath"?: string;
         "utils": Utils;
@@ -697,6 +766,10 @@ declare namespace LocalJSX {
         "spec"?: BrickSpec;
     }
     interface FkFormRender {
+        /**
+          * Reviewer notes shown under the matching fields (by brick key).
+         */
+        "annotations"?: FieldAnnotations;
         "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         /**
@@ -707,6 +780,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "editable"?: boolean;
+        /**
+          * When set, only these keys stay editable; every other field renders read-only.
+         */
+        "editableKeys"?: string[];
         /**
           * The `id` of a `<form>` element to associate this element with.
          */
@@ -723,6 +800,11 @@ declare namespace LocalJSX {
           * @default false
          */
         "readOnly"?: boolean;
+        /**
+          * Used by fk-form-review: render the flag and comment controls under each field.
+          * @default false
+         */
+        "reviewable"?: boolean;
         "selectedPath"?: string;
         /**
           * @default false
@@ -730,6 +812,22 @@ declare namespace LocalJSX {
         "showSubmit"?: boolean;
         "spec": BrickSpec;
         "submitLabel"?: string;
+    }
+    /**
+     * A filled form, read-only, where a reviewer flags fields as incorrect and
+     * comments them. Rendering is delegated to fk-form-render; this element only
+     * holds the review map and emits it.
+     */
+    interface FkFormReview {
+        "context"?: Record<string, unknown>;
+        "data"?: Record<string, unknown>;
+        "locale"?: string;
+        "onReviewChange"?: (event: FkFormReviewCustomEvent<ReviewChangeDetail>) => void;
+        /**
+          * Existing annotations to start from (by brick key).
+         */
+        "reviews"?: FieldAnnotations;
+        "spec": BrickSpec;
     }
     interface FkPropertyPanel {
         "brick": BrickSpec;
@@ -831,6 +929,7 @@ declare namespace LocalJSX {
         "readOnly": boolean;
         "disabled": boolean;
         "selectedPath": string;
+        "reviewable": boolean;
         "locale": string;
     }
     interface FkCodeEditorAttributes {
@@ -862,6 +961,10 @@ declare namespace LocalJSX {
         "showSubmit": boolean;
         "submitLabel": string;
         "selectedPath": string;
+        "locale": string;
+        "reviewable": boolean;
+    }
+    interface FkFormReviewAttributes {
         "locale": string;
     }
     interface FkPropertyPanelAttributes {
@@ -906,6 +1009,7 @@ declare namespace LocalJSX {
         "fk-file-input": Omit<FkFileInput, keyof FkFileInputAttributes> & { [K in keyof FkFileInput & keyof FkFileInputAttributes]?: FkFileInput[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `attr:${K}`]?: FkFileInputAttributes[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `prop:${K}`]?: FkFileInput[K] };
         "fk-form-builder": Omit<FkFormBuilder, keyof FkFormBuilderAttributes> & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes]?: FkFormBuilder[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `attr:${K}`]?: FkFormBuilderAttributes[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `prop:${K}`]?: FkFormBuilder[K] };
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
+        "fk-form-review": Omit<FkFormReview, keyof FkFormReviewAttributes> & { [K in keyof FkFormReview & keyof FkFormReviewAttributes]?: FkFormReview[K] } & { [K in keyof FkFormReview & keyof FkFormReviewAttributes as `attr:${K}`]?: FkFormReviewAttributes[K] } & { [K in keyof FkFormReview & keyof FkFormReviewAttributes as `prop:${K}`]?: FkFormReview[K] };
         "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
         "fk-rules-editor": Omit<FkRulesEditor, keyof FkRulesEditorAttributes> & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes]?: FkRulesEditor[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `attr:${K}`]?: FkRulesEditorAttributes[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `prop:${K}`]?: FkRulesEditor[K] };
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
@@ -930,6 +1034,12 @@ declare module "@stencil/core" {
             "fk-file-input": LocalJSX.IntrinsicElements["fk-file-input"] & JSXBase.HTMLAttributes<HTMLFkFileInputElement>;
             "fk-form-builder": LocalJSX.IntrinsicElements["fk-form-builder"] & JSXBase.HTMLAttributes<HTMLFkFormBuilderElement>;
             "fk-form-render": LocalJSX.IntrinsicElements["fk-form-render"] & JSXBase.HTMLAttributes<HTMLFkFormRenderElement>;
+            /**
+             * A filled form, read-only, where a reviewer flags fields as incorrect and
+             * comments them. Rendering is delegated to fk-form-render; this element only
+             * holds the review map and emits it.
+             */
+            "fk-form-review": LocalJSX.IntrinsicElements["fk-form-review"] & JSXBase.HTMLAttributes<HTMLFkFormReviewElement>;
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
             "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;

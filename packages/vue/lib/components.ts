@@ -17,6 +17,7 @@ import { defineCustomElement as defineFkEmptyForm } from '@streamline-pulse/form
 import { defineCustomElement as defineFkFileInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-file-input.js';
 import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js';
 import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js';
+import { defineCustomElement as defineFkFormReview } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-review.js';
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
@@ -65,6 +66,9 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'disabled',
   'selectedPath',
   'errors',
+  'annotations',
+  'editableKeys',
+  'reviewable',
   'locale',
   'utils',
   'brickDataChange',
@@ -73,7 +77,8 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'brickValidationsChange',
   'brickRulesChange',
   'brickRemove',
-  'brickDuplicate'
+  'brickDuplicate',
+  'brickReviewChange'
 ], [
   'brickDataChange',
   'brickConfigsChange',
@@ -81,7 +86,8 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'brickValidationsChange',
   'brickRulesChange',
   'brickRemove',
-  'brickDuplicate'
+  'brickDuplicate',
+  'brickReviewChange'
 ]);
 
 
@@ -155,6 +161,9 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'submitLabel',
   'selectedPath',
   'locale',
+  'annotations',
+  'editableKeys',
+  'reviewable',
   'formDataChange',
   'formSubmit',
   'validityChange'
@@ -162,6 +171,18 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'formDataChange',
   'formSubmit',
   'validityChange'
+]);
+
+
+export const FkFormReview: StencilVueComponent<JSX.FkFormReview> = /*@__PURE__*/ defineContainer<JSX.FkFormReview>('fk-form-review', defineFkFormReview, [
+  'spec',
+  'data',
+  'context',
+  'locale',
+  'reviews',
+  'reviewChange'
+], [
+  'reviewChange'
 ]);
 
 

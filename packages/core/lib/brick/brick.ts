@@ -7,6 +7,7 @@ import type { BrickSpec } from "../utils/brick-spec";
 import type { BrickType } from "../utils/brick-type";
 import type { BrickBaseConfigs, CommonBrickProps } from "../utils/common-brick-props";
 import type { BrickMoldDropType } from "../utils/drop-type";
+import type { FieldAnnotation } from "../review";
 
 export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   extends CommonBrickProps<Configs, Styles> {
@@ -30,6 +31,10 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   error?: string;
   disabled?: boolean;
   readOnly?: boolean;
+  /** A reviewer's note on this field, shown under the control. */
+  annotation?: FieldAnnotation;
+  /** Present in review mode: the controls to flag the field and comment it. */
+  review?: { value: FieldAnnotation; onChange: (next: FieldAnnotation) => void };
   locale?: string;
   children?: unknown;
   brickSpec?: BrickSpec;

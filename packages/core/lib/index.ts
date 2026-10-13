@@ -26,6 +26,9 @@ export { RecapItem, collectRecapItems } from "./utils/recap";
 // Field introspection, for backends and assistants that read or fill a form
 export { FieldDescriptor, CollectFieldsOptions, collectFields } from "./utils/fields";
 
+// Field review: annotations a reviewer leaves on a filled form
+export { FieldAnnotation, FieldAnnotations, flaggedKeys } from "./review";
+
 // Spec diagnostics
 export { SpecIssue, SpecIssueCode, lintSpec } from "./utils/lint-spec";
 

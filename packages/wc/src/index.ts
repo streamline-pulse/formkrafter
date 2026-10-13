@@ -54,6 +54,8 @@ export type {
   BrickPathDetail,
   SpecChangeDetail,
   DataChangeDetail,
+  BrickReviewChangeDetail,
+  ReviewChangeDetail,
 } from './utils/events';
 export { setFkTranslations, fkT, fkTOr, frFkTranslations } from './i18n/i18n';
 export type { FkTranslations } from './i18n/i18n';

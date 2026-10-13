@@ -6,6 +6,8 @@ import {
 } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickSpec,
+  FieldAnnotation,
+  FieldAnnotations,
   Utils,
   Validation,
 } from '@streamline-pulse/formkrafter-core';
@@ -17,6 +19,7 @@ import type {
   BrickPathDetail,
   BrickRulesChangeDetail,
   BrickStylesChangeDetail,
+  BrickReviewChangeDetail,
   BrickValidationsChangeDetail,
 } from '../../utils/events';
 
@@ -35,6 +38,9 @@ export class FkBrickRender {
   @Prop() disabled: boolean = false;
   @Prop() selectedPath?: string;
   @Prop() errors: Record<string, string> = {};
+  @Prop() annotations?: FieldAnnotations;
+  @Prop() editableKeys?: string[];
+  @Prop() reviewable: boolean = false;
   @Prop() locale?: string;
   @Prop() utils!: Utils;
 
@@ -45,6 +51,7 @@ export class FkBrickRender {
   @Event() brickRulesChange!: EventEmitter<BrickRulesChangeDetail>;
   @Event() brickRemove!: EventEmitter<BrickPathDetail>;
   @Event() brickDuplicate!: EventEmitter<BrickPathDetail>;
+  @Event() brickReviewChange!: EventEmitter<BrickReviewChangeDetail>;
 
   render() {
     const spec = this.brickSpec;
@@ -69,6 +76,9 @@ export class FkBrickRender {
         data={this.data}
         dataMap={this.dataMap}
         errors={this.errors}
+        annotations={this.annotations}
+        editableKeys={this.editableKeys}
+        reviewable={this.reviewable}
         locale={this.locale}
         path={`${this.path}.${index}`}
         editable={this.editable}
@@ -78,6 +88,18 @@ export class FkBrickRender {
         utils={this.utils}
       />
     ));
+
+    // Only fields carry data, so only they are locked, annotated or reviewed.
+    const key = spec.configs?.key;
+    const isField = !!key && (spec.type === 'input' || spec.type === 'collection');
+    const lockedByKeys = isField && this.editableKeys !== undefined && !this.editableKeys.includes(key);
+    const annotation: FieldAnnotation | undefined = isField ? this.annotations?.[key] : undefined;
+    const review = isField && this.reviewable && !editing
+      ? {
+          value: annotation ?? {},
+          onChange: (next: FieldAnnotation) => this.brickReviewChange.emit({ key, annotation: next }),
+        }
+      : undefined;
 
     if (editing && isContainer) {
       childNodes.push(<fk-drop-area path={this.path} />);
@@ -94,7 +116,9 @@ export class FkBrickRender {
       rootSpec: this.rootSpec ?? this.brickSpec,
       error: spec.configs?.key ? this.errors[spec.configs.key] : undefined,
       disabled: editing ? false : this.disabled || affected.disabled === true,
-      readOnly: editing ? false : this.readOnly,
+      readOnly: editing ? false : this.readOnly || lockedByKeys,
+      annotation,
+      review,
       path: this.path,
       editable: editing,
       children: childNodes,

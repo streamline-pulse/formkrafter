@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
@@ -25,6 +25,7 @@ import { FkEmptyForm as FkEmptyFormElement, defineCustomElement as defineFkEmpty
 import { FkFileInput as FkFileInputElement, defineCustomElement as defineFkFileInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-file-input.js";
 import { FkFormBuilder as FkFormBuilderElement, defineCustomElement as defineFkFormBuilder } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js";
 import { FkFormRender as FkFormRenderElement, defineCustomElement as defineFkFormRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js";
+import { FkFormReview as FkFormReviewElement, defineCustomElement as defineFkFormReview } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-review.js";
 import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defineFkPropertyPanel } from "@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js";
 import { FkRulesEditor as FkRulesEditorElement, defineCustomElement as defineFkRulesEditor } from "@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js";
 import { FkSelectInput as FkSelectInputElement, defineCustomElement as defineFkSelectInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js";
@@ -93,7 +94,8 @@ export type FkBrickRenderEvents = {
     onBrickValidationsChange: EventName<FkBrickRenderCustomEvent<BrickValidationsChangeDetail>>,
     onBrickRulesChange: EventName<FkBrickRenderCustomEvent<BrickRulesChangeDetail>>,
     onBrickRemove: EventName<FkBrickRenderCustomEvent<BrickPathDetail>>,
-    onBrickDuplicate: EventName<FkBrickRenderCustomEvent<BrickPathDetail>>
+    onBrickDuplicate: EventName<FkBrickRenderCustomEvent<BrickPathDetail>>,
+    onBrickReviewChange: EventName<FkBrickRenderCustomEvent<BrickReviewChangeDetail>>
 };
 
 export const FkBrickRender: StencilReactComponent<FkBrickRenderElement, FkBrickRenderEvents, Components.FkBrickRender, 'brickSpec' | 'utils'> = /*@__PURE__*/ createComponent<FkBrickRenderElement, FkBrickRenderEvents, Components.FkBrickRender, 'brickSpec' | 'utils'>({
@@ -108,7 +110,8 @@ export const FkBrickRender: StencilReactComponent<FkBrickRenderElement, FkBrickR
         onBrickValidationsChange: 'brickValidationsChange',
         onBrickRulesChange: 'brickRulesChange',
         onBrickRemove: 'brickRemove',
-        onBrickDuplicate: 'brickDuplicate'
+        onBrickDuplicate: 'brickDuplicate',
+        onBrickReviewChange: 'brickReviewChange'
     } as FkBrickRenderEvents,
     defineCustomElement: defineFkBrickRender
 });
@@ -196,6 +199,17 @@ export const FkFormRender: StencilReactComponent<FkFormRenderElement, FkFormRend
         onValidityChange: 'validityChange'
     } as FkFormRenderEvents,
     defineCustomElement: defineFkFormRender
+});
+
+export type FkFormReviewEvents = { onReviewChange: EventName<FkFormReviewCustomEvent<ReviewChangeDetail>> };
+
+export const FkFormReview: StencilReactComponent<FkFormReviewElement, FkFormReviewEvents, Components.FkFormReview, 'spec'> = /*@__PURE__*/ createComponent<FkFormReviewElement, FkFormReviewEvents, Components.FkFormReview, 'spec'>({
+    tagName: 'fk-form-review',
+    elementClass: FkFormReviewElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onReviewChange: 'reviewChange' } as FkFormReviewEvents,
+    defineCustomElement: defineFkFormReview
 });
 
 export type FkPropertyPanelEvents = {
