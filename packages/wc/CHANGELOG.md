@@ -1,5 +1,32 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.22.0
+
+### Minor Changes
+
+- aa54f34: **`collectFields` lists what a form collects.** Backends and assistants that
+  read or fill submissions had to walk specs themselves and got the field key
+  wrong (`configs.name` instead of `configs.key`) or missed the options of a
+  select. `collectFields(spec, locale)` now returns every input and collection
+  with its key, resolved label, brick id, data type, static options,
+  requiredness and, for a collection, the columns of one row.
+- 13333b1: **Field review: `<fk-form-review>`, `annotations` and `editableKeys`.** A
+  reviewer could only look at a filled form; saying _which_ field was wrong, and
+  why, had to be rebuilt by every host. `<fk-form-review>` renders the data
+  read-only with an "Incorrect" flag and a comment box under every field and
+  emits `reviewChange` with the annotation map. `<fk-form-render>` takes the same
+  map as `annotations` to show the notes under the flagged fields, and
+  `editableKeys` to leave only those fields editable. `flaggedKeys()` in core
+  derives the second from the first. Web only for now: the native renderer
+  ignores both props. Also fixed: a `readOnly` form no longer shows the stepper's
+  submit button.
+
+### Patch Changes
+
+- Updated dependencies [aa54f34]
+- Updated dependencies [13333b1]
+  - @streamline-pulse/formkrafter-core@0.22.0
+
 ## 0.21.0
 
 ### Patch Changes
