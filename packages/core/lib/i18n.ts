@@ -156,6 +156,14 @@ const en: FkTranslations = {
   'panel.height': 'Height (px)',
   'panel.tileUrl': 'Tile URL',
   'panel.shape': 'Shape (polygon or line)',
+  'panel.searchUrl': 'Geocoding URL ({q} = query)',
+  'panel.countryCodes': 'Country codes (bj, tg)',
+  'address.search': 'Search an address',
+  'address.searching': 'Searching…',
+  'address.located': 'Address located',
+  'address.notLocated': 'Address not located: pick a match to place it',
+  'address.noResult': 'No matching address',
+  'address.unavailable': 'Address search unavailable',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -314,6 +322,14 @@ export const frFkTranslations: FkTranslations = {
   'panel.height': 'Hauteur (px)',
   'panel.tileUrl': 'URL des tuiles',
   'panel.shape': 'Forme (polygon ou line)',
+  'panel.searchUrl': 'URL de géocodage ({q} = recherche)',
+  'panel.countryCodes': 'Codes pays (bj, tg)',
+  'address.search': 'Rechercher une adresse',
+  'address.searching': 'Recherche…',
+  'address.located': 'Adresse localisée',
+  'address.notLocated': 'Adresse non localisée : choisissez une proposition pour la placer',
+  'address.noResult': 'Aucune adresse ne correspond',
+  'address.unavailable': 'Recherche d’adresse indisponible',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');

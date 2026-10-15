@@ -28,6 +28,7 @@ the same palette.
 | `code` | string | CodeMirror, loaded lazily |
 | `geo-point` | object | GeoJSON `Point`: click the map or type latitude / longitude; Leaflet loaded lazily, OpenStreetMap tiles by default |
 | `geo-area` | object | GeoJSON `Polygon` or `LineString` (`shape`): click to add vertices, drag to move, right-click to remove |
+| `geo-address` | object | address search while typing (Nominatim by default, `searchUrl` with `{q}`), stored as a GeoJSON `Feature` with the normalised address and its point, adjustable on a map |
 
 ### Data
 

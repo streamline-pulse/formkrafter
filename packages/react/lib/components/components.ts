@@ -11,8 +11,9 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type AddressFeature, type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkAddressSearchCustomEvent, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
+import { FkAddressSearch as FkAddressSearchElement, defineCustomElement as defineFkAddressSearch } from "@streamline-pulse/formkrafter-wc/dist/components/fk-address-search.js";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
 import { FkBrickMoldItem as FkBrickMoldItemElement, defineCustomElement as defineFkBrickMoldItem } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-mold-item.js";
@@ -34,6 +35,17 @@ import { FkSignatureInput as FkSignatureInputElement, defineCustomElement as def
 import { FkStepper as FkStepperElement, defineCustomElement as defineFkStepper } from "@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js";
 import { FkTabs as FkTabsElement, defineCustomElement as defineFkTabs } from "@streamline-pulse/formkrafter-wc/dist/components/fk-tabs.js";
 import { FkVariablePicker as FkVariablePickerElement, defineCustomElement as defineFkVariablePicker } from "@streamline-pulse/formkrafter-wc/dist/components/fk-variable-picker.js";
+
+export type FkAddressSearchEvents = { onAddressChange: EventName<FkAddressSearchCustomEvent<AddressFeature | undefined>> };
+
+export const FkAddressSearch: StencilReactComponent<FkAddressSearchElement, FkAddressSearchEvents, Components.FkAddressSearch> = /*@__PURE__*/ createComponent<FkAddressSearchElement, FkAddressSearchEvents, Components.FkAddressSearch>({
+    tagName: 'fk-address-search',
+    elementClass: FkAddressSearchElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onAddressChange: 'addressChange' } as FkAddressSearchEvents,
+    defineCustomElement: defineFkAddressSearch
+});
 
 export type FkBrickActionsEvents = {
     onBrickRemove: EventName<FkBrickActionsCustomEvent<BrickPathDetail>>,

@@ -5,6 +5,7 @@ import { defineContainer, type StencilVueComponent } from '@stencil/vue-output-t
 
 import type { JSX } from '@streamline-pulse/formkrafter-wc/dist/components';
 
+import { defineCustomElement as defineFkAddressSearch } from '@streamline-pulse/formkrafter-wc/dist/components/fk-address-search.js';
 import { defineCustomElement as defineFkBrickActions } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js';
 import { defineCustomElement as defineFkBrickList } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js';
 import { defineCustomElement as defineFkBrickMoldItem } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-mold-item.js';
@@ -27,6 +28,21 @@ import { defineCustomElement as defineFkStepper } from '@streamline-pulse/formkr
 import { defineCustomElement as defineFkTabs } from '@streamline-pulse/formkrafter-wc/dist/components/fk-tabs.js';
 import { defineCustomElement as defineFkVariablePicker } from '@streamline-pulse/formkrafter-wc/dist/components/fk-variable-picker.js';
 
+
+
+export const FkAddressSearch: StencilVueComponent<JSX.FkAddressSearch> = /*@__PURE__*/ defineContainer<JSX.FkAddressSearch>('fk-address-search', defineFkAddressSearch, [
+  'value',
+  'searchUrl',
+  'countryCodes',
+  'language',
+  'placeholder',
+  'disabled',
+  'readOnly',
+  'minChars',
+  'addressChange'
+], [
+  'addressChange'
+]);
 
 
 export const FkBrickActions: StencilVueComponent<JSX.FkBrickActions> = /*@__PURE__*/ defineContainer<JSX.FkBrickActions>('fk-brick-actions', defineFkBrickActions, [

@@ -28,6 +28,7 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 | `code` | string | CodeMirror, chargé en lazy |
 | `geo-point` | object | `Point` GeoJSON : clic sur la carte ou saisie latitude / longitude ; Leaflet chargé à la demande, tuiles OpenStreetMap par défaut |
 | `geo-area` | object | `Polygon` ou `LineString` GeoJSON (`shape`) : clic pour ajouter des sommets, glisser pour déplacer, clic droit pour retirer |
+| `geo-address` | object | recherche d’adresse pendant la frappe (Nominatim par défaut, `searchUrl` avec `{q}`), stockée en `Feature` GeoJSON avec l’adresse normalisée et son point, ajustable sur une carte |
 
 ### Data
 

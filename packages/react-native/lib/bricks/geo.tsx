@@ -98,3 +98,59 @@ export const geoAreaBrick: NativeBrick = createNativeBrick({
   id: 'geo-area',
   render: (props) => <GeoAreaControl {...props} />,
 })
+
+type AddressFeature = {
+  type: 'Feature'
+  geometry: { type: 'Point'; coordinates: [number, number] } | null
+  properties: { label: string; [key: string]: unknown }
+}
+
+// Pas de geocodage natif : l'adresse se saisit en texte, un point deja
+// obtenu sur le web est conserve tant que le libelle ne change pas.
+function GeoAddressControl(props: NativeBrickProps) {
+  const theme = useFkTheme()
+  const value = props.data as AddressFeature | undefined
+  const label = value?.properties?.label ?? ''
+  return (
+    <Field
+      label={props.configs.label}
+      error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}
+    >
+      <TextInput
+        value={label}
+        editable={!props.disabled}
+        placeholder={props.configs.placeholder ? String(props.configs.placeholder) : fkT('address.search')}
+        placeholderTextColor={theme.colorMuted}
+        onChangeText={(text) =>
+          props.onDataChange(
+            text.trim()
+              ? text === label
+                ? value
+                : { type: 'Feature', geometry: null, properties: { label: text } }
+              : undefined
+          )
+        }
+        style={{
+          borderWidth: 1,
+          borderColor: props.error ? theme.colorDanger : theme.colorBorder,
+          borderRadius: theme.radius,
+          paddingHorizontal: theme.spacing,
+          paddingVertical: theme.spacing * 0.75,
+          color: theme.colorText,
+        }}
+      />
+      {value?.geometry ? (
+        <Text style={{ fontSize: 12, color: theme.colorMuted }}>
+          {value.geometry.coordinates[1]}, {value.geometry.coordinates[0]}
+        </Text>
+      ) : null}
+    </Field>
+  )
+}
+
+export const geoAddressBrick: NativeBrick = createNativeBrick({
+  type: 'input',
+  id: 'geo-address',
+  render: (props) => <GeoAddressControl {...props} />,
+})

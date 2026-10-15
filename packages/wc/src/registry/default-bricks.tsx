@@ -612,6 +612,74 @@ export const geoAreaBrick = createBrick({
   render: (props) => fieldBlock(props, 'Area', geoMap(props, props.configs?.shape === 'line' ? 'line' : 'polygon')),
 });
 
+const NOMINATIM_SEARCH = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q={q}';
+
+type AddressValue = {
+  type: 'Feature';
+  geometry: { type: 'Point'; coordinates: [number, number] } | null;
+  properties: { label: string; [key: string]: unknown };
+};
+
+// Une adresse cherchee chez un geocodeur, stockee avec son point ; la carte
+// en dessous permet d'ajuster le point sans perdre l'adresse normalisee.
+export const geoAddressBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'geo-address',
+  name: 'Address search',
+  category: 'Geo',
+  defaultConfigs: {
+    label: 'Address',
+    searchUrl: NOMINATIM_SEARCH,
+    countryCodes: '',
+    showMap: true,
+    center: '',
+    zoom: 15,
+    height: 220,
+    tileUrl: OSM_TILES,
+  },
+  render: (props) => {
+    const value = (props.data ?? undefined) as AddressValue | undefined;
+    const showMap = props.configs?.showMap !== false;
+    return fieldBlock(
+      props,
+      'Address',
+      <div class="fk-geo-address">
+        <fk-address-search
+          value={value as never}
+          searchUrl={typeof props.configs?.searchUrl === 'string' && props.configs.searchUrl ? props.configs.searchUrl : NOMINATIM_SEARCH}
+          countryCodes={typeof props.configs?.countryCodes === 'string' && props.configs.countryCodes ? props.configs.countryCodes : undefined}
+          language={props.locale}
+          placeholder={props.configs?.placeholder as string | undefined}
+          readOnly={props.readOnly === true}
+          disabled={props.editable === true || props.disabled === true}
+          onAddressChange={(event: CustomEvent<unknown>) => {
+            event.stopPropagation();
+            props.onDataChange?.(event.detail as AddressValue | undefined);
+          }}
+        ></fk-address-search>
+        {showMap && value?.geometry ? (
+          <fk-geo-map
+            mode="point"
+            value={value.geometry as never}
+            manual={false}
+            zoom={geoNumber(props.configs?.zoom, 15)}
+            height={geoNumber(props.configs?.height, 220)}
+            tileUrl={typeof props.configs?.tileUrl === 'string' && props.configs.tileUrl ? props.configs.tileUrl : OSM_TILES}
+            readOnly={props.readOnly === true}
+            disabled={props.editable === true || props.disabled === true}
+            onGeoChange={(event: CustomEvent<unknown>) => {
+              event.stopPropagation();
+              // Le point se deplace, l'adresse normalisee reste.
+              props.onDataChange?.({ ...value, geometry: (event.detail ?? null) as AddressValue['geometry'] });
+            }}
+          ></fk-geo-map>
+        ) : null}
+      </div>
+    );
+  },
+});
+
 export const tabsBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1157,6 +1225,7 @@ const defaults = [
     signatureBrick,
     geoPointBrick,
     geoAreaBrick,
+    geoAddressBrick,
     addressBrick,
     codeBrick,
     fileBrick,

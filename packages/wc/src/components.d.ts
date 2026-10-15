@@ -5,15 +5,49 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { AddressFeature } from "./components/fk-address-search/fk-address-search";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 import { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 import { GeoGeometry, GeoMode } from "./components/fk-geo-map/fk-geo-map";
 import { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
+export { AddressFeature } from "./components/fk-address-search/fk-address-search";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 export { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export { GeoGeometry, GeoMode } from "./components/fk-geo-map/fk-geo-map";
 export { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export namespace Components {
+    /**
+     * An address search box: what is typed is looked up after a pause, the
+     * matches are listed, a pick stores the normalised address with its point.
+     * Text that is never picked stays as a label without geometry, so an address
+     * the provider does not know is still accepted.
+     */
+    interface FkAddressSearch {
+        /**
+          * Comma-separated ISO codes to restrict the search (Nominatim `countrycodes`).
+         */
+        "countryCodes"?: string;
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        "language"?: string;
+        /**
+          * @default 3
+         */
+        "minChars": number;
+        "placeholder"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
+        /**
+          * Search URL with `{q}` for the query; Nominatim jsonv2 by default.
+          * @default 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q={q}'
+         */
+        "searchUrl": string;
+        "value"?: AddressFeature;
+    }
     interface FkBrickActions {
         "path": string;
         /**
@@ -334,6 +368,10 @@ export namespace Components {
         "variables": FkVariable[];
     }
 }
+export interface FkAddressSearchCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkAddressSearchElement;
+}
 export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkBrickActionsElement;
@@ -403,6 +441,29 @@ export interface FkVariablePickerCustomEvent<T> extends CustomEvent<T> {
     target: HTMLFkVariablePickerElement;
 }
 declare global {
+    interface HTMLFkAddressSearchElementEventMap {
+        "addressChange": AddressFeature | undefined;
+    }
+    /**
+     * An address search box: what is typed is looked up after a pause, the
+     * matches are listed, a pick stores the normalised address with its point.
+     * Text that is never picked stays as a label without geometry, so an address
+     * the provider does not know is still accepted.
+     */
+    interface HTMLFkAddressSearchElement extends Components.FkAddressSearch, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkAddressSearchElementEventMap>(type: K, listener: (this: HTMLFkAddressSearchElement, ev: FkAddressSearchCustomEvent<HTMLFkAddressSearchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkAddressSearchElementEventMap>(type: K, listener: (this: HTMLFkAddressSearchElement, ev: FkAddressSearchCustomEvent<HTMLFkAddressSearchElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkAddressSearchElement: {
+        prototype: HTMLFkAddressSearchElement;
+        new (): HTMLFkAddressSearchElement;
+    };
     interface HTMLFkBrickActionsElementEventMap {
         "brickRemove": BrickPathDetail;
         "brickDuplicate": BrickPathDetail;
@@ -750,6 +811,7 @@ declare global {
         new (): HTMLFkVariablePickerElement;
     };
     interface HTMLElementTagNameMap {
+        "fk-address-search": HTMLFkAddressSearchElement;
         "fk-brick-actions": HTMLFkBrickActionsElement;
         "fk-brick-list": HTMLFkBrickListElement;
         "fk-brick-mold-item": HTMLFkBrickMoldItemElement;
@@ -776,6 +838,39 @@ declare global {
 declare namespace LocalJSX {
     type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
 
+    /**
+     * An address search box: what is typed is looked up after a pause, the
+     * matches are listed, a pick stores the normalised address with its point.
+     * Text that is never picked stays as a label without geometry, so an address
+     * the provider does not know is still accepted.
+     */
+    interface FkAddressSearch {
+        /**
+          * Comma-separated ISO codes to restrict the search (Nominatim `countrycodes`).
+         */
+        "countryCodes"?: string;
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        "language"?: string;
+        /**
+          * @default 3
+         */
+        "minChars"?: number;
+        "onAddressChange"?: (event: FkAddressSearchCustomEvent<AddressFeature | undefined>) => void;
+        "placeholder"?: string;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
+        /**
+          * Search URL with `{q}` for the query; Nominatim jsonv2 by default.
+          * @default 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&q={q}'
+         */
+        "searchUrl"?: string;
+        "value"?: AddressFeature;
+    }
     interface FkBrickActions {
         "onBrickDrop"?: (event: FkBrickActionsCustomEvent<BrickDropDetail>) => void;
         "onBrickDuplicate"?: (event: FkBrickActionsCustomEvent<BrickPathDetail>) => void;
@@ -1134,6 +1229,15 @@ declare namespace LocalJSX {
         "variables"?: FkVariable[];
     }
 
+    interface FkAddressSearchAttributes {
+        "searchUrl": string;
+        "countryCodes": string;
+        "language": string;
+        "placeholder": string;
+        "disabled": boolean;
+        "readOnly": boolean;
+        "minChars": number;
+    }
     interface FkBrickActionsAttributes {
         "path": string;
         "selected": boolean;
@@ -1226,6 +1330,7 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "fk-address-search": Omit<FkAddressSearch, keyof FkAddressSearchAttributes> & { [K in keyof FkAddressSearch & keyof FkAddressSearchAttributes]?: FkAddressSearch[K] } & { [K in keyof FkAddressSearch & keyof FkAddressSearchAttributes as `attr:${K}`]?: FkAddressSearchAttributes[K] } & { [K in keyof FkAddressSearch & keyof FkAddressSearchAttributes as `prop:${K}`]?: FkAddressSearch[K] };
         "fk-brick-actions": Omit<FkBrickActions, keyof FkBrickActionsAttributes> & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes]?: FkBrickActions[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `attr:${K}`]?: FkBrickActionsAttributes[K] } & { [K in keyof FkBrickActions & keyof FkBrickActionsAttributes as `prop:${K}`]?: FkBrickActions[K] } & OneOf<"path", FkBrickActions["path"], FkBrickActionsAttributes["path"]>;
         "fk-brick-list": Omit<FkBrickList, keyof FkBrickListAttributes> & { [K in keyof FkBrickList & keyof FkBrickListAttributes]?: FkBrickList[K] } & { [K in keyof FkBrickList & keyof FkBrickListAttributes as `attr:${K}`]?: FkBrickListAttributes[K] } & { [K in keyof FkBrickList & keyof FkBrickListAttributes as `prop:${K}`]?: FkBrickList[K] };
         "fk-brick-mold-item": FkBrickMoldItem;
@@ -1253,6 +1358,13 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            /**
+             * An address search box: what is typed is looked up after a pause, the
+             * matches are listed, a pick stores the normalised address with its point.
+             * Text that is never picked stays as a label without geometry, so an address
+             * the provider does not know is still accepted.
+             */
+            "fk-address-search": LocalJSX.IntrinsicElements["fk-address-search"] & JSXBase.HTMLAttributes<HTMLFkAddressSearchElement>;
             "fk-brick-actions": LocalJSX.IntrinsicElements["fk-brick-actions"] & JSXBase.HTMLAttributes<HTMLFkBrickActionsElement>;
             "fk-brick-list": LocalJSX.IntrinsicElements["fk-brick-list"] & JSXBase.HTMLAttributes<HTMLFkBrickListElement>;
             "fk-brick-mold-item": LocalJSX.IntrinsicElements["fk-brick-mold-item"] & JSXBase.HTMLAttributes<HTMLFkBrickMoldItemElement>;

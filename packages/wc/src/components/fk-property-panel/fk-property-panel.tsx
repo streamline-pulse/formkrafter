@@ -316,6 +316,16 @@ export class FkPropertyPanel {
               (value) => this.emitConfigs({ mask: value })
             )
           : null}
+        {configs && 'searchUrl' in configs
+          ? [
+              this.textField(fkTOr('panel.searchUrl', 'Geocoding URL ({q} = query)'), configs.searchUrl, (value) =>
+                this.emitConfigs({ searchUrl: value })
+              ),
+              this.textField(fkTOr('panel.countryCodes', 'Country codes (bj, tg)'), configs.countryCodes, (value) =>
+                this.emitConfigs({ countryCodes: value })
+              ),
+            ]
+          : null}
         {configs && 'tileUrl' in configs
           ? [
               this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>
