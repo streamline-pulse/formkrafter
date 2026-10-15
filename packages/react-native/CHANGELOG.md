@@ -1,5 +1,47 @@
 # @streamline-pulse/formkrafter-react-native
 
+## 0.27.0
+
+### Minor Changes
+
+- 13d3dd7: **Finance bricks.** `tax-id` checks a tax identifier by `idFormat` (`bj-ifu`,
+  `fr-siren` and `fr-siret` with their Luhn key, `digits-<n>`), `iban` checks an
+  IBAN with ISO 7064 mod 97-10 and groups it by four, `money` stores
+  `{ amount, currency }` with the currency picked among the ones the builder
+  offers. The core exposes `checkLuhn`, `checkFrSiren`, `checkFrSiret`,
+  `checkBjIfu`, `checkIban` and `formatIban`; new `Finance` category.
+- c6d935d: **Geocoded address brick.** `geo-address` looks an address up while typing
+  (new `fk-address-search` element; Nominatim `jsonv2` by default, any provider
+  answering in that shape through `searchUrl` with `{q}`, optional
+  `countryCodes`), lists the matches and stores the pick as a GeoJSON `Feature`
+  with the normalised address (street, city, postcode, country, place id) and
+  its point, which a map under the field lets the user adjust. Text that is never
+  matched stays as a label without geometry. The native renderer edits the label
+  only and keeps a point obtained on the web.
+- 3c9d0e3: **Zones on a reference layer.** `geo-layer` loads a GeoJSON FeatureCollection
+  (`layerUrl`, fetched once per page) and lets the user pick a zone by clicking it
+  on the map or from a select; the field stores `{ code, name }` read from
+  `codeProperty` / `nameProperty`, or an array of them with `multiple`.
+  `fk-geo-map` gains the `layer` mode with `layerUrl`, `selected`, `multiple` and
+  a `layerChange` event. The native renderer shows the chosen zones read-only.
+- 763eea6: **Identity bricks.** `national-id` is a text field whose check comes from its
+  `idFormat`: `fr-nir` (French social security number with its key), `bj-npi`
+  (Benin, 10 digits) or `digits-<n>`; the core exposes `checkIdentity` and
+  registers one ajv format per rule. `mrz` reads the machine-readable zone of a
+  passport (TD3) or identity card (TD1) pasted into it: `parseMrz` extracts the
+  document number, nationality, names, dates and sex, verifies every ICAO 9303
+  check digit, and the stored object carries `valid` / `errors`, which the
+  validation schema enforces through a new `mrzValid` keyword. New `Identity`
+  category and `mrz.*` translations.
+
+### Patch Changes
+
+- Updated dependencies [13d3dd7]
+- Updated dependencies [c6d935d]
+- Updated dependencies [3c9d0e3]
+- Updated dependencies [763eea6]
+  - @streamline-pulse/formkrafter-core@0.27.0
+
 ## 0.26.0
 
 ### Minor Changes
