@@ -1,10 +1,10 @@
-import { applyPatch, type Operation } from "../utils/fast-json-patch";
-import type { BrickSpec } from "../utils/brick-spec";
-import type { BrickBaseConfigs } from "../utils/common-brick-props";
-import type { BrickStyles } from "../utils/brick-styles";
-import type { Validation } from "../validators/validation";
-import type { Rule } from "../rules/rule";
-import { getBrickAt, pointerFromPath } from "./pointer";
+import { applyPatch, type Operation } from "../utils/fast-json-patch.js";
+import type { BrickSpec } from "../utils/brick-spec.js";
+import type { BrickBaseConfigs } from "../utils/common-brick-props.js";
+import type { BrickStyles } from "../utils/brick-styles.js";
+import type { Validation } from "../validators/validation.js";
+import type { Rule } from "../rules/rule.js";
+import { getBrickAt, pointerFromPath } from "./pointer.js";
 
 export type SpecUpdate = {
   spec: BrickSpec;

@@ -25,7 +25,7 @@ function StepperControl(props: NativeBrickProps) {
   }
 
   const gate = (index: number): boolean => {
-    if (!config('validateSteps', false)) return true
+    if (props.disabled || !config('validateSteps', false)) return true
     const step = stepSpecs[index]
     if (!step || stepValid(step, index, props.dataMap, props.locale)) return true
     props.engine.touch(stepKeys(step))
@@ -41,7 +41,7 @@ function StepperControl(props: NativeBrickProps) {
     setActive(index)
   }
 
-  const showSubmit = config('showSubmit', false) && active === last
+  const showSubmit = config('showSubmit', false) && active === last && !props.disabled
 
   return (
     <View style={{ gap: theme.spacing * 2 }}>

@@ -127,14 +127,20 @@ export const FkCodeEditor: StencilReactComponent<FkCodeEditorElement, FkCodeEdit
     defineCustomElement: defineFkCodeEditor
 });
 
-export type FkDataGridEvents = { onGridValueChange: EventName<FkDataGridCustomEvent<Array<Record<string, unknown>> | undefined>> };
+export type FkDataGridEvents = {
+    onGridValueChange: EventName<FkDataGridCustomEvent<Array<Record<string, unknown>> | undefined>>,
+    onBrickReviewChange: EventName<FkDataGridCustomEvent<BrickReviewChangeDetail>>
+};
 
 export const FkDataGrid: StencilReactComponent<FkDataGridElement, FkDataGridEvents, Components.FkDataGrid, 'spec' | 'utils'> = /*@__PURE__*/ createComponent<FkDataGridElement, FkDataGridEvents, Components.FkDataGrid, 'spec' | 'utils'>({
     tagName: 'fk-data-grid',
     elementClass: FkDataGridElement,
     // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
     react: React,
-    events: { onGridValueChange: 'gridValueChange' } as FkDataGridEvents,
+    events: {
+        onGridValueChange: 'gridValueChange',
+        onBrickReviewChange: 'brickReviewChange'
+    } as FkDataGridEvents,
     defineCustomElement: defineFkDataGrid
 });
 

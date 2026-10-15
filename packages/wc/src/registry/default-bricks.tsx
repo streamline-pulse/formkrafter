@@ -698,6 +698,10 @@ export const dataGridBrick = createBrick({
           readOnly={props.readOnly === true}
           locale={props.locale}
           utils={props.utils}
+          annotations={props.annotations}
+          notes={props.notes}
+          reviewable={props.reviewable === true}
+          editableKeys={props.editableKeys}
           onGridValueChange={(
             event: CustomEvent<Array<Record<string, unknown>> | undefined>
           ) => {

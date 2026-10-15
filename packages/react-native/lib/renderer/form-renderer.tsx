@@ -3,6 +3,8 @@ import { Text, View } from 'react-native'
 import { fkT } from '@streamline-pulse/formkrafter-core'
 import type {
   BrickSpec,
+  FieldAnnotation,
+  FieldAnnotations,
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core'
 import { useFormEngine } from '../engine/use-form-engine.js'
@@ -17,6 +19,16 @@ export interface FormRendererProps extends FormEngineCallbacks {
   context?: Record<string, unknown>
   readOnly?: boolean
   locale?: string
+  /** Reviewer notes shown under the matching fields (by brick key). */
+  annotations?: FieldAnnotations
+  /** An earlier review's verdicts, shown as muted reminders. */
+  notes?: FieldAnnotations
+  /** When set, only these keys stay editable; every other field is locked. */
+  editableKeys?: string[]
+  /** @internal Used by FormReview. */
+  reviewable?: boolean
+  /** @internal Used by FormReview. */
+  onFieldReview?: (key: string, annotation: FieldAnnotation) => void
 }
 
 export interface FormRendererHandle {
@@ -57,6 +69,11 @@ export const FormRenderer = forwardRef<FormRendererHandle, FormRendererProps>(
           errors={errors}
           locale={props.locale}
           engine={engine}
+          annotations={props.annotations}
+          notes={props.notes}
+          editableKeys={props.editableKeys}
+          reviewable={props.reviewable}
+          onFieldReview={props.onFieldReview}
         />
       </View>
     )

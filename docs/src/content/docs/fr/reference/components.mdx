@@ -232,9 +232,13 @@ comportent de la même façon.
 <FkFormReview spec={spec} data={submitted} onReviewChange={(e) => setReviews(e.detail.reviews)} />
 ```
 
-Les champs d'une grille sont relus en bloc : le signalement et le commentaire
-portent sur toute la collection. Le rendu natif n'implémente pas encore la
-revue.
+Dans une grille, chaque cellule est relue séparément : les clés s'écrivent
+`contacts[0].email`, comme les erreurs de validation, et la grille entière peut
+aussi être signalée. `editableKeys` accepte ces clés de cellule ; quand seules
+certaines cellules sont listées, les actions de ligne (ajouter, retirer,
+réordonner) sont verrouillées. Le rendu natif offre la même chose avec
+`FormReview` et les props `annotations`, `notes` et `editableKeys` de
+`FormRenderer`.
 
 ## `<fk-form-builder>` <Badge text="stable" variant="success" />
 

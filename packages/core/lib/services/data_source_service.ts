@@ -1,4 +1,4 @@
-import { resolvePath } from "../utils/remote";
+import { resolvePath } from "../utils/remote.js";
 
 export interface DataSourceRequestOptions {
   headers?: Record<string, string>;

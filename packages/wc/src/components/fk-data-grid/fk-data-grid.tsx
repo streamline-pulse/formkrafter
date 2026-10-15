@@ -1,12 +1,14 @@
-import { Component, Event, Listen, Method, Prop, State, h } from '@stencil/core';
+import { Component, Element, Event, Listen, Method, Prop, State, h } from '@stencil/core';
 import type { EventEmitter } from '@stencil/core';
 import { validateBrickSpecDataDetailed } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickSpec,
+  FieldAnnotations,
   Utils,
   ValidationResult,
 } from '@streamline-pulse/formkrafter-core';
 import { fkT, fkTOr } from '../../i18n/i18n';
+import type { BrickReviewChangeDetail } from '../../utils/events';
 
 @Component({
   tag: 'fk-data-grid',
@@ -14,16 +16,64 @@ import { fkT, fkTOr } from '../../i18n/i18n';
   scoped: true,
 })
 export class FkDataGrid {
+  @Element() host!: HTMLElement;
+
   @Prop() spec!: BrickSpec;
   @Prop() value?: unknown;
   @Prop() disabled = false;
   @Prop() readOnly = false;
   @Prop() locale?: string;
   @Prop() utils!: Utils;
+  /** Review maps keyed `grid[index].field`, scoped to each row. */
+  @Prop() annotations?: FieldAnnotations;
+  @Prop() notes?: FieldAnnotations;
+  @Prop() reviewable = false;
+  @Prop() editableKeys?: string[];
 
   @Event() gridValueChange!: EventEmitter<
     Array<Record<string, unknown>> | undefined
   >;
+  @Event() brickReviewChange!: EventEmitter<BrickReviewChangeDetail>;
+
+  private gridKey(): string {
+    return this.spec.configs?.key ?? 'grid';
+  }
+
+  private rowScoped(map: FieldAnnotations | undefined, index: number): FieldAnnotations | undefined {
+    if (!map) return undefined;
+    const prefix = `${this.gridKey()}[${index}].`;
+    const scoped: FieldAnnotations = {};
+    for (const [key, value] of Object.entries(map)) {
+      if (key.startsWith(prefix)) scoped[key.slice(prefix.length)] = value;
+    }
+    return scoped;
+  }
+
+  // Grille entierement modifiable quand sa cle est listee ; sinon seules les
+  // cellules listees (`grid[i].champ`) le sont.
+  private rowEditableKeys(index: number): string[] | undefined {
+    if (this.editableKeys === undefined || this.editableKeys.includes(this.gridKey())) return undefined;
+    const prefix = `${this.gridKey()}[${index}].`;
+    return this.editableKeys.filter((key) => key.startsWith(prefix)).map((key) => key.slice(prefix.length));
+  }
+
+  private rowsLocked(): boolean {
+    return this.editableKeys !== undefined && !this.editableKeys.includes(this.gridKey());
+  }
+
+  // Un signalement fait dans une ligne remonte avec la cle complete de la cellule.
+  @Listen('brickReviewChange')
+  handleRowReviewChange(event: CustomEvent<BrickReviewChangeDetail>) {
+    if (event.target === this.host) return;
+    event.stopPropagation();
+    const row = (event.target as HTMLElement).closest('[data-grid-row]');
+    const index = row?.getAttribute('data-grid-row');
+    if (index === null || index === undefined) return;
+    this.brickReviewChange.emit({
+      key: `${this.gridKey()}[${index}].${event.detail.key}`,
+      annotation: event.detail.annotation,
+    });
+  }
 
   @State() touched: Record<number, Record<string, boolean>> = {};
 
@@ -173,6 +223,10 @@ export class FkDataGrid {
                   data={row}
                   dataMap={row}
                   errors={this.visibleRowErrors(index)}
+                  annotations={this.rowScoped(this.annotations, index)}
+                  notes={this.rowScoped(this.notes, index)}
+                  reviewable={this.reviewable}
+                  editableKeys={this.rowEditableKeys(index)}
                   locale={this.locale}
                   readOnly={this.readOnly}
                   disabled={this.disabled && !this.readOnly}
@@ -187,7 +241,7 @@ export class FkDataGrid {
                 class="fk-grid__move"
                 title={fkTOr('grid.moveUp', 'Move row up')}
                 aria-label={fkTOr('grid.moveUp', 'Move row up')}
-                disabled={this.disabled || index === 0}
+                disabled={this.disabled || this.rowsLocked() || index === 0}
                 onClick={(event) => {
                   event.preventDefault();
                   this.moveRow(index, -1);
@@ -200,7 +254,7 @@ export class FkDataGrid {
                 class="fk-grid__move"
                 title={fkTOr('grid.moveDown', 'Move row down')}
                 aria-label={fkTOr('grid.moveDown', 'Move row down')}
-                disabled={this.disabled || index === rows.length - 1}
+                disabled={this.disabled || this.rowsLocked() || index === rows.length - 1}
                 onClick={(event) => {
                   event.preventDefault();
                   this.moveRow(index, 1);
@@ -213,7 +267,7 @@ export class FkDataGrid {
                 class="fk-grid__remove"
                 title={fkT('grid.removeRow')}
                 aria-label={fkT('grid.removeRow')}
-                disabled={this.disabled}
+                disabled={this.disabled || this.rowsLocked()}
                 onClick={(event) => {
                   event.preventDefault();
                   this.removeRow(index);
@@ -228,7 +282,7 @@ export class FkDataGrid {
         <button
           type="button"
           class="fk-grid__add"
-          disabled={this.disabled}
+          disabled={this.disabled || this.rowsLocked()}
           onClick={this.addRow}
         >
           {fkT('grid.addRow')}

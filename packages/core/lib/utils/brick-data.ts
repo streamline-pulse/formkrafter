@@ -1,4 +1,4 @@
-import type { BrickSpec } from './brick-spec';
+import type { BrickSpec } from './brick-spec.js';
 
 export function getBrickData(
   brickSpec: BrickSpec,

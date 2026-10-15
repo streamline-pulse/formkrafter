@@ -1,5 +1,5 @@
-import { iterateBricks } from "./brick-spec";
-import type { BrickSpec } from "./brick-spec";
+import { iterateBricks } from "./brick-spec.js";
+import type { BrickSpec } from "./brick-spec.js";
 
 export type SpecIssueCode =
     | "validations-without-data-type"

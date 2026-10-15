@@ -1,4 +1,4 @@
-import type { BrickMold } from './brick-mold';
+import type { BrickMold } from './brick-mold.js';
 
 export type BrickMoldDropType = {
   type: 'BrickMold';

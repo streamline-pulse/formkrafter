@@ -109,9 +109,15 @@ export const FkDataGrid: StencilVueComponent<JSX.FkDataGrid> = /*@__PURE__*/ def
   'readOnly',
   'locale',
   'utils',
-  'gridValueChange'
+  'annotations',
+  'notes',
+  'reviewable',
+  'editableKeys',
+  'gridValueChange',
+  'brickReviewChange'
 ], [
-  'gridValueChange'
+  'gridValueChange',
+  'brickReviewChange'
 ]);
 
 

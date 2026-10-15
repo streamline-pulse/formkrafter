@@ -1,4 +1,4 @@
-import type { BrickSpec } from "../utils/brick-spec";
+import type { BrickSpec } from "../utils/brick-spec.js";
 
 export interface SpecSourceService {
   fetchSpec(ref: string): Promise<BrickSpec>;

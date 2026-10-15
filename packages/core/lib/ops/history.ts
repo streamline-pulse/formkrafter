@@ -1,6 +1,6 @@
-import { applyPatch, type Operation } from "../utils/fast-json-patch";
-import type { BrickSpec } from "../utils/brick-spec";
-import type { SpecUpdate } from "./ops";
+import { applyPatch, type Operation } from "../utils/fast-json-patch.js";
+import type { BrickSpec } from "../utils/brick-spec.js";
+import type { SpecUpdate } from "./ops.js";
 
 type HistoryEntry = {
   patches: Operation[];

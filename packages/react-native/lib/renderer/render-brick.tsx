@@ -6,9 +6,10 @@ import {
   resolveLocalizedRecord,
   wrapBrickData,
 } from '@streamline-pulse/formkrafter-core'
-import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+import type { BrickSpec, FieldAnnotation } from '@streamline-pulse/formkrafter-core'
 import { getNativeBrick } from '../registry.js'
 import type { FormEngine } from '../engine/form-engine.js'
+import { FieldReviewContext } from './review-context.js'
 
 export interface RenderBrickOptions {
   spec: BrickSpec
@@ -21,6 +22,9 @@ export interface RenderBrickOptions {
   children?: ReactNode
   onValue: (patch: Record<string, unknown>) => void
   missingColor: string
+  annotation?: FieldAnnotation
+  note?: FieldAnnotation
+  review?: { value: FieldAnnotation; onChange: (next: FieldAnnotation) => void }
 }
 
 export function renderBrick(options: RenderBrickOptions): ReactNode {
@@ -41,7 +45,8 @@ export function renderBrick(options: RenderBrickOptions): ReactNode {
 
   const key = spec.configs?.key
 
-  return brick.render({
+  const { annotation, note, review } = options
+  const rendered = brick.render({
     spec,
     configs: resolveLocalizedRecord(spec.configs, locale) ?? {},
     locale,
@@ -56,5 +61,15 @@ export function renderBrick(options: RenderBrickOptions): ReactNode {
       const wrapped = wrapBrickData(spec, value)
       if (wrapped !== undefined) options.onValue(wrapped)
     },
+    annotation,
+    note,
+    review,
   })
+
+  // Always provided, even empty: a field never inherits its parent's review.
+  return (
+    <FieldReviewContext.Provider value={{ annotation, note, review }}>
+      {rendered}
+    </FieldReviewContext.Provider>
+  )
 }

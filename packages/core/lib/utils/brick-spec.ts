@@ -1,12 +1,12 @@
-import type { JSONSchemaType } from "../validators/json-schema-type";
-import { resolveLocalizedText } from "./localized-text";
-import { defaultValidationMessage } from "../validators/default-messages";
-import type { Validator } from "../validators/validator";
-import type { Validation } from "../validators/validation";
-import type { Rule } from "../rules/rule";
-import type { BrickType } from "./brick-type";
-import type { BrickBaseConfigs } from "./common-brick-props";
-import type { BrickStyles } from "../utils/brick-styles";
+import type { JSONSchemaType } from "../validators/json-schema-type.js";
+import { resolveLocalizedText } from "./localized-text.js";
+import { defaultValidationMessage } from "../validators/default-messages.js";
+import type { Validator } from "../validators/validator.js";
+import type { Validation } from "../validators/validation.js";
+import type { Rule } from "../rules/rule.js";
+import type { BrickType } from "./brick-type.js";
+import type { BrickBaseConfigs } from "./common-brick-props.js";
+import type { BrickStyles } from "../utils/brick-styles.js";
 
 export interface BrickSpec {
     type: BrickType;

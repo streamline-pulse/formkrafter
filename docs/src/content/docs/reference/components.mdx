@@ -223,8 +223,12 @@ nested forms, rules and localized labels behave the same.
 <FkFormReview spec={spec} data={submitted} onReviewChange={(e) => setReviews(e.detail.reviews)} />
 ```
 
-Fields inside a data grid are reviewed as one: the flag and comment apply to
-the whole collection. The native renderer does not implement review yet.
+Inside a data grid every cell is reviewed on its own: keys read
+`contacts[0].email`, the same scheme as validation errors, and the grid itself
+can also be flagged as a whole. `editableKeys` accepts those cell keys too;
+when only some cells are listed, the row actions (add, remove, reorder) are
+locked. The native renderer offers the same through `FormReview` and the
+`annotations`, `notes` and `editableKeys` props of `FormRenderer`.
 
 ## `<fk-form-builder>` <Badge text="stable" variant="success" />
 

@@ -1,12 +1,12 @@
 import { Ajv, type ErrorObject, type ValidateFunction } from "ajv";
 import ajvErrors from "ajv-errors";
 import addFormats from "ajv-formats";
-import type { BrickSpec } from "../utils/brick-spec";
-import { buildValidationSchema, iterateSchemaBricks } from "../utils/brick-spec";
-import { resolveLocalizedText } from "../utils/localized-text";
-import { validationWarnings } from "../utils/lint-spec";
-import { defaultValidationMessage } from "./default-messages";
-import { evalBrickCode, getAffectedProperties } from "../brick/utils";
+import type { BrickSpec } from "../utils/brick-spec.js";
+import { buildValidationSchema, iterateSchemaBricks } from "../utils/brick-spec.js";
+import { resolveLocalizedText } from "../utils/localized-text.js";
+import { validationWarnings } from "../utils/lint-spec.js";
+import { defaultValidationMessage } from "./default-messages.js";
+import { evalBrickCode, getAffectedProperties } from "../brick/utils.js";
 
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv, ["email", "uri"]);

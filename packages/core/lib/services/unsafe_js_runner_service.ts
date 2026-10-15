@@ -1,5 +1,5 @@
 import { type Options, parse } from "acorn";
-import type { JsRunnerService, JsValidationResult } from "./js_runner_service";
+import type { JsRunnerService, JsValidationResult } from "./js_runner_service.js";
 
 export class UnsafeEvalJsRunnerService implements JsRunnerService {
   validateJs(

@@ -94,7 +94,11 @@ export class FkBrickRender {
     // Only fields carry data, so only they are locked, annotated or reviewed.
     const key = spec.configs?.key;
     const isField = !!key && (spec.type === 'input' || spec.type === 'collection');
-    const lockedByKeys = isField && this.editableKeys !== undefined && !this.editableKeys.includes(key);
+    const lockedByKeys =
+      isField &&
+      this.editableKeys !== undefined &&
+      !this.editableKeys.includes(key) &&
+      !this.editableKeys.some((entry) => entry.startsWith(`${key}[`));
     const annotation: FieldAnnotation | undefined = isField ? this.annotations?.[key] : undefined;
     const note: FieldAnnotation | undefined = isField ? this.notes?.[key] : undefined;
     const review = isField && this.reviewable && !editing
@@ -123,6 +127,10 @@ export class FkBrickRender {
       annotation,
       note,
       review,
+      annotations: this.annotations,
+      notes: this.notes,
+      reviewable: this.reviewable && !editing,
+      editableKeys: this.editableKeys,
       path: this.path,
       editable: editing,
       children: childNodes,

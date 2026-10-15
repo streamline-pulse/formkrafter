@@ -77,14 +77,24 @@ export namespace Components {
     }
     interface FkDataGrid {
         /**
+          * Review maps keyed `grid[index].field`, scoped to each row.
+         */
+        "annotations"?: FieldAnnotations;
+        /**
           * @default false
          */
         "disabled": boolean;
+        "editableKeys"?: string[];
         "locale"?: string;
+        "notes"?: FieldAnnotations;
         /**
           * @default false
          */
         "readOnly": boolean;
+        /**
+          * @default false
+         */
+        "reviewable": boolean;
         "spec": BrickSpec;
         "utils": Utils;
         "validateRows": () => Promise<ValidationResult>;
@@ -404,6 +414,7 @@ declare global {
     };
     interface HTMLFkDataGridElementEventMap {
         "gridValueChange": Array<Record<string, unknown>> | undefined;
+        "brickReviewChange": BrickReviewChangeDetail;
     }
     interface HTMLFkDataGridElement extends Components.FkDataGrid, HTMLStencilElement {
         addEventListener<K extends keyof HTMLFkDataGridElementEventMap>(type: K, listener: (this: HTMLFkDataGridElement, ev: FkDataGridCustomEvent<HTMLFkDataGridElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -727,15 +738,26 @@ declare namespace LocalJSX {
     }
     interface FkDataGrid {
         /**
+          * Review maps keyed `grid[index].field`, scoped to each row.
+         */
+        "annotations"?: FieldAnnotations;
+        /**
           * @default false
          */
         "disabled"?: boolean;
+        "editableKeys"?: string[];
         "locale"?: string;
+        "notes"?: FieldAnnotations;
+        "onBrickReviewChange"?: (event: FkDataGridCustomEvent<BrickReviewChangeDetail>) => void;
         "onGridValueChange"?: (event: FkDataGridCustomEvent<Array<Record<string, unknown>> | undefined>) => void;
         /**
           * @default false
          */
         "readOnly"?: boolean;
+        /**
+          * @default false
+         */
+        "reviewable"?: boolean;
         "spec": BrickSpec;
         "utils": Utils;
         "value"?: unknown;
@@ -958,6 +980,7 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "readOnly": boolean;
         "locale": string;
+        "reviewable": boolean;
     }
     interface FkDropAreaAttributes {
         "path": string;

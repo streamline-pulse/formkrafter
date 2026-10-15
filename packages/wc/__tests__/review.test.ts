@@ -198,3 +198,64 @@ describe('fk-form-render with annotations and editableKeys', () => {
     expect(radios.every((radio) => radio.disabled)).toBe(true);
   });
 });
+
+describe('data grid rows', () => {
+  const gridSpec = () => ({
+    type: 'panel',
+    id: 'column',
+    name: 'Form',
+    configs: { uid: 'root', key: 'form' },
+    children: [
+      {
+        type: 'collection',
+        id: 'data-grid',
+        name: 'Data grid',
+        dataType: 'array',
+        configs: { uid: 'g', key: 'contacts', label: 'Contacts' },
+        children: [
+          { type: 'input', dataType: 'string', id: 'text', name: 'Text', configs: { uid: 'c1', key: 'name', label: 'Name' } },
+          { type: 'input', dataType: 'string', id: 'email', name: 'Email', configs: { uid: 'c2', key: 'email', label: 'Email' } },
+        ],
+      },
+    ],
+  });
+
+  test('a reviewer flags one cell and the key carries the row', async () => {
+    const el = document.createElement('fk-form-review') as ReviewEl;
+    el.spec = gridSpec();
+    el.data = { contacts: [{ name: 'Ada', email: 'ada@x.io' }, { name: 'Bob', email: 'bob@x.io' }] };
+    document.body.appendChild(el);
+    let last: { reviews: Record<string, unknown>; flagged: string[] } | undefined;
+    el.addEventListener('reviewChange', (event) => {
+      last = structuredClone((event as CustomEvent).detail);
+    });
+    await tick(150);
+    const rows = [...el.querySelectorAll('.fk-grid__row')] as HTMLElement[];
+    expect(rows.length).toBe(2);
+    const flag = rows[1].querySelectorAll('.fk-review__flag input')[1] as HTMLInputElement;
+    flag.checked = true;
+    flag.dispatchEvent(new Event('change', { bubbles: true }));
+    await tick();
+    expect(last?.flagged).toEqual(['contacts[1].email']);
+    expect(rows[1].querySelector('.fk-review__comment')).toBeTruthy();
+    el.remove();
+  });
+
+  test('annotations and editableKeys address cells by row', async () => {
+    const el = document.createElement('fk-form-render') as RenderEl;
+    el.spec = gridSpec();
+    el.data = { contacts: [{ name: 'Ada', email: 'ada@x.io' }] };
+    el.annotations = { 'contacts[0].email': { incorrect: true, comment: 'Bounced' } };
+    el.editableKeys = ['contacts[0].email'];
+    document.body.appendChild(el);
+    await tick(150);
+    const row = el.querySelector('.fk-grid__row') as HTMLElement;
+    expect(row.querySelector('.fk-review__text')?.textContent).toBe('Bounced');
+    const inputs = [...row.querySelectorAll('input.fk-field__input')] as HTMLInputElement[];
+    expect(inputs[0].hasAttribute('readonly')).toBe(true);
+    expect(inputs[1].hasAttribute('readonly')).toBe(false);
+    const addRow = el.querySelector('.fk-grid__add') as HTMLButtonElement | null;
+    if (addRow) expect(addRow.disabled).toBe(true);
+    el.remove();
+  });
+});

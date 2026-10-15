@@ -1,5 +1,5 @@
 import type { RulesLogic } from "json-logic-js";
-import type { Effect } from "./effect";
+import type { Effect } from "./effect.js";
 
 export type Rule = {
   name: string;

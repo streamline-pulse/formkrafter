@@ -102,6 +102,29 @@ Two independent knobs, identical to the web:
 
 Switch both without remounting — the entered data stays.
 
+## Review
+
+A reviewer reads a filled form and flags what is wrong; the applicant then
+corrects only those fields. Both halves exist natively, with the same
+annotation map as the web:
+
+```tsx
+import { FormReview, FormRenderer } from '@streamline-pulse/formkrafter-react-native'
+import { flaggedKeys } from '@streamline-pulse/formkrafter-core'
+
+// The reviewer's screen: read-only, an "Incorrect" switch and a comment box under each field.
+<FormReview spec={spec} data={submitted} notes={previousReviews}
+  onReviewChange={(reviews, flagged) => save(reviews)} />
+
+// The applicant's screen: notes under the flagged fields, everything else locked.
+<FormRenderer spec={spec} data={submitted} annotations={reviews} editableKeys={flaggedKeys(reviews)} />
+```
+
+`notes` shows an earlier pass as a muted reminder so the next reviewer looks
+at those fields again. Custom bricks that render through the exported `Field`
+get the notes and controls for free; others read `annotation`, `note` and
+`review` from their props. A data grid is reviewed as one field natively.
+
 ## Bricks that need a native module
 
 Metro resolves imports statically, so bricks that depend on a native module
@@ -127,8 +150,8 @@ where the web's canvas produces PNG.
 ## Custom bricks and UI kits
 
 The registry is the extension point. A brick receives `data`, `error`,
-`disabled`, resolved `configs` and `onDataChange`, and renders whatever it
-wants — gluestack, NativeBase, Tamagui or your own components:
+`disabled`, resolved `configs`, `onDataChange` and, during a review,
+`annotation`, `note` and `review`, and renders whatever it wants — gluestack, NativeBase, Tamagui or your own components:
 
 ```tsx
 import {

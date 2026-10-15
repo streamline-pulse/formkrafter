@@ -103,6 +103,30 @@ Deux leviers indépendants, identiques au web :
 
 Basculez les deux sans remontage — les données saisies restent.
 
+## Revue
+
+Un réviseur relit un formulaire rempli et signale ce qui ne va pas ; le
+demandeur ne corrige ensuite que ces champs. Les deux moitiés existent en
+natif, avec la même carte d'annotations que le web :
+
+```tsx
+import { FormReview, FormRenderer } from '@streamline-pulse/formkrafter-react-native'
+import { flaggedKeys } from '@streamline-pulse/formkrafter-core'
+
+// L'écran du réviseur : lecture seule, un interrupteur « Incorrect » et un commentaire sous chaque champ.
+<FormReview spec={spec} data={submitted} notes={previousReviews}
+  onReviewChange={(reviews, flagged) => save(reviews)} />
+
+// L'écran du demandeur : remarques sous les champs signalés, tout le reste verrouillé.
+<FormRenderer spec={spec} data={submitted} annotations={reviews} editableKeys={flaggedKeys(reviews)} />
+```
+
+`notes` affiche une relecture antérieure en rappel discret pour que le
+réviseur suivant regarde à nouveau ces champs. Les bricks personnalisées qui
+passent par le `Field` exporté reçoivent remarques et contrôles sans rien
+faire ; les autres lisent `annotation`, `note` et `review` dans leurs props.
+Une grille est relue en bloc en natif.
+
 ## Les bricks qui exigent un module natif
 
 Metro résout les imports statiquement, donc les bricks qui dépendent d'un

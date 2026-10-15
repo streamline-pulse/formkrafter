@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { BrickSpec, Validation } from '@streamline-pulse/formkrafter-core'
+import type { BrickSpec, FieldAnnotation, Validation } from '@streamline-pulse/formkrafter-core'
 import type { FormEngine } from './engine/form-engine.js'
 
 export interface NativeBrickProps {
@@ -14,6 +14,12 @@ export interface NativeBrickProps {
   engine: FormEngine
   children?: ReactNode
   onDataChange: (value: unknown) => void
+  /** A reviewer's note on this field, shown under the control. */
+  annotation?: FieldAnnotation
+  /** An earlier review's verdict, shown as a reminder. */
+  note?: FieldAnnotation
+  /** Present in review mode: the controls to flag the field and comment it. */
+  review?: { value: FieldAnnotation; onChange: (next: FieldAnnotation) => void }
 }
 
 export interface NativeBrick {

@@ -1,13 +1,13 @@
-import type { Validator } from "../validators/validator";
-import type { Validation } from "../validators/validation";
-import type { JSONSchemaType } from "../validators/json-schema-type";
-import { type Utils } from "./utils";
-import type { Rule } from "../rules/rule";
-import type { BrickSpec } from "../utils/brick-spec";
-import type { BrickType } from "../utils/brick-type";
-import type { BrickBaseConfigs, CommonBrickProps } from "../utils/common-brick-props";
-import type { BrickMoldDropType } from "../utils/drop-type";
-import type { FieldAnnotation } from "../review";
+import type { Validator } from "../validators/validator.js";
+import type { Validation } from "../validators/validation.js";
+import type { JSONSchemaType } from "../validators/json-schema-type.js";
+import { type Utils } from "./utils.js";
+import type { Rule } from "../rules/rule.js";
+import type { BrickSpec } from "../utils/brick-spec.js";
+import type { BrickType } from "../utils/brick-type.js";
+import type { BrickBaseConfigs, CommonBrickProps } from "../utils/common-brick-props.js";
+import type { BrickMoldDropType } from "../utils/drop-type.js";
+import type { FieldAnnotation } from "../review.js";
 
 export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   extends CommonBrickProps<Configs, Styles> {
@@ -37,6 +37,11 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   note?: FieldAnnotation;
   /** Present in review mode: the controls to flag the field and comment it. */
   review?: { value: FieldAnnotation; onChange: (next: FieldAnnotation) => void };
+  /** The whole maps, for composite bricks (data grid) that scope them per row. */
+  annotations?: Record<string, FieldAnnotation>;
+  notes?: Record<string, FieldAnnotation>;
+  reviewable?: boolean;
+  editableKeys?: string[];
   locale?: string;
   children?: unknown;
   brickSpec?: BrickSpec;

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { BrickSpec } from '@streamline-pulse/formkrafter-core'
+import type { BrickSpec, FieldAnnotation, FieldAnnotations } from '@streamline-pulse/formkrafter-core'
 import type { FormEngine } from '../engine/form-engine.js'
 import { useFkTheme } from '../theme.js'
 import { renderBrick } from './render-brick.js'
@@ -12,6 +12,15 @@ interface BrickRendererProps {
   errors: Record<string, string>
   locale?: string
   engine: FormEngine
+  /** Reviewer notes shown under the matching fields (by brick key). */
+  annotations?: FieldAnnotations
+  /** An earlier review's verdicts, shown as reminders. */
+  notes?: FieldAnnotations
+  /** When set, only these keys stay editable. */
+  editableKeys?: string[]
+  /** Review mode: flag and comment controls under every field. */
+  reviewable?: boolean
+  onFieldReview?: (key: string, annotation: FieldAnnotation) => void
 }
 
 export function BrickRenderer(props: BrickRendererProps): ReactNode {
@@ -29,19 +38,41 @@ export function BrickRenderer(props: BrickRendererProps): ReactNode {
       errors={errors}
       locale={locale}
       engine={engine}
+      annotations={props.annotations}
+      notes={props.notes}
+      editableKeys={props.editableKeys}
+      reviewable={props.reviewable}
+      onFieldReview={props.onFieldReview}
     />
   ))
+
+  // Only fields carry data, so only they are locked, annotated or reviewed.
+  const key = spec.configs?.key
+  const isField = !!key && (spec.type === 'input' || spec.type === 'collection')
+  const locked = isField && props.editableKeys !== undefined && !props.editableKeys.includes(key)
+  const annotation = isField ? props.annotations?.[key] : undefined
+  const note = isField ? props.notes?.[key] : undefined
+  const review =
+    isField && props.reviewable
+      ? {
+          value: annotation ?? {},
+          onChange: (next: FieldAnnotation) => props.onFieldReview?.(key, next),
+        }
+      : undefined
 
   return renderBrick({
     spec,
     scope: data,
     context,
-    disabled: readOnly,
+    disabled: readOnly || locked,
     errors,
     locale,
     engine,
     children,
     onValue: (patch) => engine.setValues(patch),
     missingColor: theme.colorDanger,
+    annotation,
+    note,
+    review,
   })
 }

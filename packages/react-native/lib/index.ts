@@ -1,6 +1,10 @@
 export { FormRenderer } from './renderer/form-renderer.js'
 export type { FormRendererProps, FormRendererHandle } from './renderer/form-renderer.js'
 export { BrickRenderer } from './renderer/brick-renderer.js'
+export { FormReview } from './renderer/form-review.js'
+export type { FormReviewProps } from './renderer/form-review.js'
+export { FieldReviewContext } from './renderer/review-context.js'
+export type { FieldReviewValue } from './renderer/review-context.js'
 export { FormEngine } from './engine/form-engine.js'
 export type {
   FormEngineOptions,

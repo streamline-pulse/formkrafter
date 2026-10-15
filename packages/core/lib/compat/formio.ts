@@ -1,7 +1,7 @@
-import { stripBrickUids } from "../ops/uids";
-import type { BrickSpec } from "../utils/brick-spec";
-import type { Validation } from "../validators/validation";
-import type { Rule } from "../rules/rule";
+import { stripBrickUids } from "../ops/uids.js";
+import type { BrickSpec } from "../utils/brick-spec.js";
+import type { Validation } from "../validators/validation.js";
+import type { Rule } from "../rules/rule.js";
 
 export type FormioOptionList = Array<
     Record<string, unknown> | string | number | boolean

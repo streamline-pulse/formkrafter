@@ -1,5 +1,5 @@
 import { type Options, parse } from "acorn";
-import { runSandboxed } from "./sandbox_interpreter";
+import { runSandboxed } from "./sandbox_interpreter.js";
 
 export interface JsValidationResult {
   valid: boolean;

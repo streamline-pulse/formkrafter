@@ -1,5 +1,5 @@
 import type { Operation } from "fast-json-patch";
-import type { BrickSpec } from "../utils/brick-spec";
+import type { BrickSpec } from "../utils/brick-spec.js";
 
 const mapBricks = (
     spec: BrickSpec,

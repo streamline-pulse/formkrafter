@@ -1,5 +1,5 @@
-import type { Validator } from "./validator";
-import type { LocalizedText } from "../utils/localized-text";
+import type { Validator } from "./validator.js";
+import type { LocalizedText } from "../utils/localized-text.js";
 
 export type Validation = {
     validator: Validator;

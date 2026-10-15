@@ -1,8 +1,8 @@
-import { resolveLocalizedText } from "./localized-text";
-import { normalizeOptions } from "./options";
-import type { SelectOption } from "./options";
-import type { BrickSpec } from "./brick-spec";
-import type { JSONSchemaType } from "../validators/json-schema-type";
+import { resolveLocalizedText } from "./localized-text.js";
+import { normalizeOptions } from "./options.js";
+import type { SelectOption } from "./options.js";
+import type { BrickSpec } from "./brick-spec.js";
+import type { JSONSchemaType } from "../validators/json-schema-type.js";
 
 /** One data-bearing brick of a spec, described independently of any renderer. */
 export interface FieldDescriptor {

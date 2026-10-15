@@ -1,6 +1,6 @@
-import type { BrickBaseConfigs, CommonBrickProps } from "../utils/common-brick-props";
-import type { BrickSpec } from "../utils/brick-spec";
-import type { CollectionUtils, InputUtils, PanelUtils } from "./utils";
+import type { BrickBaseConfigs, CommonBrickProps } from "../utils/common-brick-props.js";
+import type { BrickSpec } from "../utils/brick-spec.js";
+import type { CollectionUtils, InputUtils, PanelUtils } from "./utils.js";
 
 interface BrickProps<Configs extends BrickBaseConfigs, Styles>
   extends CommonBrickProps<Configs, Styles> {

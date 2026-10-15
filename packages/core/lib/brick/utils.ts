@@ -1,6 +1,6 @@
 import jsonLogic from "json-logic-js";
-import { services } from "../services";
-import type { Rule } from "../rules/rule";
+import { services } from "../services/index.js";
+import type { Rule } from "../rules/rule.js";
 
 export type CommonUtils = object;
 

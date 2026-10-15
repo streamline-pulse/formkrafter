@@ -1,8 +1,8 @@
-import { fkTOr } from "../i18n";
-import { getAffectedProperties } from "../brick/utils";
-import { resolveLocalizedText } from "./localized-text";
-import { normalizeOptions } from "./options";
-import type { BrickSpec } from "./brick-spec";
+import { fkTOr } from "../i18n.js";
+import { getAffectedProperties } from "../brick/utils.js";
+import { resolveLocalizedText } from "./localized-text.js";
+import { normalizeOptions } from "./options.js";
+import type { BrickSpec } from "./brick-spec.js";
 
 export type RecapItem =
     | { kind: "field"; label: string; value: string }

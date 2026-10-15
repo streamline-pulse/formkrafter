@@ -1,23 +1,23 @@
 import {
   SandboxJsRunnerService,
   type JsRunnerService,
-} from "./js_runner_service";
+} from "./js_runner_service.js";
 import {
   FetchDataSourceService,
   type DataSourceService,
-} from "./data_source_service";
+} from "./data_source_service.js";
 import {
   Base64FileUploadService,
   type FileUploadService,
-} from "./file_upload_service";
+} from "./file_upload_service.js";
 import {
   FetchSpecSourceService,
   type SpecSourceService,
-} from "./spec_source_service";
+} from "./spec_source_service.js";
 import {
   FetchOptionSourceService,
   type OptionSourceService,
-} from "./option_source_service";
+} from "./option_source_service.js";
 
 export interface Services {
   jsRunnerService: JsRunnerService;
