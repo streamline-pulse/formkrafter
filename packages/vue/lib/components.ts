@@ -24,6 +24,7 @@ import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
 import { defineCustomElement as defineFkSignatureInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-signature-input.js';
+import { defineCustomElement as defineFkSlotPicker } from '@streamline-pulse/formkrafter-wc/dist/components/fk-slot-picker.js';
 import { defineCustomElement as defineFkStepper } from '@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js';
 import { defineCustomElement as defineFkTabs } from '@streamline-pulse/formkrafter-wc/dist/components/fk-tabs.js';
 import { defineCustomElement as defineFkVariablePicker } from '@streamline-pulse/formkrafter-wc/dist/components/fk-variable-picker.js';
@@ -284,6 +285,19 @@ export const FkSignatureInput: StencilVueComponent<JSX.FkSignatureInput> = /*@__
   'signatureChange'
 ], [
   'signatureChange'
+]);
+
+
+export const FkSlotPicker: StencilVueComponent<JSX.FkSlotPicker> = /*@__PURE__*/ defineContainer<JSX.FkSlotPicker>('fk-slot-picker', defineFkSlotPicker, [
+  'value',
+  'slotsUrl',
+  'rules',
+  'locale',
+  'disabled',
+  'readOnly',
+  'slotPick'
+], [
+  'slotPick'
 ]);
 
 

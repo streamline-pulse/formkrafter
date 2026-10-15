@@ -9,6 +9,7 @@ import { fkT, fkTOr } from '../i18n/i18n';
 import {
   collectRecapItems,
   resolveLocalizedText, parseMrz, formatIban } from '@streamline-pulse/formkrafter-core';
+import type { SlotRules } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
@@ -951,6 +952,102 @@ export const moneyBrick = createBrick({
   },
 });
 
+const slotRulesOf = (props: WcBrickProps): SlotRules => {
+  const c = props.configs ?? {};
+  const list = (raw: unknown) => (typeof raw === 'string' ? raw.split(',').map((v) => v.trim()).filter(Boolean) : Array.isArray(raw) ? raw.map(String) : []);
+  const num = (raw: unknown) => (raw === '' || raw === undefined || raw === null ? undefined : Number(raw));
+  return {
+    days: list(c.days).map(Number).filter((n) => n >= 1 && n <= 7),
+    from: typeof c.from === 'string' && c.from ? c.from : undefined,
+    to: typeof c.to === 'string' && c.to ? c.to : undefined,
+    duration: num(c.duration),
+    horizonDays: num(c.horizonDays),
+    noticeHours: num(c.noticeHours),
+    exclude: list(c.exclude),
+  };
+};
+
+// Rendez-vous : un creneau parmi ceux d'une URL ou des regles d'ouverture ;
+// la valeur est { id, start, end }. Les places restantes se gerent cote fournisseur.
+export const appointmentBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'appointment',
+  name: 'Appointment slot',
+  category: 'Time',
+  defaultConfigs: {
+    label: 'Appointment',
+    slotsUrl: '',
+    days: '1,2,3,4,5',
+    from: '08:00',
+    to: '17:00',
+    duration: 30,
+    horizonDays: 14,
+    noticeHours: 0,
+    exclude: '',
+  },
+  render: (props) =>
+    fieldBlock(
+      props,
+      'Appointment',
+      <fk-slot-picker
+        value={(props.data ?? undefined) as never}
+        slotsUrl={typeof props.configs?.slotsUrl === 'string' && props.configs.slotsUrl ? props.configs.slotsUrl : undefined}
+        rules={slotRulesOf(props)}
+        locale={props.locale}
+        readOnly={props.readOnly === true}
+        disabled={props.editable === true || props.disabled === true}
+        onSlotPick={(event: CustomEvent<unknown>) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
+        }}
+      ></fk-slot-picker>
+    ),
+});
+
+type DateRangeValue = { from?: string; to?: string };
+
+// Plage de dates : { from, to }, la fin jamais avant le debut (schema).
+export const dateRangeBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'date-range',
+  name: 'Date range',
+  category: 'Time',
+  defaultConfigs: { label: 'Period' },
+  render: (props) => {
+    const value = (props.data ?? {}) as DateRangeValue;
+    const update = (patch: DateRangeValue) => {
+      const next = { ...value, ...patch };
+      if (!next.from && !next.to) return props.onDataChange?.(undefined);
+      props.onDataChange?.(next);
+    };
+    const dateInput = (key: 'from' | 'to', label: string) => (
+      <label class="fk-range__part">
+        <span>{label}</span>
+        <input
+          {...invalidAttr(props)}
+          class="fk-field__input"
+          type="date"
+          value={value[key] ?? ''}
+          {...(key === 'to' && value.from ? { min: value.from } : {})}
+          {...(key === 'from' && value.to ? { max: value.to } : {})}
+          {...lock(props, true)}
+          onInput={(event) => update({ [key]: (event.target as HTMLInputElement).value || undefined })}
+        />
+      </label>
+    );
+    return fieldBlock(
+      props,
+      'Period',
+      <div class="fk-range">
+        {dateInput('from', fkT('range.from'))}
+        {dateInput('to', fkT('range.to'))}
+      </div>
+    );
+  },
+});
+
 export const tabsBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1503,6 +1600,8 @@ const defaults = [
     taxIdBrick,
     ibanBrick,
     moneyBrick,
+    appointmentBrick,
+    dateRangeBrick,
     addressBrick,
     codeBrick,
     fileBrick,

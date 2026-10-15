@@ -35,6 +35,8 @@ the same palette.
 | `tax-id` | string | tax identifier checked by `idFormat`: `bj-ifu` (13 digits), `fr-siren` / `fr-siret` (Luhn key), `digits-<n>` |
 | `iban` | string | IBAN checked with ISO 7064 mod 97-10, grouped by four on blur |
 | `money` | object | `{ amount, currency }`, the currency picked among `currencies` with `currency` as default |
+| `appointment` | object | a slot `{ id, start, end }` picked day by day, from `slotsUrl` (list with `remaining`) or generated from opening rules (`days`, `from`, `to`, `duration`, `horizonDays`, `noticeHours`, `exclude`) |
+| `date-range` | object | `{ from, to }`, the end never before the start |
 
 ### Data
 

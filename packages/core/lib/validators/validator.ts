@@ -16,6 +16,14 @@ ajvErrors(ajv);
 for (const format of ["fr-nir", "bj-npi", "fr-siren", "fr-siret", "bj-ifu", "iban", ...Array.from({ length: 20 }, (_, i) => `digits-${i + 1}`)])
   ajv.addFormat(`identity-${format}`, (value: string) => checkIdentity(format, value));
 // Zone MRZ : l'objet stocke porte le verdict des chiffres de controle.
+// Plage de dates : la fin ne precede pas le debut (chaines ISO comparables).
+ajv.addKeyword({
+  keyword: "dateRange",
+  type: "object",
+  schemaType: "boolean",
+  validate: (expected: boolean, value: { from?: string; to?: string }) =>
+    !expected || !value?.from || !value?.to || value.from <= value.to,
+});
 ajv.addKeyword({
   keyword: "mrzValid",
   type: "object",

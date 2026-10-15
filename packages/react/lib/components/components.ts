@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type AddressFeature, type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkAddressSearchCustomEvent, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type GeoZone, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type AddressFeature, type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkAddressSearchCustomEvent, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkSlotPickerCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type GeoZone, type PickedSlot, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkAddressSearch as FkAddressSearchElement, defineCustomElement as defineFkAddressSearch } from "@streamline-pulse/formkrafter-wc/dist/components/fk-address-search.js";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
@@ -32,6 +32,7 @@ import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defin
 import { FkRulesEditor as FkRulesEditorElement, defineCustomElement as defineFkRulesEditor } from "@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js";
 import { FkSelectInput as FkSelectInputElement, defineCustomElement as defineFkSelectInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js";
 import { FkSignatureInput as FkSignatureInputElement, defineCustomElement as defineFkSignatureInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-signature-input.js";
+import { FkSlotPicker as FkSlotPickerElement, defineCustomElement as defineFkSlotPicker } from "@streamline-pulse/formkrafter-wc/dist/components/fk-slot-picker.js";
 import { FkStepper as FkStepperElement, defineCustomElement as defineFkStepper } from "@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js";
 import { FkTabs as FkTabsElement, defineCustomElement as defineFkTabs } from "@streamline-pulse/formkrafter-wc/dist/components/fk-tabs.js";
 import { FkVariablePicker as FkVariablePickerElement, defineCustomElement as defineFkVariablePicker } from "@streamline-pulse/formkrafter-wc/dist/components/fk-variable-picker.js";
@@ -299,6 +300,17 @@ export const FkSignatureInput: StencilReactComponent<FkSignatureInputElement, Fk
     react: React,
     events: { onSignatureChange: 'signatureChange' } as FkSignatureInputEvents,
     defineCustomElement: defineFkSignatureInput
+});
+
+export type FkSlotPickerEvents = { onSlotPick: EventName<FkSlotPickerCustomEvent<PickedSlot | undefined>> };
+
+export const FkSlotPicker: StencilReactComponent<FkSlotPickerElement, FkSlotPickerEvents, Components.FkSlotPicker> = /*@__PURE__*/ createComponent<FkSlotPickerElement, FkSlotPickerEvents, Components.FkSlotPicker>({
+    tagName: 'fk-slot-picker',
+    elementClass: FkSlotPickerElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onSlotPick: 'slotPick' } as FkSlotPickerEvents,
+    defineCustomElement: defineFkSlotPicker
 });
 
 export type FkStepperEvents = {

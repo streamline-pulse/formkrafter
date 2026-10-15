@@ -35,6 +35,8 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 | `tax-id` | string | identifiant fiscal contrôlé par `idFormat` : `bj-ifu` (13 chiffres), `fr-siren` / `fr-siret` (clé de Luhn), `digits-<n>` |
 | `iban` | string | IBAN contrôlé selon ISO 7064 mod 97-10, groupé par quatre à la sortie du champ |
 | `money` | object | `{ amount, currency }`, la devise choisie parmi `currencies`, `currency` par défaut |
+| `appointment` | object | un créneau `{ id, start, end }` choisi jour par jour, depuis `slotsUrl` (liste avec `remaining`) ou généré par des règles d’ouverture (`days`, `from`, `to`, `duration`, `horizonDays`, `noticeHours`, `exclude`) |
+| `date-range` | object | `{ from, to }`, la fin jamais avant le début |
 
 ### Data
 

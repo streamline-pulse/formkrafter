@@ -583,3 +583,17 @@ select.fk-field__input {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: 0.05em;
 }
+
+/* Plage de dates. */
+.fk-range {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.fk-range__part {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--fk-text-muted, #71717a);
+}

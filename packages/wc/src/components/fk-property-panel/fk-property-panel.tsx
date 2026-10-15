@@ -354,6 +354,18 @@ export class FkPropertyPanel {
               ),
             ]
           : null}
+        {configs && 'slotsUrl' in configs
+          ? [
+              this.textField(fkTOr('panel.slotsUrl', 'Slots URL (empty = opening rules)'), configs.slotsUrl, (value) => this.emitConfigs({ slotsUrl: value })),
+              this.textField(fkTOr('panel.slotDays', 'Open days (1 = Monday … 7 = Sunday)'), configs.days, (value) => this.emitConfigs({ days: value })),
+              this.textField(fkTOr('panel.slotFrom', 'Opens at'), configs.from, (value) => this.emitConfigs({ from: value })),
+              this.textField(fkTOr('panel.slotTo', 'Closes at'), configs.to, (value) => this.emitConfigs({ to: value })),
+              this.textField(fkTOr('panel.slotDuration', 'Slot length (minutes)'), configs.duration, (value) => this.emitConfigs({ duration: value === '' ? undefined : Number(value) })),
+              this.textField(fkTOr('panel.slotHorizon', 'Bookable days ahead'), configs.horizonDays, (value) => this.emitConfigs({ horizonDays: value === '' ? undefined : Number(value) })),
+              this.textField(fkTOr('panel.slotNotice', 'Notice (hours)'), configs.noticeHours, (value) => this.emitConfigs({ noticeHours: value === '' ? undefined : Number(value) })),
+              this.textField(fkTOr('panel.slotExclude', 'Closed dates (YYYY-MM-DD, comma-separated)'), configs.exclude, (value) => this.emitConfigs({ exclude: value })),
+            ]
+          : null}
         {configs && 'tileUrl' in configs
           ? [
               this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>

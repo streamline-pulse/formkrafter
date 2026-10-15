@@ -7,13 +7,15 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AddressFeature } from "./components/fk-address-search/fk-address-search";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
-import { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { BrickMold, BrickSpec, FieldAnnotations, SlotRules, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 import { GeoGeometry, GeoMode, GeoZone } from "./components/fk-geo-map/fk-geo-map";
+import { PickedSlot } from "./components/fk-slot-picker/fk-slot-picker";
 import { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export { AddressFeature } from "./components/fk-address-search/fk-address-search";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
-export { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { BrickMold, BrickSpec, FieldAnnotations, SlotRules, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
 export { GeoGeometry, GeoMode, GeoZone } from "./components/fk-geo-map/fk-geo-map";
+export { PickedSlot } from "./components/fk-slot-picker/fk-slot-picker";
 export { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export namespace Components {
     /**
@@ -346,6 +348,29 @@ export namespace Components {
         "disabled": boolean;
         "value"?: string;
     }
+    /**
+     * Picks an appointment slot (the event is `slotPick`: `slotChange` would collide with
+     * the browser's native `slotchange` event in the JSX binding): the days that still have slots, then the slots
+     * of the chosen day. Slots come from a URL (`slotsUrl`, answering a list with
+     * `remaining` counts) or are generated from the opening rules.
+     */
+    interface FkSlotPicker {
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        "locale"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
+        /**
+          * @default {}
+         */
+        "rules": SlotRules;
+        "slotsUrl"?: string;
+        "value"?: PickedSlot;
+    }
     interface FkStepper {
         "dataMap"?: Record<string, unknown>;
         /**
@@ -448,6 +473,10 @@ export interface FkSelectInputCustomEvent<T> extends CustomEvent<T> {
 export interface FkSignatureInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkSignatureInputElement;
+}
+export interface FkSlotPickerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkSlotPickerElement;
 }
 export interface FkStepperCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -774,6 +803,29 @@ declare global {
         prototype: HTMLFkSignatureInputElement;
         new (): HTMLFkSignatureInputElement;
     };
+    interface HTMLFkSlotPickerElementEventMap {
+        "slotPick": PickedSlot | undefined;
+    }
+    /**
+     * Picks an appointment slot (the event is `slotPick`: `slotChange` would collide with
+     * the browser's native `slotchange` event in the JSX binding): the days that still have slots, then the slots
+     * of the chosen day. Slots come from a URL (`slotsUrl`, answering a list with
+     * `remaining` counts) or are generated from the opening rules.
+     */
+    interface HTMLFkSlotPickerElement extends Components.FkSlotPicker, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkSlotPickerElementEventMap>(type: K, listener: (this: HTMLFkSlotPickerElement, ev: FkSlotPickerCustomEvent<HTMLFkSlotPickerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkSlotPickerElementEventMap>(type: K, listener: (this: HTMLFkSlotPickerElement, ev: FkSlotPickerCustomEvent<HTMLFkSlotPickerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkSlotPickerElement: {
+        prototype: HTMLFkSlotPickerElement;
+        new (): HTMLFkSlotPickerElement;
+    };
     interface HTMLFkStepperElementEventMap {
         "stepTouch": { keys: string[] };
         "stepperSubmit": void;
@@ -852,6 +904,7 @@ declare global {
         "fk-rules-editor": HTMLFkRulesEditorElement;
         "fk-select-input": HTMLFkSelectInputElement;
         "fk-signature-input": HTMLFkSignatureInputElement;
+        "fk-slot-picker": HTMLFkSlotPickerElement;
         "fk-stepper": HTMLFkStepperElement;
         "fk-tabs": HTMLFkTabsElement;
         "fk-variable-picker": HTMLFkVariablePickerElement;
@@ -1229,6 +1282,30 @@ declare namespace LocalJSX {
         "onSignatureChange"?: (event: FkSignatureInputCustomEvent<string | undefined>) => void;
         "value"?: string;
     }
+    /**
+     * Picks an appointment slot (the event is `slotPick`: `slotChange` would collide with
+     * the browser's native `slotchange` event in the JSX binding): the days that still have slots, then the slots
+     * of the chosen day. Slots come from a URL (`slotsUrl`, answering a list with
+     * `remaining` counts) or are generated from the opening rules.
+     */
+    interface FkSlotPicker {
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        "locale"?: string;
+        "onSlotPick"?: (event: FkSlotPickerCustomEvent<PickedSlot | undefined>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
+        /**
+          * @default {}
+         */
+        "rules"?: SlotRules;
+        "slotsUrl"?: string;
+        "value"?: PickedSlot;
+    }
     interface FkStepper {
         "dataMap"?: Record<string, unknown>;
         /**
@@ -1370,6 +1447,12 @@ declare namespace LocalJSX {
         "value": string;
         "disabled": boolean;
     }
+    interface FkSlotPickerAttributes {
+        "slotsUrl": string;
+        "locale": string;
+        "disabled": boolean;
+        "readOnly": boolean;
+    }
     interface FkStepperAttributes {
         "editable": boolean;
         "readOnly": boolean;
@@ -1400,6 +1483,7 @@ declare namespace LocalJSX {
         "fk-rules-editor": Omit<FkRulesEditor, keyof FkRulesEditorAttributes> & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes]?: FkRulesEditor[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `attr:${K}`]?: FkRulesEditorAttributes[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `prop:${K}`]?: FkRulesEditor[K] };
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
         "fk-signature-input": Omit<FkSignatureInput, keyof FkSignatureInputAttributes> & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes]?: FkSignatureInput[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `attr:${K}`]?: FkSignatureInputAttributes[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `prop:${K}`]?: FkSignatureInput[K] };
+        "fk-slot-picker": Omit<FkSlotPicker, keyof FkSlotPickerAttributes> & { [K in keyof FkSlotPicker & keyof FkSlotPickerAttributes]?: FkSlotPicker[K] } & { [K in keyof FkSlotPicker & keyof FkSlotPickerAttributes as `attr:${K}`]?: FkSlotPickerAttributes[K] } & { [K in keyof FkSlotPicker & keyof FkSlotPickerAttributes as `prop:${K}`]?: FkSlotPicker[K] };
         "fk-stepper": Omit<FkStepper, keyof FkStepperAttributes> & { [K in keyof FkStepper & keyof FkStepperAttributes]?: FkStepper[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `attr:${K}`]?: FkStepperAttributes[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `prop:${K}`]?: FkStepper[K] };
         "fk-tabs": Omit<FkTabs, keyof FkTabsAttributes> & { [K in keyof FkTabs & keyof FkTabsAttributes]?: FkTabs[K] } & { [K in keyof FkTabs & keyof FkTabsAttributes as `attr:${K}`]?: FkTabsAttributes[K] } & { [K in keyof FkTabs & keyof FkTabsAttributes as `prop:${K}`]?: FkTabs[K] };
         "fk-variable-picker": FkVariablePicker;
@@ -1445,6 +1529,13 @@ declare module "@stencil/core" {
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
             "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;
             "fk-signature-input": LocalJSX.IntrinsicElements["fk-signature-input"] & JSXBase.HTMLAttributes<HTMLFkSignatureInputElement>;
+            /**
+             * Picks an appointment slot (the event is `slotPick`: `slotChange` would collide with
+             * the browser's native `slotchange` event in the JSX binding): the days that still have slots, then the slots
+             * of the chosen day. Slots come from a URL (`slotsUrl`, answering a list with
+             * `remaining` counts) or are generated from the opening rules.
+             */
+            "fk-slot-picker": LocalJSX.IntrinsicElements["fk-slot-picker"] & JSXBase.HTMLAttributes<HTMLFkSlotPickerElement>;
             "fk-stepper": LocalJSX.IntrinsicElements["fk-stepper"] & JSXBase.HTMLAttributes<HTMLFkStepperElement>;
             "fk-tabs": LocalJSX.IntrinsicElements["fk-tabs"] & JSXBase.HTMLAttributes<HTMLFkTabsElement>;
             /**

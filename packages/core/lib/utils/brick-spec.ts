@@ -149,6 +149,10 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
             property.format = `identity-${brick.configs.idFormat}`;
             messages.format = defaultValidationMessage("identity", locale);
         }
+        if (brick.id === "date-range") {
+            property.dateRange = true;
+            messages.dateRange = defaultValidationMessage("dateRange", locale);
+        }
         if (brick.id === "mrz") {
             property.mrzValid = true;
             messages.mrzValid = defaultValidationMessage("mrz", locale);
