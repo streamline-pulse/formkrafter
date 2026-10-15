@@ -13,7 +13,7 @@ const ajv = new Ajv({ allErrors: true });
 addFormats(ajv, ["email", "uri"]);
 ajvErrors(ajv);
 // Identifiants nationaux : un format ajv par regle (identity-fr-nir, identity-digits-10...).
-for (const format of ["fr-nir", "bj-npi", ...Array.from({ length: 20 }, (_, i) => `digits-${i + 1}`)])
+for (const format of ["fr-nir", "bj-npi", "fr-siren", "fr-siret", "bj-ifu", "iban", ...Array.from({ length: 20 }, (_, i) => `digits-${i + 1}`)])
   ajv.addFormat(`identity-${format}`, (value: string) => checkIdentity(format, value));
 // Zone MRZ : l'objet stocke porte le verdict des chiffres de controle.
 ajv.addKeyword({

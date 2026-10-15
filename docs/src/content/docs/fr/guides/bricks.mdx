@@ -32,6 +32,9 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 | `geo-layer` | object | une zone choisie sur une couche de référence (`layerUrl`, FeatureCollection GeoJSON ; `codeProperty` / `nameProperty`), stockée en `{ code, name }`, en tableau avec `multiple` ; une liste déroulante propose les zones sans la carte |
 | `national-id` | string | identifiant national contrôlé par `idFormat` : `fr-nir` (13 chiffres + clé), `bj-npi` (10 chiffres), `digits-<n>` |
 | `mrz` | object | zone de lecture d’un passeport (2 × 44) ou d’une carte d’identité (3 × 30) : champs lus, chaque chiffre de contrôle ICAO 9303 vérifié, le formulaire refuse une zone incohérente |
+| `tax-id` | string | identifiant fiscal contrôlé par `idFormat` : `bj-ifu` (13 chiffres), `fr-siren` / `fr-siret` (clé de Luhn), `digits-<n>` |
+| `iban` | string | IBAN contrôlé selon ISO 7064 mod 97-10, groupé par quatre à la sortie du champ |
+| `money` | object | `{ amount, currency }`, la devise choisie parmi `currencies`, `currency` par défaut |
 
 ### Data
 

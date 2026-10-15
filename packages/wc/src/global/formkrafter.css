@@ -566,3 +566,20 @@ select.fk-field__input {
 .fk-mrz__row dd {
   margin: 0;
 }
+
+/* Montant avec devise. */
+.fk-money {
+  display: flex;
+  gap: 0.5rem;
+}
+.fk-money__amount {
+  flex: 1;
+}
+.fk-money__currency {
+  width: auto;
+  min-width: 5.5rem;
+}
+.fk-iban__input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.05em;
+}

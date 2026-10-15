@@ -344,6 +344,16 @@ export class FkPropertyPanel {
               this.emitConfigs({ idFormat: value })
             )
           : null}
+        {configs && 'currencies' in configs
+          ? [
+              this.textField(fkTOr('panel.currencies', 'Currencies offered (XOF, EUR, USD)'), configs.currencies, (value) =>
+                this.emitConfigs({ currencies: value })
+              ),
+              this.textField(fkTOr('panel.currency', 'Default currency'), configs.currency, (value) =>
+                this.emitConfigs({ currency: value.toUpperCase() })
+              ),
+            ]
+          : null}
         {configs && 'tileUrl' in configs
           ? [
               this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>

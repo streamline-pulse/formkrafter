@@ -183,6 +183,11 @@ const en: FkTranslations = {
   'mrz.sex': 'Sex',
   'mrz.expiryDate': 'Expiry date',
   'category.Identity': 'Identity',
+  'category.Finance': 'Finance',
+  'money.amount': 'Amount',
+  'money.currency': 'Currency',
+  'panel.currencies': 'Currencies offered (XOF, EUR, USD)',
+  'panel.currency': 'Default currency',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -368,6 +373,11 @@ export const frFkTranslations: FkTranslations = {
   'mrz.sex': 'Sexe',
   'mrz.expiryDate': 'Date d’expiration',
   'category.Identity': 'Identité',
+  'category.Finance': 'Finance',
+  'money.amount': 'Montant',
+  'money.currency': 'Devise',
+  'panel.currencies': 'Devises proposées (XOF, EUR, USD)',
+  'panel.currency': 'Devise par défaut',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');

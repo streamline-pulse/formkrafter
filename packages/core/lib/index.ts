@@ -25,7 +25,7 @@ export { RecapItem, collectRecapItems } from "./utils/recap.js";
 
 // Field introspection, for backends and assistants that read or fill a form
 export { FieldDescriptor, CollectFieldsOptions, collectFields } from "./utils/fields.js";
-export { IdentityFormat, IDENTITY_FORMATS, checkIdentity, checkFrNir, checkBjNpi, checkDigits } from "./utils/identity.js";
+export { IdentityFormat, IDENTITY_FORMATS, checkIdentity, checkFrNir, checkBjNpi, checkDigits, checkLuhn, checkFrSiren, checkFrSiret, checkBjIfu, checkIban, formatIban } from "./utils/identity.js";
 export { MrzResult, parseMrz, mrzLines, mrzCheckDigit } from "./utils/mrz.js";
 
 // Field review: annotations a reviewer leaves on a filled form

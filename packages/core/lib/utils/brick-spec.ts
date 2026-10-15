@@ -141,7 +141,11 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
         }
 
         // Briques identite : la regle vient de la brique, pas d'une validation a cocher.
-        if (brick.id === "national-id" && typeof brick.configs?.idFormat === "string" && brick.configs.idFormat) {
+        if (brick.id === "iban") {
+            property.format = "identity-iban";
+            messages.format = defaultValidationMessage("iban", locale);
+        }
+        if ((brick.id === "national-id" || brick.id === "tax-id") && typeof brick.configs?.idFormat === "string" && brick.configs.idFormat) {
             property.format = `identity-${brick.configs.idFormat}`;
             messages.format = defaultValidationMessage("identity", locale);
         }

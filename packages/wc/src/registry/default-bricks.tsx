@@ -8,7 +8,7 @@ import { applyMask } from '../utils/mask';
 import { fkT, fkTOr } from '../i18n/i18n';
 import {
   collectRecapItems,
-  resolveLocalizedText, parseMrz } from '@streamline-pulse/formkrafter-core';
+  resolveLocalizedText, parseMrz, formatIban } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
@@ -829,6 +829,128 @@ export const mrzBrick = createBrick({
   },
 });
 
+const idInput = (props: WcBrickProps, fallback: string, extra: Record<string, unknown> = {}): VNode =>
+  field(
+    props,
+    fallback,
+    <input
+      {...invalidAttr(props)}
+      class="fk-field__input"
+      type="text"
+      autocomplete="off"
+      value={(props.data as string) ?? ''}
+      placeholder={props.configs?.placeholder as string}
+      {...extra}
+      {...lock(props, true)}
+      onInput={(event) => props.onDataChange?.((event.target as HTMLInputElement).value)}
+    />
+  );
+
+// Identifiant fiscal : meme mecanique que l'identifiant national (idFormat).
+export const taxIdBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'tax-id',
+  name: 'Tax identifier',
+  category: 'Finance',
+  defaultConfigs: { label: 'Tax identifier', idFormat: 'bj-ifu', placeholder: '' },
+  render: (props) => idInput(props, 'Tax identifier', { inputmode: 'numeric' }),
+});
+
+// IBAN : controle ISO 7064 par le schema, groupe par quatre a la sortie du champ.
+export const ibanBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'iban',
+  name: 'IBAN',
+  category: 'Finance',
+  defaultConfigs: { label: 'IBAN', placeholder: 'BJ66 BJ06 1010 0100 1441 3900 0769' },
+  render: (props) =>
+    field(
+      props,
+      'IBAN',
+      <input
+        {...invalidAttr(props)}
+        class="fk-field__input fk-iban__input"
+        type="text"
+        autocomplete="off"
+        spellcheck={false}
+        value={(props.data as string) ?? ''}
+        placeholder={props.configs?.placeholder as string}
+        {...lock(props, true)}
+        onInput={(event) => props.onDataChange?.((event.target as HTMLInputElement).value.toUpperCase())}
+        onBlur={(event) => {
+          const input = event.target as HTMLInputElement;
+          if (input.value.trim()) props.onDataChange?.(formatIban(input.value));
+        }}
+      />
+    ),
+});
+
+type MoneyValue = { amount: number; currency: string };
+
+const currenciesOf = (props: WcBrickProps): string[] => {
+  const raw = props.configs?.currencies;
+  const list = typeof raw === 'string' ? raw.split(',') : Array.isArray(raw) ? raw.map(String) : [];
+  const cleaned = list.map((code) => code.trim().toUpperCase()).filter(Boolean);
+  return cleaned.length ? cleaned : ['XOF'];
+};
+
+// Montant avec devise : { amount, currency }, la devise parmi celles proposees.
+export const moneyBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'money',
+  name: 'Amount with currency',
+  category: 'Finance',
+  defaultConfigs: { label: 'Amount', currencies: 'XOF, EUR, USD', currency: 'XOF', placeholder: '' },
+  render: (props) => {
+    const value = (props.data ?? undefined) as MoneyValue | undefined;
+    const currencies = currenciesOf(props);
+    const fallback = typeof props.configs?.currency === 'string' && props.configs.currency ? props.configs.currency.toUpperCase() : currencies[0];
+    const currency = value?.currency ?? fallback;
+    const emit = (amountRaw: string, nextCurrency: string) => {
+      if (amountRaw.trim() === '') return props.onDataChange?.(undefined);
+      const amount = Number(amountRaw);
+      if (Number.isNaN(amount)) return;
+      props.onDataChange?.({ amount, currency: nextCurrency });
+    };
+    return fieldBlock(
+      props,
+      'Amount',
+      <div class="fk-money">
+        <input
+          {...invalidAttr(props)}
+          class="fk-field__input fk-money__amount"
+          type="number"
+          step="any"
+          inputmode="decimal"
+          aria-label={fkT('money.amount')}
+          value={value?.amount ?? ''}
+          placeholder={props.configs?.placeholder as string}
+          {...lock(props, true)}
+          onInput={(event) => emit((event.target as HTMLInputElement).value, currency)}
+        />
+        <select
+          class="fk-field__input fk-money__currency"
+          aria-label={fkT('money.currency')}
+          {...lock(props, false)}
+          onChange={(event) => {
+            const next = (event.target as HTMLSelectElement).value;
+            if (value) props.onDataChange?.({ ...value, currency: next });
+          }}
+        >
+          {[...new Set([currency, ...currencies])].map((code) => (
+            <option value={code} selected={code === currency}>
+              {code}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  },
+});
+
 export const tabsBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1378,6 +1500,9 @@ const defaults = [
     geoLayerBrick,
     nationalIdBrick,
     mrzBrick,
+    taxIdBrick,
+    ibanBrick,
+    moneyBrick,
     addressBrick,
     codeBrick,
     fileBrick,

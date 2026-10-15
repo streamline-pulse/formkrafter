@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { checkFrNir, checkIdentity } from "../lib/utils/identity.js";
+import { checkFrNir, checkIdentity, checkIban, checkLuhn, formatIban } from "../lib/utils/identity.js";
 import { mrzCheckDigit, parseMrz } from "../lib/utils/mrz.js";
 import { validateFormData } from "../lib/validators/validator.js";
 import type { BrickSpec } from "../lib/utils/brick-spec.js";
@@ -102,5 +102,44 @@ describe("zone de lecture ICAO 9303", () => {
     const bad = validateFormData(spec, { passeport: { raw: "x", valid: false, errors: ["format"] } });
     expect(bad.valid).toBe(false);
     expect(JSON.stringify(bad.errors)).toContain("Machine-readable zone");
+  });
+});
+
+describe("identifiants financiers", () => {
+  test("Luhn, SIREN et SIRET", () => {
+    expect(checkLuhn("79927398713")).toBe(true);
+    expect(checkLuhn("79927398710")).toBe(false);
+    expect(checkIdentity("fr-siren", "552 100 554")).toBe(true);
+    expect(checkIdentity("fr-siren", "552 100 555")).toBe(false);
+    expect(checkIdentity("fr-siret", "552 100 554 00013")).toBe(true);
+    expect(checkIdentity("fr-siret", "552 100 554 00014")).toBe(false);
+    expect(checkIdentity("bj-ifu", "3201234567890")).toBe(true);
+    expect(checkIdentity("bj-ifu", "320123456789")).toBe(false);
+  });
+
+  test("IBAN : mod 97-10 et groupement", () => {
+    expect(checkIban("GB82 WEST 1234 5698 7654 32")).toBe(true);
+    expect(checkIban("gb82west12345698765432")).toBe(true);
+    expect(checkIban("GB82 WEST 1234 5698 7654 33")).toBe(false);
+    expect(checkIban("FR76 3000 6000 0112 3456 7890 189")).toBe(true);
+    expect(checkIban("XX00")).toBe(false);
+    expect(formatIban("gb82west12345698765432")).toBe("GB82 WEST 1234 5698 7654 32");
+  });
+
+  test("les briques iban et tax-id appliquent leur regle dans le schema", () => {
+    const spec = {
+      type: "panel", id: "column", name: "F", configs: { uid: "r", key: "form" },
+      children: [
+        { type: "input", dataType: "string", id: "iban", name: "IBAN", configs: { uid: "i", key: "rib", label: "RIB" } },
+        { type: "input", dataType: "string", id: "tax-id", name: "Tax", configs: { uid: "t", key: "ifu", label: "IFU", idFormat: "bj-ifu" } },
+        { type: "input", dataType: "object", id: "money", name: "Money", configs: { uid: "m", key: "montant", label: "Montant" }, validations: [{ validator: "required" }] },
+      ],
+    } as unknown as BrickSpec;
+    expect(validateFormData(spec, { rib: "GB82 WEST 1234 5698 7654 32", ifu: "3201234567890", montant: { amount: 1500, currency: "XOF" } }).valid).toBe(true);
+    const bad = validateFormData(spec, { rib: "GB82 WEST 1234 5698 7654 33", ifu: "12", montant: { amount: 1, currency: "XOF" } });
+    expect(bad.valid).toBe(false);
+    expect(JSON.stringify(bad.errors)).toContain("Invalid IBAN");
+    expect(JSON.stringify(bad.errors)).toContain("Invalid identifier");
+    expect(validateFormData(spec, {}).valid).toBe(false);
   });
 });

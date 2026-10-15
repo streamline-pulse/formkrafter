@@ -32,6 +32,9 @@ the same palette.
 | `geo-layer` | object | a zone picked on a reference layer (`layerUrl`, GeoJSON FeatureCollection; `codeProperty` / `nameProperty`), stored as `{ code, name }`, an array with `multiple`; a select lists the zones without the map |
 | `national-id` | string | national identifier checked by `idFormat`: `fr-nir` (13 digits + key), `bj-npi` (10 digits), `digits-<n>` |
 | `mrz` | object | machine-readable zone of a passport (2 × 44) or identity card (3 × 30): fields parsed, every ICAO 9303 check digit verified, the form refuses an inconsistent zone |
+| `tax-id` | string | tax identifier checked by `idFormat`: `bj-ifu` (13 digits), `fr-siren` / `fr-siret` (Luhn key), `digits-<n>` |
+| `iban` | string | IBAN checked with ISO 7064 mod 97-10, grouped by four on blur |
+| `money` | object | `{ amount, currency }`, the currency picked among `currencies` with `currency` as default |
 
 ### Data
 

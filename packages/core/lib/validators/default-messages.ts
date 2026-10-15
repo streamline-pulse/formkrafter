@@ -13,6 +13,7 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     type: "Invalid value",
     custom: "Invalid value",
     identity: "Invalid identifier for this format",
+    iban: "Invalid IBAN",
     mrz: "Machine-readable zone unreadable or inconsistent",
   },
   fr: {
@@ -29,6 +30,7 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     type: "Valeur invalide",
     custom: "Valeur invalide",
     identity: "Identifiant invalide pour ce format",
+    iban: "IBAN invalide",
     mrz: "Zone de lecture illisible ou incohérente",
   },
 };
