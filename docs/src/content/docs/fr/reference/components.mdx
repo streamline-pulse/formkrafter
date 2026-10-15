@@ -59,6 +59,7 @@ Rend un spec sous forme de formulaire fonctionnel.
 | `locale` | `string` | — | Locale utilisée pour résoudre les libellés et messages de validation localisés. |
 | `annotations` | `FieldAnnotations` | — | Notes du réviseur, indexées par la `key` des bricks : `{ incorrect?, comment? }`. Affichées sous les champs concernés. |
 | `editableKeys` | `string[]` | — | Si défini, seules ces clés restent modifiables ; tous les autres champs sont en lecture seule. |
+| `notes` | `FieldAnnotations` | — | Les verdicts d'une revue antérieure, affichés en rappel discret sous les champs, quel que soit le mode. |
 
 #### Correction guidée
 
@@ -217,7 +218,8 @@ comportent de la même façon.
 | `spec` | `BrickSpec` | — | **Obligatoire.** Le formulaire qui a été rempli. |
 | `data` | `Record<string, unknown>` | `{}` | Les valeurs à relire. |
 | `context` | `Record<string, unknown>` | — | Comme sur le rendu. |
-| `reviews` | `FieldAnnotations` | `{}` | Annotations de départ, par exemple une relecture précédente. |
+| `reviews` | `FieldAnnotations` | `{}` | Annotations de départ, par exemple un brouillon de cette relecture. |
+| `notes` | `FieldAnnotations` | — | Les verdicts de la relecture précédente, affichés en rappel pour que le réviseur regarde à nouveau ces champs ; la nouvelle revue part vide. |
 | `locale` | `string` | — | Locale des libellés. |
 
 ### Événements

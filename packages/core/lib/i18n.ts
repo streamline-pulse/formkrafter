@@ -140,6 +140,7 @@ const en: FkTranslations = {
   'review.incorrect': 'Incorrect',
   'review.comment': 'Comment for the person who corrects it',
   'review.flagged': 'To correct',
+  'review.previous': 'Flagged in the previous review',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -282,6 +283,7 @@ export const frFkTranslations: FkTranslations = {
   'review.incorrect': 'Incorrect',
   'review.comment': 'Commentaire pour la personne qui corrige',
   'review.flagged': 'À corriger',
+  'review.previous': 'Signalé lors de la revue précédente',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');

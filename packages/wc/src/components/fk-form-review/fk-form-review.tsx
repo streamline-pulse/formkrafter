@@ -20,6 +20,8 @@ export class FkFormReview {
   @Prop() locale?: string;
   /** Existing annotations to start from (by brick key). */
   @Prop() reviews?: FieldAnnotations;
+  /** An earlier review's verdicts, shown as reminders so the reviewer looks at those fields again. */
+  @Prop() notes?: FieldAnnotations;
 
   @Event() reviewChange!: EventEmitter<ReviewChangeDetail>;
 
@@ -57,6 +59,7 @@ export class FkFormReview {
         readOnly={true}
         reviewable={true}
         annotations={this.current}
+        notes={this.notes}
       />
     );
   }

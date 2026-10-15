@@ -39,6 +39,7 @@ export class FkBrickRender {
   @Prop() selectedPath?: string;
   @Prop() errors: Record<string, string> = {};
   @Prop() annotations?: FieldAnnotations;
+  @Prop() notes?: FieldAnnotations;
   @Prop() editableKeys?: string[];
   @Prop() reviewable: boolean = false;
   @Prop() locale?: string;
@@ -77,6 +78,7 @@ export class FkBrickRender {
         dataMap={this.dataMap}
         errors={this.errors}
         annotations={this.annotations}
+        notes={this.notes}
         editableKeys={this.editableKeys}
         reviewable={this.reviewable}
         locale={this.locale}
@@ -94,6 +96,7 @@ export class FkBrickRender {
     const isField = !!key && (spec.type === 'input' || spec.type === 'collection');
     const lockedByKeys = isField && this.editableKeys !== undefined && !this.editableKeys.includes(key);
     const annotation: FieldAnnotation | undefined = isField ? this.annotations?.[key] : undefined;
+    const note: FieldAnnotation | undefined = isField ? this.notes?.[key] : undefined;
     const review = isField && this.reviewable && !editing
       ? {
           value: annotation ?? {},
@@ -118,6 +121,7 @@ export class FkBrickRender {
       disabled: editing ? false : this.disabled || affected.disabled === true,
       readOnly: editing ? false : this.readOnly || lockedByKeys,
       annotation,
+      note,
       review,
       path: this.path,
       editable: editing,

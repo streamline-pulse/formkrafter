@@ -44,6 +44,7 @@ type ReviewEl = HTMLElement & {
   spec: unknown;
   data?: Record<string, unknown>;
   reviews?: Record<string, { incorrect?: boolean; comment?: string }>;
+  notes?: Record<string, { incorrect?: boolean; comment?: string }>;
 };
 type RenderEl = HTMLElement & {
   spec: unknown;
@@ -107,6 +108,7 @@ describe('fk-form-review', () => {
     el.spec = spec();
     el.data = { name: 'Ada', email: 'ada@example.com', agree: true, kind: 'A' };
     el.reviews = { email: { incorrect: true, comment: 'Wrong domain' } };
+    el.notes = { name: { incorrect: true, comment: 'Was misspelled last time' } };
     document.body.appendChild(el);
     el.addEventListener('reviewChange', (event) => {
       last = structuredClone((event as CustomEvent).detail);
@@ -119,6 +121,14 @@ describe('fk-form-review', () => {
     expect(inputs.length).toBeGreaterThanOrEqual(2);
     expect(inputs.every((input) => input.hasAttribute('readonly'))).toBe(true);
     expect(el.querySelectorAll('.fk-review__flag').length).toBe(4);
+  });
+
+  test('shows the previous review as a reminder next to fresh controls', () => {
+    const name = fieldOf(el, 'name');
+    expect(name.querySelector('.fk-review--previous .fk-review__text')?.textContent).toBe('Was misspelled last time');
+    expect(name.querySelector('.fk-review__flag input')).toBeTruthy();
+    expect((name.querySelector('.fk-review__flag input') as HTMLInputElement).checked).toBe(false);
+    expect(fieldOf(el, 'email').querySelector('.fk-review--previous')).toBeNull();
   });
 
   test('starts from the given reviews', () => {

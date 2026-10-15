@@ -57,6 +57,7 @@ Renders a spec as a working form.
 | `locale` | `string` | — | Locale used to resolve localized labels and validation messages. |
 | `annotations` | `FieldAnnotations` | — | Reviewer notes, keyed by brick `key`: `{ incorrect?, comment? }`. Shown under the matching fields. |
 | `editableKeys` | `string[]` | — | When set, only these keys stay editable; every other field renders read-only. |
+| `notes` | `FieldAnnotations` | — | An earlier review's verdicts, shown as muted reminders under the fields, in any mode. |
 
 #### Guided correction
 
@@ -208,7 +209,8 @@ nested forms, rules and localized labels behave the same.
 | `spec` | `BrickSpec` | — | **Required.** The form that was filled. |
 | `data` | `Record<string, unknown>` | `{}` | The values under review. |
 | `context` | `Record<string, unknown>` | — | Same as on the renderer. |
-| `reviews` | `FieldAnnotations` | `{}` | Annotations to start from, for instance a previous pass. |
+| `reviews` | `FieldAnnotations` | `{}` | Annotations to start from, for instance a draft of this pass. |
+| `notes` | `FieldAnnotations` | — | The previous pass's verdicts, shown as reminders so the reviewer looks at those fields again; the new review starts empty. |
 | `locale` | `string` | — | Locale for labels. |
 
 ### Events

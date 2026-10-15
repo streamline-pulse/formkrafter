@@ -33,6 +33,8 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   readOnly?: boolean;
   /** A reviewer's note on this field, shown under the control. */
   annotation?: FieldAnnotation;
+  /** An earlier review's verdict on this field, shown as a reminder in any mode. */
+  note?: FieldAnnotation;
   /** Present in review mode: the controls to flag the field and comment it. */
   review?: { value: FieldAnnotation; onChange: (next: FieldAnnotation) => void };
   locale?: string;

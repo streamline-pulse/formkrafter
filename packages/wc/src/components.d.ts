@@ -44,6 +44,7 @@ export namespace Components {
          */
         "errors": Record<string, string>;
         "locale"?: string;
+        "notes"?: FieldAnnotations;
         /**
           * @default '0'
          */
@@ -142,6 +143,10 @@ export namespace Components {
         "editableKeys"?: string[];
         "locale"?: string;
         /**
+          * An earlier review's verdicts, shown as reminders under the fields in any mode.
+         */
+        "notes"?: FieldAnnotations;
+        /**
           * @default false
          */
         "readOnly": boolean;
@@ -169,6 +174,10 @@ export namespace Components {
         "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         "locale"?: string;
+        /**
+          * An earlier review's verdicts, shown as reminders so the reviewer looks at those fields again.
+         */
+        "notes"?: FieldAnnotations;
         /**
           * Existing annotations to start from (by brick key).
          */
@@ -676,6 +685,7 @@ declare namespace LocalJSX {
          */
         "errors"?: Record<string, string>;
         "locale"?: string;
+        "notes"?: FieldAnnotations;
         "onBrickConfigsChange"?: (event: FkBrickRenderCustomEvent<BrickConfigsChangeDetail>) => void;
         "onBrickDataChange"?: (event: FkBrickRenderCustomEvent<Record<string, unknown>>) => void;
         "onBrickDuplicate"?: (event: FkBrickRenderCustomEvent<BrickPathDetail>) => void;
@@ -793,6 +803,10 @@ declare namespace LocalJSX {
           * The name of the element, used when submitting an HTML form.
          */
         "name"?: string;
+        /**
+          * An earlier review's verdicts, shown as reminders under the fields in any mode.
+         */
+        "notes"?: FieldAnnotations;
         "onFormDataChange"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "onFormSubmit"?: (event: FkFormRenderCustomEvent<DataChangeDetail>) => void;
         "onValidityChange"?: (event: FkFormRenderCustomEvent<ValidityChangeDetail>) => void;
@@ -822,6 +836,10 @@ declare namespace LocalJSX {
         "context"?: Record<string, unknown>;
         "data"?: Record<string, unknown>;
         "locale"?: string;
+        /**
+          * An earlier review's verdicts, shown as reminders so the reviewer looks at those fields again.
+         */
+        "notes"?: FieldAnnotations;
         "onReviewChange"?: (event: FkFormReviewCustomEvent<ReviewChangeDetail>) => void;
         /**
           * Existing annotations to start from (by brick key).

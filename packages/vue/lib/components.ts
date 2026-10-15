@@ -67,6 +67,7 @@ export const FkBrickRender: StencilVueComponent<JSX.FkBrickRender> = /*@__PURE__
   'selectedPath',
   'errors',
   'annotations',
+  'notes',
   'editableKeys',
   'reviewable',
   'locale',
@@ -162,6 +163,7 @@ export const FkFormRender: StencilVueComponent<JSX.FkFormRender> = /*@__PURE__*/
   'selectedPath',
   'locale',
   'annotations',
+  'notes',
   'editableKeys',
   'reviewable',
   'formDataChange',
@@ -180,6 +182,7 @@ export const FkFormReview: StencilVueComponent<JSX.FkFormReview> = /*@__PURE__*/
   'context',
   'locale',
   'reviews',
+  'notes',
   'reviewChange'
 ], [
   'reviewChange'

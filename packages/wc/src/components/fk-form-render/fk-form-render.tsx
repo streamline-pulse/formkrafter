@@ -49,6 +49,8 @@ export class FkFormRender {
   @Prop() locale?: string;
   /** Reviewer notes shown under the matching fields (by brick key). */
   @Prop() annotations?: FieldAnnotations;
+  /** An earlier review's verdicts, shown as reminders under the fields in any mode. */
+  @Prop() notes?: FieldAnnotations;
   /** When set, only these keys stay editable; every other field renders read-only. */
   @Prop() editableKeys?: string[];
   /** Used by fk-form-review: render the flag and comment controls under each field. */
@@ -345,6 +347,7 @@ export class FkFormRender {
           dataMap={this.dataMap()}
           errors={this.visibleErrors()}
           annotations={this.annotations}
+          notes={this.notes}
           editableKeys={this.editableKeys}
           reviewable={this.reviewable}
           locale={this.locale}

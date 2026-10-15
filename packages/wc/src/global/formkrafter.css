@@ -124,6 +124,23 @@
   border-radius: 0 var(--fk-radius) var(--fk-radius) 0;
 }
 
+.fk-field__notes {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--fk-spacing) / 2);
+}
+
+.fk-review--previous {
+  padding: calc(var(--fk-spacing) / 2) var(--fk-spacing);
+  border-left: 3px solid var(--fk-color-muted);
+  background: color-mix(in srgb, var(--fk-color-muted) 10%, transparent);
+  border-radius: 0 var(--fk-radius) var(--fk-radius) 0;
+}
+
+.fk-review--previous > .fk-review__badge {
+  color: var(--fk-color-muted);
+}
+
 .fk-review__badge {
   font-weight: 600;
   color: var(--fk-color-danger);

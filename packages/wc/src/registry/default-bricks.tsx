@@ -84,7 +84,30 @@ const fieldClass = (props: WcBrickProps, extra = ''): string =>
 
 // Under a field: the reviewer's controls (review mode), or the note left for
 // whoever corrects the value (annotated render). Nothing when neither applies.
+const previousNote = (props: WcBrickProps): VNode | null => {
+  const note = props.note;
+  if (!note || (note.incorrect !== true && !note.comment)) return null;
+  return (
+    <div class="fk-review fk-review--previous" role="note">
+      <span class="fk-review__badge">{fkT('review.previous')}</span>
+      {note.comment ? <p class="fk-review__text">{note.comment}</p> : null}
+    </div>
+  );
+};
+
 const fieldNote = (props: WcBrickProps): VNode | null => {
+  const inner = fieldNoteInner(props);
+  const previous = previousNote(props);
+  if (!inner && !previous) return null;
+  return (
+    <div class="fk-field__notes">
+      {previous}
+      {inner}
+    </div>
+  );
+};
+
+const fieldNoteInner = (props: WcBrickProps): VNode | null => {
   const review = props.review;
   if (review) {
     const flagged = review.value.incorrect === true;
