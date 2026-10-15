@@ -26,6 +26,8 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 | `signature` | string | canvas, stocké en data URL |
 | `address` | object | champ composite |
 | `code` | string | CodeMirror, chargé en lazy |
+| `geo-point` | object | `Point` GeoJSON : clic sur la carte ou saisie latitude / longitude ; Leaflet chargé à la demande, tuiles OpenStreetMap par défaut |
+| `geo-area` | object | `Polygon` ou `LineString` GeoJSON (`shape`) : clic pour ajouter des sommets, glisser pour déplacer, clic droit pour retirer |
 
 ### Data
 

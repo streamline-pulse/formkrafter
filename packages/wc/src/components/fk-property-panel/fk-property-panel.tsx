@@ -316,6 +316,27 @@ export class FkPropertyPanel {
               (value) => this.emitConfigs({ mask: value })
             )
           : null}
+        {configs && 'tileUrl' in configs
+          ? [
+              this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>
+                this.emitConfigs({ center: value })
+              ),
+              this.textField(fkTOr('panel.zoom', 'Initial zoom'), configs.zoom, (value) =>
+                this.emitConfigs({ zoom: value === '' ? undefined : Number(value) })
+              ),
+              this.textField(fkTOr('panel.height', 'Height (px)'), configs.height, (value) =>
+                this.emitConfigs({ height: value === '' ? undefined : Number(value) })
+              ),
+              this.textField(fkTOr('panel.tileUrl', 'Tile URL'), configs.tileUrl, (value) =>
+                this.emitConfigs({ tileUrl: value })
+              ),
+              'shape' in configs
+                ? this.textField(fkTOr('panel.shape', 'Shape (polygon or line)'), configs.shape, (value) =>
+                    this.emitConfigs({ shape: value === 'line' ? 'line' : 'polygon' })
+                  )
+                : null,
+            ]
+          : null}
         {configs && 'accept' in configs
           ? this.textField(
               fkTOr('panel.accept', 'Accepted file types'),

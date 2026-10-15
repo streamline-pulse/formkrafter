@@ -18,6 +18,7 @@ import { defineCustomElement as defineFkFileInput } from '@streamline-pulse/form
 import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js';
 import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js';
 import { defineCustomElement as defineFkFormReview } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-review.js';
+import { defineCustomElement as defineFkGeoMap } from '@streamline-pulse/formkrafter-wc/dist/components/fk-geo-map.js';
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
@@ -193,6 +194,23 @@ export const FkFormReview: StencilVueComponent<JSX.FkFormReview> = /*@__PURE__*/
   'reviewChange'
 ], [
   'reviewChange'
+]);
+
+
+export const FkGeoMap: StencilVueComponent<JSX.FkGeoMap> = /*@__PURE__*/ defineContainer<JSX.FkGeoMap>('fk-geo-map', defineFkGeoMap, [
+  'value',
+  'mode',
+  'center',
+  'zoom',
+  'tileUrl',
+  'attribution',
+  'height',
+  'disabled',
+  'readOnly',
+  'manual',
+  'geoChange'
+], [
+  'geoChange'
 ]);
 
 

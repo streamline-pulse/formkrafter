@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
 import { FkBrickList as FkBrickListElement, defineCustomElement as defineFkBrickList } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-list.js";
@@ -26,6 +26,7 @@ import { FkFileInput as FkFileInputElement, defineCustomElement as defineFkFileI
 import { FkFormBuilder as FkFormBuilderElement, defineCustomElement as defineFkFormBuilder } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-builder.js";
 import { FkFormRender as FkFormRenderElement, defineCustomElement as defineFkFormRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js";
 import { FkFormReview as FkFormReviewElement, defineCustomElement as defineFkFormReview } from "@streamline-pulse/formkrafter-wc/dist/components/fk-form-review.js";
+import { FkGeoMap as FkGeoMapElement, defineCustomElement as defineFkGeoMap } from "@streamline-pulse/formkrafter-wc/dist/components/fk-geo-map.js";
 import { FkPropertyPanel as FkPropertyPanelElement, defineCustomElement as defineFkPropertyPanel } from "@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js";
 import { FkRulesEditor as FkRulesEditorElement, defineCustomElement as defineFkRulesEditor } from "@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js";
 import { FkSelectInput as FkSelectInputElement, defineCustomElement as defineFkSelectInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js";
@@ -217,6 +218,17 @@ export const FkFormReview: StencilReactComponent<FkFormReviewElement, FkFormRevi
     react: React,
     events: { onReviewChange: 'reviewChange' } as FkFormReviewEvents,
     defineCustomElement: defineFkFormReview
+});
+
+export type FkGeoMapEvents = { onGeoChange: EventName<FkGeoMapCustomEvent<GeoGeometry | undefined>> };
+
+export const FkGeoMap: StencilReactComponent<FkGeoMapElement, FkGeoMapEvents, Components.FkGeoMap> = /*@__PURE__*/ createComponent<FkGeoMapElement, FkGeoMapEvents, Components.FkGeoMap>({
+    tagName: 'fk-geo-map',
+    elementClass: FkGeoMapElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onGeoChange: 'geoChange' } as FkGeoMapEvents,
+    defineCustomElement: defineFkGeoMap
 });
 
 export type FkPropertyPanelEvents = {

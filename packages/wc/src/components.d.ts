@@ -7,9 +7,11 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 import { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { GeoGeometry, GeoMode } from "./components/fk-geo-map/fk-geo-map";
 import { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 export { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { GeoGeometry, GeoMode } from "./components/fk-geo-map/fk-geo-map";
 export { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export namespace Components {
     interface FkBrickActions {
@@ -196,6 +198,52 @@ export namespace Components {
         "reviews"?: FieldAnnotations;
         "spec": BrickSpec;
     }
+    /**
+     * A Leaflet map that edits one GeoJSON geometry: a point, a polygon or a
+     * line. Leaflet is loaded on first use so forms without a map stay light.
+     * The value also stays editable without the map: a point has latitude and
+     * longitude inputs, so the field works when tiles cannot load.
+     */
+    interface FkGeoMap {
+        /**
+          * @default '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+         */
+        "attribution": string;
+        /**
+          * Initial view as [latitude, longitude], used when there is no value yet.
+         */
+        "center"?: [number, number];
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * @default 320
+         */
+        "height": number;
+        /**
+          * Show latitude and longitude inputs under a point map.
+          * @default true
+         */
+        "manual": boolean;
+        /**
+          * @default 'point'
+         */
+        "mode": GeoMode;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
+        /**
+          * @default 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+         */
+        "tileUrl": string;
+        "value"?: GeoGeometry;
+        /**
+          * @default 6
+         */
+        "zoom": number;
+    }
     interface FkPropertyPanel {
         "brick": BrickSpec;
         "editLocale"?: string;
@@ -321,6 +369,10 @@ export interface FkFormRenderCustomEvent<T> extends CustomEvent<T> {
 export interface FkFormReviewCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkFormReviewElement;
+}
+export interface FkGeoMapCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkGeoMapElement;
 }
 export interface FkPropertyPanelCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -546,6 +598,29 @@ declare global {
         prototype: HTMLFkFormReviewElement;
         new (): HTMLFkFormReviewElement;
     };
+    interface HTMLFkGeoMapElementEventMap {
+        "geoChange": GeoGeometry | undefined;
+    }
+    /**
+     * A Leaflet map that edits one GeoJSON geometry: a point, a polygon or a
+     * line. Leaflet is loaded on first use so forms without a map stay light.
+     * The value also stays editable without the map: a point has latitude and
+     * longitude inputs, so the field works when tiles cannot load.
+     */
+    interface HTMLFkGeoMapElement extends Components.FkGeoMap, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkGeoMapElementEventMap>(type: K, listener: (this: HTMLFkGeoMapElement, ev: FkGeoMapCustomEvent<HTMLFkGeoMapElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkGeoMapElementEventMap>(type: K, listener: (this: HTMLFkGeoMapElement, ev: FkGeoMapCustomEvent<HTMLFkGeoMapElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkGeoMapElement: {
+        prototype: HTMLFkGeoMapElement;
+        new (): HTMLFkGeoMapElement;
+    };
     interface HTMLFkPropertyPanelElementEventMap {
         "brickConfigsChange": BrickConfigsChangeDetail;
         "brickValidationsChange": BrickValidationsChangeDetail;
@@ -688,6 +763,7 @@ declare global {
         "fk-form-builder": HTMLFkFormBuilderElement;
         "fk-form-render": HTMLFkFormRenderElement;
         "fk-form-review": HTMLFkFormReviewElement;
+        "fk-geo-map": HTMLFkGeoMapElement;
         "fk-property-panel": HTMLFkPropertyPanelElement;
         "fk-rules-editor": HTMLFkRulesEditorElement;
         "fk-select-input": HTMLFkSelectInputElement;
@@ -911,6 +987,53 @@ declare namespace LocalJSX {
         "reviews"?: FieldAnnotations;
         "spec": BrickSpec;
     }
+    /**
+     * A Leaflet map that edits one GeoJSON geometry: a point, a polygon or a
+     * line. Leaflet is loaded on first use so forms without a map stay light.
+     * The value also stays editable without the map: a point has latitude and
+     * longitude inputs, so the field works when tiles cannot load.
+     */
+    interface FkGeoMap {
+        /**
+          * @default '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+         */
+        "attribution"?: string;
+        /**
+          * Initial view as [latitude, longitude], used when there is no value yet.
+         */
+        "center"?: [number, number];
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * @default 320
+         */
+        "height"?: number;
+        /**
+          * Show latitude and longitude inputs under a point map.
+          * @default true
+         */
+        "manual"?: boolean;
+        /**
+          * @default 'point'
+         */
+        "mode"?: GeoMode;
+        "onGeoChange"?: (event: FkGeoMapCustomEvent<GeoGeometry | undefined>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
+        /**
+          * @default 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+         */
+        "tileUrl"?: string;
+        "value"?: GeoGeometry;
+        /**
+          * @default 6
+         */
+        "zoom"?: number;
+    }
     interface FkPropertyPanel {
         "brick": BrickSpec;
         "editLocale"?: string;
@@ -1063,6 +1186,16 @@ declare namespace LocalJSX {
     interface FkFormReviewAttributes {
         "locale": string;
     }
+    interface FkGeoMapAttributes {
+        "mode": GeoMode;
+        "zoom": number;
+        "tileUrl": string;
+        "attribution": string;
+        "height": number;
+        "disabled": boolean;
+        "readOnly": boolean;
+        "manual": boolean;
+    }
     interface FkPropertyPanelAttributes {
         "path": string;
         "locale": string;
@@ -1106,6 +1239,7 @@ declare namespace LocalJSX {
         "fk-form-builder": Omit<FkFormBuilder, keyof FkFormBuilderAttributes> & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes]?: FkFormBuilder[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `attr:${K}`]?: FkFormBuilderAttributes[K] } & { [K in keyof FkFormBuilder & keyof FkFormBuilderAttributes as `prop:${K}`]?: FkFormBuilder[K] };
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-form-review": Omit<FkFormReview, keyof FkFormReviewAttributes> & { [K in keyof FkFormReview & keyof FkFormReviewAttributes]?: FkFormReview[K] } & { [K in keyof FkFormReview & keyof FkFormReviewAttributes as `attr:${K}`]?: FkFormReviewAttributes[K] } & { [K in keyof FkFormReview & keyof FkFormReviewAttributes as `prop:${K}`]?: FkFormReview[K] };
+        "fk-geo-map": Omit<FkGeoMap, keyof FkGeoMapAttributes> & { [K in keyof FkGeoMap & keyof FkGeoMapAttributes]?: FkGeoMap[K] } & { [K in keyof FkGeoMap & keyof FkGeoMapAttributes as `attr:${K}`]?: FkGeoMapAttributes[K] } & { [K in keyof FkGeoMap & keyof FkGeoMapAttributes as `prop:${K}`]?: FkGeoMap[K] };
         "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
         "fk-rules-editor": Omit<FkRulesEditor, keyof FkRulesEditorAttributes> & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes]?: FkRulesEditor[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `attr:${K}`]?: FkRulesEditorAttributes[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `prop:${K}`]?: FkRulesEditor[K] };
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
@@ -1137,6 +1271,13 @@ declare module "@stencil/core" {
              * holds the review map and emits it.
              */
             "fk-form-review": LocalJSX.IntrinsicElements["fk-form-review"] & JSXBase.HTMLAttributes<HTMLFkFormReviewElement>;
+            /**
+             * A Leaflet map that edits one GeoJSON geometry: a point, a polygon or a
+             * line. Leaflet is loaded on first use so forms without a map stay light.
+             * The value also stays editable without the map: a point has latitude and
+             * longitude inputs, so the field works when tiles cannot load.
+             */
+            "fk-geo-map": LocalJSX.IntrinsicElements["fk-geo-map"] & JSXBase.HTMLAttributes<HTMLFkGeoMapElement>;
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
             "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;

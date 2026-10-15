@@ -558,6 +558,60 @@ export const signatureBrick = createBrick({
     ),
 });
 
+const OSM_TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+// "lat, lng" dans les configs du builder -> [lat, lng] pour la carte.
+const parseCenter = (raw: unknown): [number, number] | undefined => {
+  if (Array.isArray(raw) && raw.length === 2 && raw.every((n) => typeof n === 'number')) return [raw[0], raw[1]];
+  if (typeof raw !== 'string') return undefined;
+  const parts = raw.split(',').map((part) => Number(part.trim()));
+  return parts.length === 2 && parts.every((n) => !Number.isNaN(n)) ? [parts[0], parts[1]] : undefined;
+};
+
+const geoNumber = (raw: unknown, fallback: number): number => {
+  const value = typeof raw === 'string' ? Number(raw) : raw;
+  return typeof value === 'number' && !Number.isNaN(value) ? value : fallback;
+};
+
+const geoMap = (props: WcBrickProps, mode: 'point' | 'polygon' | 'line'): VNode => (
+  <fk-geo-map
+    mode={mode}
+    value={(props.data as Record<string, unknown> | undefined) as never}
+    center={parseCenter(props.configs?.center)}
+    zoom={geoNumber(props.configs?.zoom, 6)}
+    height={geoNumber(props.configs?.height, 320)}
+    tileUrl={typeof props.configs?.tileUrl === 'string' && props.configs.tileUrl ? props.configs.tileUrl : OSM_TILES}
+    manual={props.configs?.manual !== false}
+    readOnly={props.readOnly === true}
+    disabled={props.editable === true || props.disabled === true}
+    onGeoChange={(event: CustomEvent<unknown>) => {
+      event.stopPropagation();
+      props.onDataChange?.(event.detail);
+    }}
+  ></fk-geo-map>
+);
+
+export const geoPointBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'geo-point',
+  name: 'Map point',
+  category: 'Geo',
+  defaultConfigs: { label: 'Location', center: '', zoom: 6, height: 320, tileUrl: OSM_TILES, manual: true },
+  // Pas de <label> autour : un clic sur la carte activerait son premier bouton.
+  render: (props) => fieldBlock(props, 'Location', geoMap(props, 'point')),
+});
+
+export const geoAreaBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'geo-area',
+  name: 'Map area',
+  category: 'Geo',
+  defaultConfigs: { label: 'Area', shape: 'polygon', center: '', zoom: 6, height: 320, tileUrl: OSM_TILES },
+  render: (props) => fieldBlock(props, 'Area', geoMap(props, props.configs?.shape === 'line' ? 'line' : 'polygon')),
+});
+
 export const tabsBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1101,6 +1155,8 @@ const defaults = [
     checkboxBrick,
     tagsBrick,
     signatureBrick,
+    geoPointBrick,
+    geoAreaBrick,
     addressBrick,
     codeBrick,
     fileBrick,
