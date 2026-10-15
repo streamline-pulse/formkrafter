@@ -1,5 +1,21 @@
 # @streamline-pulse/formkrafter-vue
 
+## 0.25.0
+
+### Minor Changes
+
+- 875742a: **Template variables suggested while typing.** When the form context carries
+  `_variables` (`{ name, label? }[]`), text and text-area fields open a list as
+  soon as `{{` is typed, filter it with the following characters and insert
+  `{{name}}` on Enter or click (new `fk-variable-picker` element, `variables:
+false` on a brick opts it out, password fields are never suggested). The core
+  gains the `variables.empty` translation.
+
+### Patch Changes
+
+- Updated dependencies [875742a]
+  - @streamline-pulse/formkrafter-wc@0.25.0
+
 ## 0.24.0
 
 ### Minor Changes
