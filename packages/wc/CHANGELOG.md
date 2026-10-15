@@ -1,5 +1,20 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.23.0
+
+### Minor Changes
+
+- 6ef62cd: **`notes`: remind the reviewer of the previous verdict.** When an applicant
+  resubmits after a review, the next reviewer had no trace of what was flagged
+  the first time. `<fk-form-review>` and `<fk-form-render>` take `notes`, an
+  annotation map shown as a muted "Flagged in the previous review" reminder
+  under the fields, while the new review starts empty.
+
+### Patch Changes
+
+- Updated dependencies [6ef62cd]
+  - @streamline-pulse/formkrafter-core@0.23.0
+
 ## 0.22.0
 
 ### Minor Changes
