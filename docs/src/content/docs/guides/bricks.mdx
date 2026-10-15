@@ -30,6 +30,8 @@ the same palette.
 | `geo-area` | object | GeoJSON `Polygon` or `LineString` (`shape`): click to add vertices, drag to move, right-click to remove |
 | `geo-address` | object | address search while typing (Nominatim by default, `searchUrl` with `{q}`), stored as a GeoJSON `Feature` with the normalised address and its point, adjustable on a map |
 | `geo-layer` | object | a zone picked on a reference layer (`layerUrl`, GeoJSON FeatureCollection; `codeProperty` / `nameProperty`), stored as `{ code, name }`, an array with `multiple`; a select lists the zones without the map |
+| `national-id` | string | national identifier checked by `idFormat`: `fr-nir` (13 digits + key), `bj-npi` (10 digits), `digits-<n>` |
+| `mrz` | object | machine-readable zone of a passport (2 × 44) or identity card (3 × 30): fields parsed, every ICAO 9303 check digit verified, the form refuses an inconsistent zone |
 
 ### Data
 

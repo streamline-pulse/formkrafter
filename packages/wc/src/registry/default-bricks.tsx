@@ -8,8 +8,7 @@ import { applyMask } from '../utils/mask';
 import { fkT, fkTOr } from '../i18n/i18n';
 import {
   collectRecapItems,
-  resolveLocalizedText,
-} from '@streamline-pulse/formkrafter-core';
+  resolveLocalizedText, parseMrz } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
@@ -737,6 +736,99 @@ export const geoLayerBrick = createBrick({
   },
 });
 
+// Identifiant national : un champ texte dont la regle de controle vient de
+// `idFormat` (fr-nir, bj-npi, digits-N), appliquee par le schema de validation.
+export const nationalIdBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'national-id',
+  name: 'National identifier',
+  category: 'Identity',
+  defaultConfigs: { label: 'National identifier', idFormat: 'digits-10', placeholder: '' },
+  render: (props) =>
+    field(
+      props,
+      'National identifier',
+      <input
+        {...invalidAttr(props)}
+        class="fk-field__input"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        value={(props.data as string) ?? ''}
+        placeholder={props.configs?.placeholder as string}
+        {...lock(props, true)}
+        onInput={(event) => props.onDataChange?.((event.target as HTMLInputElement).value)}
+      />
+    ),
+});
+
+type MrzValue = { raw: string; valid: boolean; errors: string[]; documentNumber?: string; nationality?: string; surname?: string; givenNames?: string; birthDate?: string | null; sex?: string; expiryDate?: string | null };
+
+// Zone MRZ : les lignes collees sont lues, les chiffres de controle verifies,
+// les champs affiches ; la valeur porte le verdict pour le schema (`mrzValid`).
+export const mrzBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'mrz',
+  name: 'Travel document (MRZ)',
+  category: 'Identity',
+  defaultConfigs: { label: 'Travel document' },
+  render: (props) => {
+    const value = props.data as MrzValue | undefined;
+    const parsed = value && 'format' in value ? (value as MrzValue & { format: string }) : undefined;
+    const rows: [string, string | null | undefined][] = parsed
+      ? [
+          [fkT('mrz.documentNumber'), parsed.documentNumber],
+          [fkT('mrz.nationality'), parsed.nationality],
+          [fkT('mrz.surname'), parsed.surname],
+          [fkT('mrz.givenNames'), parsed.givenNames],
+          [fkT('mrz.birthDate'), parsed.birthDate],
+          [fkT('mrz.sex'), parsed.sex],
+          [fkT('mrz.expiryDate'), parsed.expiryDate],
+        ]
+      : [];
+    return fieldBlock(
+      props,
+      'Travel document',
+      <div class="fk-mrz">
+        <textarea
+          {...invalidAttr(props)}
+          class="fk-field__input fk-field__input--textarea fk-mrz__input"
+          rows={3}
+          spellcheck={false}
+          autocomplete="off"
+          value={value?.raw ?? ''}
+          placeholder={(props.configs?.placeholder as string) || fkT('mrz.placeholder')}
+          {...lock(props, true)}
+          onInput={(event) => {
+            const raw = (event.target as HTMLTextAreaElement).value;
+            if (!raw.trim()) return props.onDataChange?.(undefined);
+            const result = parseMrz(raw);
+            props.onDataChange?.(result ?? { raw, valid: false, errors: ['format'] });
+          }}
+        ></textarea>
+        {value && !parsed ? <p class="fk-mrz__status fk-mrz__status--bad">{fkT('mrz.unreadable')}</p> : null}
+        {parsed && !parsed.valid ? (
+          <p class="fk-mrz__status fk-mrz__status--bad">
+            {fkT('mrz.invalid')} {parsed.errors.join(', ')}
+          </p>
+        ) : null}
+        {parsed ? (
+          <dl class={{ 'fk-mrz__fields': true, 'fk-mrz__fields--valid': parsed.valid }}>
+            {rows.map(([label, text]) => (
+              <div class="fk-mrz__row">
+                <dt>{label}</dt>
+                <dd>{text ?? '—'}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+      </div>
+    );
+  },
+});
+
 export const tabsBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1284,6 +1376,8 @@ const defaults = [
     geoAreaBrick,
     geoAddressBrick,
     geoLayerBrick,
+    nationalIdBrick,
+    mrzBrick,
     addressBrick,
     codeBrick,
     fileBrick,

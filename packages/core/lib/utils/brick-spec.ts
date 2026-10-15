@@ -140,6 +140,16 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
             }
         }
 
+        // Briques identite : la regle vient de la brique, pas d'une validation a cocher.
+        if (brick.id === "national-id" && typeof brick.configs?.idFormat === "string" && brick.configs.idFormat) {
+            property.format = `identity-${brick.configs.idFormat}`;
+            messages.format = defaultValidationMessage("identity", locale);
+        }
+        if (brick.id === "mrz") {
+            property.mrzValid = true;
+            messages.mrzValid = defaultValidationMessage("mrz", locale);
+        }
+
         property.errorMessage = messages;
 
         properties[key] = property;

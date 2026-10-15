@@ -339,6 +339,11 @@ export class FkPropertyPanel {
               ),
             ]
           : null}
+        {configs && 'idFormat' in configs
+          ? this.textField(fkTOr('panel.idFormat', 'Identifier format (fr-nir, bj-npi, digits-10…)'), configs.idFormat, (value) =>
+              this.emitConfigs({ idFormat: value })
+            )
+          : null}
         {configs && 'tileUrl' in configs
           ? [
               this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>

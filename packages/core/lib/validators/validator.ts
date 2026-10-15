@@ -6,11 +6,22 @@ import { buildValidationSchema, iterateSchemaBricks } from "../utils/brick-spec.
 import { resolveLocalizedText } from "../utils/localized-text.js";
 import { validationWarnings } from "../utils/lint-spec.js";
 import { defaultValidationMessage } from "./default-messages.js";
+import { checkIdentity } from "../utils/identity.js";
 import { evalBrickCode, getAffectedProperties } from "../brick/utils.js";
 
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv, ["email", "uri"]);
 ajvErrors(ajv);
+// Identifiants nationaux : un format ajv par regle (identity-fr-nir, identity-digits-10...).
+for (const format of ["fr-nir", "bj-npi", ...Array.from({ length: 20 }, (_, i) => `digits-${i + 1}`)])
+  ajv.addFormat(`identity-${format}`, (value: string) => checkIdentity(format, value));
+// Zone MRZ : l'objet stocke porte le verdict des chiffres de controle.
+ajv.addKeyword({
+  keyword: "mrzValid",
+  type: "object",
+  schemaType: "boolean",
+  validate: (expected: boolean, value: { valid?: boolean }) => !expected || value?.valid === true,
+});
 
 const validatorCache = new WeakMap<BrickSpec, Map<string, ValidateFunction>>();
 

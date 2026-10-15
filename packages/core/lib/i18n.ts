@@ -171,6 +171,18 @@ const en: FkTranslations = {
   'panel.layerUrl': 'Reference layer URL (GeoJSON)',
   'panel.codeProperty': 'Code property',
   'panel.nameProperty': 'Name property',
+  'panel.idFormat': 'Identifier format (fr-nir, bj-npi, digits-10…)',
+  'mrz.placeholder': 'Paste or type the two or three lines of the machine-readable zone',
+  'mrz.unreadable': 'Zone not recognised: 2 lines of 44 (passport) or 3 lines of 30 (identity card)',
+  'mrz.invalid': 'Check digits do not match for:',
+  'mrz.documentNumber': 'Document number',
+  'mrz.nationality': 'Nationality',
+  'mrz.surname': 'Surname',
+  'mrz.givenNames': 'Given names',
+  'mrz.birthDate': 'Date of birth',
+  'mrz.sex': 'Sex',
+  'mrz.expiryDate': 'Expiry date',
+  'category.Identity': 'Identity',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -344,6 +356,18 @@ export const frFkTranslations: FkTranslations = {
   'panel.layerUrl': 'URL de la couche de référence (GeoJSON)',
   'panel.codeProperty': 'Propriété du code',
   'panel.nameProperty': 'Propriété du nom',
+  'panel.idFormat': 'Format de l’identifiant (fr-nir, bj-npi, digits-10…)',
+  'mrz.placeholder': 'Collez ou saisissez les deux ou trois lignes de la zone de lecture',
+  'mrz.unreadable': 'Zone non reconnue : 2 lignes de 44 (passeport) ou 3 lignes de 30 (carte d’identité)',
+  'mrz.invalid': 'Chiffres de contrôle incohérents pour :',
+  'mrz.documentNumber': 'Numéro du document',
+  'mrz.nationality': 'Nationalité',
+  'mrz.surname': 'Nom',
+  'mrz.givenNames': 'Prénoms',
+  'mrz.birthDate': 'Date de naissance',
+  'mrz.sex': 'Sexe',
+  'mrz.expiryDate': 'Date d’expiration',
+  'category.Identity': 'Identité',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');

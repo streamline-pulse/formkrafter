@@ -12,6 +12,8 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     url: "Invalid URL",
     type: "Invalid value",
     custom: "Invalid value",
+    identity: "Invalid identifier for this format",
+    mrz: "Machine-readable zone unreadable or inconsistent",
   },
   fr: {
     required: "Ce champ est obligatoire",
@@ -26,6 +28,8 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     url: "URL invalide",
     type: "Valeur invalide",
     custom: "Valeur invalide",
+    identity: "Identifiant invalide pour ce format",
+    mrz: "Zone de lecture illisible ou incohérente",
   },
 };
 
