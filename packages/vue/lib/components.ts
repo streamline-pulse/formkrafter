@@ -224,9 +224,16 @@ export const FkGeoMap: StencilVueComponent<JSX.FkGeoMap> = /*@__PURE__*/ defineC
   'disabled',
   'readOnly',
   'manual',
-  'geoChange'
+  'layerUrl',
+  'layerCodeProperty',
+  'layerNameProperty',
+  'selected',
+  'multiple',
+  'geoChange',
+  'layerChange'
 ], [
-  'geoChange'
+  'geoChange',
+  'layerChange'
 ]);
 
 

@@ -326,6 +326,19 @@ export class FkPropertyPanel {
               ),
             ]
           : null}
+        {configs && 'layerUrl' in configs
+          ? [
+              this.textField(fkTOr('panel.layerUrl', 'Reference layer URL (GeoJSON)'), configs.layerUrl, (value) =>
+                this.emitConfigs({ layerUrl: value })
+              ),
+              this.textField(fkTOr('panel.codeProperty', 'Code property'), configs.codeProperty, (value) =>
+                this.emitConfigs({ codeProperty: value || 'code' })
+              ),
+              this.textField(fkTOr('panel.nameProperty', 'Name property'), configs.nameProperty, (value) =>
+                this.emitConfigs({ nameProperty: value || 'name' })
+              ),
+            ]
+          : null}
         {configs && 'tileUrl' in configs
           ? [
               this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>

@@ -680,6 +680,63 @@ export const geoAddressBrick = createBrick({
   },
 });
 
+type ZoneValue = { code: string; name: string };
+
+// Une zone (ou plusieurs avec `multiple`) choisie sur une couche de reference
+// GeoJSON : stockee par son code et son nom, pas par sa geometrie.
+export const geoLayerBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'geo-layer',
+  name: 'Zone on a layer',
+  category: 'Geo',
+  defaultConfigs: {
+    label: 'Zone',
+    layerUrl: '',
+    codeProperty: 'code',
+    nameProperty: 'name',
+    multiple: false,
+    center: '',
+    zoom: 6,
+    height: 320,
+    tileUrl: OSM_TILES,
+  },
+  render: (props) => {
+    const multiple = props.configs?.multiple === true;
+    const raw = props.data;
+    const zones: ZoneValue[] = multiple
+      ? Array.isArray(raw)
+        ? (raw as ZoneValue[])
+        : []
+      : raw && typeof raw === 'object' && 'code' in (raw as object)
+        ? [raw as ZoneValue]
+        : [];
+    return fieldBlock(
+      props,
+      'Zone',
+      <fk-geo-map
+        mode="layer"
+        layerUrl={typeof props.configs?.layerUrl === 'string' ? props.configs.layerUrl : undefined}
+        layerCodeProperty={typeof props.configs?.codeProperty === 'string' && props.configs.codeProperty ? props.configs.codeProperty : 'code'}
+        layerNameProperty={typeof props.configs?.nameProperty === 'string' && props.configs.nameProperty ? props.configs.nameProperty : 'name'}
+        selected={zones.map((zone) => zone.code)}
+        multiple={multiple}
+        center={parseCenter(props.configs?.center)}
+        zoom={geoNumber(props.configs?.zoom, 6)}
+        height={geoNumber(props.configs?.height, 320)}
+        tileUrl={typeof props.configs?.tileUrl === 'string' && props.configs.tileUrl ? props.configs.tileUrl : OSM_TILES}
+        readOnly={props.readOnly === true}
+        disabled={props.editable === true || props.disabled === true}
+        onLayerChange={(event: CustomEvent<unknown>) => {
+          event.stopPropagation();
+          const picked = event.detail as ZoneValue[];
+          props.onDataChange?.(multiple ? picked : picked[0]);
+        }}
+      ></fk-geo-map>
+    );
+  },
+});
+
 export const tabsBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1226,6 +1283,7 @@ const defaults = [
     geoPointBrick,
     geoAreaBrick,
     geoAddressBrick,
+    geoLayerBrick,
     addressBrick,
     codeBrick,
     fileBrick,

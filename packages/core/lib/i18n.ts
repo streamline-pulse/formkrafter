@@ -164,6 +164,13 @@ const en: FkTranslations = {
   'address.notLocated': 'Address not located: pick a match to place it',
   'address.noResult': 'No matching address',
   'address.unavailable': 'Address search unavailable',
+  'layer.pick': 'Choose a zone…',
+  'layer.pickMany': 'Click the zones on the map',
+  'layer.hint': 'Click a zone on the map to select it',
+  'layer.unavailable': 'Reference layer unavailable',
+  'panel.layerUrl': 'Reference layer URL (GeoJSON)',
+  'panel.codeProperty': 'Code property',
+  'panel.nameProperty': 'Name property',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -330,6 +337,13 @@ export const frFkTranslations: FkTranslations = {
   'address.notLocated': 'Adresse non localisée : choisissez une proposition pour la placer',
   'address.noResult': 'Aucune adresse ne correspond',
   'address.unavailable': 'Recherche d’adresse indisponible',
+  'layer.pick': 'Choisir une zone…',
+  'layer.pickMany': 'Cliquez les zones sur la carte',
+  'layer.hint': 'Cliquez une zone sur la carte pour la choisir',
+  'layer.unavailable': 'Couche de référence indisponible',
+  'panel.layerUrl': 'URL de la couche de référence (GeoJSON)',
+  'panel.codeProperty': 'Propriété du code',
+  'panel.nameProperty': 'Propriété du nom',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');

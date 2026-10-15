@@ -8,12 +8,12 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AddressFeature } from "./components/fk-address-search/fk-address-search";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 import { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
-import { GeoGeometry, GeoMode } from "./components/fk-geo-map/fk-geo-map";
+import { GeoGeometry, GeoMode, GeoZone } from "./components/fk-geo-map/fk-geo-map";
 import { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export { AddressFeature } from "./components/fk-address-search/fk-address-search";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 export { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
-export { GeoGeometry, GeoMode } from "./components/fk-geo-map/fk-geo-map";
+export { GeoGeometry, GeoMode, GeoZone } from "./components/fk-geo-map/fk-geo-map";
 export { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export namespace Components {
     /**
@@ -256,6 +256,18 @@ export namespace Components {
          */
         "height": number;
         /**
+          * @default 'code'
+         */
+        "layerCodeProperty": string;
+        /**
+          * @default 'name'
+         */
+        "layerNameProperty": string;
+        /**
+          * Layer mode: GeoJSON FeatureCollection to pick zones from.
+         */
+        "layerUrl"?: string;
+        /**
           * Show latitude and longitude inputs under a point map.
           * @default true
          */
@@ -267,7 +279,16 @@ export namespace Components {
         /**
           * @default false
          */
+        "multiple": boolean;
+        /**
+          * @default false
+         */
         "readOnly": boolean;
+        /**
+          * Layer mode: codes of the selected zones.
+          * @default []
+         */
+        "selected": string[];
         /**
           * @default 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
          */
@@ -661,6 +682,7 @@ declare global {
     };
     interface HTMLFkGeoMapElementEventMap {
         "geoChange": GeoGeometry | undefined;
+        "layerChange": GeoZone[];
     }
     /**
      * A Leaflet map that edits one GeoJSON geometry: a point, a polygon or a
@@ -1106,6 +1128,18 @@ declare namespace LocalJSX {
          */
         "height"?: number;
         /**
+          * @default 'code'
+         */
+        "layerCodeProperty"?: string;
+        /**
+          * @default 'name'
+         */
+        "layerNameProperty"?: string;
+        /**
+          * Layer mode: GeoJSON FeatureCollection to pick zones from.
+         */
+        "layerUrl"?: string;
+        /**
           * Show latitude and longitude inputs under a point map.
           * @default true
          */
@@ -1114,11 +1148,24 @@ declare namespace LocalJSX {
           * @default 'point'
          */
         "mode"?: GeoMode;
+        /**
+          * @default false
+         */
+        "multiple"?: boolean;
         "onGeoChange"?: (event: FkGeoMapCustomEvent<GeoGeometry | undefined>) => void;
+        /**
+          * Layer mode: the selected zones, in selection order.
+         */
+        "onLayerChange"?: (event: FkGeoMapCustomEvent<GeoZone[]>) => void;
         /**
           * @default false
          */
         "readOnly"?: boolean;
+        /**
+          * Layer mode: codes of the selected zones.
+          * @default []
+         */
+        "selected"?: string[];
         /**
           * @default 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
          */
@@ -1299,6 +1346,10 @@ declare namespace LocalJSX {
         "disabled": boolean;
         "readOnly": boolean;
         "manual": boolean;
+        "layerUrl": string;
+        "layerCodeProperty": string;
+        "layerNameProperty": string;
+        "multiple": boolean;
     }
     interface FkPropertyPanelAttributes {
         "path": string;

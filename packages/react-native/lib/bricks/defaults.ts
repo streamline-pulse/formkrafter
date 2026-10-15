@@ -11,7 +11,7 @@ import { tabsBrick } from './tabs.js'
 import { contentBrick, hiddenBrick, recapBrick } from './output.js'
 import { dataGridBrick } from './data-grid.js'
 import { layoutBricks } from './layout.js'
-import { geoAddressBrick, geoAreaBrick, geoPointBrick } from './geo.js'
+import { geoAddressBrick, geoAreaBrick, geoLayerBrick, geoPointBrick } from './geo.js'
 
 const DEFAULTS_KEY = Symbol.for('formkrafter.native.defaultBricksRegistered')
 const globalFlags = globalThis as unknown as Record<symbol, boolean | undefined>
@@ -38,6 +38,7 @@ export function registerDefaultNativeBricks(): void {
     geoPointBrick,
     geoAreaBrick,
     geoAddressBrick,
+    geoLayerBrick,
     ...layoutBricks,
   ]
   for (const brick of defaults) {

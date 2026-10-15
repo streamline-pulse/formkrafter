@@ -154,3 +154,34 @@ export const geoAddressBrick: NativeBrick = createNativeBrick({
   id: 'geo-address',
   render: (props) => <GeoAddressControl {...props} />,
 })
+
+type Zone = { code: string; name: string }
+
+// Pas de couche cartographique native : les zones choisies sur le web se lisent.
+function GeoLayerControl(props: NativeBrickProps) {
+  const theme = useFkTheme()
+  const raw = props.data
+  const zones: Zone[] = Array.isArray(raw)
+    ? (raw as Zone[])
+    : raw && typeof raw === 'object' && 'code' in (raw as object)
+      ? [raw as Zone]
+      : []
+  return (
+    <Field
+      label={props.configs.label}
+      error={props.error}
+      required={props.validations?.some((v) => v.validator === 'required')}
+    >
+      <Text style={{ fontSize: 14, color: zones.length ? theme.colorText : theme.colorMuted }}>
+        {zones.length ? zones.map((zone) => zone.name).join(', ') : fkT('layer.pick')}
+      </Text>
+      <Text style={{ fontSize: 12, color: theme.colorMuted }}>{fkT('geo.nativeReadOnly')}</Text>
+    </Field>
+  )
+}
+
+export const geoLayerBrick: NativeBrick = createNativeBrick({
+  type: 'input',
+  id: 'geo-layer',
+  render: (props) => <GeoLayerControl {...props} />,
+})

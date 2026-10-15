@@ -93,3 +93,38 @@ fk-geo-map {
 .fk-geo__clear:hover {
   background: var(--fk-bg-muted, rgba(127, 127, 127, 0.12));
 }
+
+.fk-geo__zone {
+  stroke: var(--fk-primary, #16a34a);
+  fill: var(--fk-primary, #16a34a);
+  cursor: pointer;
+}
+
+.fk-geo__select {
+  min-width: 14rem;
+}
+
+.fk-geo__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.fk-geo__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: var(--fk-bg-muted, rgba(127, 127, 127, 0.12));
+  font-size: 0.75rem;
+}
+
+.fk-geo__chip-remove {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  line-height: 1;
+}
