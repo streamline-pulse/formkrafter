@@ -119,6 +119,24 @@ Les actions de collection (ajout, suppression, réordonnancement) restent
 soumission est neutralisée dans les deux cas.
 </Aside>
 
+### Variables de gabarit
+
+Les champs texte et zone de texte peuvent proposer des variables de gabarit
+pendant la saisie. Passez la liste dans le contexte du formulaire sous
+`_variables` ; taper `{{` ouvre la liste, les caractères suivants filtrent
+par nom ou par libellé, Entrée ou un clic insère `{{nom}}`. `variables: false`
+dans les configs d'une brique la désactive. Les champs mot de passe ne
+proposent jamais rien.
+
+```ts
+render.context = {
+  _variables: [
+    { name: 'S1$email', label: 'Demande · Email' },
+    { name: 'RECORD_ID', label: 'Référence du dossier' },
+  ],
+};
+```
+
 ### Événements
 
 | Événement | Detail | Se déclenche quand |

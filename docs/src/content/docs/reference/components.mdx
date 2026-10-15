@@ -113,6 +113,23 @@ the distinction. Collection actions (add, remove, reorder) stay `disabled`
 either way: they are actions, not values. Submission is neutralised under both.
 </Aside>
 
+### Template variables
+
+Text and text-area fields can suggest template variables while typing. Pass
+the list through the form context as `_variables`; typing `{{` opens the
+list, the characters after it filter by name or label, Enter or a click
+inserts `{{name}}`. Set `variables: false` in a brick's configs to opt one
+field out. Password fields never suggest.
+
+```ts
+render.context = {
+  _variables: [
+    { name: 'S1$email', label: 'Request · Email' },
+    { name: 'RECORD_ID', label: 'Case reference' },
+  ],
+};
+```
+
 ### Events
 
 | Event | Detail | Fires when |

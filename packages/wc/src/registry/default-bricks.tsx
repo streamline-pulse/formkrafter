@@ -191,6 +191,24 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
   );
 };
 
+// Variables de gabarit (`{{name}}`) proposees pendant la saisie quand le
+// contexte du formulaire en fournit (`_variables`) ; `variables: false` sur
+// la brique les coupe.
+const withVariables = (props: WcBrickProps, control: VNode): VNode => {
+  const variables = props.dataMap?.['_variables'];
+  if (!Array.isArray(variables) || variables.length === 0 || props.configs?.variables === false || props.readOnly)
+    return control;
+  return (
+    <div class="fk-variables">
+      {control}
+      <fk-variable-picker
+        variables={variables as { name: string; label?: string }[]}
+        onVariablePick={(event: CustomEvent<string>) => props.onDataChange?.(event.detail)}
+      ></fk-variable-picker>
+    </div>
+  );
+};
+
 const createTextVariant = (params: {
   id: string;
   name: string;
@@ -212,6 +230,7 @@ const createTextVariant = (params: {
         params.name,
         adorned(
           props,
+          (params.inputType === 'password' ? (control: VNode) => control : (control: VNode) => withVariables(props, control))(
           <input
           {...invalidAttr(props)}
           class="fk-field__input fk-adorned__input"
@@ -227,6 +246,7 @@ const createTextVariant = (params: {
             props.onDataChange?.(next);
           }}
           />
+          )
         )
       ),
   });
@@ -270,16 +290,19 @@ export const textareaBrick = createBrick({
     field(
       props,
       'Text area',
-      <textarea
-        {...invalidAttr(props)}
-        class="fk-field__input fk-field__input--textarea"
-        value={(props.data as string) ?? ''}
-        placeholder={props.configs?.placeholder as string}
-        {...lock(props, true)}
-        onInput={(event) =>
-          props.onDataChange?.((event.target as HTMLTextAreaElement).value)
-        }
-      ></textarea>
+      withVariables(
+        props,
+        <textarea
+          {...invalidAttr(props)}
+          class="fk-field__input fk-field__input--textarea"
+          value={(props.data as string) ?? ''}
+          placeholder={props.configs?.placeholder as string}
+          {...lock(props, true)}
+          onInput={(event) =>
+            props.onDataChange?.((event.target as HTMLTextAreaElement).value)
+          }
+        ></textarea>
+      )
     ),
 });
 

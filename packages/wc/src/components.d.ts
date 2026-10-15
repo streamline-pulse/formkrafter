@@ -7,8 +7,10 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 import { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
 export { BrickMold, BrickSpec, FieldAnnotations, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export namespace Components {
     interface FkBrickActions {
         "path": string;
@@ -271,6 +273,18 @@ export namespace Components {
          */
         "tabLabels": string[];
     }
+    /**
+     * Suggests template variables inside the text control that precedes it.
+     * Typing `{{` opens the list, the text after it filters, Enter or a click
+     * inserts `{{name}}` in place of what was typed. The host form passes the
+     * variables through its context as `_variables`.
+     */
+    interface FkVariablePicker {
+        /**
+          * @default []
+         */
+        "variables": FkVariable[];
+    }
 }
 export interface FkBrickActionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -331,6 +345,10 @@ export interface FkStepperCustomEvent<T> extends CustomEvent<T> {
 export interface FkTabsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkTabsElement;
+}
+export interface FkVariablePickerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkVariablePickerElement;
 }
 declare global {
     interface HTMLFkBrickActionsElementEventMap {
@@ -633,6 +651,29 @@ declare global {
         prototype: HTMLFkTabsElement;
         new (): HTMLFkTabsElement;
     };
+    interface HTMLFkVariablePickerElementEventMap {
+        "variablePick": string;
+    }
+    /**
+     * Suggests template variables inside the text control that precedes it.
+     * Typing `{{` opens the list, the text after it filters, Enter or a click
+     * inserts `{{name}}` in place of what was typed. The host form passes the
+     * variables through its context as `_variables`.
+     */
+    interface HTMLFkVariablePickerElement extends Components.FkVariablePicker, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkVariablePickerElementEventMap>(type: K, listener: (this: HTMLFkVariablePickerElement, ev: FkVariablePickerCustomEvent<HTMLFkVariablePickerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkVariablePickerElementEventMap>(type: K, listener: (this: HTMLFkVariablePickerElement, ev: FkVariablePickerCustomEvent<HTMLFkVariablePickerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkVariablePickerElement: {
+        prototype: HTMLFkVariablePickerElement;
+        new (): HTMLFkVariablePickerElement;
+    };
     interface HTMLElementTagNameMap {
         "fk-brick-actions": HTMLFkBrickActionsElement;
         "fk-brick-list": HTMLFkBrickListElement;
@@ -653,6 +694,7 @@ declare global {
         "fk-signature-input": HTMLFkSignatureInputElement;
         "fk-stepper": HTMLFkStepperElement;
         "fk-tabs": HTMLFkTabsElement;
+        "fk-variable-picker": HTMLFkVariablePickerElement;
     }
 }
 declare namespace LocalJSX {
@@ -955,6 +997,19 @@ declare namespace LocalJSX {
          */
         "tabLabels"?: string[];
     }
+    /**
+     * Suggests template variables inside the text control that precedes it.
+     * Typing `{{` opens the list, the text after it filters, Enter or a click
+     * inserts `{{name}}` in place of what was typed. The host form passes the
+     * variables through its context as `_variables`.
+     */
+    interface FkVariablePicker {
+        "onVariablePick"?: (event: FkVariablePickerCustomEvent<string>) => void;
+        /**
+          * @default []
+         */
+        "variables"?: FkVariable[];
+    }
 
     interface FkBrickActionsAttributes {
         "path": string;
@@ -1057,6 +1112,7 @@ declare namespace LocalJSX {
         "fk-signature-input": Omit<FkSignatureInput, keyof FkSignatureInputAttributes> & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes]?: FkSignatureInput[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `attr:${K}`]?: FkSignatureInputAttributes[K] } & { [K in keyof FkSignatureInput & keyof FkSignatureInputAttributes as `prop:${K}`]?: FkSignatureInput[K] };
         "fk-stepper": Omit<FkStepper, keyof FkStepperAttributes> & { [K in keyof FkStepper & keyof FkStepperAttributes]?: FkStepper[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `attr:${K}`]?: FkStepperAttributes[K] } & { [K in keyof FkStepper & keyof FkStepperAttributes as `prop:${K}`]?: FkStepper[K] };
         "fk-tabs": Omit<FkTabs, keyof FkTabsAttributes> & { [K in keyof FkTabs & keyof FkTabsAttributes]?: FkTabs[K] } & { [K in keyof FkTabs & keyof FkTabsAttributes as `attr:${K}`]?: FkTabsAttributes[K] } & { [K in keyof FkTabs & keyof FkTabsAttributes as `prop:${K}`]?: FkTabs[K] };
+        "fk-variable-picker": FkVariablePicker;
     }
 }
 export { LocalJSX as JSX };
@@ -1087,6 +1143,13 @@ declare module "@stencil/core" {
             "fk-signature-input": LocalJSX.IntrinsicElements["fk-signature-input"] & JSXBase.HTMLAttributes<HTMLFkSignatureInputElement>;
             "fk-stepper": LocalJSX.IntrinsicElements["fk-stepper"] & JSXBase.HTMLAttributes<HTMLFkStepperElement>;
             "fk-tabs": LocalJSX.IntrinsicElements["fk-tabs"] & JSXBase.HTMLAttributes<HTMLFkTabsElement>;
+            /**
+             * Suggests template variables inside the text control that precedes it.
+             * Typing `{{` opens the list, the text after it filters, Enter or a click
+             * inserts `{{name}}` in place of what was typed. The host form passes the
+             * variables through its context as `_variables`.
+             */
+            "fk-variable-picker": LocalJSX.IntrinsicElements["fk-variable-picker"] & JSXBase.HTMLAttributes<HTMLFkVariablePickerElement>;
         }
     }
 }

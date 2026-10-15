@@ -525,3 +525,10 @@ select.fk-field__input {
   background: color-mix(in srgb, var(--fk-color-text) 3%, var(--fk-color-surface));
   cursor: default;
 }
+
+/* Suggestions de variables sous un champ texte. */
+.fk-variables {
+  position: relative;
+  display: block;
+  width: 100%;
+}

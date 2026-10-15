@@ -24,6 +24,7 @@ import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/fo
 import { defineCustomElement as defineFkSignatureInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-signature-input.js';
 import { defineCustomElement as defineFkStepper } from '@streamline-pulse/formkrafter-wc/dist/components/fk-stepper.js';
 import { defineCustomElement as defineFkTabs } from '@streamline-pulse/formkrafter-wc/dist/components/fk-tabs.js';
+import { defineCustomElement as defineFkVariablePicker } from '@streamline-pulse/formkrafter-wc/dist/components/fk-variable-picker.js';
 
 
 
@@ -269,6 +270,14 @@ export const FkTabs: StencilVueComponent<JSX.FkTabs> = /*@__PURE__*/ defineConta
   'stepTouch'
 ], [
   'stepTouch'
+]);
+
+
+export const FkVariablePicker: StencilVueComponent<JSX.FkVariablePicker> = /*@__PURE__*/ defineContainer<JSX.FkVariablePicker>('fk-variable-picker', defineFkVariablePicker, [
+  'variables',
+  'variablePick'
+], [
+  'variablePick'
 ]);
 
 

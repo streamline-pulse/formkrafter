@@ -141,6 +141,7 @@ const en: FkTranslations = {
   'review.comment': 'Comment for the person who corrects it',
   'review.flagged': 'To correct',
   'review.previous': 'Flagged in the previous review',
+  'variables.empty': 'No matching variable',
 };
 
 export const frFkTranslations: FkTranslations = {
@@ -284,6 +285,7 @@ export const frFkTranslations: FkTranslations = {
   'review.comment': 'Commentaire pour la personne qui corrige',
   'review.flagged': 'À corriger',
   'review.previous': 'Signalé lors de la revue précédente',
+  'variables.empty': 'Aucune variable ne correspond',
 };
 
 const GLOBAL_KEY = Symbol.for('formkrafter.i18n');
