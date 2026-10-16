@@ -1,5 +1,11 @@
 # @streamline-pulse/formkrafter-core
 
+## 0.30.0
+
+### Minor Changes
+
+- e369763: Measures and registries: a `measure` brick (number + unit in a family, with the base-unit equivalent kept for totals), a `vehicle-plate` brick (per-country formats, formatted on blur) and a `company-registry` brick (OHADA RCCM, French RCS, generic), with their validator formats `plate-*` / `registry-*`.
+
 ## 0.29.0
 
 ### Minor Changes
