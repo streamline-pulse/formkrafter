@@ -287,6 +287,11 @@ export class FkPropertyPanel {
         {this.textField(fkT('panel.label'), this.readLocalized(configs?.label), (value) =>
           this.writeTextConfig('label', value)
         )}
+        {configs
+          ? this.textField(fkTOr('panel.description', 'Help text under the field'), this.readLocalized(configs.description), (value) =>
+              this.writeTextConfig('description', value)
+            )
+          : null}
         {isInput
           ? [
               this.textField(

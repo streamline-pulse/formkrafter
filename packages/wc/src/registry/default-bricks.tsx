@@ -175,10 +175,17 @@ const fieldNoteInner = (props: WcBrickProps): VNode | null => {
   );
 };
 
+// Aide descriptive sous le champ (`configs.description`, localisable).
+const fieldHint = (props: WcBrickProps): VNode | null => {
+  const text = resolveLocalizedText(props.configs?.description as never, props.locale);
+  return text ? <p class="fk-field__hint">{text}</p> : null;
+};
+
 const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
   <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
     {labelNode(props, fallback)}
     {control}
+    {fieldHint(props)}
     {fieldError(props)}
     {fieldNote(props)}
   </div>
@@ -193,6 +200,7 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
       <label class={fieldClass(props)} style={asInlineStyle(props.styles)}>
         {labelNode(props, fallback)}
         {control}
+        {fieldHint(props)}
         {fieldError(props)}
       </label>
     );

@@ -56,6 +56,8 @@
 }
 
 .fk-field__input {
+  width: 100%;
+  box-sizing: border-box;
   padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
   border: 1px solid var(--fk-color-border);
   border-radius: var(--fk-radius);
@@ -77,6 +79,14 @@
 .fk-field__error {
   font-size: 0.75rem;
   color: var(--fk-color-danger);
+}
+
+/* Aide descriptive sous le champ (configs.description) : pour les integrateurs et les usagers. */
+.fk-field__hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--fk-color-text-muted, var(--fk-text-muted, #71717a));
 }
 
 .fk-field__main {

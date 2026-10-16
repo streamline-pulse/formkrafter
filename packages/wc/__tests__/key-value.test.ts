@@ -10,7 +10,7 @@ const spec = () => ({
   configs: { uid: 'root', key: 'form' },
   children: [
     { type: 'input', dataType: 'object', id: 'key-value', name: 'Key / value', configs: { uid: 'k', key: 'donnees', label: 'Données' } },
-    { type: 'input', dataType: 'string', id: 'textarea', name: 'Text area', configs: { uid: 't', key: 'brut', label: 'Brut' } },
+    { type: 'input', dataType: 'string', id: 'textarea', name: 'Text area', configs: { uid: 't', key: 'brut', label: 'Brut', description: 'JSON brut ou texte' } },
     {
       type: 'collection', dataType: 'array', id: 'data-grid', name: 'Grid', configs: { uid: 'g', key: 'notifications', label: 'Notifications' },
       children: [{ type: 'input', dataType: 'string', id: 'textarea', name: 'Text area', configs: { uid: 'g1', key: 'template', label: 'Template' } }],
@@ -68,9 +68,10 @@ describe('key / value brick, JSON in text fields and variables inside grids', ()
     expect(el.querySelectorAll('.fk-kv__value fk-variable-picker').length).toBe(2);
   });
 
-  test('an object stored in a text area shows as JSON instead of [object Object]', () => {
+  test('an object stored in a text area shows as JSON instead of [object Object], with its help text', () => {
     const area = el.querySelector('textarea.fk-field__input') as HTMLTextAreaElement;
     expect(area.value).toBe('{\n  "a": 1\n}');
+    expect(area.closest('.fk-field')?.querySelector('.fk-field__hint')?.textContent).toBe('JSON brut ou texte');
   });
 
   test('a text area inside a grid row gets the variable picker from the form context', () => {
