@@ -22,6 +22,14 @@ import type { SlotRules } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
+// Une valeur objet ou liste dans un champ texte (reglage enregistre en JSON)
+// s'affiche en JSON lisible au lieu de « [object Object] ».
+const textValue = (data: unknown, pretty = false): string => {
+  if (data === null || data === undefined) return '';
+  if (typeof data === 'object') return pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
+  return String(data);
+};
+
 const labelOf = (props: WcBrickProps, fallback: string): string =>
   (props.configs?.label as string) ?? props.configs?.key ?? fallback;
 
@@ -244,7 +252,7 @@ const createTextVariant = (params: {
           {...invalidAttr(props)}
           class="fk-field__input fk-adorned__input"
           type={params.inputType}
-          value={(props.data as string) ?? ''}
+          value={textValue(props.data)}
           placeholder={props.configs?.placeholder as string}
           {...lock(props, true)}
           onInput={(event) => {
@@ -304,7 +312,7 @@ export const textareaBrick = createBrick({
         <textarea
           {...invalidAttr(props)}
           class="fk-field__input fk-field__input--textarea"
-          value={(props.data as string) ?? ''}
+          value={textValue(props.data, true)}
           placeholder={props.configs?.placeholder as string}
           {...lock(props, true)}
           onInput={(event) =>
@@ -1386,6 +1394,7 @@ export const dataGridBrick = createBrick({
         <fk-data-grid
           spec={props.brickSpec}
           value={props.data}
+          dataMap={props.dataMap}
           disabled={props.disabled === true || props.readOnly === true}
           readOnly={props.readOnly === true}
           locale={props.locale}
@@ -1403,6 +1412,36 @@ export const dataGridBrick = createBrick({
         />
       )
     ),
+});
+
+// Cle / valeur : un objet plat edite ligne par ligne, les valeurs acceptant les
+// variables ({{…}}) comme un champ texte. Pour une liste, la grille suffit.
+export const keyValueBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'key-value',
+  name: 'Key / value',
+  category: 'Data',
+  defaultConfigs: { label: 'Key / value', keyLabel: '', valueLabel: '' },
+  render: (props) => {
+    const variables = props.dataMap?.['_variables'];
+    return fieldBlock(
+      props,
+      'Key / value',
+      <fk-key-value
+        value={(props.data ?? undefined) as never}
+        keyLabel={(props.configs?.keyLabel as string) || undefined}
+        valueLabel={(props.configs?.valueLabel as string) || undefined}
+        variables={Array.isArray(variables) ? (variables as { name: string; label?: string }[]) : []}
+        readOnly={props.readOnly === true}
+        disabled={props.editable === true || props.disabled === true}
+        onKeyValueChange={(event: CustomEvent<unknown>) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
+        }}
+      ></fk-key-value>
+    );
+  },
 });
 
 export const hiddenBrick = createBrick({
@@ -1789,6 +1828,7 @@ const defaults = [
     codeBrick,
     fileBrick,
     dataGridBrick,
+    keyValueBrick,
     hiddenBrick,
     contentBrick,
     recapBrick,

@@ -21,6 +21,7 @@ import { defineCustomElement as defineFkFormBuilder } from '@streamline-pulse/fo
 import { defineCustomElement as defineFkFormRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-render.js';
 import { defineCustomElement as defineFkFormReview } from '@streamline-pulse/formkrafter-wc/dist/components/fk-form-review.js';
 import { defineCustomElement as defineFkGeoMap } from '@streamline-pulse/formkrafter-wc/dist/components/fk-geo-map.js';
+import { defineCustomElement as defineFkKeyValue } from '@streamline-pulse/formkrafter-wc/dist/components/fk-key-value.js';
 import { defineCustomElement as defineFkPropertyPanel } from '@streamline-pulse/formkrafter-wc/dist/components/fk-property-panel.js';
 import { defineCustomElement as defineFkRulesEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-rules-editor.js';
 import { defineCustomElement as defineFkSelectInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-select-input.js';
@@ -133,6 +134,7 @@ export const FkDataGrid: StencilVueComponent<JSX.FkDataGrid> = /*@__PURE__*/ def
   'notes',
   'reviewable',
   'editableKeys',
+  'dataMap',
   'gridValueChange',
   'brickReviewChange'
 ], [
@@ -254,6 +256,19 @@ export const FkGeoMap: StencilVueComponent<JSX.FkGeoMap> = /*@__PURE__*/ defineC
 ], [
   'geoChange',
   'layerChange'
+]);
+
+
+export const FkKeyValue: StencilVueComponent<JSX.FkKeyValue> = /*@__PURE__*/ defineContainer<JSX.FkKeyValue>('fk-key-value', defineFkKeyValue, [
+  'value',
+  'keyLabel',
+  'valueLabel',
+  'variables',
+  'disabled',
+  'readOnly',
+  'keyValueChange'
+], [
+  'keyValueChange'
 ]);
 
 

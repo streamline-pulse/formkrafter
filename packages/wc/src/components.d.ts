@@ -123,6 +123,10 @@ export namespace Components {
          */
         "annotations"?: FieldAnnotations;
         /**
+          * Data map of the enclosing form: its `_`-prefixed context (variables, API base…) reaches the cells.
+         */
+        "dataMap"?: Record<string, unknown>;
+        /**
           * @default false
          */
         "disabled": boolean;
@@ -346,6 +350,27 @@ export namespace Components {
          */
         "zoom": number;
     }
+    /**
+     * A flat object edited row by row (key, value). Rows with an empty key stay
+     * local until named; values accept template variables through the picker.
+     */
+    interface FkKeyValue {
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        "keyLabel"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
+        "value"?: Record<string, unknown>;
+        "valueLabel"?: string;
+        /**
+          * @default []
+         */
+        "variables": { name: string; label?: string }[];
+    }
     interface FkPropertyPanel {
         "brick": BrickSpec;
         "editLocale"?: string;
@@ -506,6 +531,10 @@ export interface FkFormReviewCustomEvent<T> extends CustomEvent<T> {
 export interface FkGeoMapCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkGeoMapElement;
+}
+export interface FkKeyValueCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkKeyValueElement;
 }
 export interface FkPropertyPanelCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -804,6 +833,27 @@ declare global {
         prototype: HTMLFkGeoMapElement;
         new (): HTMLFkGeoMapElement;
     };
+    interface HTMLFkKeyValueElementEventMap {
+        "keyValueChange": Record<string, string> | undefined;
+    }
+    /**
+     * A flat object edited row by row (key, value). Rows with an empty key stay
+     * local until named; values accept template variables through the picker.
+     */
+    interface HTMLFkKeyValueElement extends Components.FkKeyValue, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkKeyValueElementEventMap>(type: K, listener: (this: HTMLFkKeyValueElement, ev: FkKeyValueCustomEvent<HTMLFkKeyValueElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkKeyValueElementEventMap>(type: K, listener: (this: HTMLFkKeyValueElement, ev: FkKeyValueCustomEvent<HTMLFkKeyValueElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkKeyValueElement: {
+        prototype: HTMLFkKeyValueElement;
+        new (): HTMLFkKeyValueElement;
+    };
     interface HTMLFkPropertyPanelElementEventMap {
         "brickConfigsChange": BrickConfigsChangeDetail;
         "brickValidationsChange": BrickValidationsChangeDetail;
@@ -972,6 +1022,7 @@ declare global {
         "fk-form-render": HTMLFkFormRenderElement;
         "fk-form-review": HTMLFkFormReviewElement;
         "fk-geo-map": HTMLFkGeoMapElement;
+        "fk-key-value": HTMLFkKeyValueElement;
         "fk-property-panel": HTMLFkPropertyPanelElement;
         "fk-rules-editor": HTMLFkRulesEditorElement;
         "fk-select-input": HTMLFkSelectInputElement;
@@ -1101,6 +1152,10 @@ declare namespace LocalJSX {
           * Review maps keyed `grid[index].field`, scoped to each row.
          */
         "annotations"?: FieldAnnotations;
+        /**
+          * Data map of the enclosing form: its `_`-prefixed context (variables, API base…) reaches the cells.
+         */
+        "dataMap"?: Record<string, unknown>;
         /**
           * @default false
          */
@@ -1345,6 +1400,28 @@ declare namespace LocalJSX {
          */
         "zoom"?: number;
     }
+    /**
+     * A flat object edited row by row (key, value). Rows with an empty key stay
+     * local until named; values accept template variables through the picker.
+     */
+    interface FkKeyValue {
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        "keyLabel"?: string;
+        "onKeyValueChange"?: (event: FkKeyValueCustomEvent<Record<string, string> | undefined>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
+        "value"?: Record<string, unknown>;
+        "valueLabel"?: string;
+        /**
+          * @default []
+         */
+        "variables"?: { name: string; label?: string }[];
+    }
     interface FkPropertyPanel {
         "brick": BrickSpec;
         "editLocale"?: string;
@@ -1554,6 +1631,12 @@ declare namespace LocalJSX {
         "layerNameProperty": string;
         "multiple": boolean;
     }
+    interface FkKeyValueAttributes {
+        "keyLabel": string;
+        "valueLabel": string;
+        "disabled": boolean;
+        "readOnly": boolean;
+    }
     interface FkPropertyPanelAttributes {
         "path": string;
         "locale": string;
@@ -1606,6 +1689,7 @@ declare namespace LocalJSX {
         "fk-form-render": Omit<FkFormRender, keyof FkFormRenderAttributes> & { [K in keyof FkFormRender & keyof FkFormRenderAttributes]?: FkFormRender[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `attr:${K}`]?: FkFormRenderAttributes[K] } & { [K in keyof FkFormRender & keyof FkFormRenderAttributes as `prop:${K}`]?: FkFormRender[K] };
         "fk-form-review": Omit<FkFormReview, keyof FkFormReviewAttributes> & { [K in keyof FkFormReview & keyof FkFormReviewAttributes]?: FkFormReview[K] } & { [K in keyof FkFormReview & keyof FkFormReviewAttributes as `attr:${K}`]?: FkFormReviewAttributes[K] } & { [K in keyof FkFormReview & keyof FkFormReviewAttributes as `prop:${K}`]?: FkFormReview[K] };
         "fk-geo-map": Omit<FkGeoMap, keyof FkGeoMapAttributes> & { [K in keyof FkGeoMap & keyof FkGeoMapAttributes]?: FkGeoMap[K] } & { [K in keyof FkGeoMap & keyof FkGeoMapAttributes as `attr:${K}`]?: FkGeoMapAttributes[K] } & { [K in keyof FkGeoMap & keyof FkGeoMapAttributes as `prop:${K}`]?: FkGeoMap[K] };
+        "fk-key-value": Omit<FkKeyValue, keyof FkKeyValueAttributes> & { [K in keyof FkKeyValue & keyof FkKeyValueAttributes]?: FkKeyValue[K] } & { [K in keyof FkKeyValue & keyof FkKeyValueAttributes as `attr:${K}`]?: FkKeyValueAttributes[K] } & { [K in keyof FkKeyValue & keyof FkKeyValueAttributes as `prop:${K}`]?: FkKeyValue[K] };
         "fk-property-panel": Omit<FkPropertyPanel, keyof FkPropertyPanelAttributes> & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes]?: FkPropertyPanel[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `attr:${K}`]?: FkPropertyPanelAttributes[K] } & { [K in keyof FkPropertyPanel & keyof FkPropertyPanelAttributes as `prop:${K}`]?: FkPropertyPanel[K] };
         "fk-rules-editor": Omit<FkRulesEditor, keyof FkRulesEditorAttributes> & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes]?: FkRulesEditor[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `attr:${K}`]?: FkRulesEditorAttributes[K] } & { [K in keyof FkRulesEditor & keyof FkRulesEditorAttributes as `prop:${K}`]?: FkRulesEditor[K] };
         "fk-select-input": Omit<FkSelectInput, keyof FkSelectInputAttributes> & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes]?: FkSelectInput[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `attr:${K}`]?: FkSelectInputAttributes[K] } & { [K in keyof FkSelectInput & keyof FkSelectInputAttributes as `prop:${K}`]?: FkSelectInput[K] };
@@ -1658,6 +1742,11 @@ declare module "@stencil/core" {
              * longitude inputs, so the field works when tiles cannot load.
              */
             "fk-geo-map": LocalJSX.IntrinsicElements["fk-geo-map"] & JSXBase.HTMLAttributes<HTMLFkGeoMapElement>;
+            /**
+             * A flat object edited row by row (key, value). Rows with an empty key stay
+             * local until named; values accept template variables through the picker.
+             */
+            "fk-key-value": LocalJSX.IntrinsicElements["fk-key-value"] & JSXBase.HTMLAttributes<HTMLFkKeyValueElement>;
             "fk-property-panel": LocalJSX.IntrinsicElements["fk-property-panel"] & JSXBase.HTMLAttributes<HTMLFkPropertyPanelElement>;
             "fk-rules-editor": LocalJSX.IntrinsicElements["fk-rules-editor"] & JSXBase.HTMLAttributes<HTMLFkRulesEditorElement>;
             "fk-select-input": LocalJSX.IntrinsicElements["fk-select-input"] & JSXBase.HTMLAttributes<HTMLFkSelectInputElement>;

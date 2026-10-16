@@ -29,6 +29,8 @@ export class FkDataGrid {
   @Prop() notes?: FieldAnnotations;
   @Prop() reviewable = false;
   @Prop() editableKeys?: string[];
+  /** Data map of the enclosing form: its `_`-prefixed context (variables, API base…) reaches the cells. */
+  @Prop() dataMap?: Record<string, unknown>;
 
   @Event() gridValueChange!: EventEmitter<
     Array<Record<string, unknown>> | undefined
@@ -204,6 +206,10 @@ export class FkDataGrid {
     this.gridValueChange.emit(rows.length ? rows : undefined);
   }
 
+  private contextMap(): Record<string, unknown> {
+    return Object.fromEntries(Object.entries(this.dataMap ?? {}).filter(([key]) => key.startsWith('_')));
+  }
+
   render() {
     const children = this.spec.children ?? [];
     const rows = this.rows();
@@ -221,7 +227,7 @@ export class FkDataGrid {
                 <fk-brick-render
                   brickSpec={child}
                   data={row}
-                  dataMap={row}
+                  dataMap={{ ...this.contextMap(), ...row }}
                   errors={this.visibleRowErrors(index)}
                   annotations={this.rowScoped(this.annotations, index)}
                   notes={this.rowScoped(this.notes, index)}
