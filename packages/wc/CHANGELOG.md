@@ -1,5 +1,12 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.32.1
+
+### Patch Changes
+
+- d445d93: Variable picker, slot picker, document reader, key/value, geo and address components follow the theme variables (`--fk-color-*`), so their lists and panels are readable in dark mode.
+  - @streamline-pulse/formkrafter-core@0.32.1
+
 ## 0.32.0
 
 ### Patch Changes
