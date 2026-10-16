@@ -153,6 +153,7 @@ export type {
     FetchSpecSourceDefaults
 } from "./services/spec_source_service.js";
 export { FetchOptionSourceService } from "./services/option_source_service.js";
+export { FilePickOptions, FilePickerService } from "./services/file_picker_service.js";
 export {
   DocumentReading,
   DocumentReadOptions,

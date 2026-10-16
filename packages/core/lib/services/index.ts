@@ -22,6 +22,7 @@ import {
   FetchDocumentReaderService,
   type DocumentReaderService,
 } from "./document_reader_service.js";
+import type { FilePickerService } from "./file_picker_service.js";
 
 export interface Services {
   jsRunnerService: JsRunnerService;
@@ -30,6 +31,8 @@ export interface Services {
   specSourceService: SpecSourceService;
   optionSourceService: OptionSourceService;
   documentReaderService: DocumentReaderService;
+  /** Optional: file picking on platforms without a file input (React Native). */
+  filePickerService?: FilePickerService;
 }
 
 const GLOBAL_KEY = Symbol.for("formkrafter.core.services");
