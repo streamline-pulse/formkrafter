@@ -18,6 +18,10 @@ import {
   FetchOptionSourceService,
   type OptionSourceService,
 } from "./option_source_service.js";
+import {
+  FetchDocumentReaderService,
+  type DocumentReaderService,
+} from "./document_reader_service.js";
 
 export interface Services {
   jsRunnerService: JsRunnerService;
@@ -25,6 +29,7 @@ export interface Services {
   fileUploadService: FileUploadService;
   specSourceService: SpecSourceService;
   optionSourceService: OptionSourceService;
+  documentReaderService: DocumentReaderService;
 }
 
 const GLOBAL_KEY = Symbol.for("formkrafter.core.services");
@@ -36,9 +41,11 @@ const services: Services = (globalStore[GLOBAL_KEY] ??= {
   fileUploadService: new Base64FileUploadService(),
   specSourceService: new FetchSpecSourceService(),
   optionSourceService: new FetchOptionSourceService(),
+  documentReaderService: new FetchDocumentReaderService(),
 });
 
 services.specSourceService ??= new FetchSpecSourceService();
 services.optionSourceService ??= new FetchOptionSourceService();
+services.documentReaderService ??= new FetchDocumentReaderService();
 
 export { services };

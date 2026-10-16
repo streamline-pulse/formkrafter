@@ -37,6 +37,7 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 | `money` | object | `{ amount, currency }`, la devise choisie parmi `currencies`, `currency` par défaut |
 | `appointment` | object | un créneau `{ id, start, end }` choisi jour par jour, depuis `slotsUrl` (liste avec `remaining`) ou généré par des règles d’ouverture (`days`, `from`, `to`, `duration`, `horizonDays`, `noticeHours`, `exclude`) |
 | `date-range` | object | `{ from, to }`, la fin jamais avant le début |
+| `document` | object | un document scanné ou déposé, lu par l’hôte (`services.documentReaderService`, `readUrl`) : le texte lu, les `fields` demandés (`clé|Libellé` par ligne, corrigeables par l’usager) et, avec `fills` (`champ=cléFormulaire` par ligne), les clés du formulaire qu’ils remplissent ; le fichier est conservé via le service d’upload sauf si `keepFile` est désactivé |
 
 ### Data
 

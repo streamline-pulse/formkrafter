@@ -15,6 +15,7 @@ import { geoAddressBrick, geoAreaBrick, geoLayerBrick, geoPointBrick } from './g
 import { mrzBrick, nationalIdBrick } from './identity.js'
 import { ibanBrick, moneyBrick, taxIdBrick } from './finance.js'
 import { appointmentBrick, dateRangeBrick } from './time.js'
+import { documentBrick } from './documents.js'
 
 const DEFAULTS_KEY = Symbol.for('formkrafter.native.defaultBricksRegistered')
 const globalFlags = globalThis as unknown as Record<symbol, boolean | undefined>
@@ -49,6 +50,7 @@ export function registerDefaultNativeBricks(): void {
     moneyBrick,
     appointmentBrick,
     dateRangeBrick,
+    documentBrick,
     ...layoutBricks,
   ]
   for (const brick of defaults) {

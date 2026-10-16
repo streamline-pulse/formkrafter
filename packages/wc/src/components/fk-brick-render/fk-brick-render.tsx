@@ -141,6 +141,9 @@ export class FkBrickRender {
         const wrapped = wrapBrickData(spec, value);
         if (wrapped !== undefined) this.brickDataChange.emit(wrapped);
       },
+      onDataPatch: (patch) => {
+        if (patch && Object.keys(patch).length) this.brickDataChange.emit(patch);
+      },
       onConfigsChange: (configs, changedPath) =>
         this.brickConfigsChange.emit({ configs, path: changedPath ?? this.path }),
       onStylesChange: (styles, changedPath) =>

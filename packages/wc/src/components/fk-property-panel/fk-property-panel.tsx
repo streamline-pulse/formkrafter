@@ -366,6 +366,32 @@ export class FkPropertyPanel {
               this.textField(fkTOr('panel.slotExclude', 'Closed dates (YYYY-MM-DD, comma-separated)'), configs.exclude, (value) => this.emitConfigs({ exclude: value })),
             ]
           : null}
+        {configs && 'readUrl' in configs
+          ? [
+              this.textField(fkTOr('panel.readUrl', 'Reader URL (empty = host default)'), configs.readUrl, (value) => this.emitConfigs({ readUrl: value })),
+              <label class="fk-props__field">
+                <span class="fk-props__label">{fkTOr('panel.documentFields', 'Fields to read (key|Label per line)')}</span>
+                <textarea
+                  class="fk-props__input fk-props__input--textarea"
+                  onChange={(event) => this.emitConfigs({ fields: (event.target as HTMLTextAreaElement).value })}
+                >
+                  {typeof configs.fields === 'string' ? configs.fields : ''}
+                </textarea>
+              </label>,
+              <label class="fk-props__field">
+                <span class="fk-props__label">{fkTOr('panel.documentFills', 'Fill the form (field=formKey per line)')}</span>
+                <textarea
+                  class="fk-props__input fk-props__input--textarea"
+                  onChange={(event) => this.emitConfigs({ fills: (event.target as HTMLTextAreaElement).value })}
+                >
+                  {typeof configs.fills === 'string' ? configs.fills : ''}
+                </textarea>
+              </label>,
+              this.textField(fkTOr('panel.documentLanguage', 'Document language (fr, en…)'), configs.language, (value) => this.emitConfigs({ language: value })),
+              this.textField(fkTOr('panel.accept', 'Accepted files'), configs.accept, (value) => this.emitConfigs({ accept: value })),
+              this.textField(fkTOr('panel.uploadUrl', 'Upload URL'), configs.uploadUrl, (value) => this.emitConfigs({ uploadUrl: value })),
+            ]
+          : null}
         {configs && 'tileUrl' in configs
           ? [
               this.textField(fkTOr('panel.center', 'Initial center (lat, lng)'), configs.center, (value) =>

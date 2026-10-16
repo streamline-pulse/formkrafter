@@ -28,6 +28,7 @@ export { FieldDescriptor, CollectFieldsOptions, collectFields } from "./utils/fi
 export { IdentityFormat, IDENTITY_FORMATS, checkIdentity, checkFrNir, checkBjNpi, checkDigits, checkLuhn, checkFrSiren, checkFrSiret, checkBjIfu, checkIban, formatIban } from "./utils/identity.js";
 export { MrzResult, parseMrz, mrzLines, mrzCheckDigit } from "./utils/mrz.js";
 export { Slot, SlotRules, generateSlots, readSlots, groupSlotsByDay, slotDate } from "./utils/slots.js";
+export { DocumentField, parseDocumentFields, parseDocumentFills, documentFillPatch } from "./utils/documents.js";
 
 // Field review: annotations a reviewer leaves on a filled form
 export { FieldAnnotation, FieldAnnotations, flaggedKeys } from "./review.js";
@@ -150,6 +151,14 @@ export type {
     FetchSpecSourceDefaults
 } from "./services/spec_source_service.js";
 export { FetchOptionSourceService } from "./services/option_source_service.js";
+export {
+  DocumentReading,
+  DocumentReadOptions,
+  DocumentReaderService,
+  FetchDocumentReaderDefaults,
+  FetchDocumentReaderService,
+  readDocumentReading,
+} from "./services/document_reader_service.js";
 export type {
     OptionSourceService,
     FetchOptionSourceDefaults

@@ -7,13 +7,15 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AddressFeature } from "./components/fk-address-search/fk-address-search";
 import { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
-import { BrickMold, BrickSpec, FieldAnnotations, SlotRules, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { BrickMold, BrickSpec, DocumentField, FieldAnnotations, SlotRules, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+import { DocumentValue } from "./components/fk-document-reader/fk-document-reader";
 import { GeoGeometry, GeoMode, GeoZone } from "./components/fk-geo-map/fk-geo-map";
 import { PickedSlot } from "./components/fk-slot-picker/fk-slot-picker";
 import { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
 export { AddressFeature } from "./components/fk-address-search/fk-address-search";
 export { BrickConfigsChangeDetail, BrickDropDetail, BrickPathDetail, BrickReviewChangeDetail, BrickRulesChangeDetail, BrickStylesChangeDetail, BrickValidationsChangeDetail, DataChangeDetail, ReviewChangeDetail, SpecChangeDetail, ValidityChangeDetail } from "./utils/events";
-export { BrickMold, BrickSpec, FieldAnnotations, SlotRules, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { BrickMold, BrickSpec, DocumentField, FieldAnnotations, SlotRules, UploadedFile, Utils, ValidationResult } from "@streamline-pulse/formkrafter-core";
+export { DocumentValue } from "./components/fk-document-reader/fk-document-reader";
 export { GeoGeometry, GeoMode, GeoZone } from "./components/fk-geo-map/fk-geo-map";
 export { PickedSlot } from "./components/fk-slot-picker/fk-slot-picker";
 export { FkVariable } from "./components/fk-variable-picker/fk-variable-picker";
@@ -139,6 +141,49 @@ export namespace Components {
         "utils": Utils;
         "validateRows": () => Promise<ValidationResult>;
         "value"?: unknown;
+    }
+    /**
+     * Picks a document (file or camera on mobile), sends it to the host's
+     * document reader, then shows the text and the requested fields, which the
+     * user can correct before the form is submitted.
+     */
+    interface FkDocumentReader {
+        /**
+          * @default 'image/*,.pdf'
+         */
+        "accept": string;
+        /**
+          * Offers the device camera (mobile browsers) in addition to the file picker.
+          * @default false
+         */
+        "capture": boolean;
+        /**
+          * Form context handed to the host reader (`_`-prefixed keys).
+         */
+        "context"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "disabled": boolean;
+        /**
+          * @default []
+         */
+        "fields": DocumentField[];
+        /**
+          * @default true
+         */
+        "keepFile": boolean;
+        "language"?: string;
+        /**
+          * @default false
+         */
+        "readOnly": boolean;
+        "readUrl"?: string;
+        /**
+          * When set, the document is also uploaded through the file upload service and kept in the value.
+         */
+        "uploadUrl"?: string;
+        "value"?: DocumentValue;
     }
     interface FkDropArea {
         /**
@@ -434,6 +479,10 @@ export interface FkDataGridCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkDataGridElement;
 }
+export interface FkDocumentReaderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFkDocumentReaderElement;
+}
 export interface FkDropAreaCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLFkDropAreaElement;
@@ -610,6 +659,28 @@ declare global {
     var HTMLFkDataGridElement: {
         prototype: HTMLFkDataGridElement;
         new (): HTMLFkDataGridElement;
+    };
+    interface HTMLFkDocumentReaderElementEventMap {
+        "documentChange": DocumentValue | undefined;
+    }
+    /**
+     * Picks a document (file or camera on mobile), sends it to the host's
+     * document reader, then shows the text and the requested fields, which the
+     * user can correct before the form is submitted.
+     */
+    interface HTMLFkDocumentReaderElement extends Components.FkDocumentReader, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFkDocumentReaderElementEventMap>(type: K, listener: (this: HTMLFkDocumentReaderElement, ev: FkDocumentReaderCustomEvent<HTMLFkDocumentReaderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFkDocumentReaderElementEventMap>(type: K, listener: (this: HTMLFkDocumentReaderElement, ev: FkDocumentReaderCustomEvent<HTMLFkDocumentReaderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFkDocumentReaderElement: {
+        prototype: HTMLFkDocumentReaderElement;
+        new (): HTMLFkDocumentReaderElement;
     };
     interface HTMLFkDropAreaElementEventMap {
         "brickDrop": BrickDropDetail;
@@ -893,6 +964,7 @@ declare global {
         "fk-brick-render": HTMLFkBrickRenderElement;
         "fk-code-editor": HTMLFkCodeEditorElement;
         "fk-data-grid": HTMLFkDataGridElement;
+        "fk-document-reader": HTMLFkDocumentReaderElement;
         "fk-drop-area": HTMLFkDropAreaElement;
         "fk-empty-form": HTMLFkEmptyFormElement;
         "fk-file-input": HTMLFkFileInputElement;
@@ -1049,6 +1121,50 @@ declare namespace LocalJSX {
         "spec": BrickSpec;
         "utils": Utils;
         "value"?: unknown;
+    }
+    /**
+     * Picks a document (file or camera on mobile), sends it to the host's
+     * document reader, then shows the text and the requested fields, which the
+     * user can correct before the form is submitted.
+     */
+    interface FkDocumentReader {
+        /**
+          * @default 'image/*,.pdf'
+         */
+        "accept"?: string;
+        /**
+          * Offers the device camera (mobile browsers) in addition to the file picker.
+          * @default false
+         */
+        "capture"?: boolean;
+        /**
+          * Form context handed to the host reader (`_`-prefixed keys).
+         */
+        "context"?: Record<string, unknown>;
+        /**
+          * @default false
+         */
+        "disabled"?: boolean;
+        /**
+          * @default []
+         */
+        "fields"?: DocumentField[];
+        /**
+          * @default true
+         */
+        "keepFile"?: boolean;
+        "language"?: string;
+        "onDocumentChange"?: (event: FkDocumentReaderCustomEvent<DocumentValue | undefined>) => void;
+        /**
+          * @default false
+         */
+        "readOnly"?: boolean;
+        "readUrl"?: string;
+        /**
+          * When set, the document is also uploaded through the file upload service and kept in the value.
+         */
+        "uploadUrl"?: string;
+        "value"?: DocumentValue;
     }
     interface FkDropArea {
         /**
@@ -1388,6 +1504,16 @@ declare namespace LocalJSX {
         "locale": string;
         "reviewable": boolean;
     }
+    interface FkDocumentReaderAttributes {
+        "accept": string;
+        "capture": boolean;
+        "readUrl": string;
+        "uploadUrl": string;
+        "keepFile": boolean;
+        "language": string;
+        "disabled": boolean;
+        "readOnly": boolean;
+    }
     interface FkDropAreaAttributes {
         "path": string;
         "empty": boolean;
@@ -1472,6 +1598,7 @@ declare namespace LocalJSX {
         "fk-brick-render": Omit<FkBrickRender, keyof FkBrickRenderAttributes> & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes]?: FkBrickRender[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `attr:${K}`]?: FkBrickRenderAttributes[K] } & { [K in keyof FkBrickRender & keyof FkBrickRenderAttributes as `prop:${K}`]?: FkBrickRender[K] };
         "fk-code-editor": Omit<FkCodeEditor, keyof FkCodeEditorAttributes> & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes]?: FkCodeEditor[K] } & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes as `attr:${K}`]?: FkCodeEditorAttributes[K] } & { [K in keyof FkCodeEditor & keyof FkCodeEditorAttributes as `prop:${K}`]?: FkCodeEditor[K] };
         "fk-data-grid": Omit<FkDataGrid, keyof FkDataGridAttributes> & { [K in keyof FkDataGrid & keyof FkDataGridAttributes]?: FkDataGrid[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `attr:${K}`]?: FkDataGridAttributes[K] } & { [K in keyof FkDataGrid & keyof FkDataGridAttributes as `prop:${K}`]?: FkDataGrid[K] };
+        "fk-document-reader": Omit<FkDocumentReader, keyof FkDocumentReaderAttributes> & { [K in keyof FkDocumentReader & keyof FkDocumentReaderAttributes]?: FkDocumentReader[K] } & { [K in keyof FkDocumentReader & keyof FkDocumentReaderAttributes as `attr:${K}`]?: FkDocumentReaderAttributes[K] } & { [K in keyof FkDocumentReader & keyof FkDocumentReaderAttributes as `prop:${K}`]?: FkDocumentReader[K] };
         "fk-drop-area": Omit<FkDropArea, keyof FkDropAreaAttributes> & { [K in keyof FkDropArea & keyof FkDropAreaAttributes]?: FkDropArea[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `attr:${K}`]?: FkDropAreaAttributes[K] } & { [K in keyof FkDropArea & keyof FkDropAreaAttributes as `prop:${K}`]?: FkDropArea[K] } & OneOf<"path", FkDropArea["path"], FkDropAreaAttributes["path"]>;
         "fk-empty-form": FkEmptyForm;
         "fk-file-input": Omit<FkFileInput, keyof FkFileInputAttributes> & { [K in keyof FkFileInput & keyof FkFileInputAttributes]?: FkFileInput[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `attr:${K}`]?: FkFileInputAttributes[K] } & { [K in keyof FkFileInput & keyof FkFileInputAttributes as `prop:${K}`]?: FkFileInput[K] };
@@ -1507,6 +1634,12 @@ declare module "@stencil/core" {
             "fk-brick-render": LocalJSX.IntrinsicElements["fk-brick-render"] & JSXBase.HTMLAttributes<HTMLFkBrickRenderElement>;
             "fk-code-editor": LocalJSX.IntrinsicElements["fk-code-editor"] & JSXBase.HTMLAttributes<HTMLFkCodeEditorElement>;
             "fk-data-grid": LocalJSX.IntrinsicElements["fk-data-grid"] & JSXBase.HTMLAttributes<HTMLFkDataGridElement>;
+            /**
+             * Picks a document (file or camera on mobile), sends it to the host's
+             * document reader, then shows the text and the requested fields, which the
+             * user can correct before the form is submitted.
+             */
+            "fk-document-reader": LocalJSX.IntrinsicElements["fk-document-reader"] & JSXBase.HTMLAttributes<HTMLFkDocumentReaderElement>;
             "fk-drop-area": LocalJSX.IntrinsicElements["fk-drop-area"] & JSXBase.HTMLAttributes<HTMLFkDropAreaElement>;
             "fk-empty-form": LocalJSX.IntrinsicElements["fk-empty-form"] & JSXBase.HTMLAttributes<HTMLFkEmptyFormElement>;
             "fk-file-input": LocalJSX.IntrinsicElements["fk-file-input"] & JSXBase.HTMLAttributes<HTMLFkFileInputElement>;

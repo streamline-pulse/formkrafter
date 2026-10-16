@@ -23,6 +23,8 @@ export interface BrickProps<DataType, Configs extends BrickBaseConfigs, Styles>
   dataMap?: Record<string, unknown>;
   rootSpec?: BrickSpec;
   onDataChange?: (value?: DataType) => void;
+  /** Sets several form keys at once (a brick that fills other fields, e.g. from a document). */
+  onDataPatch?: (patch: Record<string, unknown>) => void;
   onMove?: (from: string, to: string) => void;
   onDuplicate?: (path: string) => void;
   onDelete?: (path: string) => void;

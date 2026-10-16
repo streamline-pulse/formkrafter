@@ -13,6 +13,7 @@ import { defineCustomElement as defineFkBrickNotFound } from '@streamline-pulse/
 import { defineCustomElement as defineFkBrickRender } from '@streamline-pulse/formkrafter-wc/dist/components/fk-brick-render.js';
 import { defineCustomElement as defineFkCodeEditor } from '@streamline-pulse/formkrafter-wc/dist/components/fk-code-editor.js';
 import { defineCustomElement as defineFkDataGrid } from '@streamline-pulse/formkrafter-wc/dist/components/fk-data-grid.js';
+import { defineCustomElement as defineFkDocumentReader } from '@streamline-pulse/formkrafter-wc/dist/components/fk-document-reader.js';
 import { defineCustomElement as defineFkDropArea } from '@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js';
 import { defineCustomElement as defineFkEmptyForm } from '@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js';
 import { defineCustomElement as defineFkFileInput } from '@streamline-pulse/formkrafter-wc/dist/components/fk-file-input.js';
@@ -137,6 +138,24 @@ export const FkDataGrid: StencilVueComponent<JSX.FkDataGrid> = /*@__PURE__*/ def
 ], [
   'gridValueChange',
   'brickReviewChange'
+]);
+
+
+export const FkDocumentReader: StencilVueComponent<JSX.FkDocumentReader> = /*@__PURE__*/ defineContainer<JSX.FkDocumentReader>('fk-document-reader', defineFkDocumentReader, [
+  'value',
+  'accept',
+  'capture',
+  'readUrl',
+  'uploadUrl',
+  'keepFile',
+  'fields',
+  'language',
+  'context',
+  'disabled',
+  'readOnly',
+  'documentChange'
+], [
+  'documentChange'
 ]);
 
 

@@ -11,7 +11,7 @@ import type { EventName, StencilReactComponent } from '@stencil/react-output-tar
 import { createComponent } from '@stencil/react-output-target/runtime';
 import React from 'react';
 
-import { type AddressFeature, type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type FkAddressSearchCustomEvent, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkSlotPickerCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type GeoZone, type PickedSlot, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
+import { type AddressFeature, type BrickConfigsChangeDetail, type BrickDropDetail, type BrickPathDetail, type BrickReviewChangeDetail, type BrickRulesChangeDetail, type BrickStylesChangeDetail, type BrickValidationsChangeDetail, type DataChangeDetail, type DocumentValue, type FkAddressSearchCustomEvent, type FkBrickActionsCustomEvent, type FkBrickRenderCustomEvent, type FkCodeEditorCustomEvent, type FkDataGridCustomEvent, type FkDocumentReaderCustomEvent, type FkDropAreaCustomEvent, type FkFileInputCustomEvent, type FkFormBuilderCustomEvent, type FkFormRenderCustomEvent, type FkFormReviewCustomEvent, type FkGeoMapCustomEvent, type FkPropertyPanelCustomEvent, type FkRulesEditorCustomEvent, type FkSelectInputCustomEvent, type FkSignatureInputCustomEvent, type FkSlotPickerCustomEvent, type FkStepperCustomEvent, type FkTabsCustomEvent, type FkVariablePickerCustomEvent, type GeoGeometry, type GeoZone, type PickedSlot, type ReviewChangeDetail, type SpecChangeDetail, type UploadedFile, type ValidityChangeDetail } from "@streamline-pulse/formkrafter-wc";
 import type { Components } from "@streamline-pulse/formkrafter-wc/dist/components";
 import { FkAddressSearch as FkAddressSearchElement, defineCustomElement as defineFkAddressSearch } from "@streamline-pulse/formkrafter-wc/dist/components/fk-address-search.js";
 import { FkBrickActions as FkBrickActionsElement, defineCustomElement as defineFkBrickActions } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-actions.js";
@@ -21,6 +21,7 @@ import { FkBrickNotFound as FkBrickNotFoundElement, defineCustomElement as defin
 import { FkBrickRender as FkBrickRenderElement, defineCustomElement as defineFkBrickRender } from "@streamline-pulse/formkrafter-wc/dist/components/fk-brick-render.js";
 import { FkCodeEditor as FkCodeEditorElement, defineCustomElement as defineFkCodeEditor } from "@streamline-pulse/formkrafter-wc/dist/components/fk-code-editor.js";
 import { FkDataGrid as FkDataGridElement, defineCustomElement as defineFkDataGrid } from "@streamline-pulse/formkrafter-wc/dist/components/fk-data-grid.js";
+import { FkDocumentReader as FkDocumentReaderElement, defineCustomElement as defineFkDocumentReader } from "@streamline-pulse/formkrafter-wc/dist/components/fk-document-reader.js";
 import { FkDropArea as FkDropAreaElement, defineCustomElement as defineFkDropArea } from "@streamline-pulse/formkrafter-wc/dist/components/fk-drop-area.js";
 import { FkEmptyForm as FkEmptyFormElement, defineCustomElement as defineFkEmptyForm } from "@streamline-pulse/formkrafter-wc/dist/components/fk-empty-form.js";
 import { FkFileInput as FkFileInputElement, defineCustomElement as defineFkFileInput } from "@streamline-pulse/formkrafter-wc/dist/components/fk-file-input.js";
@@ -157,6 +158,17 @@ export const FkDataGrid: StencilReactComponent<FkDataGridElement, FkDataGridEven
         onBrickReviewChange: 'brickReviewChange'
     } as FkDataGridEvents,
     defineCustomElement: defineFkDataGrid
+});
+
+export type FkDocumentReaderEvents = { onDocumentChange: EventName<FkDocumentReaderCustomEvent<DocumentValue | undefined>> };
+
+export const FkDocumentReader: StencilReactComponent<FkDocumentReaderElement, FkDocumentReaderEvents, Components.FkDocumentReader> = /*@__PURE__*/ createComponent<FkDocumentReaderElement, FkDocumentReaderEvents, Components.FkDocumentReader>({
+    tagName: 'fk-document-reader',
+    elementClass: FkDocumentReaderElement,
+    // @ts-ignore - ignore potential React type mismatches between the Stencil Output Target and your project.
+    react: React,
+    events: { onDocumentChange: 'documentChange' } as FkDocumentReaderEvents,
+    defineCustomElement: defineFkDocumentReader
 });
 
 export type FkDropAreaEvents = { onBrickDrop: EventName<FkDropAreaCustomEvent<BrickDropDetail>> };

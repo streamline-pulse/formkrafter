@@ -8,7 +8,11 @@ import { applyMask } from '../utils/mask';
 import { fkT, fkTOr } from '../i18n/i18n';
 import {
   collectRecapItems,
-  resolveLocalizedText, parseMrz, formatIban } from '@streamline-pulse/formkrafter-core';
+  resolveLocalizedText, parseMrz, formatIban,
+  parseDocumentFields,
+  parseDocumentFills,
+  documentFillPatch,
+} from '@streamline-pulse/formkrafter-core';
 import type { SlotRules } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
@@ -1005,6 +1009,56 @@ export const appointmentBrick = createBrick({
     ),
 });
 
+// Lecture de document : le fichier part chez le lecteur de l'hote (OCR, mise en
+// page, modele…), la valeur garde le texte lu et les champs demandes, et
+// `fills` reporte ces champs dans d'autres cles du formulaire.
+export const documentBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'document',
+  name: 'Document reading',
+  category: 'Documents',
+  defaultConfigs: {
+    label: 'Document',
+    accept: 'image/*,.pdf',
+    capture: true,
+    readUrl: '',
+    uploadUrl: '',
+    keepFile: true,
+    fields: '',
+    fills: '',
+    language: '',
+  },
+  render: (props) => {
+    const fields = parseDocumentFields(props.configs?.fields);
+    const fills = parseDocumentFills(props.configs?.fills);
+    const context = Object.fromEntries(Object.entries(props.dataMap ?? {}).filter(([key]) => key.startsWith('_')));
+    return fieldBlock(
+      props,
+      'Document',
+      <fk-document-reader
+        value={(props.data ?? undefined) as never}
+        accept={typeof props.configs?.accept === 'string' && props.configs.accept ? props.configs.accept : 'image/*,.pdf'}
+        capture={props.configs?.capture !== false}
+        readUrl={typeof props.configs?.readUrl === 'string' && props.configs.readUrl ? props.configs.readUrl : undefined}
+        uploadUrl={props.configs?.keepFile === false ? undefined : ((props.configs?.uploadUrl as string | undefined) ?? '')}
+        keepFile={props.configs?.keepFile !== false}
+        fields={fields}
+        context={context}
+        language={typeof props.configs?.language === 'string' && props.configs.language ? props.configs.language : undefined}
+        readOnly={props.readOnly === true}
+        disabled={props.editable === true || props.disabled === true}
+        onDocumentChange={(event: CustomEvent<{ fields?: Record<string, unknown> } | undefined>) => {
+          event.stopPropagation();
+          props.onDataChange?.(event.detail);
+          const patch = documentFillPatch(event.detail?.fields, fills);
+          if (Object.keys(patch).length) props.onDataPatch?.(patch);
+        }}
+      ></fk-document-reader>
+    );
+  },
+});
+
 type DateRangeValue = { from?: string; to?: string };
 
 // Plage de dates : { from, to }, la fin jamais avant le debut (schema).
@@ -1602,6 +1656,7 @@ const defaults = [
     moneyBrick,
     appointmentBrick,
     dateRangeBrick,
+    documentBrick,
     addressBrick,
     codeBrick,
     fileBrick,

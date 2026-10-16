@@ -1,0 +1,114 @@
+:host {
+  display: block;
+}
+
+.fk-document__native {
+  display: none;
+}
+
+.fk-document__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fk-document__choose {
+  border: 1px dashed var(--fk-border, #d4d4d8);
+  border-radius: var(--fk-radius, 0.375rem);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.fk-document__choose:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.fk-document__file {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--fk-border, #d4d4d8);
+  border-radius: var(--fk-radius, 0.375rem);
+  padding: 0.375rem 0.625rem;
+}
+
+.fk-document__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.fk-document__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.fk-document__status,
+.fk-document__empty {
+  font-size: 0.75rem;
+  color: var(--fk-text-muted, #71717a);
+}
+
+.fk-document__remove {
+  border: 0;
+  background: transparent;
+  color: var(--fk-text-muted, #71717a);
+  font: inherit;
+  cursor: pointer;
+}
+
+.fk-document__fields {
+  display: grid;
+  grid-template-columns: minmax(6rem, max-content) 1fr;
+  gap: 0.375rem 0.75rem;
+  margin: 0.5rem 0 0;
+}
+
+.fk-document__field {
+  display: contents;
+}
+
+.fk-document__field dt {
+  font-size: 0.8125rem;
+  color: var(--fk-text-muted, #71717a);
+  align-self: center;
+}
+
+.fk-document__field dd {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.fk-document__missing {
+  color: var(--fk-text-muted, #71717a);
+  font-style: italic;
+}
+
+.fk-document__text {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.fk-document__text summary {
+  cursor: pointer;
+  color: var(--fk-text-muted, #71717a);
+}
+
+.fk-document__text pre {
+  margin: 0.375rem 0 0;
+  max-height: 16rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  font: inherit;
+  padding: 0.5rem;
+  border: 1px solid var(--fk-border, #d4d4d8);
+  border-radius: var(--fk-radius, 0.375rem);
+}
