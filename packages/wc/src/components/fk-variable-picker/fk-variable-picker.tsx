@@ -34,6 +34,7 @@ export class FkVariablePicker {
   /** Where the typed `{{...` starts, so the pick can replace it. */
   private tokenStart = -1;
   private control: HTMLInputElement | HTMLTextAreaElement | null = null;
+  private closeTimer: ReturnType<typeof setTimeout> | null = null;
 
   @Event() variablePick!: EventEmitter<string>;
 
@@ -45,7 +46,7 @@ export class FkVariablePicker {
       previous.addEventListener('click', this.sync);
       previous.addEventListener('keyup', this.onKeyUp);
       previous.addEventListener('keydown', this.onKeyDown);
-      previous.addEventListener('blur', this.close);
+      previous.addEventListener('blur', this.closeSoon);
     }
   }
 
@@ -56,7 +57,8 @@ export class FkVariablePicker {
     control.removeEventListener('click', this.sync);
     control.removeEventListener('keyup', this.onKeyUp);
     control.removeEventListener('keydown', this.onKeyDown);
-    control.removeEventListener('blur', this.close);
+    control.removeEventListener('blur', this.closeSoon);
+    if (this.closeTimer) clearTimeout(this.closeTimer);
   }
 
   private matches(): FkVariable[] {
@@ -82,6 +84,12 @@ export class FkVariablePicker {
       this.close();
       return;
     }
+    // A close scheduled by the previous keystroke (the first `{`) must not
+    // undo the opening triggered by the second one.
+    if (this.closeTimer) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+    }
     this.tokenStart = start;
     this.query = before.slice(start + OPEN.length);
     this.index = 0;
@@ -89,8 +97,18 @@ export class FkVariablePicker {
   };
 
   private close = () => {
-    // Let a click on an item land before the list goes away.
-    setTimeout(() => {
+    if (this.closeTimer) {
+      clearTimeout(this.closeTimer);
+      this.closeTimer = null;
+    }
+    this.open = false;
+  };
+
+  // On blur, let a click on an item land before the list goes away.
+  private closeSoon = () => {
+    if (this.closeTimer) clearTimeout(this.closeTimer);
+    this.closeTimer = setTimeout(() => {
+      this.closeTimer = null;
       this.open = false;
     }, 120);
   };

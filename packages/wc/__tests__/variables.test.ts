@@ -89,6 +89,22 @@ describe('variable picker', () => {
     expect(el.querySelectorAll('.fk-variables__list').length).toBe(0);
   });
 
+  test('the two braces typed one after the other keep the list open', async () => {
+    const input = el.querySelector('input.fk-field__input') as HTMLInputElement;
+    // Le premier `{` ferme (aucun jeton), le second ouvre : la fermeture
+    // differee du premier ne doit pas annuler l'ouverture.
+    typeInto(input, 'Bonjour {');
+    input.dispatchEvent(new KeyboardEvent('keyup', { key: '{', bubbles: true }));
+    await tick(20);
+    typeInto(input, 'Bonjour {{');
+    input.dispatchEvent(new KeyboardEvent('keyup', { key: '{', bubbles: true }));
+    await tick(300);
+    expect(el.querySelectorAll('.fk-variables__item').length).toBe(3);
+    typeInto(input, 'Bonjour ');
+    await tick(50);
+    expect(el.querySelector('.fk-variables__list')).toBeNull();
+  });
+
   test('without variables in the context nothing is added', async () => {
     const bare = document.createElement('fk-form-render') as RenderEl;
     bare.spec = spec();
