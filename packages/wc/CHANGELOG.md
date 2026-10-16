@@ -1,5 +1,16 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.31.0
+
+### Minor Changes
+
+- b6833bc: Settings-friendly editing: a `key-value` brick edits a flat object row by row (values with the variable picker), text fields show an object or list value as readable JSON instead of "[object Object]", and the form context (`_variables`, API base…) now reaches the bricks inside data-grid rows so templates in a grid get the variable picker too.
+
+### Patch Changes
+
+- Updated dependencies [b6833bc]
+  - @streamline-pulse/formkrafter-core@0.31.0
+
 ## 0.30.0
 
 ### Minor Changes
