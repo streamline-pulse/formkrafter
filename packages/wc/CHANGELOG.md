@@ -1,5 +1,12 @@
 # @streamline-pulse/formkrafter-wc
 
+## 0.28.1
+
+### Patch Changes
+
+- 37a6084: Variable picker: the list stays open when the two `{` are typed one after the other (the deferred close of the first keystroke no longer cancels the opening).
+  - @streamline-pulse/formkrafter-core@0.28.1
+
 ## 0.28.0
 
 ### Minor Changes
