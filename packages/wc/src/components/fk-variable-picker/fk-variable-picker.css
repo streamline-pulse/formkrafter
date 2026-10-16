@@ -11,10 +11,11 @@
   margin-top: 0.25rem;
   max-height: 14rem;
   overflow-y: auto;
-  border: 1px solid var(--fk-border, #d4d4d8);
+  border: 1px solid var(--fk-color-border, #d4d4d8);
   border-radius: var(--fk-radius, 0.375rem);
-  background: var(--fk-bg, #fff);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background: var(--fk-color-surface, #fff);
+  color: var(--fk-color-text, inherit);
+  box-shadow: 0 8px 24px var(--fk-color-shadow, rgba(0, 0, 0, 0.12));
 }
 
 .fk-variables__item {
@@ -33,7 +34,7 @@
 
 .fk-variables__item--active,
 .fk-variables__item:hover {
-  background: var(--fk-bg-muted, rgba(127, 127, 127, 0.12));
+  background: var(--fk-color-hover, rgba(127, 127, 127, 0.12));
 }
 
 .fk-variables__name {
@@ -43,11 +44,11 @@
 
 .fk-variables__label {
   font-size: 0.75rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }
 
 .fk-variables__empty {
   padding: 0.5rem 0.625rem;
   font-size: 0.75rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }

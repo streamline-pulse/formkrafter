@@ -11,7 +11,7 @@
 
 .fk-slots__day,
 .fk-slots__time {
-  border: 1px solid var(--fk-border, #d4d4d8);
+  border: 1px solid var(--fk-color-border, #d4d4d8);
   border-radius: var(--fk-radius, 0.375rem);
   background: transparent;
   color: inherit;
@@ -24,8 +24,8 @@
 
 .fk-slots__day--active,
 .fk-slots__time--picked {
-  border-color: var(--fk-primary, #16a34a);
-  background: var(--fk-primary, #16a34a);
+  border-color: var(--fk-color-primary, #16a34a);
+  background: var(--fk-color-primary, #16a34a);
   color: #fff;
 }
 
@@ -48,14 +48,14 @@
 }
 
 .fk-slots__empty {
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }
 
 .fk-slots__clear {
   margin-left: 0.5rem;
   border: 0;
   background: transparent;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
   font: inherit;
   font-size: 0.75rem;
   text-decoration: underline;

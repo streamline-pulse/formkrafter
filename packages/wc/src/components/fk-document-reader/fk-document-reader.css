@@ -13,7 +13,7 @@
 }
 
 .fk-document__choose {
-  border: 1px dashed var(--fk-border, #d4d4d8);
+  border: 1px dashed var(--fk-color-border, #d4d4d8);
   border-radius: var(--fk-radius, 0.375rem);
   background: transparent;
   color: inherit;
@@ -32,7 +32,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid var(--fk-border, #d4d4d8);
+  border: 1px solid var(--fk-color-border, #d4d4d8);
   border-radius: var(--fk-radius, 0.375rem);
   padding: 0.375rem 0.625rem;
 }
@@ -54,13 +54,13 @@
 .fk-document__status,
 .fk-document__empty {
   font-size: 0.75rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }
 
 .fk-document__remove {
   border: 0;
   background: transparent;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
   font: inherit;
   cursor: pointer;
 }
@@ -78,7 +78,7 @@
 
 .fk-document__field dt {
   font-size: 0.8125rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
   align-self: center;
 }
 
@@ -88,7 +88,7 @@
 }
 
 .fk-document__missing {
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
   font-style: italic;
 }
 
@@ -99,7 +99,7 @@
 
 .fk-document__text summary {
   cursor: pointer;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }
 
 .fk-document__text pre {
@@ -109,6 +109,6 @@
   white-space: pre-wrap;
   font: inherit;
   padding: 0.5rem;
-  border: 1px solid var(--fk-border, #d4d4d8);
+  border: 1px solid var(--fk-color-border, #d4d4d8);
   border-radius: var(--fk-radius, 0.375rem);
 }

@@ -86,7 +86,7 @@
   margin: 0.25rem 0 0;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: var(--fk-color-text-muted, var(--fk-text-muted, #71717a));
+  color: var(--fk-color-muted, #71717a);
 }
 
 .fk-field__main {

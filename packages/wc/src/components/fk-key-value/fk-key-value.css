@@ -23,7 +23,7 @@
 .fk-kv__add {
   border: 0;
   background: transparent;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
   font: inherit;
   font-size: 0.8125rem;
   cursor: pointer;
@@ -37,5 +37,5 @@
 
 .fk-kv__empty {
   font-size: 0.8125rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }

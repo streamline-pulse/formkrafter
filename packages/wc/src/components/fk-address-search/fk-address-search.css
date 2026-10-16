@@ -10,11 +10,11 @@
   display: block;
   margin-top: 0.25rem;
   font-size: 0.75rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }
 
 .fk-address__status--located {
-  color: var(--fk-primary, #16a34a);
+  color: var(--fk-color-primary, #16a34a);
 }
 
 .fk-address__list {
@@ -25,9 +25,9 @@
   margin-top: 0.25rem;
   max-height: 14rem;
   overflow-y: auto;
-  border: 1px solid var(--fk-border, #d4d4d8);
+  border: 1px solid var(--fk-color-border, #d4d4d8);
   border-radius: var(--fk-radius, 0.375rem);
-  background: var(--fk-bg, #fff);
+  background: var(--fk-color-surface, #fff);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
@@ -46,11 +46,11 @@
 
 .fk-address__item--active,
 .fk-address__item:hover {
-  background: var(--fk-bg-muted, rgba(127, 127, 127, 0.12));
+  background: var(--fk-color-hover, rgba(127, 127, 127, 0.12));
 }
 
 .fk-address__empty {
   padding: 0.5rem 0.625rem;
   font-size: 0.75rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-color-muted, #71717a);
 }
