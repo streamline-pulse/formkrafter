@@ -153,6 +153,16 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
             property.dateRange = true;
             messages.dateRange = defaultValidationMessage("dateRange", locale);
         }
+        if (brick.id === "vehicle-plate") {
+            const format = typeof brick.configs?.plateFormat === "string" && brick.configs.plateFormat ? brick.configs.plateFormat : "generic";
+            property.format = `plate-${format}`;
+            messages.format = defaultValidationMessage("plate", locale);
+        }
+        if (brick.id === "company-registry") {
+            const format = typeof brick.configs?.registryFormat === "string" && brick.configs.registryFormat ? brick.configs.registryFormat : "generic";
+            property.format = `registry-${format}`;
+            messages.format = defaultValidationMessage("registry", locale);
+        }
         if (brick.id === "mrz") {
             property.mrzValid = true;
             messages.mrzValid = defaultValidationMessage("mrz", locale);

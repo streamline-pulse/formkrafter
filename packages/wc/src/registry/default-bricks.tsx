@@ -12,6 +12,11 @@ import {
   parseDocumentFields,
   parseDocumentFills,
   documentFillPatch,
+  measureFamilyOf,
+  measureUnits,
+  measureValue,
+  formatPlate,
+  formatCompanyRegistry,
 } from '@streamline-pulse/formkrafter-core';
 import type { SlotRules } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
@@ -1059,6 +1064,126 @@ export const documentBrick = createBrick({
   },
 });
 
+type MeasureStored = { value: number; unit: string; base: number };
+
+// Mesure : un nombre et son unite dans une famille (longueur, surface, masse,
+// volume, duree) ; la valeur garde l'equivalent en unite de base pour les totaux.
+export const measureBrick = createBrick({
+  type: 'input',
+  dataType: 'object',
+  id: 'measure',
+  name: 'Measure',
+  category: 'Measures',
+  defaultConfigs: { label: 'Measure', family: 'area', units: '', unit: '', placeholder: '' },
+  render: (props) => {
+    const family = measureFamilyOf(props.configs?.family);
+    const units = measureUnits(family, props.configs?.units);
+    const value = props.data as MeasureStored | undefined;
+    const fallback = typeof props.configs?.unit === 'string' && units.some((u) => u.id === props.configs?.unit) ? (props.configs.unit as string) : units[0].id;
+    const unit = value?.unit && units.some((u) => u.id === value.unit) ? value.unit : fallback;
+    const emit = (raw: string, nextUnit: string) => {
+      if (raw.trim() === '') return props.onDataChange?.(undefined);
+      const number = Number(raw);
+      if (Number.isNaN(number)) return;
+      props.onDataChange?.(measureValue(family, number, nextUnit));
+    };
+    return fieldBlock(
+      props,
+      'Measure',
+      <div class="fk-money fk-measure">
+        <input
+          {...invalidAttr(props)}
+          class="fk-field__input fk-money__amount fk-measure__value"
+          type="number"
+          step="any"
+          inputmode="decimal"
+          aria-label={fkT('measure.value')}
+          value={value?.value ?? ''}
+          placeholder={props.configs?.placeholder as string}
+          {...lock(props, true)}
+          onInput={(event) => emit((event.target as HTMLInputElement).value, unit)}
+        />
+        <select
+          class="fk-field__input fk-money__currency fk-measure__unit"
+          aria-label={fkT('measure.unit')}
+          {...lock(props, false)}
+          onChange={(event) => {
+            const next = (event.target as HTMLSelectElement).value;
+            if (value) props.onDataChange?.(measureValue(family, value.value, next));
+          }}
+        >
+          {units.map((item) => (
+            <option value={item.id} selected={item.id === unit}>
+              {item.symbol}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  },
+});
+
+// Immatriculation : saisie libre, mise en forme du format a la sortie du champ,
+// controle par le schema (`plate-<format>`).
+export const vehiclePlateBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'vehicle-plate',
+  name: 'Vehicle plate',
+  category: 'Registries',
+  defaultConfigs: { label: 'Vehicle plate', plateFormat: 'generic', placeholder: '' },
+  render: (props) =>
+    field(
+      props,
+      'Vehicle plate',
+      <input
+        {...invalidAttr(props)}
+        class="fk-field__input fk-plate"
+        type="text"
+        autocomplete="off"
+        autocapitalize="characters"
+        value={(props.data as string) ?? ''}
+        placeholder={props.configs?.placeholder as string}
+        {...lock(props, true)}
+        onInput={(event) => props.onDataChange?.((event.target as HTMLInputElement).value.toUpperCase())}
+        onBlur={(event) => {
+          const raw = (event.target as HTMLInputElement).value;
+          if (raw.trim()) props.onDataChange?.(formatPlate(String(props.configs?.plateFormat ?? 'generic'), raw));
+        }}
+      />
+    ),
+});
+
+// Registre d'entreprise (RCCM OHADA, RCS…) : meme principe, format `registry-<format>`.
+export const companyRegistryBrick = createBrick({
+  type: 'input',
+  dataType: 'string',
+  id: 'company-registry',
+  name: 'Company registration',
+  category: 'Registries',
+  defaultConfigs: { label: 'Company registration', registryFormat: 'ohada-rccm', placeholder: '' },
+  render: (props) =>
+    field(
+      props,
+      'Company registration',
+      <input
+        {...invalidAttr(props)}
+        class="fk-field__input fk-registry"
+        type="text"
+        autocomplete="off"
+        autocapitalize="characters"
+        value={(props.data as string) ?? ''}
+        placeholder={props.configs?.placeholder as string}
+        {...lock(props, true)}
+        onInput={(event) => props.onDataChange?.((event.target as HTMLInputElement).value.toUpperCase())}
+        onBlur={(event) => {
+          const raw = (event.target as HTMLInputElement).value;
+          if (raw.trim()) props.onDataChange?.(formatCompanyRegistry(String(props.configs?.registryFormat ?? 'generic'), raw));
+        }}
+      />
+    ),
+});
+
 type DateRangeValue = { from?: string; to?: string };
 
 // Plage de dates : { from, to }, la fin jamais avant le debut (schema).
@@ -1657,6 +1782,9 @@ const defaults = [
     appointmentBrick,
     dateRangeBrick,
     documentBrick,
+    measureBrick,
+    vehiclePlateBrick,
+    companyRegistryBrick,
     addressBrick,
     codeBrick,
     fileBrick,

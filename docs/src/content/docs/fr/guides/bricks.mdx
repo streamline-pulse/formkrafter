@@ -38,6 +38,9 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 | `appointment` | object | un créneau `{ id, start, end }` choisi jour par jour, depuis `slotsUrl` (liste avec `remaining`) ou généré par des règles d’ouverture (`days`, `from`, `to`, `duration`, `horizonDays`, `noticeHours`, `exclude`) |
 | `date-range` | object | `{ from, to }`, la fin jamais avant le début |
 | `document` | object | un document scanné ou déposé, lu par l’hôte (`services.documentReaderService`, `readUrl`) : le texte lu, les `fields` demandés (`clé|Libellé` par ligne, corrigeables par l’usager) et, avec `fills` (`champ=cléFormulaire` par ligne), les clés du formulaire qu’ils remplissent ; le fichier est conservé via le service d’upload sauf si `keepFile` est désactivé |
+| `measure` | object | `{ value, unit, base }` : un nombre et son unité dans une `family` (length, area, mass, volume, duration), `units` restreignant le choix, `base` gardant la valeur dans l’unité de base de la famille (m, m², kg, l, h) pour totaliser des unités différentes |
+| `vehicle-plate` | string | immatriculation contrôlée par `plateFormat` (`fr`, `bj`, `ci`, `sn`, `generic`), en majuscules à la saisie et mise en forme à la sortie du champ |
+| `company-registry` | string | numéro d’immatriculation d’entreprise contrôlé par `registryFormat` (`ohada-rccm`, `fr-rcs`, `generic`) |
 
 ### Data
 

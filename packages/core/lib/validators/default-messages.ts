@@ -16,6 +16,8 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     iban: "Invalid IBAN",
     dateRange: "The end before the start is not allowed",
     mrz: "Machine-readable zone unreadable or inconsistent",
+    plate: "Invalid registration plate for this format",
+    registry: "Invalid registration number for this format",
   },
   fr: {
     required: "Ce champ est obligatoire",
@@ -34,6 +36,8 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     iban: "IBAN invalide",
     dateRange: "La fin ne peut pas précéder le début",
     mrz: "Zone de lecture illisible ou incohérente",
+    plate: "Immatriculation invalide pour ce format",
+    registry: "Numéro d’immatriculation invalide pour ce format",
   },
 };
 

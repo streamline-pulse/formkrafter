@@ -27,6 +27,8 @@ export { RecapItem, collectRecapItems } from "./utils/recap.js";
 export { FieldDescriptor, CollectFieldsOptions, collectFields } from "./utils/fields.js";
 export { IdentityFormat, IDENTITY_FORMATS, checkIdentity, checkFrNir, checkBjNpi, checkDigits, checkLuhn, checkFrSiren, checkFrSiret, checkBjIfu, checkIban, formatIban } from "./utils/identity.js";
 export { MrzResult, parseMrz, mrzLines, mrzCheckDigit } from "./utils/mrz.js";
+export { MeasureFamily, MeasureUnit, MeasureValue, MEASURE_FAMILIES, measureFamilyOf, measureUnits, unitOf, convertMeasure, measureValue, formatMeasure } from "./utils/units.js";
+export { PLATE_FORMATS, REGISTRY_FORMATS, checkPlate, formatPlate, compactPlate, checkCompanyRegistry, formatCompanyRegistry } from "./utils/registries.js";
 export { Slot, SlotRules, generateSlots, readSlots, groupSlotsByDay, slotDate } from "./utils/slots.js";
 export { DocumentField, parseDocumentFields, parseDocumentFills, documentFillPatch } from "./utils/documents.js";
 

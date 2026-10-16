@@ -38,6 +38,9 @@ the same palette.
 | `appointment` | object | a slot `{ id, start, end }` picked day by day, from `slotsUrl` (list with `remaining`) or generated from opening rules (`days`, `from`, `to`, `duration`, `horizonDays`, `noticeHours`, `exclude`) |
 | `date-range` | object | `{ from, to }`, the end never before the start |
 | `document` | object | a scanned or uploaded document read by the host (`services.documentReaderService`, `readUrl`): the text read, the `fields` asked for (`key|Label` per line, editable by the user) and, with `fills` (`field=formKey` per line), the form keys they fill; the file itself is kept through the upload service unless `keepFile` is off |
+| `measure` | object | `{ value, unit, base }`: a number with a unit of its `family` (length, area, mass, volume, duration), `units` restricting the choice, `base` holding the value in the family's base unit (m, m², kg, l, h) so totals can mix units |
+| `vehicle-plate` | string | registration plate checked by `plateFormat` (`fr`, `bj`, `ci`, `sn`, `generic`), upper-cased while typing and formatted on blur |
+| `company-registry` | string | company registration number checked by `registryFormat` (`ohada-rccm`, `fr-rcs`, `generic`) |
 
 ### Data
 

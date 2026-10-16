@@ -366,6 +366,27 @@ export class FkPropertyPanel {
               this.textField(fkTOr('panel.slotExclude', 'Closed dates (YYYY-MM-DD, comma-separated)'), configs.exclude, (value) => this.emitConfigs({ exclude: value })),
             ]
           : null}
+        {configs && 'family' in configs
+          ? [
+              this.textField(fkTOr('panel.family', 'Measure family (length, area, mass, volume, duration)'), configs.family, (value) =>
+                this.emitConfigs({ family: value })
+              ),
+              this.textField(fkTOr('panel.units', 'Units offered (ids, comma-separated; empty = all)'), configs.units, (value) =>
+                this.emitConfigs({ units: value })
+              ),
+              this.textField(fkTOr('panel.unit', 'Default unit'), configs.unit, (value) => this.emitConfigs({ unit: value })),
+            ]
+          : null}
+        {configs && 'plateFormat' in configs
+          ? this.textField(fkTOr('panel.plateFormat', 'Plate format (fr, bj, ci, sn, generic)'), configs.plateFormat, (value) =>
+              this.emitConfigs({ plateFormat: value })
+            )
+          : null}
+        {configs && 'registryFormat' in configs
+          ? this.textField(fkTOr('panel.registryFormat', 'Registration format (ohada-rccm, fr-rcs, generic)'), configs.registryFormat, (value) =>
+              this.emitConfigs({ registryFormat: value })
+            )
+          : null}
         {configs && 'readUrl' in configs
           ? [
               this.textField(fkTOr('panel.readUrl', 'Reader URL (empty = host default)'), configs.readUrl, (value) => this.emitConfigs({ readUrl: value })),
