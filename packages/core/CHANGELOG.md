@@ -1,5 +1,11 @@
 # @streamline-pulse/formkrafter-core
 
+## 0.32.0
+
+### Minor Changes
+
+- d6a2946: React Native: the document brick can pick a file or take a photo when the host installs `services.filePickerService` (camera or document picker), then sends it to the document reader like the web brick.
+
 ## 0.31.1
 
 ### Patch Changes
