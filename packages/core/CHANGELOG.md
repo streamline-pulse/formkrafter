@@ -1,5 +1,11 @@
 # @streamline-pulse/formkrafter-core
 
+## 0.31.1
+
+### Patch Changes
+
+- c44ceec: Fields render `configs.description` as a help text under the control (editable in the property panel, localisable), and inputs stretch to the width of their field.
+
 ## 0.31.0
 
 ### Minor Changes
