@@ -1,6 +1,7 @@
 import { Component, Event, Prop, State, Watch, h } from '@stencil/core';
 import type { EventEmitter, VNode } from '@stencil/core';
-import { isLocalizedObject } from '@streamline-pulse/formkrafter-core';
+import { isLocalizedObject, services } from '@streamline-pulse/formkrafter-core';
+import type { OptionCatalogEntry } from '@streamline-pulse/formkrafter-core';
 import type {
   BrickSpec,
   Validation,
@@ -36,6 +37,16 @@ export class FkPropertyPanel {
 
   @State() activeTab: PanelTab = 'config';
   @State() newStyleKey = '';
+  /** Catalogs offered by the host (services.optionSourceService.listCatalogs), suggested for optionsRef. */
+  @State() catalogs: OptionCatalogEntry[] = [];
+  private catalogsRequested = false;
+
+  private loadCatalogs() {
+    this.catalogsRequested = true;
+    const list = services.optionSourceService?.listCatalogs?.();
+    if (!list) return;
+    list.then((catalogs) => (this.catalogs = catalogs)).catch(() => undefined);
+  }
 
   @Watch('brick')
   onBrickChange() {
@@ -254,10 +265,25 @@ export class FkPropertyPanel {
     }
 
     if (source === 'catalog') {
+      if (!this.catalogsRequested) this.loadCatalogs();
       nodes.push(
-        this.textField(fkT('panel.optionsRef'), configs.optionsRef, (value) =>
-          this.emitConfigs({ optionsRef: value })
-        )
+        <label class="fk-props__field">
+          <span class="fk-props__label">{fkT('panel.optionsRef')}</span>
+          <input
+            class="fk-props__input"
+            type="text"
+            list="fk-option-catalogs"
+            value={(configs.optionsRef as string) ?? ''}
+            onChange={(event) => this.emitConfigs({ optionsRef: (event.target as HTMLInputElement).value })}
+          />
+          <datalist id="fk-option-catalogs">
+            {this.catalogs.map((catalog) => (
+              <option value={catalog.ref}>
+                {catalog.filters?.length ? `${catalog.label} (${catalog.filters.map((filter) => `?${filter}=`).join(', ')})` : catalog.label}
+              </option>
+            ))}
+          </datalist>
+        </label>
       );
     }
 

@@ -164,5 +164,6 @@ export {
 } from "./services/document_reader_service.js";
 export type {
     OptionSourceService,
+    OptionCatalogEntry,
     FetchOptionSourceDefaults
 } from "./services/option_source_service.js";

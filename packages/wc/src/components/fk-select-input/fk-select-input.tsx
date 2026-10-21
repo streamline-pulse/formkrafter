@@ -65,6 +65,7 @@ export class FkSelectInput {
   @Watch('dataMap')
   onDataMapChange() {
     this.resolveRemote();
+    this.resolveCatalog();
   }
 
   private searchParam(): string | undefined {
@@ -219,7 +220,9 @@ export class FkSelectInput {
   private async resolveCatalog(force = false) {
     if (this.source() !== 'catalog') return;
 
-    const ref = (this.configs?.optionsRef as string) || '';
+    // A ref may follow other answers: `towns?region={{data.region}}`.
+    const raw = (this.configs?.optionsRef as string) || '';
+    const ref = raw ? interpolateTemplate(raw, this.dataMap) : '';
     if (!ref) {
       this.catalogOptions = [];
       return;

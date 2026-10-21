@@ -22,6 +22,19 @@ const spec = () => ({
         optionsRef: 'professions',
       },
     },
+    {
+      type: 'input',
+      dataType: 'string',
+      id: 'select',
+      name: 'Select',
+      configs: {
+        uid: 'town',
+        key: 'town',
+        label: 'Town',
+        optionsSource: 'catalog',
+        optionsRef: 'towns?profession={profession}',
+      },
+    },
   ],
 });
 
@@ -62,7 +75,7 @@ beforeAll(async () => {
   services.optionSourceService = {
     fetchOptions: async (ref: string) => {
       fetchedRefs.push(ref);
-      return ['Accompagnateur', 'Accoucheuse', 'Agronome'];
+      return ref.startsWith('towns') ? ['Lomé', 'Tsévié'] : ['Accompagnateur', 'Accoucheuse', 'Agronome'];
     },
   };
 
@@ -84,7 +97,7 @@ describe('catalog options (optionsRef)', () => {
       (option) => option.textContent?.trim()
     );
     expect(labels).toEqual(['Accompagnateur', 'Accoucheuse', 'Agronome']);
-    expect(fetchedRefs).toEqual(['professions']);
+    expect(fetchedRefs).toContain('professions');
   });
 
   test('selecting a catalog option emits its value', async () => {
@@ -97,5 +110,9 @@ describe('catalog options (optionsRef)', () => {
     (renderEl.querySelector('.fk-select__option') as HTMLElement).click();
     await tick();
     expect(data).toEqual({ profession: 'Accompagnateur' });
+  });
+
+  test('a ref follows the answers it names (dependent lists)', async () => {
+    expect(fetchedRefs).toContain('towns?profession=Accompagnateur');
   });
 });
