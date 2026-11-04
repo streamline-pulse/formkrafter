@@ -1430,5 +1430,1096 @@
         "office": "TG121"
       }
     ]
+  },
+  {
+    "name": "identifiers",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Identifiers",
+      "children": [
+        {
+          "type": "input",
+          "id": "national-id",
+          "name": "nir",
+          "dataType": "string",
+          "configs": {
+            "key": "nir",
+            "idFormat": "fr-nir"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "national-id",
+          "name": "npi",
+          "dataType": "string",
+          "configs": {
+            "key": "npi",
+            "idFormat": "bj-npi"
+          }
+        },
+        {
+          "type": "input",
+          "id": "tax-id",
+          "name": "ifu",
+          "dataType": "string",
+          "configs": {
+            "key": "ifu",
+            "idFormat": "bj-ifu"
+          }
+        },
+        {
+          "type": "input",
+          "id": "tax-id",
+          "name": "siren",
+          "dataType": "string",
+          "configs": {
+            "key": "siren",
+            "idFormat": "fr-siren"
+          }
+        },
+        {
+          "type": "input",
+          "id": "tax-id",
+          "name": "siret",
+          "dataType": "string",
+          "configs": {
+            "key": "siret",
+            "idFormat": "fr-siret"
+          }
+        },
+        {
+          "type": "input",
+          "id": "national-id",
+          "name": "plain_id",
+          "dataType": "string",
+          "configs": {
+            "key": "plain_id"
+          }
+        },
+        {
+          "type": "input",
+          "id": "iban",
+          "name": "iban",
+          "dataType": "string",
+          "configs": {
+            "key": "iban"
+          },
+          "validations": [
+            {
+              "validator": "minLength",
+              "value": 30
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "national-id",
+          "name": "code",
+          "dataType": "string",
+          "configs": {
+            "key": "code",
+            "idFormat": "digits-5"
+          }
+        },
+        {
+          "type": "input",
+          "id": "vehicle-plate",
+          "name": "plate_fr",
+          "dataType": "string",
+          "configs": {
+            "key": "plate_fr",
+            "plateFormat": "fr"
+          }
+        },
+        {
+          "type": "input",
+          "id": "vehicle-plate",
+          "name": "plate_ci",
+          "dataType": "string",
+          "configs": {
+            "key": "plate_ci",
+            "plateFormat": "ci"
+          }
+        },
+        {
+          "type": "input",
+          "id": "vehicle-plate",
+          "name": "plate_any",
+          "dataType": "string",
+          "configs": {
+            "key": "plate_any"
+          }
+        },
+        {
+          "type": "input",
+          "id": "company-registry",
+          "name": "rccm",
+          "dataType": "string",
+          "configs": {
+            "key": "rccm",
+            "registryFormat": "ohada-rccm"
+          }
+        },
+        {
+          "type": "input",
+          "id": "company-registry",
+          "name": "rcs",
+          "dataType": "string",
+          "configs": {
+            "key": "rcs",
+            "registryFormat": "fr-rcs"
+          }
+        },
+        {
+          "type": "input",
+          "id": "company-registry",
+          "name": "registry_any",
+          "dataType": "string",
+          "configs": {
+            "key": "registry_any"
+          }
+        },
+        {
+          "type": "input",
+          "id": "mrz",
+          "name": "passport",
+          "dataType": "object",
+          "configs": {
+            "key": "passport"
+          }
+        }
+      ]
+    },
+    "locales": [
+      "fr",
+      "en"
+    ],
+    "data": [
+      {
+        "nir": "1 85 05 78 006 084 36",
+        "npi": "1234567890",
+        "ifu": "1234567890123",
+        "siren": "443 061 841",
+        "siret": "443 061 841 00047",
+        "plain_id": "X",
+        "iban": "FR76 3000 6000 0112 3456 7890 189",
+        "code": "12 345",
+        "plate_fr": "ab-123-cd",
+        "plate_ci": "1234 AB 01",
+        "plate_any": "abc123",
+        "rccm": "RB/COT/01 B 1234",
+        "rcs": "443 061 841 RCS Paris",
+        "registry_any": "AB/12-34",
+        "passport": {
+          "raw": "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001011F3501014ZE184226B<<<<<16",
+          "valid": true
+        }
+      },
+      {
+        "nir": "1850578006084 00",
+        "npi": "123",
+        "ifu": "12",
+        "siren": "443061842",
+        "siret": "44306184100048",
+        "iban": "FR7630006000011234567890188",
+        "code": "1234",
+        "plate_fr": "AI-123-CD",
+        "plate_ci": "1234AB1",
+        "plate_any": "ab",
+        "rccm": "RB-COT-01-B-1234",
+        "rcs": "443061841 RCS P",
+        "registry_any": "AB.12",
+        "passport": {
+          "raw": "P<UTO\nshort",
+          "valid": false,
+          "errors": [
+            "format"
+          ]
+        }
+      },
+      {
+        "nir": 185057800608436,
+        "iban": "GB82WEST12345698765432",
+        "passport": {
+          "valid": true
+        }
+      },
+      {
+        "iban": "FR76",
+        "passport": "P<UTO"
+      }
+    ]
+  },
+  {
+    "name": "unknown-identity-format",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Unknown",
+      "children": [
+        {
+          "type": "input",
+          "id": "tax-id",
+          "name": "nif",
+          "dataType": "string",
+          "configs": {
+            "key": "nif",
+            "idFormat": "tg-nif"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "other",
+          "dataType": "string",
+          "configs": {
+            "key": "other"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {},
+      {
+        "nif": "x"
+      }
+    ]
+  },
+  {
+    "name": "unknown-plate-format",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Unknown plate",
+      "children": [
+        {
+          "type": "input",
+          "id": "vehicle-plate",
+          "name": "plate",
+          "dataType": "string",
+          "configs": {
+            "key": "plate",
+            "plateFormat": "tg"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {},
+      {
+        "plate": "TG 1234 AB"
+      }
+    ]
+  },
+  {
+    "name": "digits-out-of-range",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Digits",
+      "children": [
+        {
+          "type": "input",
+          "id": "national-id",
+          "name": "code",
+          "dataType": "string",
+          "configs": {
+            "key": "code",
+            "idFormat": "digits-21"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {},
+      {
+        "code": "1"
+      }
+    ]
+  },
+  {
+    "name": "hidden-by-rules",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Hidden",
+      "children": [
+        {
+          "type": "input",
+          "id": "select",
+          "name": "company_type",
+          "dataType": "string",
+          "configs": {
+            "key": "company_type"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "select",
+          "name": "btp_age",
+          "dataType": "string",
+          "configs": {
+            "key": "btp_age"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "minLength",
+              "value": 3
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": {
+                "!=": [
+                  {
+                    "var": "company_type"
+                  },
+                  "btp"
+                ]
+              },
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "id": "panel",
+          "name": "Carrier",
+          "children": [
+            {
+              "type": "input",
+              "id": "text",
+              "name": "carrier_name",
+              "dataType": "string",
+              "configs": {
+                "key": "carrier_name"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "id": "vehicle-plate",
+              "name": "carrier_plate",
+              "dataType": "string",
+              "configs": {
+                "key": "carrier_plate",
+                "plateFormat": "bj"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": {
+                "in": [
+                  {
+                    "var": "office"
+                  },
+                  [
+                    "TG151",
+                    "TG152"
+                  ]
+                ]
+              },
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "select",
+          "name": "office",
+          "dataType": "string",
+          "configs": {
+            "key": "office"
+          }
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "by_logic",
+          "dataType": "string",
+          "configs": {
+            "key": "by_logic"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "logic"
+                  },
+                  "logic": {
+                    "==": [
+                      {
+                        "var": "containers"
+                      },
+                      "0"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "number",
+          "name": "containers",
+          "dataType": "number",
+          "configs": {
+            "key": "containers"
+          }
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "truthy_not_true",
+          "dataType": "string",
+          "configs": {
+            "key": "truthy_not_true"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": 1,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "overridden",
+          "dataType": "string",
+          "configs": {
+            "key": "overridden"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            },
+            {
+              "name": "show",
+              "type": "jsonLogic",
+              "logic": {
+                "==": [
+                  {
+                    "var": "office"
+                  },
+                  "TG121"
+                ]
+              },
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "unset_boolean",
+          "dataType": "string",
+          "configs": {
+            "key": "unset_boolean"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "js_disabled",
+          "dataType": "string",
+          "configs": {
+            "key": "js_disabled"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "lock",
+              "type": "javaScript",
+              "code": "return true",
+              "effects": [
+                {
+                  "property": {
+                    "target": "disabled",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "collection",
+          "id": "data-grid",
+          "name": "Items",
+          "dataType": "array",
+          "configs": {
+            "key": "items"
+          },
+          "validations": [
+            {
+              "validator": "minItems",
+              "value": 1
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": {
+                "==": [
+                  {
+                    "var": "company_type"
+                  },
+                  "none"
+                ]
+              },
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ],
+          "children": [
+            {
+              "type": "input",
+              "id": "text",
+              "name": "hs",
+              "dataType": "string",
+              "configs": {
+                "key": "hs"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "id": "text",
+              "name": "note",
+              "dataType": "string",
+              "configs": {
+                "key": "note"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                }
+              ],
+              "rules": [
+                {
+                  "name": "hide",
+                  "type": "jsonLogic",
+                  "logic": {
+                    "!": {
+                      "var": "hs"
+                    }
+                  },
+                  "effects": [
+                    {
+                      "property": {
+                        "target": "hidden",
+                        "type": "boolean"
+                      },
+                      "boolean": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {},
+      {
+        "company_type": "btp"
+      },
+      {
+        "company_type": "other",
+        "office": "TG151",
+        "containers": "0"
+      },
+      {
+        "company_type": "btp",
+        "btp_age": "x",
+        "office": "TG121",
+        "containers": 0,
+        "items": []
+      },
+      {
+        "company_type": "none",
+        "items": [],
+        "office": "TG152",
+        "carrier_plate": "bad"
+      },
+      {
+        "company_type": "none",
+        "items": [
+          {},
+          {
+            "hs": "8429"
+          }
+        ]
+      },
+      {
+        "company_type": "btp",
+        "btp_age": "new",
+        "by_logic": "x",
+        "truthy_not_true": "x",
+        "overridden": "x",
+        "unset_boolean": "x",
+        "js_disabled": "x",
+        "items": [
+          {
+            "hs": "1",
+            "note": "n"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "hidden-root-rule",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Root hidden",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "string",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ],
+      "rules": [
+        {
+          "name": "hide",
+          "type": "jsonLogic",
+          "logic": {
+            "var": "skip"
+          },
+          "effects": [
+            {
+              "property": {
+                "target": "hidden",
+                "type": "boolean"
+              },
+              "boolean": true
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {},
+      {
+        "skip": true
+      },
+      {
+        "skip": 1
+      }
+    ]
+  },
+  {
+    "name": "rule-throws",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Throws",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "string",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": {
+                "nope": [
+                  1
+                ]
+              },
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {}
+    ]
+  },
+  {
+    "name": "hidden-truthy-values",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Truthy",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "logic_one",
+          "dataType": "string",
+          "configs": {
+            "key": "logic_one"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "r",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "logic"
+                  },
+                  "logic": {
+                    "+": [
+                      0,
+                      1
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "logic_true",
+          "dataType": "string",
+          "configs": {
+            "key": "logic_true"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "r",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "logic"
+                  },
+                  "logic": {
+                    "==": [
+                      1,
+                      1
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "string_true",
+          "dataType": "string",
+          "configs": {
+            "key": "string_true"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "r",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "string"
+                  },
+                  "string": "true"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "boolean_true",
+          "dataType": "string",
+          "configs": {
+            "key": "boolean_true"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "r",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "logic_null",
+          "dataType": "string",
+          "configs": {
+            "key": "logic_null"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "rules": [
+            {
+              "name": "r",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "logic"
+                  },
+                  "logic": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {}
+    ]
   }
 ]

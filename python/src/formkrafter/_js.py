@@ -18,8 +18,38 @@ except ImportError:  # pragma: no cover - exercised when regex is absent
 Number = int | float
 
 
+class _Undefined:
+    """JavaScript `undefined`, where it differs from `null` (None): `Number(undefined)` is NaN, not 0."""
+
+    _instance: _Undefined | None = None
+
+    def __new__(cls) -> _Undefined:
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __repr__(self) -> str:
+        return "undefined"
+
+    def __bool__(self) -> bool:
+        return False
+
+
+UNDEFINED = _Undefined()
+
+# JavaScript's whitespace (String.prototype.trim, \s): wider than str.strip() on a few code points
+JS_WHITESPACE = (
+    "\t\n\v\f\r \u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a"
+    "\u2028\u2029\u202f\u205f\u3000\ufeff"
+)
+
+
+def js_trim(text: str) -> str:
+    return text.strip(JS_WHITESPACE)
+
+
 def to_number(value: Any) -> Number:
-    """`Number(value)`: "12" is 12, "" and null are 0, true is 1, anything unreadable is NaN."""
+    """`Number(value)`: "12" is 12, "" and null are 0, true is 1, undefined and anything unreadable NaN."""
     if isinstance(value, bool):
         return int(value)
     if value is None:
@@ -27,7 +57,7 @@ def to_number(value: Any) -> Number:
     if isinstance(value, int | float):
         return _tidy(float(value)) if isinstance(value, float) else value
     if isinstance(value, str):
-        text = value.strip()
+        text = js_trim(value)
         if not text:
             return 0
         lowered = text.lower()
@@ -47,9 +77,111 @@ def to_number(value: Any) -> Number:
             return _tidy(float(text))
         except ValueError:
             return math.nan
-    if isinstance(value, list) and len(value) <= 1:
-        return to_number(value[0]) if value else 0
+    if isinstance(value, list):
+        return to_number(js_string(value))
     return math.nan
+
+
+_FLOAT_PREFIX = _re.compile(r"[+-]?(?:Infinity|(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)")
+
+
+def parse_float(value: Any) -> float:
+    """`parseFloat(value)`: the longest number at the start of `String(value)`, else NaN."""
+    match = _FLOAT_PREFIX.match(js_trim(js_string(value)))
+    if not match:
+        return math.nan
+    text = match.group(0)
+    return float(text.replace("Infinity", "inf"))
+
+
+def js_string(value: Any) -> str:
+    """`String(value)`: null is "null", arrays are joined with commas (null and undefined as "")."""
+    if value is None:
+        return "null"
+    if value is UNDEFINED:
+        return "undefined"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, int | float):
+        return number_to_string(value)
+    if isinstance(value, list):
+        return ",".join("" if v is None or v is UNDEFINED else js_string(v) for v in value)
+    if isinstance(value, dict):
+        return "[object Object]"
+    return str(value)
+
+
+def js_truthy(value: Any) -> bool:
+    """`!!value`: false for null, undefined, false, 0, NaN and ""; every object is true."""
+    if value is None or value is UNDEFINED or value is False:
+        return False
+    if isinstance(value, int | float):
+        return value != 0 and not math.isnan(value)
+    if isinstance(value, str):
+        return value != ""
+    return True
+
+
+def js_type(value: Any) -> str:
+    if value is UNDEFINED:
+        return "undefined"
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, int | float):
+        return "number"
+    if isinstance(value, str):
+        return "string"
+    return "object"
+
+
+def strict_equals(a: Any, b: Any) -> bool:
+    """`a === b`: same type and value; objects by identity."""
+    kind = js_type(a)
+    if kind != js_type(b):
+        return False
+    if kind in ("undefined", "null"):
+        return True
+    if kind == "object":
+        return a is b
+    return bool(a == b)
+
+
+def loose_equals(a: Any, b: Any) -> bool:
+    """`a == b`, with JavaScript's coercions: "1" == 1, true == 1, [1] == "1", null == undefined."""
+    ka, kb = js_type(a), js_type(b)
+    if ka == kb:
+        return strict_equals(a, b)
+    if ka in ("undefined", "null") or kb in ("undefined", "null"):
+        return ka in ("undefined", "null") and kb in ("undefined", "null")
+    if ka == "boolean":
+        return loose_equals(to_number(a), b)
+    if kb == "boolean":
+        return loose_equals(a, to_number(b))
+    if {ka, kb} == {"number", "string"}:
+        return to_number(a) == to_number(b)
+    if ka == "object":
+        return loose_equals(js_string(a), b)
+    if kb == "object":
+        return loose_equals(a, js_string(b))
+    return False
+
+
+def _primitive(value: Any) -> Any:
+    return js_string(value) if isinstance(value, list | dict) else value
+
+
+def js_compare(a: Any, b: Any) -> int | None:
+    """The abstract relational comparison behind `<`: -1, 0 or 1, None when NaN makes it undefined."""
+    pa, pb = _primitive(a), _primitive(b)
+    if isinstance(pa, str) and isinstance(pb, str):
+        ua, ub = pa.encode("utf-16-be"), pb.encode("utf-16-be")
+        return (ua > ub) - (ua < ub)
+    na, nb = to_number(pa), to_number(pb)
+    if math.isnan(na) or math.isnan(nb):
+        return None
+    return (na > nb) - (na < nb)
 
 
 def _tidy(n: float) -> Number:

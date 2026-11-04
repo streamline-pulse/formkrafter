@@ -2075,6 +2075,2106 @@
           ]
         }
       ]
+    },
+    {
+      "name": "identifiers",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "nir": {
+                "type": "string",
+                "nullable": false,
+                "format": "identity-fr-nir",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "npi": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-bj-npi",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "ifu": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-bj-ifu",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "siren": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-fr-siren",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "siret": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-fr-siret",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "plain_id": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "iban": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 30,
+                "format": "identity-iban",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum 30 caractères",
+                  "format": "IBAN invalide"
+                }
+              },
+              "code": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-digits-5",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "plate_fr": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-fr",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Immatriculation invalide pour ce format"
+                }
+              },
+              "plate_ci": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-ci",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Immatriculation invalide pour ce format"
+                }
+              },
+              "plate_any": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-generic",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Immatriculation invalide pour ce format"
+                }
+              },
+              "rccm": {
+                "type": "string",
+                "nullable": true,
+                "format": "registry-ohada-rccm",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Numéro d’immatriculation invalide pour ce format"
+                }
+              },
+              "rcs": {
+                "type": "string",
+                "nullable": true,
+                "format": "registry-fr-rcs",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Numéro d’immatriculation invalide pour ce format"
+                }
+              },
+              "registry_any": {
+                "type": "string",
+                "nullable": true,
+                "format": "registry-generic",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Numéro d’immatriculation invalide pour ce format"
+                }
+              },
+              "passport": {
+                "type": "object",
+                "nullable": true,
+                "mrzValid": true,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "mrzValid": "Zone de lecture illisible ou incohérente"
+                }
+              }
+            },
+            "required": [
+              "nir"
+            ],
+            "errorMessage": {
+              "required": {
+                "nir": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "nir": "Identifiant invalide pour ce format"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "nir": "Identifiant invalide pour ce format",
+                "npi": "Identifiant invalide pour ce format",
+                "ifu": "Identifiant invalide pour ce format",
+                "siren": "Identifiant invalide pour ce format",
+                "siret": "Identifiant invalide pour ce format",
+                "iban": "Minimum 30 caractères",
+                "code": "Identifiant invalide pour ce format",
+                "plate_fr": "Immatriculation invalide pour ce format",
+                "plate_ci": "Immatriculation invalide pour ce format",
+                "plate_any": "Immatriculation invalide pour ce format",
+                "rccm": "Numéro d’immatriculation invalide pour ce format",
+                "rcs": "Numéro d’immatriculation invalide pour ce format",
+                "registry_any": "Numéro d’immatriculation invalide pour ce format",
+                "passport": "Zone de lecture illisible ou incohérente"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "nir": "Valeur invalide",
+                "iban": "Minimum 30 caractères"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "iban": "Minimum 30 caractères",
+                "passport": "Valeur invalide",
+                "nir": "Ce champ est obligatoire"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "nir": {
+                "type": "string",
+                "nullable": false,
+                "format": "identity-fr-nir",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              },
+              "npi": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-bj-npi",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              },
+              "ifu": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-bj-ifu",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              },
+              "siren": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-fr-siren",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              },
+              "siret": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-fr-siret",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              },
+              "plain_id": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "iban": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 30,
+                "format": "identity-iban",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Must be at least 30 characters",
+                  "format": "Invalid IBAN"
+                }
+              },
+              "code": {
+                "type": "string",
+                "nullable": true,
+                "format": "identity-digits-5",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              },
+              "plate_fr": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-fr",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration plate for this format"
+                }
+              },
+              "plate_ci": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-ci",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration plate for this format"
+                }
+              },
+              "plate_any": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-generic",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration plate for this format"
+                }
+              },
+              "rccm": {
+                "type": "string",
+                "nullable": true,
+                "format": "registry-ohada-rccm",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration number for this format"
+                }
+              },
+              "rcs": {
+                "type": "string",
+                "nullable": true,
+                "format": "registry-fr-rcs",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration number for this format"
+                }
+              },
+              "registry_any": {
+                "type": "string",
+                "nullable": true,
+                "format": "registry-generic",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration number for this format"
+                }
+              },
+              "passport": {
+                "type": "object",
+                "nullable": true,
+                "mrzValid": true,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "mrzValid": "Machine-readable zone unreadable or inconsistent"
+                }
+              }
+            },
+            "required": [
+              "nir"
+            ],
+            "errorMessage": {
+              "required": {
+                "nir": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "nir": "Invalid identifier for this format"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "nir": "Invalid identifier for this format",
+                "npi": "Invalid identifier for this format",
+                "ifu": "Invalid identifier for this format",
+                "siren": "Invalid identifier for this format",
+                "siret": "Invalid identifier for this format",
+                "iban": "Must be at least 30 characters",
+                "code": "Invalid identifier for this format",
+                "plate_fr": "Invalid registration plate for this format",
+                "plate_ci": "Invalid registration plate for this format",
+                "plate_any": "Invalid registration plate for this format",
+                "rccm": "Invalid registration number for this format",
+                "rcs": "Invalid registration number for this format",
+                "registry_any": "Invalid registration number for this format",
+                "passport": "Machine-readable zone unreadable or inconsistent"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "nir": "Invalid value",
+                "iban": "Must be at least 30 characters"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "iban": "Must be at least 30 characters",
+                "passport": "Invalid value",
+                "nir": "This field is required"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown-identity-format",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "nif": {
+                "type": "string",
+                "nullable": false,
+                "format": "identity-tg-nif",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Identifiant invalide pour ce format"
+                }
+              },
+              "other": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "nif",
+              "other"
+            ],
+            "errorMessage": {
+              "required": {
+                "nif": "Ce champ est obligatoire",
+                "other": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-tg-nif\" ignored in schema at path \"#/properties/nif\""
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-tg-nif\" ignored in schema at path \"#/properties/nif\""
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown-plate-format",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "plate": {
+                "type": "string",
+                "nullable": false,
+                "format": "plate-tg",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid registration plate for this format"
+                }
+              }
+            },
+            "required": [
+              "plate"
+            ],
+            "errorMessage": {
+              "required": {
+                "plate": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: unknown format \"plate-tg\" ignored in schema at path \"#/properties/plate\""
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: unknown format \"plate-tg\" ignored in schema at path \"#/properties/plate\""
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "digits-out-of-range",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "nullable": false,
+                "format": "identity-digits-21",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid identifier for this format"
+                }
+              }
+            },
+            "required": [
+              "code"
+            ],
+            "errorMessage": {
+              "required": {
+                "code": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-digits-21\" ignored in schema at path \"#/properties/code\""
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-digits-21\" ignored in schema at path \"#/properties/code\""
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hidden-by-rules",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "company_type": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "btp_age": {
+                "type": "string",
+                "nullable": false,
+                "minLength": 3,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum 3 caractères"
+                }
+              },
+              "carrier_name": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "carrier_plate": {
+                "type": "string",
+                "nullable": true,
+                "format": "plate-bj",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Immatriculation invalide pour ce format"
+                }
+              },
+              "office": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "by_logic": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "containers": {
+                "type": "number",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "truthy_not_true": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "overridden": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "unset_boolean": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "js_disabled": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "items": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 1,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minItems": "Sélectionnez au moins 1 élément(s)"
+                }
+              }
+            },
+            "required": [
+              "company_type",
+              "btp_age",
+              "carrier_name",
+              "by_logic",
+              "truthy_not_true",
+              "overridden",
+              "unset_boolean",
+              "js_disabled"
+            ],
+            "errorMessage": {
+              "required": {
+                "company_type": "Ce champ est obligatoire",
+                "btp_age": "Ce champ est obligatoire",
+                "carrier_name": "Ce champ est obligatoire",
+                "by_logic": "Ce champ est obligatoire",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "overridden": "Ce champ est obligatoire",
+                "unset_boolean": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "company_type": "Ce champ est obligatoire",
+                "carrier_name": "Ce champ est obligatoire",
+                "by_logic": "Ce champ est obligatoire",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "btp_age": "Ce champ est obligatoire",
+                "carrier_name": "Ce champ est obligatoire",
+                "by_logic": "Ce champ est obligatoire",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "containers": "Valeur invalide",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "btp_age": "Minimum 3 caractères",
+                "items": "Sélectionnez au moins 1 élément(s)",
+                "carrier_name": "Ce champ est obligatoire",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "overridden": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "by_logic": "Ce champ est obligatoire",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "carrier_name": "Ce champ est obligatoire",
+                "by_logic": "Ce champ est obligatoire",
+                "truthy_not_true": "Ce champ est obligatoire",
+                "js_disabled": "Ce champ est obligatoire",
+                "items[0].hs": "Ce champ est obligatoire",
+                "items[1].note": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "carrier_name": "Ce champ est obligatoire"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hidden-root-rule",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              }
+            },
+            "required": [
+              "a"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "a": "This field is required"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "a": "This field is required"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rule-throws",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              }
+            },
+            "required": [
+              "a"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "error": "Unrecognized operation nope"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hidden-truthy-values",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "logic_one": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "logic_true": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "string_true": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "boolean_true": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "logic_null": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              }
+            },
+            "required": [
+              "logic_one",
+              "logic_true",
+              "string_true",
+              "boolean_true",
+              "logic_null"
+            ],
+            "errorMessage": {
+              "required": {
+                "logic_one": "This field is required",
+                "logic_true": "This field is required",
+                "string_true": "This field is required",
+                "boolean_true": "This field is required",
+                "logic_null": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "logic_one": "This field is required",
+                "string_true": "This field is required",
+                "logic_null": "This field is required"
+              }
+            }
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "jsonlogic": [
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": 1
+    },
+    {
+      "result": 1
+    },
+    {
+      "result": 5
+    },
+    {
+      "result": null
+    },
+    {
+      "result": "dflt"
+    },
+    {
+      "result": 2
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 3
+    },
+    {
+      "result": 5
+    },
+    {
+      "result": "h"
+    },
+    {
+      "result": {
+        "a": 1,
+        "b": "2",
+        "s": "hello",
+        "n": null,
+        "z": 0,
+        "e": "",
+        "arr": [
+          1,
+          2,
+          3
+        ],
+        "o": {
+          "x": {
+            "y": 5
+          }
+        },
+        "t": true,
+        "f": false,
+        "list": [
+          {
+            "v": 1
+          },
+          {
+            "v": 5
+          }
+        ],
+        "office": "TG121",
+        "btp": "non"
+      }
+    },
+    {
+      "result": {
+        "q": 1
+      }
+    },
+    {
+      "result": {
+        "q": 1
+      }
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 20
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": [
+        "n",
+        "e",
+        "zz"
+      ]
+    },
+    {
+      "result": [
+        "q"
+      ]
+    },
+    {
+      "result": [
+        "n",
+        "zz"
+      ]
+    },
+    {
+      "result": []
+    },
+    {
+      "result": [
+        "zz",
+        "n"
+      ]
+    },
+    {
+      "result": []
+    },
+    {
+      "result": "yes"
+    },
+    {
+      "result": "no"
+    },
+    {
+      "result": "b"
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": true
+    },
+    {
+      "result": "n"
+    },
+    {
+      "result": "x"
+    },
+    {
+      "result": 0
+    },
+    {
+      "result": {
+        "$undefined": true
+      }
+    },
+    {
+      "result": []
+    },
+    {
+      "result": "x"
+    },
+    {
+      "result": {
+        "$undefined": true
+      }
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "error": "Unrecognized operation x"
+    },
+    {
+      "error": "Unrecognized operation k"
+    },
+    {
+      "result": ""
+    },
+    {
+      "result": "solo"
+    },
+    {
+      "result": "logic"
+    },
+    {
+      "result": "logic"
+    },
+    {
+      "result": "son"
+    },
+    {
+      "result": "log"
+    },
+    {
+      "result": "js"
+    },
+    {
+      "result": "23"
+    },
+    {
+      "result": "bc"
+    },
+    {
+      "result": "b"
+    },
+    {
+      "result": "éllo😀"
+    },
+    {
+      "result": 6.5
+    },
+    {
+      "result": 2
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 0
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 3
+    },
+    {
+      "result": 45
+    },
+    {
+      "result": 3
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 6
+    },
+    {
+      "result": "5"
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 0.30000000000000004
+    },
+    {
+      "result": 3
+    },
+    {
+      "result": -5
+    },
+    {
+      "result": -1
+    },
+    {
+      "result": -1
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 0.25
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 3
+    },
+    {
+      "result": 1
+    },
+    {
+      "result": -1
+    },
+    {
+      "result": 1
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 1.5
+    },
+    {
+      "result": 1
+    },
+    {
+      "result": null
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 0
+    },
+    {
+      "result": null
+    },
+    {
+      "result": [
+        1,
+        2,
+        3,
+        [
+          4
+        ],
+        null
+      ]
+    },
+    {
+      "result": []
+    },
+    {
+      "result": [
+        5
+      ]
+    },
+    {
+      "result": [
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "result": []
+    },
+    {
+      "result": [
+        {
+          "v": 5
+        }
+      ]
+    },
+    {
+      "result": []
+    },
+    {
+      "result": 6
+    },
+    {
+      "result": null
+    },
+    {
+      "result": 7
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": "x"
+    },
+    {
+      "error": "Unrecognized operation unknown_op"
+    },
+    {
+      "error": "Unrecognized operation a.b (failed at a)"
+    },
+    {
+      "error": "reduce of empty array with no initial value"
+    },
+    {
+      "result": [
+        1,
+        1,
+        "x"
+      ]
+    },
+    {
+      "result": {
+        "a": 1,
+        "b": 2
+      }
+    },
+    {
+      "result": "plain"
+    },
+    {
+      "result": null
+    },
+    {
+      "result": {}
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": true
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": false
+    },
+    {
+      "result": true
+    }
+  ],
+  "utils": {
+    "identity": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false
+    ],
+    "formatIban": [
+      "FR76 3000 6000 0112 3456 7890 189",
+      "GB82 WEST 1234 5698 7654 32",
+      "AB1",
+      "",
+      "DE89 3704 0044 0532 0130 00"
+    ],
+    "plates": [
+      [
+        true,
+        "AB-123-CD"
+      ],
+      [
+        false,
+        "AI-123-CD"
+      ],
+      [
+        true,
+        "AB-123-CD"
+      ],
+      [
+        true,
+        "AB 1234 RB"
+      ],
+      [
+        true,
+        "A 1234 RB"
+      ],
+      [
+        false,
+        "AB123RB"
+      ],
+      [
+        true,
+        "1234 AB 01"
+      ],
+      [
+        false,
+        "1234AB1"
+      ],
+      [
+        true,
+        "DK 1234 A"
+      ],
+      [
+        true,
+        "DK 123 AB"
+      ],
+      [
+        true,
+        "AB-12"
+      ],
+      [
+        false,
+        "ABC"
+      ],
+      [
+        true,
+        "AB12CD"
+      ],
+      [
+        false,
+        "ÀB12"
+      ],
+      [
+        true,
+        "AB-123-CD"
+      ]
+    ],
+    "registries": [
+      [
+        true,
+        "RB/COT/01 B 1234"
+      ],
+      [
+        true,
+        "RB/COT/2019 B 12345"
+      ],
+      [
+        false,
+        "RB-COT-01-B-1234"
+      ],
+      [
+        false,
+        "TG/LOM/2020 A 1"
+      ],
+      [
+        true,
+        "443 061 841 RCS PARIS"
+      ],
+      [
+        false,
+        "443061841 RCS P"
+      ],
+      [
+        true,
+        "AB/12-34"
+      ],
+      [
+        false,
+        "AB.12"
+      ],
+      [
+        true,
+        "ABCD"
+      ],
+      [
+        true,
+        "RB/COT"
+      ]
+    ],
+    "mrz": [
+      {
+        "raw": "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001011F3501014ZE184226B<<<<<16",
+        "format": "TD3",
+        "documentType": "P",
+        "issuingCountry": "UTO",
+        "documentNumber": "L898902C3",
+        "nationality": "UTO",
+        "surname": "ERIKSSON",
+        "givenNames": "ANNA MARIA",
+        "birthDate": "1990-01-01",
+        "sex": "F",
+        "expiryDate": "2035-01-01",
+        "optional": "ZE184226B",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "raw": "I<UTOD231458907<<<<<<<<<<<<<<<\n9001011M3501014UTO<<<<<<<<<<<2\nDOE<<JOHN<PAUL<<<<<<<<<<<<<<<<",
+        "format": "TD1",
+        "documentType": "I",
+        "issuingCountry": "UTO",
+        "documentNumber": "D23145890",
+        "nationality": "UTO",
+        "surname": "DOE",
+        "givenNames": "JOHN PAUL",
+        "birthDate": "1990-01-01",
+        "sex": "M",
+        "expiryDate": "2035-01-01",
+        "optional": "",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "raw": "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001011F3501014<<<<<<<<<<<<<<<4",
+        "format": "TD3",
+        "documentType": "P",
+        "issuingCountry": "UTO",
+        "documentNumber": "L898902C3",
+        "nationality": "UTO",
+        "surname": "ERIKSSON",
+        "givenNames": "ANNA MARIA",
+        "birthDate": "1990-01-01",
+        "sex": "F",
+        "expiryDate": "2035-01-01",
+        "optional": "",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "raw": "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001021F3501014ZE184226B<<<<<16",
+        "format": "TD3",
+        "documentType": "P",
+        "issuingCountry": "UTO",
+        "documentNumber": "L898902C3",
+        "nationality": "UTO",
+        "surname": "ERIKSSON",
+        "givenNames": "ANNA MARIA",
+        "birthDate": "1990-01-02",
+        "sex": "F",
+        "expiryDate": "2035-01-01",
+        "optional": "ZE184226B",
+        "valid": false,
+        "errors": [
+          "birthDate",
+          "composite"
+        ]
+      },
+      {
+        "raw": "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\r\nL898902C36UTO9001011F3501014ZE184226B<<<<<16",
+        "format": "TD3",
+        "documentType": "P",
+        "issuingCountry": "UTO",
+        "documentNumber": "L898902C3",
+        "nationality": "UTO",
+        "surname": "ERIKSSON",
+        "givenNames": "ANNA MARIA",
+        "birthDate": "1990-01-01",
+        "sex": "F",
+        "expiryDate": "2035-01-01",
+        "optional": "ZE184226B",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "raw": "p<utoeriksson<<anna<maria<<<<<<<<<<<<<<<<<<<\nl898902c36uto9001011f3501014ze184226b<<<<<16",
+        "format": "TD3",
+        "documentType": "P",
+        "issuingCountry": "UTO",
+        "documentNumber": "L898902C3",
+        "nationality": "UTO",
+        "surname": "ERIKSSON",
+        "givenNames": "ANNA MARIA",
+        "birthDate": "1990-01-01",
+        "sex": "F",
+        "expiryDate": "2035-01-01",
+        "optional": "ZE184226B",
+        "valid": true,
+        "errors": []
+      },
+      {
+        "raw": "  P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001011F3501014ZE184226B<<<<< 16",
+        "format": "TD3",
+        "documentType": "P",
+        "issuingCountry": "UTO",
+        "documentNumber": "L898902C3",
+        "nationality": "UTO",
+        "surname": "ERIKSSON",
+        "givenNames": "ANNA MARIA",
+        "birthDate": "1990-01-01",
+        "sex": "F",
+        "expiryDate": "2035-01-01",
+        "optional": "ZE184226B",
+        "valid": true,
+        "errors": []
+      },
+      null,
+      null,
+      {
+        "raw": "I<UTOD231458907<<<<<<<<<<<<<<<\n9001011M3501014UTO<<<<<<<<<<<2\nDOE<<JOHN<PAUL<<<<<<<<<<<<<<<<\n",
+        "format": "TD1",
+        "documentType": "I",
+        "issuingCountry": "UTO",
+        "documentNumber": "D23145890",
+        "nationality": "UTO",
+        "surname": "DOE",
+        "givenNames": "JOHN PAUL",
+        "birthDate": "1990-01-01",
+        "sex": "M",
+        "expiryDate": "2035-01-01",
+        "optional": "",
+        "valid": true,
+        "errors": []
+      },
+      null
+    ]
+  }
 }

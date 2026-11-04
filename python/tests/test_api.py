@@ -17,7 +17,9 @@ from formkrafter import (
     register_validation_messages,
     validate_form_data,
 )
+from formkrafter.identity import parse_mrz
 from formkrafter.models import BrickSpec
+from formkrafter.rules import JavaScriptRule, get_affected_properties
 from formkrafter.testing import assert_matches_core, compare_with_core, export_contract
 
 REPO = Path(__file__).resolve().parents[2]
@@ -25,12 +27,15 @@ REPO = Path(__file__).resolve().parents[2]
 WEB = REPO / "packages/wc"
 
 
+TD3 = "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001011F3501014ZE184226B<<<<<16"
+
+
 def text(key: str, **extra: Any) -> dict[str, Any]:
     return {"type": "input", "id": "text", "name": key, "dataType": "string", "configs": {"key": key}, **extra}
 
 
-def form(*children: dict[str, Any]) -> dict[str, Any]:
-    return {"type": "panel", "id": "panel", "name": "Form", "children": list(children)}
+def form(*children: dict[str, Any], **extra: Any) -> dict[str, Any]:
+    return {"type": "panel", "id": "panel", "name": "Form", "children": list(children), **extra}
 
 
 ITEMS = {
@@ -69,34 +74,21 @@ def test_details_carry_the_validator_and_its_value() -> None:
     }
 
 
+def hiding(rule_type: str = "jsonLogic", effect_type: str = "boolean", **extra: Any) -> dict[str, Any]:
+    effect = {"property": {"target": "hidden", "type": effect_type}, "boolean": True, "code": "return true"}
+    return {"name": "r", "type": rule_type, "logic": True, "code": "return true", "effects": [effect], **extra}
+
+
 @pytest.mark.parametrize(
     "brick",
     [
         text("x", validations=[{"validator": "custom", "customValidator": "return value === 'ok'"}]),
-        text(
-            "x",
-            rules=[
-                {
-                    "name": "r",
-                    "type": "jsonLogic",
-                    "logic": True,
-                    "effects": [{"property": {"target": "hidden", "type": "boolean"}, "boolean": True}],
-                }
-            ],
-        ),
-        {"type": "input", "id": "iban", "name": "IBAN", "dataType": "string", "configs": {"key": "x"}},
-        {
-            "type": "input",
-            "id": "tax-id",
-            "name": "NIF",
-            "dataType": "string",
-            "configs": {"key": "x", "idFormat": "bj-ifu"},
-        },
-        {"type": "input", "id": "company-registry", "name": "RCCM", "dataType": "string", "configs": {"key": "x"}},
-        {"type": "input", "id": "mrz", "name": "MRZ", "dataType": "object", "configs": {"key": "x"}},
+        text("x", rules=[hiding("javaScript")]),
+        text("x", rules=[hiding("jsonLogic", "code")]),
+        form(text("x"), rules=[hiding("javaScript")]),  # a panel hiding keyed children
     ],
 )
-def test_specs_beyond_the_port_are_refused(brick: dict[str, Any]) -> None:
+def test_javascript_that_decides_the_verdict_is_refused(brick: dict[str, Any]) -> None:
     for spec in (form(brick), form({**ITEMS, "children": [brick]})):  # at the top level and inside rows
         with pytest.raises(SpecNotSupported):
             validate_form_data(spec, {})
@@ -104,19 +96,64 @@ def test_specs_beyond_the_port_are_refused(brick: dict[str, Any]) -> None:
 
 
 def test_what_does_not_change_the_verdict_is_accepted() -> None:
-    hide_note = {
-        "name": "r",
-        "type": "jsonLogic",
-        "logic": True,
-        "effects": [{"property": {"target": "hidden", "type": "boolean"}, "boolean": True}],
-    }
-    assert_supported(
-        form({"type": "output", "id": "content", "name": "Note", "configs": {"content": "x"}, "rules": [hide_note]})
-    )
+    note = {"type": "output", "id": "content", "name": "Note", "configs": {"content": "x"}}
+    assert_supported(form({**note, "rules": [hiding("javaScript")]}))  # hides no data
     assert_supported(form(text("x", validations=[{"validator": "custom"}])))  # no code: skipped by the core too
-    assert_supported(
-        form({"type": "input", "id": "tax-id", "name": "NIF", "dataType": "string", "configs": {"key": "x"}})
+    disable = {**hiding("javaScript"), "effects": [{"property": {"target": "disabled", "type": "code"}, "code": "1"}]}
+    assert_supported(form(text("x", rules=[disable])))  # disables, never hides
+    assert_supported(form(text("x", rules=[hiding()])))  # JsonLogic runs server-side
+
+
+def test_rule_scope_feeds_the_rules() -> None:
+    btp_age = text("btp_age", validations=[{"validator": "required"}])
+    btp_age["rules"] = [{**hiding(), "logic": {"!": {"var": "IS_BTP"}}}]
+    spec = form(btp_age)
+    assert validate_form_data(spec, {}).errors == {}  # IS_BTP unset: hidden
+    assert validate_form_data(spec, {}, rule_scope={"IS_BTP": True}).errors == {"btp_age": "This field is required"}
+
+
+def test_a_tampered_mrz_verdict_is_not_trusted() -> None:
+    spec = form({"type": "input", "id": "mrz", "name": "MRZ", "dataType": "object", "configs": {"key": "mrz"}})
+    honest = parse_mrz(TD3)
+    assert honest is not None and honest.valid
+    assert validate_form_data(spec, {"mrz": honest.to_dict()}).valid
+    # the browser trusts `valid`; the server re-reads the zone it was sent
+    forged = {**honest.to_dict(), "raw": TD3.replace("9001011", "9001021"), "valid": True}
+    assert validate_form_data(spec, {"mrz": forged}).details["mrz"].validator == "mrz"
+
+
+def test_identifier_errors_name_their_format() -> None:
+    spec = form(
+        {
+            "type": "input",
+            "id": "tax-id",
+            "name": "IFU",
+            "dataType": "string",
+            "configs": {"key": "ifu", "idFormat": "bj-ifu"},
+        },
+        {"type": "input", "id": "iban", "name": "IBAN", "dataType": "string", "configs": {"key": "iban"}},
+        {
+            "type": "input",
+            "id": "company-registry",
+            "name": "RCCM",
+            "dataType": "string",
+            "configs": {"key": "rccm", "registryFormat": "ohada-rccm"},
+        },
     )
+    details = validate_form_data(spec, {"ifu": "12", "iban": "FR76", "rccm": "x"}, "fr").details
+    assert {k: (d.validator, d.value) for k, d in details.items()} == {
+        "ifu": ("identity", "bj-ifu"),
+        "iban": ("iban", None),
+        "rccm": ("registry", "ohada-rccm"),
+    }
+
+
+def test_affected_properties_refuse_javascript_unless_skipped() -> None:
+    rules = [hiding("javaScript")]
+    with pytest.raises(JavaScriptRule):
+        get_affected_properties(rules, {})
+    assert get_affected_properties(rules, {}, javascript="skip") == {}
+    assert get_affected_properties([hiding()], {}) == {"hidden": True}
 
 
 def test_registered_messages_override_the_defaults() -> None:

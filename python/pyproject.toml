@@ -1,6 +1,6 @@
 [project]
 name = "formkrafter"
-version = "0.1.0"
+version = "0.2.0"
 description = "FormKrafter for Python backends: validate form submissions exactly like @streamline-pulse/formkrafter-core does in the browser"
 readme = "README.md"
 requires-python = ">=3.12"

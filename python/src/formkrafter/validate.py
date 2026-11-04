@@ -9,10 +9,20 @@ from __future__ import annotations
 import math
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field
+from functools import partial
 from typing import Any
 
-from formkrafter._js import FORMATS, compile_pattern, to_number
+from formkrafter._js import FORMATS, UNDEFINED, compile_pattern, js_compare, js_truthy
+from formkrafter.identity import (
+    PLATE_FORMATS,
+    REGISTRY_FORMATS,
+    check_company_registry,
+    check_identity,
+    check_plate,
+    parse_mrz,
+)
 from formkrafter.lint import validation_warnings
+from formkrafter.rules import hidden_keys, javascript_hiding
 from formkrafter.spec import (
     BrickSpec,
     as_spec,
@@ -65,9 +75,21 @@ _VALIDATOR_OF = {
     "minItems": "minItems",
     "maxItems": "maxItems",
     "dateRange": "dateRange",
+    "mrzValid": "mrz",
 }
-_FORMAT_VALIDATOR = {"email": "email", "uri": "url"}
+_FORMAT_VALIDATOR = {"email": "email", "uri": "url", "identity-iban": "iban"}
 _COUNTS = ("minLength", "maxLength", "minItems", "maxItems")
+
+# The formats the core registers on Ajv (validators/validator.ts); any other one fails the compilation.
+_IDENTITY_FORMATS = ["fr-nir", "bj-npi", "fr-siren", "fr-siret", "bj-ifu", "iban"] + [
+    f"digits-{n}" for n in range(1, 21)
+]
+_FORMAT_CHECKS: dict[str, Callable[[str], bool]] = {
+    **FORMATS,
+    **{f"identity-{name}": partial(check_identity, name) for name in _IDENTITY_FORMATS},
+    **{f"plate-{rule.id}": partial(check_plate, rule.id) for rule in PLATE_FORMATS},
+    **{f"registry-{rule.id}": partial(check_company_registry, rule.id) for rule in REGISTRY_FORMATS},
+}
 
 
 def _is_number(value: Any) -> bool:
@@ -85,15 +107,6 @@ _TYPE_CHECKS: dict[str, Callable[[Any], bool]] = {
 }
 
 
-def _js_le(a: Any, b: Any) -> bool:
-    if isinstance(a, str) and isinstance(b, str):
-        return a.encode("utf-16-be") <= b.encode("utf-16-be")
-    try:
-        return to_number(a) <= to_number(b)
-    except TypeError:
-        return False
-
-
 def _failing_keywords(prop: Mapping[str, Any], value: Any, patterns: Mapping[str, Any]) -> Iterator[str]:
     """The keywords of a property schema that the value fails, each applied to the types Ajv applies it to."""
     types = prop.get("type")
@@ -109,7 +122,7 @@ def _failing_keywords(prop: Mapping[str, Any], value: Any, patterns: Mapping[str
             yield "maxLength"
         if "pattern" in prop and not patterns[prop["pattern"]].search(value):
             yield "pattern"
-        if "format" in prop and not FORMATS[prop["format"]](value):
+        if "format" in prop and not _FORMAT_CHECKS[prop["format"]](value):
             yield "format"
     if _is_number(value):
         if "minimum" in prop and value < prop["minimum"]:
@@ -122,15 +135,30 @@ def _failing_keywords(prop: Mapping[str, Any], value: Any, patterns: Mapping[str
         if "maxItems" in prop and len(value) > prop["maxItems"]:
             yield "maxItems"
     if prop.get("dateRange") and isinstance(value, Mapping):
-        start, end = value.get("from"), value.get("to")
-        if start and end and not _js_le(start, end):
+        start, end = value.get("from", UNDEFINED), value.get("to", UNDEFINED)
+        if js_truthy(start) and js_truthy(end) and js_compare(start, end) not in (-1, 0):
             yield "dateRange"
+    if prop.get("mrzValid") and isinstance(value, Mapping) and not _mrz_valid(value):
+        yield "mrzValid"
+
+
+def _mrz_valid(value: Mapping[str, Any]) -> bool:
+    """The core trusts the verdict the brick stored; the server also re-reads the zone it was given."""
+    if value.get("valid") is not True:
+        return False
+    raw = value.get("raw")
+    if isinstance(raw, str):
+        parsed = parse_mrz(raw)
+        return parsed is not None and parsed.valid
+    return True
 
 
 def _compile(schema: Mapping[str, Any]) -> dict[str, Any]:
     """The checks Ajv runs when it compiles the schema (meta-schema, regular expressions); raises on failure."""
     patterns: dict[str, Any] = {}
     for key, prop in schema["properties"].items():
+        if "format" in prop and prop["format"] not in _FORMAT_CHECKS:
+            raise ValueError(f'unknown format "{prop["format"]}" ignored in schema at path "#/properties/{key}"')
         for keyword in _COUNTS:
             if keyword in prop:
                 n = prop[keyword]
@@ -149,10 +177,14 @@ def _compile(schema: Mapping[str, Any]) -> dict[str, Any]:
 
 def _detail(keyword: str, prop: Mapping[str, Any], message: str) -> ErrorDetail:
     if keyword == "format":
-        return ErrorDetail(_FORMAT_VALIDATOR.get(prop["format"], "format"), message)
+        name = prop["format"]
+        if name in _FORMAT_VALIDATOR:
+            return ErrorDetail(_FORMAT_VALIDATOR[name], message)
+        family, _, variant = name.partition("-")
+        return ErrorDetail(family, message, variant)
     if keyword == "type":
         return ErrorDetail("type", message, prop.get("type"))
-    if keyword == "dateRange":
+    if keyword in ("dateRange", "mrzValid"):
         return ErrorDetail(_VALIDATOR_OF[keyword], message)
     return ErrorDetail(_VALIDATOR_OF[keyword], message, prop.get(keyword))
 
@@ -186,11 +218,11 @@ def _has_key(brick: BrickSpec) -> bool:
 
 
 def assert_supported(spec: Any) -> None:
-    """Raise `SpecNotSupported` when validating the spec needs what the port does not run.
+    """Raise `SpecNotSupported` when validating the spec needs JavaScript, which the server does not run.
 
-    Refused: JavaScript custom validators, rules that hide data-carrying bricks (their errors depend on the
-    rules), and the bricks whose check is not ported yet (identity numbers, plates, registries, MRZ).
-    Rules that only disable, prefill or require do not change validation and are accepted.
+    Refused: custom validators (`validator: "custom"`) and rules whose hiding of a data-carrying brick is
+    decided by JavaScript. JsonLogic rules are evaluated; JavaScript rules that do not hide fields cannot
+    change the verdict and are accepted.
     """
     spec = as_spec(spec)
     if not spec:
@@ -205,26 +237,16 @@ def assert_supported(spec: Any) -> None:
                 raise SpecNotSupported(
                     f"{path} ({brick.get('name')}): JavaScript custom validators do not run server-side"
                 )
-        hides = any(
-            ((effect or {}).get("property") or {}).get("target") == "hidden"
-            for rule in brick.get("rules") or []
-            for effect in (rule or {}).get("effects") or []
-        )
-        if hides and _has_key(brick):
+        rules = list(javascript_hiding(brick))
+        if rules and _has_key(brick):
             raise SpecNotSupported(
-                f"{path} ({brick.get('name')}): rules that hide fields are not evaluated server-side yet"
+                f"{path} ({brick.get('name')}): rule {rules[0]!r} hides fields with JavaScript, "
+                "which does not run server-side"
             )
-    for level in _levels(spec):
-        schema = build_validation_schema(level) or {"properties": {}}
-        for key, prop in schema["properties"].items():
-            if "format" in prop and prop["format"] not in FORMATS:
-                raise SpecNotSupported(f'"{key}": the {prop["format"]} check is not ported to Python yet')
-            if "mrzValid" in prop:
-                raise SpecNotSupported(f'"{key}": the MRZ check is not ported to Python yet')
 
 
 def _validate_level(
-    spec: BrickSpec, data: dict[str, Any], locale: str | None
+    spec: BrickSpec, data: dict[str, Any], locale: str | None, scope: Mapping[str, Any]
 ) -> tuple[dict[str, ErrorDetail], str | None]:
     schema = build_validation_schema(spec, locale)
     if not schema:
@@ -232,6 +254,7 @@ def _validate_level(
     try:
         patterns = _compile(schema)
     except ValueError as error:
+        hidden_keys(spec, scope, javascript="skip")  # the rules still run, and may still throw
         return {}, f"the validation schema failed to compile, so no rule was enforced: {error}"
 
     details: dict[str, ErrorDetail] = {}
@@ -249,25 +272,34 @@ def _validate_level(
         message = required_messages.get(key)
         if key not in data and key not in details and message:
             details[key] = ErrorDetail("required", message)
+    # a field the rules hide is not checked (its rows still are, as in the core)
+    for key in hidden_keys(spec, scope, javascript="skip"):
+        details.pop(key, None)
     return details, None
 
 
-def validate_form_data(spec: Any, data: Any, locale: str | None = None) -> ValidationResult:
+def validate_form_data(
+    spec: Any, data: Any, locale: str | None = None, rule_scope: Mapping[str, Any] | None = None
+) -> ValidationResult:
     """Validate submitted data against a spec, as `validateFormData` does in the browser.
 
     Empty strings and nulls count as missing; collections are validated row by row, their errors keyed
-    `items[0].field`. Raises `SpecNotSupported` when the spec needs what the port does not run.
+    `items[0].field`; fields hidden by rules are not checked. `rule_scope` adds variables the rules read
+    (merged over the data, as the core does). Raises `SpecNotSupported` when the spec needs JavaScript.
     """
     spec = as_spec(spec)
     assert_supported(spec)
-    return _validate(spec, data, locale)
+    return _validate(spec, data, locale, rule_scope)
 
 
-def _validate(spec: BrickSpec | None, data: Any, locale: str | None) -> ValidationResult:
+def _validate(
+    spec: BrickSpec | None, data: Any, locale: str | None, rule_scope: Mapping[str, Any] | None = None
+) -> ValidationResult:
     if not spec:
         return ValidationResult(True, {})
     present = _strip_empty(data)
-    details, compile_failure = _validate_level(spec, present, locale)
+    scope = {**present, **rule_scope} if rule_scope else present
+    details, compile_failure = _validate_level(spec, present, locale, scope)
 
     for brick in iterate_schema_bricks(spec):
         key: Any = configs_of(brick).get("key")
