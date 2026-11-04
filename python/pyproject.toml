@@ -1,0 +1,51 @@
+[project]
+name = "formkrafter"
+version = "0.1.0"
+description = "FormKrafter for Python backends: validate form submissions exactly like @streamline-pulse/formkrafter-core does in the browser"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Streamline Pulse" }]
+keywords = ["formkrafter", "forms", "form-builder", "json-schema", "validation"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+pydantic = ["pydantic>=2.6"]
+# Unicode property classes (\p{L}) in `pattern` validations, as the browser's RegExp `u` flag allows
+regex = ["regex>=2024.4"]
+
+[project.urls]
+Homepage = "https://github.com/streamline-pulse/formkrafter/tree/main/python#readme"
+Repository = "https://github.com/streamline-pulse/formkrafter"
+Issues = "https://github.com/streamline-pulse/formkrafter/issues"
+
+[dependency-groups]
+dev = ["pytest>=8", "pydantic>=2.6", "ruff>=0.6", "mypy>=1.11"]
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/formkrafter"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+strict = true
+files = ["src"]

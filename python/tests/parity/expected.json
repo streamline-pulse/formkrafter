@@ -1,0 +1,2080 @@
+{
+  "core": "0.33.0",
+  "cases": [
+    {
+      "name": "customs-declaration",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "effective_date": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "origin": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "items": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 1,
+                "maxItems": 3,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minItems": "Sélectionnez au moins 1 élément(s)",
+                  "maxItems": "Sélectionnez au plus 3 élément(s)"
+                }
+              },
+              "containers": {
+                "type": "integer",
+                "nullable": true,
+                "minimum": 0,
+                "maximum": 99,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minimum": "Minimum 0",
+                  "maximum": "Maximum 99"
+                }
+              },
+              "freight": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minimum": "Minimum 0"
+                }
+              }
+            },
+            "required": [
+              "effective_date",
+              "origin"
+            ],
+            "errorMessage": {
+              "required": {
+                "effective_date": "Ce champ est obligatoire",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Ce champ est obligatoire",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Sélectionnez au moins 1 élément(s)",
+                "effective_date": "Ce champ est obligatoire",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Sélectionnez au plus 3 élément(s)",
+                "items[0].hs_code": "Format invalide",
+                "items[0].declared_value": "Minimum 0",
+                "items[0].gross_weight_kg": "Minimum 0.5",
+                "items[1].declared_value": "Valeur invalide",
+                "items[1].hs_code": "Ce champ est obligatoire",
+                "items[2].hs_code": "Ce champ est obligatoire",
+                "items[2].declared_value": "Ce champ est obligatoire",
+                "items[3].hs_code": "Ce champ est obligatoire",
+                "items[3].declared_value": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Sélectionnez au plus 3 élément(s)",
+                "items[0].hs_code": "Ce champ est obligatoire",
+                "items[0].declared_value": "Ce champ est obligatoire",
+                "items[1].hs_code": "Ce champ est obligatoire",
+                "items[1].declared_value": "Ce champ est obligatoire",
+                "items[2].hs_code": "Ce champ est obligatoire",
+                "items[2].declared_value": "Ce champ est obligatoire",
+                "items[3].hs_code": "Ce champ est obligatoire",
+                "items[3].declared_value": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Valeur invalide",
+                "origin": "Valeur invalide",
+                "items": "Valeur invalide",
+                "containers": "Valeur invalide",
+                "freight": "Minimum 0"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items[0].hs_code": "Format invalide"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "containers": "Maximum 99",
+                "freight": "Valeur invalide",
+                "items[0].hs_code": "Format invalide",
+                "items[0].declared_value": "Valeur invalide"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Ce champ est obligatoire",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Ce champ est obligatoire",
+                "origin": "Choisissez l'origine"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "effective_date": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "origin": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "items": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 1,
+                "maxItems": 3,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minItems": "Select at least 1 item(s)",
+                  "maxItems": "Select at most 3 item(s)"
+                }
+              },
+              "containers": {
+                "type": "integer",
+                "nullable": true,
+                "minimum": 0,
+                "maximum": 99,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0",
+                  "maximum": "Must be at most 99"
+                }
+              },
+              "freight": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0"
+                }
+              }
+            },
+            "required": [
+              "effective_date",
+              "origin"
+            ],
+            "errorMessage": {
+              "required": {
+                "effective_date": "This field is required",
+                "origin": "Pick the origin"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Pick the origin"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at least 1 item(s)",
+                "effective_date": "This field is required",
+                "origin": "Pick the origin"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at most 3 item(s)",
+                "items[0].hs_code": "Invalid format",
+                "items[0].declared_value": "Must be at least 0",
+                "items[0].gross_weight_kg": "Must be at least 0.5",
+                "items[1].declared_value": "Invalid value",
+                "items[1].hs_code": "This field is required",
+                "items[2].hs_code": "This field is required",
+                "items[2].declared_value": "This field is required",
+                "items[3].hs_code": "This field is required",
+                "items[3].declared_value": "This field is required"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at most 3 item(s)",
+                "items[0].hs_code": "This field is required",
+                "items[0].declared_value": "This field is required",
+                "items[1].hs_code": "This field is required",
+                "items[1].declared_value": "This field is required",
+                "items[2].hs_code": "This field is required",
+                "items[2].declared_value": "This field is required",
+                "items[3].hs_code": "This field is required",
+                "items[3].declared_value": "This field is required"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Invalid value",
+                "origin": "Invalid value",
+                "items": "Invalid value",
+                "containers": "Invalid value",
+                "freight": "Must be at least 0"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items[0].hs_code": "Invalid format"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "containers": "Must be at most 99",
+                "freight": "Invalid value",
+                "items[0].hs_code": "Invalid format",
+                "items[0].declared_value": "Invalid value"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Pick the origin"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Pick the origin"
+              }
+            }
+          ]
+        },
+        {
+          "locale": null,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "effective_date": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "origin": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "items": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 1,
+                "maxItems": 3,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minItems": "Select at least 1 item(s)",
+                  "maxItems": "Select at most 3 item(s)"
+                }
+              },
+              "containers": {
+                "type": "integer",
+                "nullable": true,
+                "minimum": 0,
+                "maximum": 99,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0",
+                  "maximum": "Must be at most 99"
+                }
+              },
+              "freight": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0"
+                }
+              }
+            },
+            "required": [
+              "effective_date",
+              "origin"
+            ],
+            "errorMessage": {
+              "required": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at least 1 item(s)",
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at most 3 item(s)",
+                "items[0].hs_code": "Invalid format",
+                "items[0].declared_value": "Must be at least 0",
+                "items[0].gross_weight_kg": "Must be at least 0.5",
+                "items[1].declared_value": "Invalid value",
+                "items[1].hs_code": "This field is required",
+                "items[2].hs_code": "This field is required",
+                "items[2].declared_value": "This field is required",
+                "items[3].hs_code": "This field is required",
+                "items[3].declared_value": "This field is required"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at most 3 item(s)",
+                "items[0].hs_code": "This field is required",
+                "items[0].declared_value": "This field is required",
+                "items[1].hs_code": "This field is required",
+                "items[1].declared_value": "This field is required",
+                "items[2].hs_code": "This field is required",
+                "items[2].declared_value": "This field is required",
+                "items[3].hs_code": "This field is required",
+                "items[3].declared_value": "This field is required"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Invalid value",
+                "origin": "Invalid value",
+                "items": "Invalid value",
+                "containers": "Invalid value",
+                "freight": "Must be at least 0"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items[0].hs_code": "Invalid format"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "containers": "Must be at most 99",
+                "freight": "Invalid value",
+                "items[0].hs_code": "Invalid format",
+                "items[0].declared_value": "Invalid value"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "de",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "effective_date": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "origin": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "items": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 1,
+                "maxItems": 3,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minItems": "Select at least 1 item(s)",
+                  "maxItems": "Select at most 3 item(s)"
+                }
+              },
+              "containers": {
+                "type": "integer",
+                "nullable": true,
+                "minimum": 0,
+                "maximum": 99,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0",
+                  "maximum": "Must be at most 99"
+                }
+              },
+              "freight": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0"
+                }
+              }
+            },
+            "required": [
+              "effective_date",
+              "origin"
+            ],
+            "errorMessage": {
+              "required": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at least 1 item(s)",
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at most 3 item(s)",
+                "items[0].hs_code": "Invalid format",
+                "items[0].declared_value": "Must be at least 0",
+                "items[0].gross_weight_kg": "Must be at least 0.5",
+                "items[1].declared_value": "Invalid value",
+                "items[1].hs_code": "This field is required",
+                "items[2].hs_code": "This field is required",
+                "items[2].declared_value": "This field is required",
+                "items[3].hs_code": "This field is required",
+                "items[3].declared_value": "This field is required"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items": "Select at most 3 item(s)",
+                "items[0].hs_code": "This field is required",
+                "items[0].declared_value": "This field is required",
+                "items[1].hs_code": "This field is required",
+                "items[1].declared_value": "This field is required",
+                "items[2].hs_code": "This field is required",
+                "items[2].declared_value": "This field is required",
+                "items[3].hs_code": "This field is required",
+                "items[3].declared_value": "This field is required"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "Invalid value",
+                "origin": "Invalid value",
+                "items": "Invalid value",
+                "containers": "Invalid value",
+                "freight": "Must be at least 0"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "items[0].hs_code": "Invalid format"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "containers": "Must be at most 99",
+                "freight": "Invalid value",
+                "items[0].hs_code": "Invalid format",
+                "items[0].declared_value": "Invalid value"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "effective_date": "This field is required",
+                "origin": "Choisissez l'origine"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "text-validations",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": false,
+                "minLength": 3,
+                "maxLength": 8,
+                "pattern": "^[A-Z]",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum 3 caractères",
+                  "maxLength": "Trop long",
+                  "pattern": "Format invalide"
+                }
+              },
+              "code": {
+                "type": "string",
+                "nullable": true,
+                "pattern": "^(?<area>[A-Z]{2})-\\d+$",
+                "minLength": 4,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "pattern": "Code AA-123 attendu",
+                  "minLength": "Minimum 4 caractères"
+                }
+              },
+              "email": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "Adresse email invalide"
+                }
+              },
+              "site": {
+                "type": "string",
+                "nullable": true,
+                "format": "uri",
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "format": "URL invalide"
+                }
+              },
+              "emoji": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 2,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "maxLength": "Maximum 2 caractères"
+                }
+              },
+              "nickname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true,
+                "minLength": 2,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum 2 caractères"
+                }
+              },
+              "le": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 2,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": ""
+                }
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "errorMessage": {
+              "required": {
+                "name": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Minimum 3 caractères"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Minimum 3 caractères"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Trop long"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Trop long",
+                "code": "Code AA-123 attendu",
+                "email": "Adresse email invalide",
+                "site": "URL invalide"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "code": "Code AA-123 attendu"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "email": "Adresse email invalide",
+                "site": "URL invalide",
+                "nickname": "Minimum 2 caractères"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "emoji": "Maximum 2 caractères"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "email": "Adresse email invalide",
+                "site": "URL invalide"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Valeur invalide",
+                "code": "Valeur invalide",
+                "email": "Valeur invalide",
+                "site": "Valeur invalide"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "nullable": false,
+                "minLength": 3,
+                "maxLength": 8,
+                "pattern": "^[A-Z]",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Must be at least 3 characters",
+                  "maxLength": "Trop long",
+                  "pattern": "Invalid format"
+                }
+              },
+              "code": {
+                "type": "string",
+                "nullable": true,
+                "pattern": "^(?<area>[A-Z]{2})-\\d+$",
+                "minLength": 4,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "pattern": "Expected code AA-123",
+                  "minLength": "Must be at least 4 characters"
+                }
+              },
+              "email": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid email address"
+                }
+              },
+              "site": {
+                "type": "string",
+                "nullable": true,
+                "format": "uri",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "format": "Invalid URL"
+                }
+              },
+              "emoji": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 2,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "maxLength": "Must be at most 2 characters"
+                }
+              },
+              "nickname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true,
+                "minLength": 2,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Must be at least 2 characters"
+                }
+              },
+              "le": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 2,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Too short"
+                }
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "errorMessage": {
+              "required": {
+                "name": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Must be at least 3 characters"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Must be at least 3 characters"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Trop long"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Trop long",
+                "code": "Expected code AA-123",
+                "email": "Invalid email address",
+                "site": "Invalid URL"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "code": "Expected code AA-123"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "email": "Invalid email address",
+                "site": "Invalid URL",
+                "nickname": "Must be at least 2 characters"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "emoji": "Must be at most 2 characters",
+                "le": "Too short"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "email": "Invalid email address",
+                "site": "Invalid URL"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "name": "Invalid value",
+                "code": "Invalid value",
+                "email": "Invalid value",
+                "site": "Invalid value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "choices-and-flags",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "type": "array",
+                "nullable": false,
+                "minItems": 1,
+                "maxItems": 2,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minItems": "Sélectionnez au moins 1 élément(s)",
+                  "maxItems": "Sélectionnez au plus 2 élément(s)"
+                }
+              },
+              "newsletter": {
+                "type": "boolean",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "terms": {
+                "type": "boolean",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "marketing": {
+                "type": "boolean",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "custom_consent": {
+                "type": "boolean",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "period": {
+                "type": "object",
+                "nullable": true,
+                "dateRange": true,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "dateRange": "La fin ne peut pas précéder le début"
+                }
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "local_phone": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "meta": {
+                "type": "object",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "tags",
+              "terms",
+              "custom_consent"
+            ],
+            "errorMessage": {
+              "required": {
+                "tags": "Ce champ est obligatoire",
+                "terms": "Ce champ est obligatoire",
+                "custom_consent": "Acceptez les conditions"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "tags": "Sélectionnez au moins 1 élément(s)"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "tags": "Sélectionnez au plus 2 élément(s)",
+                "newsletter": "Valeur invalide",
+                "terms": "Valeur invalide",
+                "custom_consent": "Acceptez les conditions"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "tags": "Valeur invalide",
+                "period": "La fin ne peut pas précéder le début"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "meta": "Valeur invalide"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "period": "Valeur invalide",
+                "phone": "Valeur invalide"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "type": "array",
+                "nullable": false,
+                "minItems": 1,
+                "maxItems": 2,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minItems": "Select at least 1 item(s)",
+                  "maxItems": "Select at most 2 item(s)"
+                }
+              },
+              "newsletter": {
+                "type": "boolean",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "terms": {
+                "type": "boolean",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "marketing": {
+                "type": "boolean",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "custom_consent": {
+                "type": "boolean",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "period": {
+                "type": "object",
+                "nullable": true,
+                "dateRange": true,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "dateRange": "The end before the start is not allowed"
+                }
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "local_phone": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "meta": {
+                "type": "object",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              }
+            },
+            "required": [
+              "tags",
+              "terms",
+              "custom_consent"
+            ],
+            "errorMessage": {
+              "required": {
+                "tags": "This field is required",
+                "terms": "This field is required",
+                "custom_consent": "Acceptez les conditions"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "tags": "Select at least 1 item(s)"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "tags": "Select at most 2 item(s)",
+                "newsletter": "Invalid value",
+                "terms": "Invalid value",
+                "custom_consent": "Acceptez les conditions"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "tags": "Invalid value",
+                "period": "The end before the start is not allowed"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "meta": "Invalid value"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "period": "Invalid value",
+                "phone": "Invalid value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nested-collections",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "shipments": {
+                "type": "array",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "shipments"
+            ],
+            "errorMessage": {
+              "required": {
+                "shipments": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "shipments[0].parcels": "Sélectionnez au moins 1 élément(s)",
+                "shipments[0].ref": "Ce champ est obligatoire",
+                "shipments[1].parcels[0].kg": "Maximum 30",
+                "shipments[1].parcels[1].kg": "Ce champ est obligatoire",
+                "shipments[1].parcels[2].kg": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "shipments[0].parcels": "Valeur invalide"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lint-issues",
+      "lint": [
+        {
+          "code": "input-without-key",
+          "path": "0.0",
+          "message": "input brick \"text\" has no configs.key — it carries no data and is skipped by validation"
+        },
+        {
+          "code": "validations-without-data-type",
+          "path": "0.1",
+          "key": "untyped",
+          "message": "\"untyped\" declares 2 validation(s) but has no dataType — they are silently skipped, on the client and on the server"
+        },
+        {
+          "code": "duplicate-key",
+          "path": "0.3",
+          "key": "dup",
+          "message": "key \"dup\" is used by two bricks (0.2 and 0.3) — their values collide in the form data"
+        },
+        {
+          "code": "collection-without-children",
+          "path": "0.4",
+          "key": "rows",
+          "message": "collection \"rows\" has no row template — it can never produce data"
+        },
+        {
+          "code": "input-without-key",
+          "path": "0.5",
+          "message": "collection brick \"data-grid\" has no configs.key — it carries no data and is skipped by validation"
+        }
+      ],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "dup": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 10,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 10"
+                }
+              },
+              "rows": {
+                "type": "array",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "mismatch": {
+                "type": "string",
+                "nullable": true,
+                "minimum": 3,
+                "minItems": 1,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 3",
+                  "minItems": "Select at least 1 item(s)"
+                }
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "dup": "Invalid value"
+              },
+              "warnings": [
+                "\"untyped\" declares 2 validation(s) but has no dataType — they are silently skipped, on the client and on the server"
+              ]
+            },
+            {
+              "valid": false,
+              "errors": {
+                "dup": "Must be at least 10"
+              },
+              "warnings": [
+                "\"untyped\" declares 2 validation(s) but has no dataType — they are silently skipped, on the client and on the server"
+              ]
+            },
+            {
+              "valid": false,
+              "errors": {
+                "dup": "Invalid value",
+                "mismatch": "Invalid value"
+              },
+              "warnings": [
+                "\"untyped\" declares 2 validation(s) but has no dataType — they are silently skipped, on the client and on the server"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "localized-defaults",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "rate": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0.25,
+                "maximum": 1e+21,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minimum": "Minimum 0.25",
+                  "maximum": "Maximum 1e+21"
+                }
+              },
+              "small": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 1e-7,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minimum": "Minimum 1e-7"
+                }
+              },
+              "only_en": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              },
+              "bool_value": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 1,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum true caractères"
+                }
+              }
+            },
+            "required": [
+              "only_en"
+            ],
+            "errorMessage": {
+              "required": {
+                "only_en": "English only"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "only_en": "English only"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Minimum 0.25",
+                "small": "Minimum 1e-7"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Maximum 1e+21"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "rate": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0.25,
+                "maximum": 1e+21,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0.25",
+                  "maximum": "Must be at most 1e+21"
+                }
+              },
+              "small": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 1e-7,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 1e-7"
+                }
+              },
+              "only_en": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "bool_value": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 1,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Must be at least true characters"
+                }
+              }
+            },
+            "required": [
+              "only_en"
+            ],
+            "errorMessage": {
+              "required": {
+                "only_en": "English only"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "only_en": "English only"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Must be at least 0.25",
+                "small": "Must be at least 1e-7"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Must be at most 1e+21"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "es",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "rate": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0.25,
+                "maximum": 1e+21,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0.25",
+                  "maximum": "Must be at most 1e+21"
+                }
+              },
+              "small": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 1e-7,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 1e-7"
+                }
+              },
+              "only_en": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "bool_value": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 1,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Must be at least true characters"
+                }
+              }
+            },
+            "required": [
+              "only_en"
+            ],
+            "errorMessage": {
+              "required": {
+                "only_en": "English only"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "only_en": "English only"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Must be at least 0.25",
+                "small": "Must be at least 1e-7"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Must be at most 1e+21"
+              }
+            }
+          ]
+        },
+        {
+          "locale": "",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "rate": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 0.25,
+                "maximum": 1e+21,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 0.25",
+                  "maximum": "Must be at most 1e+21"
+                }
+              },
+              "small": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 1e-7,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 1e-7"
+                }
+              },
+              "only_en": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "bool_value": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 1,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minLength": "Must be at least true characters"
+                }
+              }
+            },
+            "required": [
+              "only_en"
+            ],
+            "errorMessage": {
+              "required": {
+                "only_en": "English only"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "only_en": "English only"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Must be at least 0.25",
+                "small": "Must be at least 1e-7"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "rate": "Must be at most 1e+21"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compile-failures",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "string",
+                "nullable": false,
+                "pattern": "[",
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "pattern": "Invalid format"
+                }
+              },
+              "b": {
+                "type": "number",
+                "nullable": true,
+                "minimum": 1,
+                "errorMessage": {
+                  "type": "Invalid value",
+                  "minimum": "Must be at least 1"
+                }
+              }
+            },
+            "required": [
+              "a"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: Invalid regular expression: missing terminating ] for character class"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: Invalid regular expression: missing terminating ] for character class"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "negative-min-length",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "string",
+                "nullable": false,
+                "minLength": -1,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum -1 caractères"
+                }
+              },
+              "b": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "a",
+              "b"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "Ce champ est obligatoire",
+                "b": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fractional-max-items",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "array",
+                "nullable": false,
+                "maxItems": 2.5,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "maxItems": "Sélectionnez au plus 2.5 élément(s)"
+                }
+              },
+              "b": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "a",
+              "b"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "Ce champ est obligatoire",
+                "b": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "nan-min",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "number",
+                "nullable": false,
+                "minimum": null,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minimum": "Minimum abc"
+                }
+              },
+              "b": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "a",
+              "b"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "Ce champ est obligatoire",
+                "b": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+              ]
+            },
+            {
+              "valid": true,
+              "errors": {},
+              "warnings": [
+                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hex-min",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "a": {
+                "type": "number",
+                "nullable": false,
+                "minimum": 16,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minimum": "Minimum 0x10"
+                }
+              },
+              "b": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "a",
+              "b"
+            ],
+            "errorMessage": {
+              "required": {
+                "a": "Ce champ est obligatoire",
+                "b": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "a": "Ce champ est obligatoire",
+                "b": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "a": "Valeur invalide"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "a": "Minimum 0x10"
+              }
+            },
+            {
+              "valid": false,
+              "errors": {
+                "a": "Valeur invalide"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rules-without-hidden",
+      "lint": [],
+      "locales": [
+        {
+          "locale": "fr",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "carrier": {
+                "type": "string",
+                "nullable": true,
+                "minLength": 2,
+                "errorMessage": {
+                  "type": "Valeur invalide",
+                  "minLength": "Minimum 2 caractères"
+                }
+              },
+              "office": {
+                "type": "string",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Valeur invalide"
+                }
+              }
+            },
+            "required": [
+              "office"
+            ],
+            "errorMessage": {
+              "required": {
+                "office": "Ce champ est obligatoire"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": false,
+              "errors": {
+                "carrier": "Minimum 2 caractères",
+                "office": "Ce champ est obligatoire"
+              }
+            },
+            {
+              "valid": true,
+              "errors": {}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

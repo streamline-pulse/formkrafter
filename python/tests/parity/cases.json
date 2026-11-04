@@ -1,0 +1,1434 @@
+[
+  {
+    "name": "customs-declaration",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Declaration",
+      "children": [
+        {
+          "type": "panel",
+          "id": "row",
+          "name": "Row",
+          "children": [
+            {
+              "type": "input",
+              "id": "date",
+              "name": "Effective date",
+              "dataType": "string",
+              "configs": {
+                "key": "effective_date"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "id": "select",
+              "name": "Origin",
+              "dataType": "string",
+              "configs": {
+                "key": "origin",
+                "options": [
+                  {
+                    "value": "CI",
+                    "label": "Côte d'Ivoire"
+                  }
+                ]
+              },
+              "validations": [
+                {
+                  "validator": "required",
+                  "message": {
+                    "fr": "Choisissez l'origine",
+                    "en": "Pick the origin"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "collection",
+          "id": "data-grid",
+          "name": "Items",
+          "dataType": "array",
+          "configs": {
+            "key": "items"
+          },
+          "validations": [
+            {
+              "validator": "minItems",
+              "value": 1
+            },
+            {
+              "validator": "maxItems",
+              "value": "3"
+            }
+          ],
+          "children": [
+            {
+              "type": "input",
+              "id": "text",
+              "name": "HS code",
+              "dataType": "string",
+              "configs": {
+                "key": "hs_code"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                },
+                {
+                  "validator": "pattern",
+                  "value": "^\\d{4}(\\.\\d{2}){0,3}$"
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "id": "number",
+              "name": "Declared value",
+              "dataType": "number",
+              "configs": {
+                "key": "declared_value"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                },
+                {
+                  "validator": "min",
+                  "value": 0
+                }
+              ]
+            },
+            {
+              "type": "input",
+              "id": "number",
+              "name": "Weight",
+              "dataType": "number",
+              "configs": {
+                "key": "gross_weight_kg"
+              },
+              "validations": [
+                {
+                  "validator": "min",
+                  "value": 0.5
+                },
+                {
+                  "validator": "max",
+                  "value": 100000
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "number",
+          "name": "Containers",
+          "dataType": "integer",
+          "configs": {
+            "key": "containers"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": 0
+            },
+            {
+              "validator": "max",
+              "value": 99
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "number",
+          "name": "Freight",
+          "dataType": "number",
+          "configs": {
+            "key": "freight"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": "0"
+            }
+          ]
+        },
+        {
+          "type": "output",
+          "id": "content",
+          "name": "Help",
+          "dataType": "void",
+          "configs": {
+            "key": "help",
+            "content": "Fill in the declaration"
+          }
+        }
+      ]
+    },
+    "locales": [
+      "fr",
+      "en",
+      null,
+      "de"
+    ],
+    "data": [
+      {
+        "effective_date": "2026-11-04",
+        "origin": "CI",
+        "items": [
+          {
+            "hs_code": "8429.52.00",
+            "declared_value": 147441257,
+            "gross_weight_kg": 25120
+          }
+        ],
+        "containers": 3,
+        "freight": 45000
+      },
+      {},
+      {
+        "effective_date": "",
+        "origin": null,
+        "items": []
+      },
+      {
+        "effective_date": "2026-11-04",
+        "origin": "CI",
+        "items": [
+          {
+            "hs_code": "84",
+            "declared_value": -1,
+            "gross_weight_kg": 0.1
+          },
+          {
+            "hs_code": "",
+            "declared_value": "x"
+          },
+          "not-a-row",
+          {}
+        ]
+      },
+      {
+        "effective_date": "2026-11-04",
+        "origin": "CI",
+        "items": [
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      {
+        "effective_date": 20261104,
+        "origin": [
+          "CI"
+        ],
+        "items": "x",
+        "containers": 2.5,
+        "freight": -3
+      },
+      {
+        "effective_date": "2026-11-04",
+        "origin": "CI",
+        "items": [
+          {
+            "hs_code": "8429\n",
+            "declared_value": 1
+          }
+        ],
+        "containers": 3.0,
+        "unknown": 1
+      },
+      {
+        "effective_date": "2026-11-04",
+        "origin": "CI",
+        "items": [
+          {
+            "hs_code": "٨٤٢٩",
+            "declared_value": true
+          }
+        ],
+        "containers": 100,
+        "freight": false
+      },
+      "not-an-object",
+      null
+    ]
+  },
+  {
+    "name": "text-validations",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Profile",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Name",
+          "dataType": "string",
+          "configs": {
+            "key": "name"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "minLength",
+              "value": 3
+            },
+            {
+              "validator": "maxLength",
+              "value": 8,
+              "message": "Trop long"
+            },
+            {
+              "validator": "pattern",
+              "value": "^[A-Z]"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Code",
+          "dataType": "string",
+          "configs": {
+            "key": "code"
+          },
+          "validations": [
+            {
+              "validator": "pattern",
+              "value": "^(?<area>[A-Z]{2})-\\d+$",
+              "message": {
+                "fr": "Code AA-123 attendu",
+                "en": "Expected code AA-123"
+              }
+            },
+            {
+              "validator": "minLength",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "email",
+          "name": "Email",
+          "dataType": "string",
+          "configs": {
+            "key": "email"
+          },
+          "validations": [
+            {
+              "validator": "email"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "url",
+          "name": "Site",
+          "dataType": "string",
+          "configs": {
+            "key": "site"
+          },
+          "validations": [
+            {
+              "validator": "url"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Emoji",
+          "dataType": "string",
+          "configs": {
+            "key": "emoji"
+          },
+          "validations": [
+            {
+              "validator": "maxLength",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Nickname",
+          "dataType": [
+            "string",
+            "null"
+          ],
+          "configs": {
+            "key": "nickname"
+          },
+          "validations": [
+            {
+              "validator": "minLength",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Localized empty",
+          "dataType": "string",
+          "configs": {
+            "key": "le"
+          },
+          "validations": [
+            {
+              "validator": "minLength",
+              "value": 2,
+              "message": {
+                "fr": "",
+                "en": "Too short"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr",
+      "en"
+    ],
+    "data": [
+      {
+        "name": "Alice"
+      },
+      {
+        "name": "al"
+      },
+      {
+        "name": "a"
+      },
+      {
+        "name": "abcdefghij"
+      },
+      {
+        "name": "Abcdefghij",
+        "code": "a-1",
+        "email": "x@y",
+        "site": "example.com"
+      },
+      {
+        "name": "Alice",
+        "code": "AB-12",
+        "email": "alice@example.org",
+        "site": "https://example.org/a?b=c#d"
+      },
+      {
+        "name": "Alice",
+        "code": "AB-12\n",
+        "email": "Alice.B+tag@Example.ORG",
+        "site": "mailto:alice@example.org"
+      },
+      {
+        "name": "Alice",
+        "email": "not an email",
+        "site": "http://exa mple.com",
+        "emoji": "😀😀",
+        "nickname": "a"
+      },
+      {
+        "name": "Alice",
+        "emoji": "😀😀😀",
+        "nickname": "ab",
+        "le": "x"
+      },
+      {
+        "name": "Alice",
+        "email": "alice@exa_mple.com",
+        "site": "//example.com",
+        "le": "xyz"
+      },
+      {
+        "name": 42,
+        "code": 12,
+        "email": 1,
+        "site": true
+      }
+    ]
+  },
+  {
+    "name": "choices-and-flags",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Onboarding",
+      "children": [
+        {
+          "type": "input",
+          "id": "select",
+          "name": "Tags",
+          "dataType": "object",
+          "configs": {
+            "key": "tags",
+            "multiple": true
+          },
+          "validations": [
+            {
+              "validator": "minItems",
+              "value": 1
+            },
+            {
+              "validator": "maxItems",
+              "value": 2
+            },
+            {
+              "validator": "required"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "checkbox",
+          "name": "Newsletter",
+          "dataType": "boolean",
+          "configs": {
+            "key": "newsletter"
+          }
+        },
+        {
+          "type": "input",
+          "id": "consent",
+          "name": "Terms",
+          "dataType": "boolean",
+          "configs": {
+            "key": "terms"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "consent",
+          "name": "Marketing",
+          "dataType": "boolean",
+          "configs": {
+            "key": "marketing"
+          }
+        },
+        {
+          "type": "input",
+          "id": "consent",
+          "name": "Custom consent",
+          "dataType": "boolean",
+          "configs": {
+            "key": "custom_consent"
+          },
+          "validations": [
+            {
+              "validator": "required",
+              "message": "Acceptez les conditions"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "date-range",
+          "name": "Period",
+          "dataType": "object",
+          "configs": {
+            "key": "period"
+          }
+        },
+        {
+          "type": "input",
+          "id": "phone",
+          "name": "Phone",
+          "dataType": "string",
+          "configs": {
+            "key": "phone",
+            "countryPicker": true
+          }
+        },
+        {
+          "type": "input",
+          "id": "phone",
+          "name": "Local phone",
+          "dataType": "string",
+          "configs": {
+            "key": "local_phone"
+          }
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Meta",
+          "dataType": "object",
+          "configs": {
+            "key": "meta"
+          }
+        }
+      ]
+    },
+    "locales": [
+      "fr",
+      "en"
+    ],
+    "data": [
+      {
+        "tags": [
+          "a"
+        ],
+        "terms": true,
+        "custom_consent": true
+      },
+      {
+        "tags": [],
+        "terms": false,
+        "custom_consent": false,
+        "marketing": false
+      },
+      {
+        "tags": [
+          "a",
+          "b",
+          "c"
+        ],
+        "terms": "yes",
+        "newsletter": "no"
+      },
+      {
+        "tags": "a",
+        "terms": true,
+        "custom_consent": true,
+        "period": {
+          "from": "2026-02-01",
+          "to": "2026-01-01"
+        },
+        "phone": "+22890000000",
+        "local_phone": "90 00 00 00"
+      },
+      {
+        "tags": [
+          "a"
+        ],
+        "terms": true,
+        "custom_consent": true,
+        "period": {
+          "from": "2026-01-01",
+          "to": "2026-02-01"
+        },
+        "phone": "90000000",
+        "meta": []
+      },
+      {
+        "tags": [
+          "a"
+        ],
+        "terms": true,
+        "custom_consent": true,
+        "period": {
+          "from": "2026-01-01"
+        },
+        "phone": "+0123456789",
+        "meta": {
+          "a": 1
+        }
+      },
+      {
+        "tags": [
+          "a"
+        ],
+        "terms": true,
+        "custom_consent": true,
+        "period": "2026",
+        "phone": 22890000000
+      }
+    ]
+  },
+  {
+    "name": "nested-collections",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Shipments",
+      "children": [
+        {
+          "type": "collection",
+          "id": "data-grid",
+          "name": "Shipments",
+          "dataType": "array",
+          "configs": {
+            "key": "shipments"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ],
+          "children": [
+            {
+              "type": "input",
+              "id": "text",
+              "name": "Ref",
+              "dataType": "string",
+              "configs": {
+                "key": "ref"
+              },
+              "validations": [
+                {
+                  "validator": "required"
+                }
+              ]
+            },
+            {
+              "type": "panel",
+              "id": "panel",
+              "name": "Box",
+              "children": [
+                {
+                  "type": "collection",
+                  "id": "data-grid",
+                  "name": "Parcels",
+                  "dataType": "array",
+                  "configs": {
+                    "key": "parcels"
+                  },
+                  "validations": [
+                    {
+                      "validator": "minItems",
+                      "value": 1
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "input",
+                      "id": "number",
+                      "name": "Weight",
+                      "dataType": "number",
+                      "configs": {
+                        "key": "kg"
+                      },
+                      "validations": [
+                        {
+                          "validator": "required"
+                        },
+                        {
+                          "validator": "max",
+                          "value": 30
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {
+        "shipments": [
+          {
+            "ref": "A",
+            "parcels": [
+              {
+                "kg": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "shipments": [
+          {
+            "parcels": []
+          },
+          {
+            "ref": "B",
+            "parcels": [
+              {
+                "kg": 31
+              },
+              {},
+              {
+                "kg": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "shipments": []
+      },
+      {
+        "shipments": [
+          {
+            "ref": "C",
+            "parcels": "x"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "lint-issues",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Broken",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "No key",
+          "dataType": "string",
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "No type",
+          "configs": {
+            "key": "untyped"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "minLength",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "A",
+          "dataType": "string",
+          "configs": {
+            "key": "dup"
+          },
+          "validations": [
+            {
+              "validator": "minLength",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "number",
+          "name": "B",
+          "dataType": "number",
+          "configs": {
+            "key": "dup"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "type": "collection",
+          "id": "data-grid",
+          "name": "Empty",
+          "dataType": "array",
+          "configs": {
+            "key": "rows"
+          }
+        },
+        {
+          "type": "collection",
+          "id": "data-grid",
+          "name": "No key rows",
+          "dataType": "array",
+          "children": [
+            {
+              "type": "input",
+              "id": "text",
+              "name": "x",
+              "dataType": "string",
+              "configs": {
+                "key": "x"
+              }
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Mismatched",
+          "dataType": "string",
+          "configs": {
+            "key": "mismatch"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": 3
+            },
+            {
+              "validator": "minItems",
+              "value": 1
+            },
+            {
+              "validator": "pattern",
+              "value": ""
+            },
+            {
+              "validator": "minLength"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {
+        "dup": "abc",
+        "untyped": "",
+        "mismatch": "a"
+      },
+      {
+        "dup": 3,
+        "rows": [
+          {
+            "a": 1
+          }
+        ]
+      },
+      {
+        "dup": "abcdef",
+        "mismatch": [
+          "a"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "localized-defaults",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Localized",
+      "children": [
+        {
+          "type": "input",
+          "id": "number",
+          "name": "Rate",
+          "dataType": "number",
+          "configs": {
+            "key": "rate"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": 0.25
+            },
+            {
+              "validator": "max",
+              "value": 1e+21
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "number",
+          "name": "Small",
+          "dataType": "number",
+          "configs": {
+            "key": "small"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": 1e-07
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Only en",
+          "dataType": "string",
+          "configs": {
+            "key": "only_en"
+          },
+          "validations": [
+            {
+              "validator": "required",
+              "message": {
+                "en": "English only"
+              }
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Bool value",
+          "dataType": "string",
+          "configs": {
+            "key": "bool_value"
+          },
+          "validations": [
+            {
+              "validator": "minLength",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr",
+      "en",
+      "es",
+      ""
+    ],
+    "data": [
+      {},
+      {
+        "rate": 0.1,
+        "small": 0,
+        "only_en": "x",
+        "bool_value": ""
+      },
+      {
+        "rate": 2e+21,
+        "only_en": "x"
+      }
+    ]
+  },
+  {
+    "name": "compile-failures",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Broken schema",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "string",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "pattern",
+              "value": "["
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "b",
+          "dataType": "number",
+          "configs": {
+            "key": "b"
+          },
+          "validations": [
+            {
+              "validator": "min",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {},
+      {
+        "b": 0
+      }
+    ]
+  },
+  {
+    "name": "negative-min-length",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "negative-min-length",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "string",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "minLength",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "b",
+          "dataType": "string",
+          "configs": {
+            "key": "b"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {},
+      {
+        "a": "x",
+        "b": "y"
+      },
+      {
+        "a": 5,
+        "b": "y"
+      },
+      {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": "y"
+      }
+    ]
+  },
+  {
+    "name": "fractional-max-items",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "fractional-max-items",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "array",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "maxItems",
+              "value": 2.5
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "b",
+          "dataType": "string",
+          "configs": {
+            "key": "b"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {},
+      {
+        "a": "x",
+        "b": "y"
+      },
+      {
+        "a": 5,
+        "b": "y"
+      },
+      {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": "y"
+      }
+    ]
+  },
+  {
+    "name": "nan-min",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "nan-min",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "number",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "min",
+              "value": "abc"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "b",
+          "dataType": "string",
+          "configs": {
+            "key": "b"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {},
+      {
+        "a": "x",
+        "b": "y"
+      },
+      {
+        "a": 5,
+        "b": "y"
+      },
+      {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": "y"
+      }
+    ]
+  },
+  {
+    "name": "hex-min",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "hex-min",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "a",
+          "dataType": "number",
+          "configs": {
+            "key": "a"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            },
+            {
+              "validator": "min",
+              "value": "0x10"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "b",
+          "dataType": "string",
+          "configs": {
+            "key": "b"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {},
+      {
+        "a": "x",
+        "b": "y"
+      },
+      {
+        "a": 5,
+        "b": "y"
+      },
+      {
+        "a": [
+          1,
+          2,
+          3
+        ],
+        "b": "y"
+      }
+    ]
+  },
+  {
+    "name": "rules-without-hidden",
+    "spec": {
+      "type": "panel",
+      "id": "panel",
+      "name": "Rules",
+      "children": [
+        {
+          "type": "input",
+          "id": "text",
+          "name": "Carrier",
+          "dataType": "string",
+          "configs": {
+            "key": "carrier"
+          },
+          "validations": [
+            {
+              "validator": "minLength",
+              "value": 2
+            }
+          ],
+          "rules": [
+            {
+              "name": "lock",
+              "type": "jsonLogic",
+              "logic": {
+                "==": [
+                  {
+                    "var": "office"
+                  },
+                  "TG121"
+                ]
+              },
+              "effects": [
+                {
+                  "property": {
+                    "target": "disabled",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "output",
+          "id": "content",
+          "name": "Note",
+          "dataType": "void",
+          "configs": {
+            "content": "x"
+          },
+          "rules": [
+            {
+              "name": "hide",
+              "type": "jsonLogic",
+              "logic": true,
+              "effects": [
+                {
+                  "property": {
+                    "target": "hidden",
+                    "type": "boolean"
+                  },
+                  "boolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "id": "text",
+          "name": "office",
+          "dataType": "string",
+          "configs": {
+            "key": "office"
+          },
+          "validations": [
+            {
+              "validator": "required"
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "fr"
+    ],
+    "data": [
+      {
+        "carrier": "a"
+      },
+      {
+        "carrier": "ab",
+        "office": "TG121"
+      }
+    ]
+  }
+]

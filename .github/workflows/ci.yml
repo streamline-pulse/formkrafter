@@ -51,6 +51,37 @@ jobs:
       - name: Lint
         run: bun run lint
 
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # The core writes the fixtures the port is tested against: stale ones
+      # mean a core change the Python package has not followed.
+      - name: Parity fixtures are up to date
+        run: bun scripts/python-parity.ts --check
+
+      # formkrafter.testing runs the built core through Node
+      - name: Build the core
+        run: bun run --cwd packages/core build
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Lint and type-check
+        working-directory: python
+        run: uv run ruff check src tests && uv run ruff format --check src tests && uv run mypy
+
+      - name: Test
+        working-directory: python
+        run: uv run pytest
+
   e2e:
     runs-on: ubuntu-latest
     # The job runs inside the same image that generates the visual baselines

@@ -1,0 +1,40 @@
+name: Python release
+
+# Publishes python/ to PyPI when a `py-v<version>` tag is pushed (e.g. py-v0.1.0).
+# Uses PyPI trusted publishing: the `formkrafter` project on pypi.org must list
+# this repository, this workflow and the `pypi` environment as a trusted publisher.
+on:
+  push:
+    tags: ["py-v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: The tag matches the package version
+        working-directory: python
+        run: |
+          version=$(uv version --short)
+          if [ "py-v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} but python/pyproject.toml says ${version}"
+            exit 1
+          fi
+
+      - name: Test
+        working-directory: python
+        run: uv run pytest
+
+      - name: Build
+        working-directory: python
+        run: uv build
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist/

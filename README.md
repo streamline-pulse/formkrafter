@@ -36,6 +36,7 @@ flowchart LR
 | [`formkrafter-wc`](packages/wc/README.md) | The UI: `<fk-form-builder>` and `<fk-form-render>` plus 27 built-in bricks, theming tokens, i18n, drag & drop (Pragmatic DnD). |
 | [`formkrafter-react`](packages/react/README.md) | React components generated from the Web Components at build time. |
 | [`formkrafter-vue`](packages/vue/README.md) | Vue components generated the same way. |
+| [`formkrafter` (Python)](python/README.md) | Server-side validation for Python backends: the same schema, error keys and messages as the core, held to it by parity fixtures the core generates. |
 
 ## Quick taste
 
@@ -71,6 +72,7 @@ formkrafter/
 │   ├── wc/          Stencil Web Components (+ dev playground)
 │   ├── react/       generated React wrappers
 │   └── vue/         generated Vue wrappers
+├── python/          Python package (PyPI `formkrafter`): server-side validation
 ├── examples/
 │   └── tanstack-start/   full app: builder + preview, en/fr, dark mode
 ├── package.json     Bun workspaces + version catalog
