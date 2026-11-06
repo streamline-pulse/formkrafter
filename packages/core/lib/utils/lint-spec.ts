@@ -5,7 +5,8 @@ export type SpecIssueCode =
     | "validations-without-data-type"
     | "input-without-key"
     | "duplicate-key"
-    | "collection-without-children";
+    | "collection-without-children"
+    | "content-in-row";
 
 export interface SpecIssue {
     code: SpecIssueCode;
@@ -16,6 +17,8 @@ export interface SpecIssue {
 
 const isDataCarrying = (brick: BrickSpec): boolean =>
     brick.type === "input" || brick.type === "collection";
+
+const isRow = (brick: BrickSpec): boolean => brick.type === "panel" && brick.id === "row";
 
 export function lintSpec(spec?: BrickSpec): SpecIssue[] {
     if (!spec) return [];
@@ -66,6 +69,17 @@ export function lintSpec(spec?: BrickSpec): SpecIssue[] {
                 key,
                 message: `collection "${key ?? brick.id}" has no row template — it can never produce data`,
             });
+        }
+
+        if (isRow(brick)) {
+            for (const [index, child] of (brick.children ?? []).entries()) {
+                if (child?.type !== "output") continue;
+                issues.push({
+                    code: "content-in-row",
+                    path: `${path}.${index}`,
+                    message: `${child.id} brick in a row takes a column like a field and reads as a label without one — place it above or below the row`,
+                });
+            }
         }
     }
 

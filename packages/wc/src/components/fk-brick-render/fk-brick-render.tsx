@@ -1,4 +1,4 @@
-import { Component, Event, Prop, h } from '@stencil/core';
+import { Component, Event, Host, Prop, h } from '@stencil/core';
 import type { EventEmitter, VNode } from '@stencil/core';
 import {
   getAffectedProperties,
@@ -22,6 +22,12 @@ import type {
   BrickReviewChangeDetail,
   BrickValidationsChangeDetail,
 } from '../../utils/events';
+
+// `layout.span`: how many columns of its row the brick takes (1 to 12).
+const layoutSpan = (spec: BrickSpec): number => {
+  const span = Math.round(Number(spec.layout?.span));
+  return Number.isFinite(span) ? Math.min(12, Math.max(1, span)) : 1;
+};
 
 @Component({
   tag: 'fk-brick-render',
@@ -66,7 +72,9 @@ export class FkBrickRender {
     const editing = this.editable && (spec.editable ?? true);
     const affected = getAffectedProperties(spec.rules, this.dataMap);
 
-    if (!editing && affected.hidden === true) return null;
+    // The host stays in its row, group or column: hide it, not only its content,
+    // so a hidden field takes no column and no gap.
+    if (!editing && affected.hidden === true) return <Host hidden />;
 
     const isContainer = spec.type === 'panel' || spec.type === 'collection';
 
@@ -163,16 +171,20 @@ export class FkBrickRender {
     };
 
     const node = (editing ? brick.renderBuilder(props) : brick.render(props)) as VNode;
+    const span = layoutSpan(spec);
+    const hostStyle = span > 1 ? { '--fk-span': String(span) } : undefined;
 
-    if (!editing || this.path === '0') return node;
+    if (!editing || this.path === '0') return <Host style={hostStyle}>{node}</Host>;
 
     return (
-      <fk-brick-actions
-        path={this.path}
-        selected={this.path === this.selectedPath}
-      >
-        {node}
-      </fk-brick-actions>
+      <Host style={hostStyle}>
+        <fk-brick-actions
+          path={this.path}
+          selected={this.path === this.selectedPath}
+        >
+          {node}
+        </fk-brick-actions>
+      </Host>
     );
   }
 }

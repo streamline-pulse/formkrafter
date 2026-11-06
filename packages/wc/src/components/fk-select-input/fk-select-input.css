@@ -39,6 +39,16 @@
   font-size: 0.9rem;
 }
 
+/* Two lines at most in the trigger: the whole label is in the list and the tooltip. */
+.fk-select__value {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
 .fk-select__placeholder {
   color: var(--fk-color-muted);
 }

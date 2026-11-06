@@ -25,6 +25,7 @@ interface BrickSpec {
   dataType?: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array' | 'null' | 'void'
   configs?: { key?: string } & Record<string, unknown>
   styles?: Record<string, unknown>
+  layout?: { columns?: number; span?: number }  // placement dans une ligne, voir Bricks › Lignes
   validations?: Validation[]
   rules?: Rule[]
   children?: BrickSpec[]

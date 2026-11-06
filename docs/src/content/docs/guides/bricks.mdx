@@ -55,12 +55,40 @@ the same palette.
 
 | Brick `id` | Type | Notes |
 |---|---|---|
-| `group`, `row`, `column` | panel | fieldset and flex containers |
+| `group`, `row`, `column` | panel | a fieldset, a row of fields side by side, a column |
 | `stepper` | panel | wizard with per-step validation |
 | `tabs` | panel | optional validate-before-leaving |
 | `nested-form` | panel | references another form by `specRef` |
 | `content` | output | static rich text |
 | `recap` | output | live summary of the whole form |
+
+#### Rows
+
+The fields of a `row` share its width. A field hidden by a rule takes no
+column and no gap: the fields still shown share the whole row. Labels,
+controls, hints and errors line up across the row, so a label on two lines or a
+hint under one field moves no control, and a checkbox sits on the line of its
+neighbours' controls.
+
+A row wraps when a column would be narrower than `--fk-row-min` (12rem), and on
+screens narrower than 36rem it shows one field per line. Two `layout` settings
+adjust it:
+
+- `layout.columns` on the row: that many equal columns, so a field alone in its
+  row keeps its share instead of the whole width.
+- `layout.span` on one of its fields: how many columns that field takes.
+
+```json
+{ "type": "panel", "id": "row", "name": "Row", "layout": { "columns": 3 },
+  "children": [
+    { "type": "input", "id": "text", "name": "Street", "layout": { "span": 2 }, "configs": { "key": "street" } },
+    { "type": "input", "id": "text", "name": "Town", "configs": { "key": "town" } }
+  ] }
+```
+
+A `content` brick belongs above or below a row, not in it: there it would take
+a column and read as a label without a field. `lintSpec` reports it as
+`content-in-row`.
 
 ## Behaviors worth knowing
 

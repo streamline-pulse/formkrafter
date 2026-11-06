@@ -55,12 +55,40 @@ s'enregistrent de la même façon et apparaissent dans la même palette.
 
 | `id` de brick | Type | Notes |
 |---|---|---|
-| `group`, `row`, `column` | panel | conteneurs fieldset et flex |
+| `group`, `row`, `column` | panel | un fieldset, une ligne de champs côte à côte, une colonne |
 | `stepper` | panel | wizard avec validation par étape |
 | `tabs` | panel | validation optionnelle avant de quitter l'onglet |
 | `nested-form` | panel | référence un autre formulaire par `specRef` |
 | `content` | output | texte riche statique |
 | `recap` | output | résumé vivant de tout le formulaire |
+
+#### Lignes
+
+Les champs d'une `row` se partagent sa largeur. Un champ masqué par une règle
+n'occupe ni colonne ni espacement : les champs encore affichés se partagent
+toute la ligne. Libellés, contrôles, aides et erreurs s'alignent d'un champ à
+l'autre : un libellé sur deux lignes ou une aide sous un seul champ ne décale
+aucun contrôle, et une case à cocher se pose sur la ligne des contrôles voisins.
+
+Une ligne passe à la ligne quand une colonne deviendrait plus étroite que
+`--fk-row-min` (12rem), et sur un écran de moins de 36rem elle affiche un champ
+par ligne. Deux réglages `layout` l'ajustent :
+
+- `layout.columns` sur la ligne : autant de colonnes égales, si bien qu'un champ
+  seul dans sa ligne garde sa part au lieu de toute la largeur.
+- `layout.span` sur l'un de ses champs : le nombre de colonnes qu'il occupe.
+
+```json
+{ "type": "panel", "id": "row", "name": "Row", "layout": { "columns": 3 },
+  "children": [
+    { "type": "input", "id": "text", "name": "Street", "layout": { "span": 2 }, "configs": { "key": "street" } },
+    { "type": "input", "id": "text", "name": "Town", "configs": { "key": "town" } }
+  ] }
+```
+
+Une brick `content` se place au-dessus ou au-dessous d'une ligne, pas dedans :
+elle y prendrait une colonne et se lirait comme un libellé sans champ.
+`lintSpec` la signale (`content-in-row`).
 
 ## Comportements à connaître
 

@@ -2521,5 +2521,118 @@
     "data": [
       {}
     ]
+  },
+  {
+    "name": "content-in-row",
+    "spec": {
+      "type": "panel",
+      "id": "column",
+      "name": "Form",
+      "configs": {
+        "key": "form"
+      },
+      "children": [
+        {
+          "type": "panel",
+          "id": "row",
+          "name": "Row",
+          "children": [
+            {
+              "type": "input",
+              "id": "date",
+              "name": "Date",
+              "dataType": "string",
+              "configs": {
+                "key": "date",
+                "label": "Date"
+              }
+            },
+            {
+              "type": "output",
+              "id": "content",
+              "name": "Currency",
+              "dataType": "void",
+              "configs": {
+                "content": "Currency: XOF"
+              }
+            },
+            {
+              "type": "input",
+              "id": "text",
+              "name": "Origin",
+              "dataType": "string",
+              "configs": {
+                "key": "origin"
+              },
+              "layout": {
+                "span": 2
+              }
+            }
+          ],
+          "layout": {
+            "columns": 3
+          }
+        },
+        {
+          "type": "output",
+          "id": "heading",
+          "name": "Heading",
+          "dataType": "void",
+          "configs": {
+            "label": "Goods"
+          }
+        },
+        {
+          "type": "panel",
+          "id": "group",
+          "name": "Group",
+          "children": [
+            {
+              "type": "panel",
+              "id": "row",
+              "name": "Row",
+              "children": [
+                {
+                  "type": "output",
+                  "id": "alert",
+                  "name": "Notice",
+                  "dataType": "void",
+                  "configs": {
+                    "content": "Read me"
+                  }
+                },
+                {
+                  "type": "input",
+                  "id": "checkbox",
+                  "name": "Agreed",
+                  "dataType": "boolean",
+                  "configs": {
+                    "key": "agreed"
+                  },
+                  "validations": [
+                    {
+                      "validator": "required"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "locales": [
+      "en"
+    ],
+    "data": [
+      {
+        "date": "2026-11-06",
+        "origin": "CN",
+        "agreed": true
+      },
+      {
+        "origin": "TG"
+      }
+    ]
   }
 ]

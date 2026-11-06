@@ -2974,6 +2974,73 @@
           ]
         }
       ]
+    },
+    {
+      "name": "content-in-row",
+      "lint": [
+        {
+          "code": "content-in-row",
+          "path": "0.0.1",
+          "message": "content brick in a row takes a column like a field and reads as a label without one — place it above or below the row"
+        },
+        {
+          "code": "content-in-row",
+          "path": "0.2.0.0",
+          "message": "alert brick in a row takes a column like a field and reads as a label without one — place it above or below the row"
+        }
+      ],
+      "locales": [
+        {
+          "locale": "en",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "origin": {
+                "type": "string",
+                "nullable": true,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              },
+              "agreed": {
+                "type": "boolean",
+                "nullable": false,
+                "errorMessage": {
+                  "type": "Invalid value"
+                }
+              }
+            },
+            "required": [
+              "agreed"
+            ],
+            "errorMessage": {
+              "required": {
+                "agreed": "This field is required"
+              }
+            },
+            "additionalProperties": false
+          },
+          "results": [
+            {
+              "valid": true,
+              "errors": {}
+            },
+            {
+              "valid": false,
+              "errors": {
+                "agreed": "This field is required"
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "jsonlogic": [

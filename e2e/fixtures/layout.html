@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FormKrafter — layout of rows, hidden fields, checkboxes</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 16px; font-family: ui-sans-serif, system-ui, sans-serif; }
+      section { margin-bottom: 24px; }
+      .dark-panel { padding: 8px; background: #111c24; }
+    </style>
+  </head>
+  <body>
+    <section><fk-form-render id="hidden-middle"></fk-form-render></section>
+    <section><fk-form-render id="hidden-first"></fk-form-render></section>
+    <section><fk-form-render id="hidden-gaps"></fk-form-render></section>
+    <section><fk-form-render id="checkbox"></fk-form-render></section>
+    <section><fk-form-render id="aligned"></fk-form-render></section>
+    <section><fk-form-render id="wide-row"></fk-form-render></section>
+    <section><fk-form-render id="columns"></fk-form-render></section>
+    <section><fk-form-render id="long-select"></fk-form-render></section>
+    <section><fk-form-render id="grid"></fk-form-render></section>
+    <section class="dark-panel" data-fk-theme="dark"><fk-form-render id="dark"></fk-form-render></section>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+
+      const hideWhen = (key, value) => [
+        {
+          name: `hide when ${key} is ${value}`,
+          type: 'jsonLogic',
+          logic: { '==': [{ var: key }, value] },
+          effects: [{ property: { target: 'hidden', type: 'boolean' }, boolean: true }],
+        },
+      ]
+      const text = (key, label, extra = {}) => ({
+        type: 'input', dataType: 'string', id: 'text', name: label, configs: { key, label, ...extra.configs }, ...extra.spec,
+      })
+      const checkbox = (key, label, extra = {}) => ({
+        type: 'input', dataType: 'boolean', id: 'checkbox', name: label, configs: { key, label, ...extra.configs }, ...extra.spec,
+      })
+      const content = (uid, value, extra = {}) => ({
+        type: 'output', dataType: 'void', id: 'content', name: 'Note', configs: { uid, content: value }, ...extra,
+      })
+      const row = (children, extra = {}) => ({ type: 'panel', id: 'row', name: 'Row', children, ...extra })
+      const group = (label, children) => ({ type: 'panel', id: 'group', name: label, configs: { label }, children })
+      const form = (children) => ({ type: 'panel', id: 'column', name: 'Form', configs: { key: 'form' }, children })
+
+      const forms = {
+        'hidden-middle': form([
+          text('mode', 'Mode'),
+          row([
+            text('a', 'First'),
+            text('b', 'Second', { spec: { rules: hideWhen('mode', 'goods') } }),
+            text('c', 'Third'),
+          ]),
+        ]),
+        'hidden-first': form([
+          text('mode', 'Mode'),
+          row([
+            text('payer', 'Who pays?', { spec: { rules: hideWhen('mode', 'goods') } }),
+            checkbox('wholesale', 'Is it a wholesale purchase?'),
+          ]),
+        ]),
+        'hidden-gaps': form([
+          text('mode', 'Mode'),
+          group('Supplier', [
+            text('first', 'Visible before'),
+            content('n1', 'You are the supplier.', { rules: hideWhen('mode', 'goods') }),
+            content('n2', 'You are the supplier, too.', { rules: hideWhen('mode', 'goods') }),
+            text('second', 'Visible after'),
+          ]),
+        ]),
+        checkbox: form([
+          checkbox('vat', 'The supplier charges VAT', {
+            configs: { description: 'Tick when the invoice shows VAT (LPF art. 102).' },
+            spec: { validations: [{ validator: 'required' }] },
+          }),
+        ]),
+        aligned: form([
+          row([
+            text('date', 'Date'),
+            text('bonus', 'Bonus or 13th month paid this month, in CFA francs, before any deduction'),
+            text('benefits', 'Benefits in kind', { configs: { description: 'Housing, car, phone, at their market value.' } }),
+            checkbox('majored', 'Higher rate'),
+          ]),
+        ]),
+        'wide-row': form([
+          group('Declaration', [
+            row([
+              text('office', 'Customs office'),
+              text('date2', 'Declaration date'),
+              text('regime', 'Customs regime'),
+              text('mode2', 'Transport mode'),
+            ]),
+          ]),
+        ]),
+        columns: form([
+          row([text('alone', 'Where is the supplier established?')], { layout: { columns: 2 } }),
+          row([text('wide', 'Spans two', { spec: { layout: { span: 2 } } }), text('narrow', 'One')], { layout: { columns: 3 } }),
+        ]),
+        'long-select': form([
+          row([
+            {
+              type: 'input', dataType: 'string', id: 'select', name: 'Operation',
+              configs: {
+                key: 'op', label: 'What is invoiced?',
+                options: 'Liberal profession: lawyer, notary, bailiff, auctioneer, architect, chartered accountant, doctor, commission agent\nGoods',
+              },
+            },
+            text('amount', 'Amount'),
+          ]),
+        ]),
+        grid: form([
+          {
+            type: 'collection', dataType: 'array', id: 'data-grid', name: 'Items', configs: { key: 'items', label: 'Items' },
+            children: [
+              text('hs', 'Product or HS code', { configs: { description: 'Search by name or code.' } }),
+              text('qty', 'Quantity'),
+              text('value', 'Value'),
+              text('vehicle', 'Vehicle or motorcycle, new or used, and its age'),
+              text('origin', 'Origin'),
+              text('weight', 'Weight'),
+              text('freight', 'Freight'),
+              text('insurance', 'Insurance'),
+            ],
+          },
+        ]),
+        dark: form([text('rate', 'Higher rate', { spec: { validations: [{ validator: 'required' }] } })]),
+      }
+
+      const data = {
+        'hidden-middle': { mode: 'goods' },
+        'hidden-first': { mode: 'goods' },
+        'hidden-gaps': { mode: 'goods' },
+        'long-select': { op: 'Liberal profession: lawyer, notary, bailiff, auctioneer, architect, chartered accountant, doctor, commission agent' },
+        grid: { items: [{}] },
+      }
+
+      for (const [id, spec] of Object.entries(forms)) {
+        const el = document.getElementById(id)
+        if (data[id]) el.data = data[id]
+        el.spec = spec
+      }
+    </script>
+  </body>
+</html>

@@ -6,6 +6,7 @@
   --fk-color-muted: #64748b;
   --fk-color-danger: #dc2626;
   --fk-color-shadow: rgba(0, 0, 0, 0.12);
+  --fk-color-on-primary: #ffffff;
   --fk-radius: 8px;
   --fk-font: system-ui, -apple-system, sans-serif;
   --fk-spacing: 8px;
@@ -20,6 +21,7 @@
   --fk-color-muted: #8fa4b0;
   --fk-color-danger: #f87171;
   --fk-color-shadow: rgba(0, 0, 0, 0.5);
+  --fk-color-on-primary: #04211f;
 }
 
 [data-fk-theme='light'] {
@@ -30,6 +32,12 @@
   --fk-color-muted: #64748b;
   --fk-color-danger: #dc2626;
   --fk-color-shadow: rgba(0, 0, 0, 0.12);
+  --fk-color-on-primary: #ffffff;
+}
+
+/* A brick hidden by a rule takes no column, no track and no gap. */
+fk-brick-render[hidden] {
+  display: none !important;
 }
 
 .fk-field {
@@ -86,7 +94,7 @@
   margin: 0.25rem 0 0;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: var(--fk-color-muted, #71717a);
+  color: var(--fk-color-muted);
 }
 
 .fk-field__main {
@@ -166,6 +174,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--fk-spacing);
+  /* A fieldset is min-content wide by default: the widest row would push the page sideways. */
+  min-inline-size: 0;
   margin: 0;
   padding: calc(var(--fk-spacing) * 1.5);
   border: 1px solid var(--fk-color-border);
@@ -189,14 +199,120 @@ select.fk-field__input {
 }
 
 .fk-row {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--fk-row-min, 12rem), 100%), 1fr));
+  align-items: start;
   gap: var(--fk-spacing);
 }
 
+/* layout.columns: n equal columns, fewer when they would be narrower than --fk-row-min. */
+.fk-row--columns {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(
+      max(
+        min(var(--fk-row-min, 12rem), 100%),
+        (100% - (var(--fk-row-columns) - 1) * var(--fk-spacing)) / var(--fk-row-columns)
+      ),
+      1fr
+    )
+  );
+}
+
 .fk-row > * {
-  flex: 1;
+  grid-column: span var(--fk-span, 1);
   min-width: 0;
+}
+
+@media (max-width: 36rem) {
+  .fk-row,
+  .fk-row--columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fk-row > * {
+    grid-column: auto;
+  }
+}
+
+/*
+ * In a row (and in a data-grid row), the fields share five tracks: label,
+ * control, hint, error, notes. A label on two lines or a hint under one field
+ * moves no control. A brick of another shape keeps the whole cell.
+ */
+@supports (grid-template-rows: subgrid) {
+  .fk-row,
+  .fk-grid__cells {
+    grid-auto-rows: auto;
+    row-gap: 0;
+    margin-block-end: calc(-1 * var(--fk-spacing));
+  }
+
+  :is(.fk-row, .fk-grid__cells) > * {
+    grid-row: span 5;
+    margin-block-end: var(--fk-spacing);
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render {
+    display: grid;
+    grid-template-rows: subgrid;
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > * {
+    grid-row: 1 / -1;
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned {
+    display: grid;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > * {
+    grid-row: 2;
+    margin-block-start: calc(var(--fk-spacing) / 2);
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > .fk-field__label {
+    grid-row: 1;
+    align-self: end;
+    margin-block-start: 0;
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > .fk-field__hint {
+    grid-row: 3;
+    margin-block-start: calc(var(--fk-spacing) / 2 + 0.25rem);
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > .fk-field__error {
+    grid-row: 4;
+  }
+
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > .fk-field__notes {
+    grid-row: 5;
+  }
+
+  /* A checkbox has no label above it: it sits on the line of its neighbours' controls. */
+  :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--check > .fk-field__main {
+    align-self: center;
+  }
+
+  /* The checkbox's hint, error and notes line up with its label text, not with the box. */
+  .fk-field--check {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--fk-spacing);
+  }
+
+  .fk-field--check > * {
+    grid-column: 2;
+  }
+
+  .fk-field--check > .fk-field__main {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
 }
 
 .fk-column {
@@ -496,7 +612,7 @@ select.fk-field__input {
 
 .fk-field__required {
   margin-inline-start: 0.15em;
-  color: var(--fk-danger, #b3261e);
+  color: var(--fk-danger, var(--fk-color-danger));
 }
 
 .fk-visually-hidden {
@@ -520,8 +636,8 @@ select.fk-field__input {
   font: inherit;
   font-weight: 600;
   cursor: pointer;
-  color: var(--fk-on-accent, #fff);
-  background: var(--fk-accent, #1d5a60);
+  color: var(--fk-on-accent, var(--fk-color-on-primary));
+  background: var(--fk-accent, var(--fk-color-primary));
 }
 
 .fk-form__submit:disabled {
@@ -554,7 +670,7 @@ select.fk-field__input {
   font-size: 0.75rem;
 }
 .fk-mrz__status--bad {
-  color: var(--fk-danger, #dc2626);
+  color: var(--fk-danger, var(--fk-color-danger));
 }
 .fk-mrz__fields {
   display: grid;
@@ -562,16 +678,16 @@ select.fk-field__input {
   gap: 0.25rem 1rem;
   margin: 0.5rem 0 0;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--fk-border, #d4d4d8);
+  border: 1px solid var(--fk-border, var(--fk-color-border));
   border-radius: var(--fk-radius, 0.375rem);
   font-size: 0.8125rem;
 }
 .fk-mrz__fields--valid {
-  border-color: var(--fk-primary, #16a34a);
+  border-color: var(--fk-primary, var(--fk-color-success));
 }
 .fk-mrz__row dt {
   font-size: 0.6875rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-text-muted, var(--fk-color-muted));
 }
 .fk-mrz__row dd {
   margin: 0;
@@ -605,5 +721,5 @@ select.fk-field__input {
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: var(--fk-text-muted, #71717a);
+  color: var(--fk-text-muted, var(--fk-color-muted));
 }

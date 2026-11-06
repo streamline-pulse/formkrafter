@@ -12,6 +12,7 @@ SpecIssueCode = Literal[
     "input-without-key",
     "duplicate-key",
     "collection-without-children",
+    "content-in-row",
 ]
 
 
@@ -32,7 +33,7 @@ class SpecIssue:
 
 
 def lint_spec(spec: Any) -> list[SpecIssue]:
-    """Issues of a spec: keyless inputs, validations without a dataType, duplicate keys, empty collections."""
+    """Issues of a spec: keyless inputs, untyped validations, duplicate keys, empty collections, content in a row."""
     issues: list[SpecIssue] = []
     seen: dict[str, str] = {}
 
@@ -90,6 +91,19 @@ def lint_spec(spec: Any) -> list[SpecIssue]:
                     key,
                 )
             )
+
+        if brick_type == "panel" and brick.get("id") == "row":
+            for index, child in enumerate(brick.get("children") or []):
+                if not isinstance(child, dict) or child.get("type") != "output":
+                    continue
+                issues.append(
+                    SpecIssue(
+                        "content-in-row",
+                        f"{path}.{index}",
+                        f"{child.get('id')} brick in a row takes a column like a field and reads as a label "
+                        "without one — place it above or below the row",
+                    )
+                )
 
     return issues
 

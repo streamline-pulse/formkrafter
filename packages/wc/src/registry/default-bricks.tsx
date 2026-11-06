@@ -181,8 +181,10 @@ const fieldHint = (props: WcBrickProps): VNode | null => {
   return text ? <p class="fk-field__hint">{text}</p> : null;
 };
 
+// `fk-field--aligned`: label, one control, hint, error and notes, in that order.
+// In a row these children take the row's shared tracks, so controls line up.
 const fieldBlock = (props: WcBrickProps, fallback: string, control: VNode): VNode => (
-  <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
+  <div class={fieldClass(props, 'fk-field--aligned')} style={asInlineStyle(props.styles)}>
     {labelNode(props, fallback)}
     {control}
     {fieldHint(props)}
@@ -197,7 +199,7 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
   const note = fieldNote(props);
   if (!note)
     return (
-      <label class={fieldClass(props)} style={asInlineStyle(props.styles)}>
+      <label class={fieldClass(props, 'fk-field--aligned')} style={asInlineStyle(props.styles)}>
         {labelNode(props, fallback)}
         {control}
         {fieldHint(props)}
@@ -210,6 +212,7 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
         {labelNode(props, fallback)}
         {control}
       </label>
+      {fieldHint(props)}
       {fieldError(props)}
       {note}
     </div>
@@ -481,8 +484,8 @@ export const selectBoxesBrick = createBrick({
     const selected = Array.isArray(props.data) ? (props.data as string[]) : [];
 
     return (
-      <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
-        <span class="fk-field__label">{labelOf(props, 'Select boxes')}</span>
+      <div class={fieldClass(props, 'fk-field--aligned')} style={asInlineStyle(props.styles)}>
+        {labelNode(props, 'Select boxes')}
         <div class="fk-radio-group">
           {staticOptions(props).map((option) => (
             <label class="fk-radio" key={option.value}>
@@ -502,7 +505,8 @@ export const selectBoxesBrick = createBrick({
             </label>
           ))}
         </div>
-        {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+        {fieldHint(props)}
+        {fieldError(props)}
         {fieldNote(props)}
       </div>
     );
@@ -1281,8 +1285,8 @@ export const radioBrick = createBrick({
   category: 'Inputs',
   defaultConfigs: { label: 'Radio', options: 'Option 1\nOption 2' },
   render: (props) => (
-    <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
-      <span class="fk-field__label">{labelOf(props, 'Radio')}</span>
+    <div class={fieldClass(props, 'fk-field--aligned')} style={asInlineStyle(props.styles)}>
+      {labelNode(props, 'Radio')}
       <div class="fk-radio-group" role="radiogroup" {...invalidAttr(props)}>
         {staticOptions(props).map((option) => (
           <label class="fk-radio" key={option.value}>
@@ -1297,7 +1301,8 @@ export const radioBrick = createBrick({
           </label>
         ))}
       </div>
-      {props.error ? <span class="fk-field__error">{props.error}</span> : null}
+      {fieldHint(props)}
+      {fieldError(props)}
       {fieldNote(props)}
     </div>
   ),
@@ -1527,10 +1532,13 @@ export const checkboxBrick = createBrick({
   name: 'Checkbox',
   category: 'Inputs',
   defaultConfigs: { label: 'Checkbox' },
-  render: (props) => {
-    const control = (
+  // The hint sits under the label text, not under the box; in a row the box
+  // and its label take the control track of the fields beside it.
+  render: (props) => (
+    <div class={fieldClass(props, 'fk-field--aligned fk-field--check')} style={asInlineStyle(props.styles)}>
       <label class="fk-field--inline fk-field__main">
         <input
+          {...invalidAttr(props)}
           class="fk-field__checkbox"
           type="checkbox"
           checked={props.data === true}
@@ -1539,34 +1547,13 @@ export const checkboxBrick = createBrick({
             props.onDataChange?.((event.target as HTMLInputElement).checked)
           }
         />
-        <span class="fk-field__label">{labelOf(props, 'Checkbox')}</span>
+        {labelNode(props, 'Checkbox')}
       </label>
-    );
-    const note = fieldNote(props);
-    if (!note)
-      return (
-        <label class={fieldClass(props, 'fk-field--inline')} style={asInlineStyle(props.styles)}>
-          <input
-            class="fk-field__checkbox"
-            type="checkbox"
-            checked={props.data === true}
-            {...lock(props, false)}
-            onChange={(event) =>
-              props.onDataChange?.((event.target as HTMLInputElement).checked)
-            }
-          />
-          <span class="fk-field__label">{labelOf(props, 'Checkbox')}</span>
-          {props.error ? <span class="fk-field__error">{props.error}</span> : null}
-        </label>
-      );
-    return (
-      <div class={fieldClass(props)} style={asInlineStyle(props.styles)}>
-        {control}
-        {props.error ? <span class="fk-field__error">{props.error}</span> : null}
-        {note}
-      </div>
-    );
-  },
+      {fieldHint(props)}
+      {fieldError(props)}
+      {fieldNote(props)}
+    </div>
+  ),
 });
 
 export const groupBrick = createBrick({
@@ -1591,11 +1578,20 @@ export const rowBrick = createBrick({
   id: 'row',
   name: 'Row',
   category: 'Layout',
-  render: (props) => (
-    <div class="fk-row" style={asInlineStyle(props.styles)}>
-      {props.children as VNode}
-    </div>
-  ),
+  // Shown children share the width and wrap under `--fk-row-min`; with
+  // `layout.columns` the row keeps that many equal columns.
+  render: (props) => {
+    const columns = Math.round(Number(props.brickSpec?.layout?.columns));
+    const fixed = Number.isFinite(columns) && columns > 1 ? Math.min(12, columns) : 0;
+    return (
+      <div
+        class={fixed ? 'fk-row fk-row--columns' : 'fk-row'}
+        style={{ ...asInlineStyle(props.styles), ...(fixed ? { '--fk-row-columns': String(fixed) } : {}) }}
+      >
+        {props.children as VNode}
+      </div>
+    );
+  },
 });
 
 export const columnBrick = createBrick({

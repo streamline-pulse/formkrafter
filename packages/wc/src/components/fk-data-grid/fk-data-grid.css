@@ -29,16 +29,16 @@
 }
 
 .fk-grid__cells {
-  display: flex;
+  display: grid;
   flex: 1;
-  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--fk-grid-cell-min, 10rem), 100%), 1fr));
+  align-items: start;
   gap: var(--fk-spacing);
   min-width: 0;
 }
 
 .fk-grid__cells > * {
-  flex: 1;
-  min-width: 160px;
+  min-width: 0;
 }
 
 .fk-grid__remove {

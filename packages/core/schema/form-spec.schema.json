@@ -68,6 +68,15 @@
           "description": "Style tokens applied to the brick, as CSS-like key/value pairs.",
           "additionalProperties": true
         },
+        "layout": {
+          "type": "object",
+          "description": "Placement in a row: \"columns\" on the row itself (equal columns, a lone field keeps its share), \"span\" on one of its children (how many columns it takes). A row still stacks on narrow screens.",
+          "properties": {
+            "columns": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "span": { "type": "integer", "minimum": 1, "maximum": 12 }
+          },
+          "additionalProperties": false
+        },
         "children": {
           "type": "array",
           "items": { "$ref": "#/$defs/brick" },
