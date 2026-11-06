@@ -37,6 +37,15 @@ const spec = () => ({
       children: [text('first', { layout: { span: 2 } }), text('payer', { rules: hideWhenGoods }), text('third')],
     },
     {
+      type: 'panel',
+      id: 'group',
+      name: 'Services',
+      configs: { uid: 'services', label: 'Services only' },
+      children: [
+        { type: 'panel', id: 'row', name: 'Row', configs: { uid: 'empty-row' }, children: [text('provider', { rules: hideWhenGoods })] },
+      ],
+    },
+    {
       type: 'input',
       dataType: 'boolean',
       id: 'checkbox',
@@ -100,12 +109,21 @@ describe('layout', () => {
     expect(hostOf('third')!.hasAttribute('hidden')).toBe(false);
   });
 
+  test('a group whose fields are all hidden is hidden with its legend', async () => {
+    const group = Array.from(el.querySelectorAll<HTMLElement>('fk-brick-render')).find(
+      (host) => (host as unknown as { brickSpec?: { configs?: { uid?: string } } }).brickSpec?.configs?.uid === 'services'
+    )!;
+    expect(group.hasAttribute('hidden')).toBe(true);
+    expect(group.querySelector('legend')).toBeNull();
+  });
+
   test('the host is shown again when the rule no longer hides it', async () => {
     el.data = { mode: 'services' };
     await tick();
     const payer = hostOf('payer')!;
     expect(payer.hasAttribute('hidden')).toBe(false);
     expect(payer.querySelector('input')).not.toBeNull();
+    expect(el.querySelector('legend')?.textContent).toBe('Services only');
     el.data = { mode: 'goods', op: 'A very long operation label' };
     await tick();
     expect(hostOf('payer')!.hasAttribute('hidden')).toBe(true);

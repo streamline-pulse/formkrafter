@@ -60,6 +60,14 @@ test.describe('layout of rows', () => {
     expect(after.y - (before.y + before.height)).toBeCloseTo(8, 0)
   })
 
+  test('a row or a group whose fields are all hidden is hidden too', async ({ page }) => {
+    await expect(page.locator('#hidden-gaps .fk-row')).toBeHidden()
+    await expect(page.locator('#hidden-gaps').getByText('Services only')).toBeHidden()
+    await control(page, 'hidden-gaps', 'Mode').fill('services')
+    await expect(page.locator('#hidden-gaps').getByText('Services only')).toBeVisible()
+    await expect(control(page, 'hidden-gaps', 'Wholesale')).toBeVisible()
+  })
+
   test('labels on two lines and a hint under one field move no control', async ({ page }) => {
     const tops = await page
       .locator('#aligned .fk-row input.fk-field__input')

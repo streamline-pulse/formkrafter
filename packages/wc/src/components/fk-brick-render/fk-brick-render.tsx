@@ -29,6 +29,16 @@ const layoutSpan = (spec: BrickSpec): number => {
   return Number.isFinite(span) ? Math.min(12, Math.max(1, span)) : 1;
 };
 
+// A row, column or group whose bricks are all hidden is hidden too: it would
+// otherwise stay as an empty cell, or a legend over nothing, and keep its gap.
+const LAYOUT_PANELS = new Set(['row', 'column', 'group']);
+
+const isShown = (spec: BrickSpec, dataMap?: Record<string, unknown>): boolean => {
+  if (getAffectedProperties(spec.rules, dataMap).hidden === true) return false;
+  if (spec.type !== 'panel' || !LAYOUT_PANELS.has(spec.id) || !spec.children?.length) return true;
+  return spec.children.some((child) => isShown(child, dataMap));
+};
+
 @Component({
   tag: 'fk-brick-render',
   shadow: false,
@@ -74,7 +84,7 @@ export class FkBrickRender {
 
     // The host stays in its row, group or column: hide it, not only its content,
     // so a hidden field takes no column and no gap.
-    if (!editing && affected.hidden === true) return <Host hidden />;
+    if (!editing && !isShown(spec, this.dataMap)) return <Host hidden />;
 
     const isContainer = spec.type === 'panel' || spec.type === 'collection';
 

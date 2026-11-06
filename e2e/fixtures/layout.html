@@ -69,8 +69,13 @@
             text('first', 'Visible before'),
             content('n1', 'You are the supplier.', { rules: hideWhen('mode', 'goods') }),
             content('n2', 'You are the supplier, too.', { rules: hideWhen('mode', 'goods') }),
+            row([
+              text('wholesale2', 'Wholesale', { spec: { rules: hideWhen('mode', 'goods') } }),
+              text('status', 'Buyer status', { spec: { rules: hideWhen('mode', 'goods') } }),
+            ]),
             text('second', 'Visible after'),
           ]),
+          group('Services only', [text('provider', 'Provider status', { spec: { rules: hideWhen('mode', 'goods') } })]),
         ]),
         checkbox: form([
           checkbox('vat', 'The supplier charges VAT', {
