@@ -170,6 +170,7 @@ for (const issue of lintSpec(spec)) {
 | `input-without-key` | The value has nowhere to go in the form data |
 | `duplicate-key` | Two bricks write to the same key; one value overwrites the other |
 | `collection-without-children` | A collection with no bricks to repeat |
+| `content-in-row` | A content brick sits in a row, where it takes a column like a field |
 
 Each issue carries `code`, `path`, `key` and a human-readable `message`. An
 empty array means the spec is sound. It is cheap enough to run in CI over every

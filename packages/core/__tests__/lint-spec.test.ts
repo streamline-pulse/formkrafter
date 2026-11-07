@@ -86,6 +86,25 @@ describe("lintSpec", () => {
             "collection-without-children",
         ]);
     });
+
+    test("a content brick inside a row is reported, not one beside it", () => {
+        const note = { type: "output", dataType: "void", id: "content", name: "Note", configs: { content: "XOF" } };
+        const issues = lintSpec(
+            spec([
+                { type: "panel", id: "row", name: "Row", children: [input(), note] },
+                note,
+                { type: "panel", id: "column", name: "Column", children: [note] },
+            ])
+        );
+
+        expect(issues).toEqual([
+            {
+                code: "content-in-row",
+                path: "0.0.1",
+                message: "content brick in a row takes a column like a field and reads as a label without one — place it above or below the row",
+            },
+        ]);
+    });
 });
 
 describe("validateFormData warnings", () => {

@@ -8,6 +8,14 @@ import type { BrickType } from "./brick-type.js";
 import type { BrickBaseConfigs } from "./common-brick-props.js";
 import type { BrickStyles } from "../utils/brick-styles.js";
 
+/** Where a brick sits in its row: `columns` on a row, `span` on one of its children. */
+export interface BrickLayout {
+    /** On a row: the number of equal columns, so a lone field keeps its share instead of the whole width. */
+    columns?: number;
+    /** On a child of a row: how many of the row's columns it takes (1 by default). */
+    span?: number;
+}
+
 export interface BrickSpec {
     type: BrickType;
     dataType?: JSONSchemaType;
@@ -27,6 +35,7 @@ export interface BrickSpec {
 
     configs?: BrickBaseConfigs & Record<string, unknown>;
     styles?: BrickStyles<string>;
+    layout?: BrickLayout;
 
     children?: BrickSpec[];
 }
