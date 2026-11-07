@@ -99,9 +99,17 @@ test.describe('layout of rows', () => {
   test('a long select value takes two lines at most and shows the whole label on hover', async ({ page }) => {
     const value = page.locator('#long-select .fk-select__value')
     await expect(value).toHaveAttribute('title', /commission agent$/)
-    // Two lines at a normal line height are about 2.4em; three would be 3.6em.
-    const fontSize = await value.evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
-    expect((await value.boundingBox())!.height).toBeLessThanOrEqual(fontSize * 2.6)
+    // One line measured with the same font, since `normal` line height differs between platforms.
+    const { height, line, clipped } = await value.evaluate((el) => {
+      const probe = el.cloneNode() as HTMLElement
+      probe.textContent = 'x'
+      el.after(probe)
+      const line = probe.getBoundingClientRect().height
+      probe.remove()
+      return { height: el.getBoundingClientRect().height, line, clipped: el.scrollHeight > el.clientHeight }
+    })
+    expect(height).toBeLessThanOrEqual(line * 2 + 1)
+    expect(clipped).toBe(true)
   })
 
   test('data-grid cells keep regular columns and aligned controls', async ({ page }) => {
