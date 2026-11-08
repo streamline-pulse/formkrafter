@@ -385,7 +385,7 @@ export class FkSelectInput {
                 </span>
               ))
             ) : (
-              <span class="fk-select__value">
+              <span class="fk-select__value" title={this.labelOf(selected[0], options)}>
                 {this.labelOf(selected[0], options)}
               </span>
             )}

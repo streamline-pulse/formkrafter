@@ -177,6 +177,7 @@ for (const issue of lintSpec(spec)) {
 | `input-without-key` | La valeur n'a nulle part où aller dans les données du formulaire |
 | `duplicate-key` | Deux bricks écrivent sur la même clé ; une valeur écrase l'autre |
 | `collection-without-children` | Une collection sans brick à répéter |
+| `content-in-row` | Une brick de contenu dans une ligne, où elle prend une colonne comme un champ |
 
 Chaque problème porte `code`, `path`, `key` et un `message` lisible. Un tableau
 vide signifie que le spec est sain. C'est assez peu coûteux pour tourner en CI

@@ -7,6 +7,7 @@ export { DropType, BrickMoldDropType, BrickSpecDropType } from "./utils/drop-typ
 export { BrickStyles } from "./utils/brick-styles.js";
 export { BrickBaseConfigs, CommonBrickProps, WithBrickBaseConfigs } from "./utils/common-brick-props.js";
 export {
+    BrickLayout,
     BrickSpec,
     buildValidationSchema,
     iterateBricks,
