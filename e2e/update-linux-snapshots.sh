@@ -2,7 +2,7 @@
 # Regenerates the linux visual baselines with the official Playwright image,
 # so they can be produced from a mac. The servers run on the host, bound to
 # all interfaces; the container only drives the browser and reaches them
-# through host.docker.internal. Expects the packages and examples to be
+# through host.docker.internal, relayed on its own localhost. Expects the packages and examples to be
 # built, same as `bun run e2e`.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -28,8 +28,9 @@ for p in 4179 4180 4181 4182; do
   until curl -so /dev/null "http://localhost:$p/"; do sleep 0.5; done
 done
 
+# The browser loads the pages from localhost through forward-to-host.mjs, a
+# secure context like CI's; on host.docker.internal the builder cannot mint ids.
 docker run --rm \
   -v "$(cd .. && pwd)":/repo -w /repo/e2e \
-  -e E2E_HOST=host.docker.internal \
   "mcr.microsoft.com/playwright:v${VERSION}-jammy" \
-  npx playwright test visual --update-snapshots
+  bash -c 'node forward-to-host.mjs & npx playwright test visual --update-snapshots'
