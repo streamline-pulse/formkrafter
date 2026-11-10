@@ -50,7 +50,9 @@ export default defineConfig({
     {
       command: `bun serve.mjs`,
       cwd: '../examples/html',
-      env: { PORT: String(HTML_PORT) },
+      // Serves the workspace build while the pinned CDN version is not
+      // published yet (between the version-packages PR and the Release run).
+      env: { PORT: String(HTML_PORT), FK_WC_LOCAL_FALLBACK: '1' },
       url: `http://${HOST}:${HTML_PORT}`,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
