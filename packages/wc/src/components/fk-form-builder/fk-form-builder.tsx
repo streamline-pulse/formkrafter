@@ -24,6 +24,7 @@ import type {
 import { newBrickSpec } from '../../registry/registry';
 import { registerDefaultBricks } from '../../registry/default-bricks';
 import { fkT } from '../../i18n/i18n';
+import { fkIcon } from '../../utils/icons';
 import type {
   BrickConfigsChangeDetail,
   BrickDropDetail,
@@ -363,7 +364,8 @@ export class FkFormBuilder {
               disabled={!this.history.canUndo}
               onClick={this.undo}
             >
-              ↩ {fkT('builder.undo')}
+              {fkIcon('undo')}
+              {fkT('builder.undo')}
             </button>
             <button
               type="button"
@@ -371,7 +373,8 @@ export class FkFormBuilder {
               disabled={!this.history.canRedo}
               onClick={this.redo}
             >
-              ↪ {fkT('builder.redo')}
+              {fkIcon('redo')}
+              {fkT('builder.redo')}
             </button>
 
             <span class="fk-builder__spacer"></span>
@@ -401,7 +404,8 @@ export class FkFormBuilder {
               class="fk-builder__tool"
               onClick={this.importFromClipboard}
             >
-              ⤓ {fkT('builder.importJson')}
+              {fkIcon('import')}
+              {fkT('builder.importJson')}
             </button>
             <button
               type="button"
@@ -409,7 +413,8 @@ export class FkFormBuilder {
               disabled={!this.currentSpec}
               onClick={this.copySpec}
             >
-              ⧉ {this.copied ? fkT('builder.copied') : fkT('builder.copyJson')}
+              {fkIcon('copy')}
+              {this.copied ? fkT('builder.copied') : fkT('builder.copyJson')}
             </button>
             <button
               type="button"
@@ -417,7 +422,8 @@ export class FkFormBuilder {
               disabled={!this.currentSpec}
               onClick={this.downloadSpec}
             >
-              ⬇ {fkT('builder.downloadJson')}
+              {fkIcon('download')}
+              {fkT('builder.downloadJson')}
             </button>
           </div>
 

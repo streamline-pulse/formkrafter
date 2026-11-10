@@ -44,7 +44,8 @@
 }
 
 .fk-palette__chevron {
-  display: inline-block;
+  display: inline-flex;
+  font-size: 0.9rem;
   transition: transform 120ms ease;
 }
 

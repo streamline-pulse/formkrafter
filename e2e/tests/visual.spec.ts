@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
+import { fileURLToPath } from 'node:url'
 
 /**
  * Pixel-level regression coverage. Functional tests proved blind to a
@@ -73,12 +74,31 @@ test.describe('visual', () => {
     await expect(page).toHaveScreenshot('vue-home.png', { fullPage: true })
   })
 
+  // The page pins a published version on the CDN, which a release moves before
+  // it publishes it: compared with the CDN, a styling change would turn this
+  // baseline red on its own PR or on the release's. The pixels are those of the
+  // workspace build; plain-html.spec covers the published artifact.
   test('plain html example', async ({ page }) => {
+    await page.route(/cdn\.jsdelivr\.net\/npm\/@streamline-pulse\/formkrafter-wc@[\d.]+\/(.*)$/, (route) => {
+      const [, path] = route.request().url().match(/formkrafter-wc@[\d.]+\/(.*)$/)!
+      return route.fulfill({ path: fileURLToPath(new URL(`../../packages/wc/${path}`, import.meta.url)) })
+    })
     await page.goto(HTML_APP)
     await expect(page.locator('fk-form-builder .fk-mold').first()).toBeVisible()
     await expect(page.locator('fk-form-builder fk-brick-actions').first()).toBeVisible()
     await settled(page)
     await expect(page).toHaveScreenshot('html-home.png', { fullPage: true })
+  })
+
+  // Every input brick, empty, in the light and the dark theme: one height for
+  // one-line controls, the select's chevron away from the border, native date
+  // and time parts that follow the theme.
+  test('every input brick, light and dark', async ({ page }) => {
+    await page.goto(`${HOSTILE}gallery.html`)
+    await page.waitForFunction(() => (window as { __ready?: boolean }).__ready)
+    await expect(page.locator('#dark fk-brick-render').last()).toBeVisible()
+    await settled(page)
+    await expect(page).toHaveScreenshot('gallery.png', { fullPage: true })
   })
 
   test('hostile host page keeps the chrome intact', async ({ page }) => {

@@ -10,6 +10,10 @@
   --fk-radius: 8px;
   --fk-font: system-ui, -apple-system, sans-serif;
   --fk-spacing: 8px;
+  /* One height for every one-line control: inputs, selects, tags, date and time. */
+  --fk-control-height: 2.375rem;
+  /* Space between two fields of a form. */
+  --fk-field-gap: calc(var(--fk-spacing) * 2);
 }
 
 .dark,
@@ -22,9 +26,12 @@
   --fk-color-danger: #f87171;
   --fk-color-shadow: rgba(0, 0, 0, 0.5);
   --fk-color-on-primary: #04211f;
+  /* Native parts follow the theme: date and time pickers, radios, checkboxes, scrollbars. */
+  color-scheme: dark;
 }
 
 [data-fk-theme='light'] {
+  color-scheme: light;
   --fk-color-primary: #2b7a81;
   --fk-color-surface: #ffffff;
   --fk-color-border: #d5dde2;
@@ -66,6 +73,7 @@ fk-brick-render[hidden] {
 .fk-field__input {
   width: 100%;
   box-sizing: border-box;
+  min-height: var(--fk-control-height);
   padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
   border: 1px solid var(--fk-color-border);
   border-radius: var(--fk-radius);
@@ -73,6 +81,15 @@ fk-brick-render[hidden] {
   color: var(--fk-color-text);
   font: inherit;
   font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+/* Text, date and time inputs all come out at the same height, whatever their native parts. */
+input.fk-field__input,
+select.fk-field__input {
+  height: var(--fk-control-height);
+  /* The height is set: a time input's native fields would add a pixel to the padding. */
+  padding-block: 0;
 }
 
 .fk-field__input:focus {
@@ -81,6 +98,10 @@ fk-brick-render[hidden] {
 }
 
 .fk-field__checkbox {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  flex-shrink: 0;
   accent-color: var(--fk-color-primary);
 }
 
@@ -173,7 +194,7 @@ fk-brick-render[hidden] {
 .fk-group {
   display: flex;
   flex-direction: column;
-  gap: var(--fk-spacing);
+  gap: var(--fk-field-gap);
   /* A fieldset is min-content wide by default: the widest row would push the page sideways. */
   min-inline-size: 0;
   margin: 0;
@@ -194,15 +215,35 @@ fk-brick-render[hidden] {
   resize: vertical;
 }
 
+/*
+ * The native arrow sits against the border and cannot be moved: draw a chevron
+ * in the muted colour, with room on its right.
+ */
 select.fk-field__input {
-  appearance: auto;
+  appearance: none;
+  padding-inline-end: calc(var(--fk-spacing) * 4);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--fk-color-muted) 50%),
+    linear-gradient(135deg, var(--fk-color-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - var(--fk-spacing) * 2 - 4px) 50%,
+    calc(100% - var(--fk-spacing) * 2) 50%;
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
+}
+
+[dir='rtl'] select.fk-field__input,
+select.fk-field__input:dir(rtl) {
+  background-position:
+    calc(var(--fk-spacing) * 2) 50%,
+    calc(var(--fk-spacing) * 2 + 4px) 50%;
 }
 
 .fk-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(var(--fk-row-min, 12rem), 100%), 1fr));
   align-items: start;
-  gap: var(--fk-spacing);
+  gap: var(--fk-field-gap) calc(var(--fk-spacing) * 1.5);
 }
 
 /* layout.columns: n equal columns, fewer when they would be narrower than --fk-row-min. */
@@ -212,7 +253,7 @@ select.fk-field__input {
     minmax(
       max(
         min(var(--fk-row-min, 12rem), 100%),
-        (100% - (var(--fk-row-columns) - 1) * var(--fk-spacing)) / var(--fk-row-columns)
+        (100% - (var(--fk-row-columns) - 1) * var(--fk-spacing) * 1.5) / var(--fk-row-columns)
       ),
       1fr
     )
@@ -283,12 +324,12 @@ select.fk-field__input {
   .fk-grid__cells {
     grid-auto-rows: auto;
     row-gap: 0;
-    margin-block-end: calc(-1 * var(--fk-spacing));
+    margin-block-end: calc(-1 * var(--fk-field-gap));
   }
 
   :is(.fk-row, .fk-grid__cells) > * {
     grid-row: span 5;
-    margin-block-end: var(--fk-spacing);
+    margin-block-end: var(--fk-field-gap);
   }
 
   :is(.fk-row, .fk-grid__cells) > fk-brick-render {
@@ -309,6 +350,18 @@ select.fk-field__input {
   :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > * {
     grid-row: 2;
     margin-block-start: calc(var(--fk-spacing) / 2);
+  }
+
+  /*
+   * In a table line (labels hidden, data-grid cells) the controls share one
+   * middle: a select whose value takes two lines centres the inputs beside it.
+   * A form row keeps its controls at the top, beside a textarea say.
+   */
+  :is(.fk-row--labels-hidden, .fk-grid__cells)
+    > fk-brick-render
+    > .fk-field--aligned
+    > :not(.fk-field__label, .fk-field__hint, .fk-field__error, .fk-field__notes) {
+    align-self: center;
   }
 
   :is(.fk-row, .fk-grid__cells) > fk-brick-render > .fk-field--aligned > .fk-field__label {
@@ -361,25 +414,29 @@ select.fk-field__input {
 .fk-column {
   display: flex;
   flex-direction: column;
-  gap: var(--fk-spacing);
+  gap: var(--fk-field-gap);
   min-width: 0;
 }
 
 .fk-radio-group {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--fk-spacing) / 2);
+  gap: calc(var(--fk-spacing) * 0.75);
 }
 
 .fk-radio {
   display: flex;
   align-items: center;
-  gap: calc(var(--fk-spacing) / 2);
+  gap: var(--fk-spacing);
   font-size: 0.9rem;
   color: var(--fk-color-text);
 }
 
 .fk-radio input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  flex-shrink: 0;
   accent-color: var(--fk-color-primary);
 }
 
@@ -465,7 +522,9 @@ select.fk-field__input {
   flex-wrap: wrap;
   align-items: center;
   gap: calc(var(--fk-spacing) / 2);
-  padding: calc(var(--fk-spacing) / 2);
+  box-sizing: border-box;
+  min-height: var(--fk-control-height);
+  padding: calc(var(--fk-spacing) / 2) calc(var(--fk-spacing) / 2) calc(var(--fk-spacing) / 2) calc(var(--fk-spacing) * 1.5);
   border: 1px solid var(--fk-color-border);
   border-radius: var(--fk-radius);
   background: var(--fk-color-surface);
@@ -495,6 +554,7 @@ select.fk-field__input {
 .fk-tags__input {
   flex: 1;
   min-width: 120px;
+  padding: 0;
   border: none;
   background: transparent;
   font: inherit;
@@ -504,6 +564,11 @@ select.fk-field__input {
 
 .fk-tags__input:focus {
   outline: none;
+}
+
+.fk-tags:focus-within {
+  outline: 2px solid color-mix(in srgb, var(--fk-color-primary) 40%, transparent);
+  border-color: var(--fk-color-primary);
 }
 
 .fk-recap__list {
@@ -765,4 +830,10 @@ select.fk-field__input {
   gap: 0.25rem;
   font-size: 0.75rem;
   color: var(--fk-text-muted, var(--fk-color-muted));
+}
+
+/* Line icons (utils/icons.tsx) sit on the text baseline of their button. */
+.fk-icon {
+  flex-shrink: 0;
+  vertical-align: -0.125em;
 }

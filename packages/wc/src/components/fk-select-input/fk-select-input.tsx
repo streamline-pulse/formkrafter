@@ -9,6 +9,7 @@ import {
 } from '../../utils/remote';
 import type { SelectOption } from '../../utils/options';
 import { fkT } from '../../i18n/i18n';
+import { fkIcon } from '../../utils/icons';
 
 let selectInstanceCounter = 0;
 
@@ -469,7 +470,9 @@ export class FkSelectInput {
               ✕
             </button>
           ) : null}
-          <span class="fk-select__caret">▾</span>
+          <span class="fk-select__caret" aria-hidden="true">
+            {fkIcon('chevronDown')}
+          </span>
         </div>
 
         {this.open ? (

@@ -14,6 +14,10 @@ const box = async (page: Page, selector: string): Promise<Box> => {
 const control = (page: Page, form: string, label: string) =>
   page.locator(`#${form}`).getByLabel(label, { exact: true })
 
+// The fields of a row are 12px apart; the fields of a column or a group 16px.
+const COLUMN_GAP = 12
+const FIELD_GAP = 16
+
 const controlBox = async (page: Page, form: string, label: string): Promise<Box> => {
   const found = await control(page, form, label).boundingBox()
   if (!found) throw new Error(`${label} has no box`)
@@ -32,9 +36,8 @@ test.describe('layout of rows', () => {
     const first = await controlBox(page, 'hidden-middle', 'First')
     const third = await controlBox(page, 'hidden-middle', 'Third')
 
-    const gap = 8
-    expect(first.width).toBeCloseTo((row.width - gap) / 2, 0)
-    expect(third.width).toBeCloseTo((row.width - gap) / 2, 0)
+    expect(first.width).toBeCloseTo((row.width - COLUMN_GAP) / 2, 0)
+    expect(third.width).toBeCloseTo((row.width - COLUMN_GAP) / 2, 0)
     expect(third.x + third.width).toBeCloseTo(row.x + row.width, 0)
   })
 
@@ -51,13 +54,13 @@ test.describe('layout of rows', () => {
     await expect(control(page, 'hidden-middle', 'Second')).toBeVisible()
     const row = await box(page, '#hidden-middle .fk-row')
     const first = await controlBox(page, 'hidden-middle', 'First')
-    expect(first.width).toBeCloseTo((row.width - 16) / 3, 0)
+    expect(first.width).toBeCloseTo((row.width - 2 * COLUMN_GAP) / 3, 0)
   })
 
   test('hidden bricks add no gap to their group', async ({ page }) => {
     const before = await box(page, '#hidden-gaps fk-brick-render:has(> .fk-field) >> nth=1')
     const after = await box(page, '#hidden-gaps fk-brick-render:has(> .fk-field) >> nth=2')
-    expect(after.y - (before.y + before.height)).toBeCloseTo(8, 0)
+    expect(after.y - (before.y + before.height)).toBeCloseTo(FIELD_GAP, 0)
   })
 
   test('a row or a group whose fields are all hidden is hidden too', async ({ page }) => {
@@ -86,13 +89,13 @@ test.describe('layout of rows', () => {
     const rows = page.locator('#columns .fk-row')
     const half = (await rows.nth(0).boundingBox())!
     const alone = await controlBox(page, 'columns', 'Where is the supplier established?')
-    expect(alone.width).toBeCloseTo((half.width - 8) / 2, 0)
+    expect(alone.width).toBeCloseTo((half.width - COLUMN_GAP) / 2, 0)
 
     const thirds = (await rows.nth(1).boundingBox())!
     const wide = await controlBox(page, 'columns', 'Spans two')
     const narrow = await controlBox(page, 'columns', 'One')
-    const column = (thirds.width - 16) / 3
-    expect(wide.width).toBeCloseTo(column * 2 + 8, 0)
+    const column = (thirds.width - 2 * COLUMN_GAP) / 3
+    expect(wide.width).toBeCloseTo(column * 2 + COLUMN_GAP, 0)
     expect(narrow.width).toBeCloseTo(column, 0)
   })
 
@@ -152,7 +155,7 @@ test.describe('a dense table row (layout.labels hidden, layout.columns as tracks
     expect(middle(tick)).toBeCloseTo(middle(select), 0)
     expect(middle(url)).toBeCloseTo(middle(select), 0)
     // The row is the control and the gap under it: no label line above.
-    expect(row.height).toBeLessThanOrEqual(Math.max(select.height, url.height) + 8 + 1)
+    expect(row.height).toBeLessThanOrEqual(Math.max(select.height, url.height) + FIELD_GAP + 1)
 
     const visible = (await page.locator('#dense-visible .fk-row').boundingBox())!
     expect(visible.height).toBeGreaterThan(row.height + 10)

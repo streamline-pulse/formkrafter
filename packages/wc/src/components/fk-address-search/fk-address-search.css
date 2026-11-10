@@ -2,7 +2,9 @@
   display: block;
 }
 
+/* display: block, or the global .fk-address grid of the address brick gives the input half the width. */
 .fk-address {
+  display: block;
   position: relative;
 }
 
