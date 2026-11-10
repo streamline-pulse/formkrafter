@@ -1,0 +1,113 @@
+---
+title: Generating forms with an LLM
+description: Let a model write a FormKrafter form through OpenAI strict structured output, then render and validate it like any other spec.
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+An agent that needs several answers from a person (a table of channels, a
+question with choices) can write the form itself. With OpenAI's **strict
+structured output**, the model is guaranteed to return JSON that matches a
+schema. FormKrafter ships that schema, and a function that turns the model's
+output into a spec `fk-form-render` and `validateFormData` take unchanged.
+
+## The strict schema
+
+`form-spec.schema.json` stays the canonical, permissive schema. Strict mode
+refuses it: it has open maps, optional properties and untyped values such as
+JsonLogic. Next to it, `form-spec.strict.schema.json` is the **AI profile**:
+
+- the root is `{ "form": brick }`;
+- each brick is one definition per `id`, with its own closed `configs`, so a
+  `select` has its `options` and an unknown brick cannot be written;
+- every property is present: an absent one is `null`;
+- texts are plain strings, so you choose the locale before asking the model;
+- builder-only properties (`uid`, `styles`, `configsForm`…) are left out.
+
+It ships in the core package, and it is served at
+`https://formkrafter.com/schema/form-spec.strict.schema.json`:
+
+```ts
+import schema from '@streamline-pulse/formkrafter-core/schema/form-spec.strict.schema.json'
+```
+
+The schema is generated from the core's brick catalog (`BRICK_CATALOG`). A
+model can write these bricks: `text`, `textarea`, `email`, `url`, `phone`,
+`number`, `date`, `time`, `datetime`, `checkbox`, `select`, `radio`,
+`multi-select`, `select-boxes`, `data-grid`, `content`, `group`, `row`, `column`.
+The others (identity documents, maps, uploads, signatures, steppers…) depend on
+your services or on design decisions; `AI_EXCLUDED_BRICKS` says why, brick by brick.
+
+## Rules: `hiddenWhen` and `disabledWhen`
+
+A model does not write rules. It writes, on a brick, a JsonLogic expression
+that hides or disables it while it holds:
+
+```json
+{ "id": "url", "configs": { "key": "linkedin_url", "label": "Page address", … },
+  "hiddenWhen": { "!": [{ "var": "linkedin" }] } }
+```
+
+The schema covers the JsonLogic forms need, each operator taking an array of
+arguments: `var`, `==`, `!=`, `!`, `>`, `>=`, `<`, `<=`, `in`, `and`, `or`,
+`+`, `if`.
+
+## From the model's output to a form
+
+```ts
+import { fromStrictSpec, validateFormData } from '@streamline-pulse/formkrafter-core'
+import schema from '@streamline-pulse/formkrafter-core/schema/form-spec.strict.schema.json'
+
+const response = await fetch('https://api.openai.com/v1/responses', {
+  method: 'POST',
+  headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    model: 'gpt-6.1-sol',
+    input: prompt,
+    text: { format: { type: 'json_schema', name: 'form_spec', schema, strict: true } },
+  }),
+})
+const body = await response.json()
+const text = body.output.find((item) => item.type === 'message').content[0].text
+
+const spec = fromStrictSpec(JSON.parse(text))
+// Render it: <fk-form-render .spec=${spec}>
+// Check the answers on the server, with the same verdict as the browser:
+const verdict = validateFormData(spec, answers, 'fr')
+```
+
+`fromStrictSpec` unwraps `form`, drops the nulls, restores `type`, `dataType` and
+`name` from the brick id, and turns `hiddenWhen` / `disabledWhen` into rules. It
+throws on a brick id the catalog does not list. It does not add `uid`s: the
+renderer and the validator do not need them, and the builder adds its own.
+
+## A prompt that works
+
+The schema already tells the model what each brick and config is for. The
+prompt says what to ask, and in which language:
+
+> Write a form « Your channels ». For each channel (LinkedIn, Facebook,
+> Instagram, Blog / site, YouTube, TikTok, X, Newsletter), a box « I publish
+> here ». For LinkedIn and Facebook only, a choice between Company page and
+> Personal profile, and the page address: these two questions show only when the
+> channel's box is ticked. Labels in English.
+
+Put the questions that show together in one `row`, and fixed text above or below
+a row rather than in it. The bricks' descriptions in the schema say so too.
+
+## Checking a model
+
+`scripts/openai-strict-probe.ts` sends the schema to OpenAI with this prompt and
+checks the form that comes back: 8 boxes, account type questions with their
+options, addresses, each hidden until its box is ticked. It calls the paid API,
+so it runs on demand, from the **AI profile** workflow or by hand:
+
+```bash
+OPENAI_API_KEY=… bun scripts/openai-strict-probe.ts gpt-6.1-sol gpt-6-luna
+```
+
+<Aside type="caution">
+A model writes the form, not the rules of your business. Read what it asks
+before it reaches a person, and validate the answers on the server with
+`validateFormData`, as for any spec you did not write.
+</Aside>

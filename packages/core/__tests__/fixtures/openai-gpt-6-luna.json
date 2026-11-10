@@ -1,0 +1,209 @@
+{
+  "form": {
+    "id": "column",
+    "hiddenWhen": null,
+    "children": [
+      {
+        "id": "content",
+        "configs": {
+          "content": "Vos canaux"
+        },
+        "hiddenWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "linkedin",
+          "label": "LinkedIn — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "radio",
+        "configs": {
+          "key": "linkedin_type",
+          "label": "LinkedIn — type de compte",
+          "description": null,
+          "options": [
+            {
+              "label": "Page entreprise",
+              "value": "page_entreprise"
+            },
+            {
+              "label": "Profil personnel",
+              "value": "profil_personnel"
+            }
+          ],
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": {
+          "!=": [
+            {
+              "var": "linkedin"
+            },
+            true
+          ]
+        },
+        "disabledWhen": null
+      },
+      {
+        "id": "url",
+        "configs": {
+          "key": "linkedin_url",
+          "label": "Adresse de votre page ou profil LinkedIn",
+          "description": null,
+          "placeholder": "https://…",
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": {
+          "!=": [
+            {
+              "var": "linkedin"
+            },
+            true
+          ]
+        },
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "facebook",
+          "label": "Facebook — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "radio",
+        "configs": {
+          "key": "facebook_type",
+          "label": "Facebook — type de compte",
+          "description": null,
+          "options": [
+            {
+              "label": "Page entreprise",
+              "value": "page_entreprise"
+            },
+            {
+              "label": "Profil personnel",
+              "value": "profil_personnel"
+            }
+          ],
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": {
+          "!=": [
+            {
+              "var": "facebook"
+            },
+            true
+          ]
+        },
+        "disabledWhen": null
+      },
+      {
+        "id": "url",
+        "configs": {
+          "key": "facebook_url",
+          "label": "Adresse de votre page ou profil Facebook",
+          "description": null,
+          "placeholder": "https://…",
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": {
+          "!=": [
+            {
+              "var": "facebook"
+            },
+            true
+          ]
+        },
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "instagram",
+          "label": "Instagram — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "blog_site",
+          "label": "Blog / site — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "youtube",
+          "label": "YouTube — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "tiktok",
+          "label": "TikTok — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "x",
+          "label": "X — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      },
+      {
+        "id": "checkbox",
+        "configs": {
+          "key": "newsletter",
+          "label": "Newsletter — je publie ici",
+          "description": null,
+          "defaultValue": null
+        },
+        "validations": null,
+        "hiddenWhen": null,
+        "disabledWhen": null
+      }
+    ]
+  }
+}

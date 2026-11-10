@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>FormKrafter — a form written by a model (strict profile)</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      body { margin: 24px; font-family: ui-sans-serif, system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <!-- The test sets renderer.spec to fromStrictSpec(model output). -->
+    <fk-form-render id="renderer" locale="fr"></fk-form-render>
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+      const renderer = document.getElementById('renderer')
+      window.__data = {}
+      renderer.addEventListener('formDataChange', (event) => {
+        window.__data = event.detail.data
+      })
+      window.__ready = true
+    </script>
+  </body>
+</html>

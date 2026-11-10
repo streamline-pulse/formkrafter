@@ -49,7 +49,9 @@
     "a11y:report": "rm -f e2e/a11y-results.jsonl && A11Y_REPORT=a11y-results.jsonl bun run --filter formkrafter-e2e test tests/a11y.spec.ts && node scripts/a11y-report.mjs",
     "licence:report": "node scripts/licence-report.mjs",
     "check:cdn-pins": "bun scripts/sync-cdn-pins.mjs --check",
-    "check:schema": "bun scripts/sync-schema.mjs --check"
+    "check:schema": "bun scripts/sync-schema.mjs --check",
+    "strict-schema": "bun scripts/strict-schema.ts",
+    "check:strict-schema": "bun scripts/strict-schema.ts --check"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
