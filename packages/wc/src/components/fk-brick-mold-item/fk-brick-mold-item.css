@@ -9,7 +9,7 @@
   align-items: center;
   box-sizing: border-box;
   height: 100%;
-  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  padding: calc(var(--fk-spacing) / 1.5) calc(var(--fk-spacing) * 0.75);
   border: 1px solid var(--fk-color-border);
   border-radius: calc(var(--fk-radius) / 1.5);
   background: var(--fk-color-surface);
@@ -36,7 +36,10 @@
   font-weight: 500;
   line-height: 1.25;
   color: var(--fk-color-text);
-  /* « Appoint-ment », not « Appointmen / t »: hyphenate in the page's language, break only a word that cannot fit. */
-  hyphens: auto;
+  /*
+   * Break inside a word only when it cannot fit its line. No hyphens: auto,
+   * whose dictionary loads after the first paint, so a name came out
+   * hyphenated or not from one render to the next.
+   */
   overflow-wrap: break-word;
 }
