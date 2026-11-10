@@ -1,6 +1,7 @@
 import { Component, Host, Prop, State, h } from '@stencil/core';
 import { getBrickMoldsGroupedByCategory } from '../../registry/registry';
 import { fkT, fkTOr } from '../../i18n/i18n';
+import { fkIcon } from '../../utils/icons';
 
 @Component({
   tag: 'fk-brick-list',
@@ -71,8 +72,9 @@ export class FkBrickList {
                       'fk-palette__chevron': true,
                       'fk-palette__chevron--collapsed': isCollapsed,
                     }}
+                    aria-hidden="true"
                   >
-                    ▾
+                    {fkIcon('chevronDown')}
                   </span>
                   {fkTOr(`category.${category}`, category)}
                   <span class="fk-palette__count">{molds.length}</span>

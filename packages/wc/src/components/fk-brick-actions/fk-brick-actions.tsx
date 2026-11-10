@@ -7,6 +7,7 @@ import {
 import { toBrickDropDetail } from '../../utils/drop';
 import type { BrickDropDetail, BrickPathDetail } from '../../utils/events';
 import { fkT } from '../../i18n/i18n';
+import { fkIcon } from '../../utils/icons';
 
 @Component({
   tag: 'fk-brick-actions',
@@ -103,7 +104,7 @@ export class FkBrickActions {
               this.brickDuplicate.emit({ path: this.path });
             }}
           >
-            ⧉
+            {fkIcon('copy')}
           </button>
           <button
             type="button"

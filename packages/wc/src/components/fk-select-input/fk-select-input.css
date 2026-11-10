@@ -11,8 +11,11 @@
   display: flex;
   align-items: center;
   gap: calc(var(--fk-spacing) / 2);
-  min-height: 38px;
-  padding: calc(var(--fk-spacing) / 2) var(--fk-spacing);
+  box-sizing: border-box;
+  min-height: var(--fk-control-height, 2.375rem);
+  padding: calc(var(--fk-spacing) / 2) var(--fk-spacing) calc(var(--fk-spacing) / 2) calc(var(--fk-spacing) * 1.5);
+  font-size: 0.9rem;
+  line-height: 1.25;
   border: 1px solid var(--fk-color-border);
   border-radius: var(--fk-radius);
   background: var(--fk-color-surface);
@@ -36,7 +39,6 @@
   align-items: center;
   gap: 4px;
   min-width: 0;
-  font-size: 0.9rem;
 }
 
 /* Two lines at most in the trigger: the whole label is in the list and the tooltip. */
@@ -75,8 +77,18 @@
   padding: 0 2px;
 }
 
+/* As wide as the chevron beside it: a wider one takes the value's room in a narrow select. */
 .fk-select__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1.5rem;
+  padding: 0;
+  border-radius: calc(var(--fk-radius) / 2);
   color: var(--fk-color-muted);
+  font-size: 0.75rem;
 }
 
 .fk-select__clear:hover {
@@ -84,8 +96,21 @@
 }
 
 .fk-select__caret {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
   color: var(--fk-color-muted);
-  font-size: 0.8rem;
+  transition: transform 120ms ease;
+}
+
+.fk-select__caret svg {
+  width: 100%;
+  height: 100%;
+}
+
+.fk-select__trigger--open .fk-select__caret {
+  transform: rotate(180deg);
 }
 
 .fk-select__dropdown {
@@ -105,7 +130,7 @@
 .fk-select__search {
   font: inherit;
   font-size: 0.85rem;
-  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
   border: none;
   border-bottom: 1px solid var(--fk-color-border);
   background: transparent;
@@ -126,7 +151,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--fk-spacing);
-  padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
+  padding: var(--fk-spacing) calc(var(--fk-spacing) * 1.5);
   font-size: 0.9rem;
   color: var(--fk-color-text);
   cursor: pointer;

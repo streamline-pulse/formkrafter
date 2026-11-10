@@ -7,6 +7,8 @@
 .fk-mold {
   display: flex;
   align-items: center;
+  box-sizing: border-box;
+  height: 100%;
   padding: calc(var(--fk-spacing) / 1.5) var(--fk-spacing);
   border: 1px solid var(--fk-color-border);
   border-radius: calc(var(--fk-radius) / 1.5);
@@ -24,10 +26,17 @@
   opacity: 0.5;
 }
 
+/* Two lines rather than « Address sea… »: the palette names are what the user scans. */
 .fk-mold__name {
-  font-weight: 500;
-  color: var(--fk-color-text);
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--fk-color-text);
+  /* « Appoint-ment », not « Appointmen / t »: hyphenate in the page's language, break only a word that cannot fit. */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }

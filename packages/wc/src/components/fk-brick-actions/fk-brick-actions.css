@@ -31,7 +31,9 @@
 
 .fk-actions__toolbar {
   position: absolute;
-  top: calc(var(--fk-spacing) / -2);
+  /* Astride the top border, over the label line: never over the control. */
+  top: 0;
+  transform: translateY(-50%);
   inset-inline-end: var(--fk-spacing);
   z-index: 1;
   display: none;

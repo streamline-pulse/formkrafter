@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FormKrafter — every input brick, light and dark</title>
+    <link rel="stylesheet" href="/dist/formkrafter-wc.css" />
+    <style>
+      html { background: #fff; color-scheme: light; }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; }
+      .theme { padding: 24px; }
+      .theme[data-fk-theme='dark'] { background: #0f181e; }
+      .theme { max-width: 720px; }
+    </style>
+  </head>
+  <body>
+    <section class="theme" id="light-wrap"><fk-form-render id="light"></fk-form-render></section>
+    <section class="theme" id="dark-wrap" data-fk-theme="dark"><fk-form-render id="dark"></fk-form-render></section>
+
+    <script type="module">
+      import '/dist/formkrafter-wc.esm.js'
+      import { registerDefaultBricks, getBrickMolds, getBrick } from '/dist/index.esm.js'
+
+      registerDefaultBricks()
+      const options = [
+        { label: 'First option', value: 'a' },
+        { label: 'Second option', value: 'b' },
+        { label: 'Third option', value: 'c' },
+      ]
+      // Left out: what loads map tiles or a code editor from the network, what shows
+      // today's dates, and what is not a field.
+      const skip = new Set(['hidden', 'signature', 'geo-point', 'geo-area', 'geo-layer', 'nested-form', 'recap', 'document', 'code', 'appointment'])
+      const only = new URLSearchParams(location.search).get('only')?.split(',')
+      const bricks = getBrickMolds()
+        .map((mold) => getBrick(mold.type, mold.id))
+        .filter((brick) => brick.type === 'input' && !skip.has(brick.id) && (!only || only.includes(brick.id)))
+        .map((brick) => ({
+          type: brick.type,
+          dataType: brick.dataType,
+          id: brick.id,
+          name: brick.name ?? brick.id,
+          configs: {
+            ...(brick.defaultConfigs ?? {}),
+            key: brick.id.replaceAll('-', '_'),
+            label: `${brick.name ?? brick.id} (${brick.id})`,
+            description: brick.id === 'text' ? 'A hint under the field.' : undefined,
+            ...(['select', 'multi-select', 'radio', 'select-boxes'].includes(brick.id) ? { options, optionsSource: 'static' } : {}),
+          },
+          ...(brick.id === 'email' ? { validations: [{ validator: 'required' }] } : {}),
+        }))
+      const spec = { type: 'panel', id: 'column', name: 'Form', configs: { key: 'form' }, children: bricks }
+      for (const id of ['light', 'dark']) document.getElementById(id).spec = spec
+      window.__ready = true
+    </script>
+  </body>
+</html>
