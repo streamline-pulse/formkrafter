@@ -50,3 +50,24 @@ test.describe('a form written by a model', () => {
     expect(validateFormData(spec, answered, 'fr').valid).toBe(true)
   })
 })
+
+// The forms gpt-6.1-sol and gpt-6-luna wrote for the same request: one hides the
+// row of a channel's questions, the other each question.
+for (const model of ['gpt-6.1-sol', 'gpt-6-luna']) {
+  test(`what ${model} wrote: the account type shows once LinkedIn is ticked`, async ({ page }) => {
+    const written = JSON.parse(
+      readFileSync(new URL(`../../packages/core/__tests__/fixtures/openai-${model}.json`, import.meta.url), 'utf8')
+    )
+    await page.goto(`${FIXTURES}/strict-profile.html`)
+    await page.waitForFunction(() => (window as { __ready?: boolean }).__ready)
+    await page.evaluate((value) => {
+      ;(document.getElementById('renderer') as HTMLElement & { spec: unknown }).spec = value
+    }, fromStrictSpec(written))
+
+    await expect(page.getByRole('checkbox')).toHaveCount(8)
+    await expect(page.getByRole('radio')).toHaveCount(0)
+    await page.getByRole('checkbox').first().check()
+    await expect(page.getByRole('radio')).toHaveCount(2)
+    await expect(page.getByRole('radio', { name: 'Page entreprise' })).toBeVisible()
+  })
+}

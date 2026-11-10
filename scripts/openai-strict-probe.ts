@@ -37,8 +37,17 @@ function acceptance(spec: BrickSpec): string[] {
   const failures: string[] = [];
   const all = bricks(spec);
   const boxes = all.filter((brick) => brick.id === "checkbox").map((brick) => String(brick.configs?.key));
-  const hiddenByABox = (brick: BrickSpec) =>
+  const hidesOnABox = (brick: BrickSpec) =>
     (brick.rules ?? []).some((rule) => rule.effects?.some((effect) => effect.property?.target === "hidden") && boxes.some((box) => readsVar(rule.logic, box)));
+  // A question is hidden by its own rule or by a panel around it (a row of the channel's questions, say).
+  const hiddenWithABox = new Set<BrickSpec>();
+  const mark = (brick: BrickSpec, inherited: boolean): void => {
+    const hidden = inherited || hidesOnABox(brick);
+    if (hidden) hiddenWithABox.add(brick);
+    for (const child of brick.children ?? []) mark(child, hidden);
+  };
+  mark(spec, false);
+  const hiddenByABox = (brick: BrickSpec) => hiddenWithABox.has(brick);
   const choices = all.filter((brick) => brick.id === "select" || brick.id === "radio");
   const addresses = all.filter((brick) => brick.id === "url" || brick.id === "text");
 

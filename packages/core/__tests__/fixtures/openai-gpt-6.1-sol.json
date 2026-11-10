@@ -1,0 +1,285 @@
+{
+  "form": {
+    "id": "column",
+    "hiddenWhen": null,
+    "children": [
+      {
+        "id": "content",
+        "configs": {
+          "content": "Vos canaux"
+        },
+        "hiddenWhen": null
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "LinkedIn"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "linkedin_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          },
+          {
+            "id": "row",
+            "hiddenWhen": {
+              "!=": [
+                {
+                  "var": "linkedin_actif"
+                },
+                true
+              ]
+            },
+            "layout": {
+              "columns": 2
+            },
+            "children": [
+              {
+                "id": "radio",
+                "configs": {
+                  "key": "linkedin_type",
+                  "label": "Type de présence sur LinkedIn",
+                  "description": null,
+                  "options": [
+                    {
+                      "label": "Page entreprise",
+                      "value": "page_entreprise"
+                    },
+                    {
+                      "label": "Profil personnel",
+                      "value": "profil_personnel"
+                    }
+                  ],
+                  "defaultValue": null
+                },
+                "validations": null,
+                "hiddenWhen": null,
+                "disabledWhen": null
+              },
+              {
+                "id": "url",
+                "configs": {
+                  "key": "linkedin_adresse",
+                  "label": "Adresse de la page",
+                  "description": "Indiquez l’adresse de votre page entreprise ou de votre profil personnel.",
+                  "placeholder": "https://www.linkedin.com/…",
+                  "defaultValue": null
+                },
+                "validations": null,
+                "hiddenWhen": null,
+                "disabledWhen": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "Facebook"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "facebook_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          },
+          {
+            "id": "row",
+            "hiddenWhen": {
+              "!=": [
+                {
+                  "var": "facebook_actif"
+                },
+                true
+              ]
+            },
+            "layout": {
+              "columns": 2
+            },
+            "children": [
+              {
+                "id": "radio",
+                "configs": {
+                  "key": "facebook_type",
+                  "label": "Type de présence sur Facebook",
+                  "description": null,
+                  "options": [
+                    {
+                      "label": "Page entreprise",
+                      "value": "page_entreprise"
+                    },
+                    {
+                      "label": "Profil personnel",
+                      "value": "profil_personnel"
+                    }
+                  ],
+                  "defaultValue": null
+                },
+                "validations": null,
+                "hiddenWhen": null,
+                "disabledWhen": null
+              },
+              {
+                "id": "url",
+                "configs": {
+                  "key": "facebook_adresse",
+                  "label": "Adresse de la page",
+                  "description": "Indiquez l’adresse de votre page entreprise ou de votre profil personnel.",
+                  "placeholder": "https://www.facebook.com/…",
+                  "defaultValue": null
+                },
+                "validations": null,
+                "hiddenWhen": null,
+                "disabledWhen": null
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "Instagram"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "instagram_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "Blog / site"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "blog_site_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "YouTube"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "youtube_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "TikTok"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "tiktok_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "X"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "x_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "group",
+        "configs": {
+          "label": "Newsletter"
+        },
+        "hiddenWhen": null,
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "newsletter_actif",
+              "label": "Je publie ici",
+              "description": null,
+              "defaultValue": false
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      }
+    ]
+  }
+}

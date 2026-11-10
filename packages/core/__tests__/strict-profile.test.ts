@@ -15,6 +15,10 @@ const canonicalSchema = read("../schema/form-spec.schema.json");
 // What a model writes for MarketingFlow's « Vos canaux »: 8 boxes, and for LinkedIn
 // and Facebook an account type and an address, hidden until the box is ticked.
 const channels = read("./fixtures/strict-channels.json");
+// What gpt-6.1-sol and gpt-6-luna wrote for the same request, in strict mode
+// (scripts/openai-strict-probe.ts, 10 November 2026). gpt-6.1-sol hides the
+// row of a channel's questions; gpt-6-luna hides each question.
+const MODEL_OUTPUTS = ["gpt-6.1-sol", "gpt-6-luna"].map((model) => [model, read(`./fixtures/openai-${model}.json`)] as const);
 
 const fields = (spec: BrickSpec): BrickSpec[] =>
   [spec, ...(spec.children ?? []).flatMap(fields)].filter((brick) => brick.configs?.key);
@@ -48,6 +52,18 @@ describe("strict schema", () => {
     expect(validate(channels)).toBe(true);
     expect(validate({ form: { ...channels.form, id: "password" } })).toBe(false);
   });
+});
+
+describe("what models wrote", () => {
+  for (const [model, output] of MODEL_OUTPUTS) {
+    test(`${model}: follows the schema, converts to a sound spec, and an untouched form is valid`, () => {
+      expect(new Ajv({ strict: false }).compile(strictSchema)(output)).toBe(true);
+      const spec = fromStrictSpec(output);
+      expect(lintSpec(spec)).toEqual([]);
+      expect(fields(spec).filter((brick) => brick.id === "checkbox")).toHaveLength(8);
+      expect(validateFormData(spec, {}, "fr").valid).toBe(true);
+    });
+  }
 });
 
 describe("fromStrictSpec", () => {
