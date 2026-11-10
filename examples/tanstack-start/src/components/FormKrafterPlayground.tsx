@@ -117,13 +117,13 @@ export default function FormKrafterPlayground({
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="space-y-2">
           <h2 className="text-lg font-semibold">{m.playground_data()}</h2>
-          <pre className="border-border max-h-64 overflow-auto rounded-lg border bg-slate-900 p-3 text-xs text-slate-100">
+          <pre className="border-border max-h-64 overflow-auto rounded-lg border bg-muted p-3 text-xs text-foreground">
             {result ? JSON.stringify(result, null, 2) : '{}'}
           </pre>
         </section>
         <section className="space-y-2">
           <h2 className="text-lg font-semibold">{m.playground_spec()}</h2>
-          <pre className="border-border max-h-64 overflow-auto rounded-lg border bg-slate-900 p-3 text-xs text-slate-100">
+          <pre className="border-border max-h-64 overflow-auto rounded-lg border bg-muted p-3 text-xs text-foreground">
             {spec ? JSON.stringify(spec, null, 2) : '{}'}
           </pre>
         </section>

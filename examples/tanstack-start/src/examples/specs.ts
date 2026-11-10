@@ -204,7 +204,9 @@ export const gridSpec: BrickSpec = column('grid', [
     id: 'data-grid',
     name: 'Contacts',
     configs: { key: 'contacts', label: 'Team contacts' },
-    validations: [{ validator: 'minItems', value: 1 }],
+    // minItems checks an array that is there: an empty grid has no value, so
+    // "at least one contact" also needs required.
+    validations: [{ validator: 'required' }, { validator: 'minItems', value: 1 }],
     children: [
       {
         type: 'input',
