@@ -89,7 +89,9 @@ for (const model of models) {
     usage?: { input_tokens?: number; output_tokens?: number };
   };
   if (!response.ok) {
-    console.log(`✗ ${model}: schema refused (${response.status}): ${body.error?.message}`);
+    // 400 is OpenAI judging the schema; anything else (key, quota, model) says nothing about it.
+    const verdict = response.status === 400 ? "schema refused" : "request failed";
+    console.log(`✗ ${model}: ${verdict} (${response.status}): ${body.error?.message}`);
     failed = true;
     continue;
   }
