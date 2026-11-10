@@ -354,7 +354,7 @@ select.fk-field__input:dir(rtl) {
 
   /*
    * In a table line (labels hidden, data-grid cells) the controls share one
-   * middle: a select whose value takes two lines centres the inputs beside it.
+   * middle: a multi-select whose chips take two lines centres the inputs beside it.
    * A form row keeps its controls at the top, beside a textarea say.
    */
   :is(.fk-row--labels-hidden, .fk-grid__cells)
