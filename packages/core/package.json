@@ -41,7 +41,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./schema/form-spec.schema.json": "./schema/form-spec.schema.json"
+    "./schema/form-spec.schema.json": "./schema/form-spec.schema.json",
+    "./schema/form-spec.strict.schema.json": "./schema/form-spec.strict.schema.json"
   },
   "publishConfig": {
     "access": "public"

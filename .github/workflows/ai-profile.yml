@@ -1,0 +1,35 @@
+name: AI profile
+
+# Sends the strict schema to OpenAI and checks the form a model writes with it
+# (scripts/openai-strict-probe.ts). It calls the paid API, so it runs on demand
+# only, typically before a release that adds a brick to the catalog.
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: Models to try, separated by spaces
+        default: gpt-6.1-sol gpt-6-luna
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Probe OpenAI strict structured output
+        run: |
+          if [ -z "${OPENAI_API_KEY}" ]; then
+            echo "::error::OPENAI_API_KEY secret is not set (repo Settings > Secrets and variables > Actions)"
+            exit 1
+          fi
+          bun scripts/openai-strict-probe.ts $MODELS
+        env:
+          MODELS: ${{ inputs.models }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

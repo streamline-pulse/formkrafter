@@ -1,0 +1,2040 @@
+{
+  "type": "object",
+  "description": "A FormKrafter form, written for OpenAI strict structured output. Pass it to fromStrictSpec from @streamline-pulse/formkrafter-core before rendering or validating it.",
+  "properties": {
+    "form": {
+      "$ref": "#/$defs/brick"
+    }
+  },
+  "required": [
+    "form"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "brick_text": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "text"
+          ],
+          "description": "One line of free text."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "mask": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Input mask: 9 a digit, a a letter, A a letter in capitals, * either; other characters are inserted as they are."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "mask",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_textarea": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "textarea"
+          ],
+          "description": "Several lines of free text."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_email": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "email"
+          ],
+          "description": "An email address."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_url": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "url"
+          ],
+          "description": "A web address (https://…)."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_phone": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "phone"
+          ],
+          "description": "A phone number."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "mask": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Input mask: 9 a digit, other characters inserted as they are, for example +228 99 99 99 99."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "mask",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_number": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "number"
+          ],
+          "description": "A number."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "prefix": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Shown before the control, for example a currency."
+            },
+            "suffix": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Shown after the control, for example a unit."
+            },
+            "defaultValue": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "prefix",
+            "suffix",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_date": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "date"
+          ],
+          "description": "A date, stored as YYYY-MM-DD."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_time": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "time"
+          ],
+          "description": "A time of day, stored as HH:MM."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_datetime": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "datetime"
+          ],
+          "description": "A date and a time."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_checkbox": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "checkbox"
+          ],
+          "description": "A yes/no box; the label sits beside it. Use it for each item of a list someone ticks."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "defaultValue": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_select": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "select"
+          ],
+          "description": "One choice in a drop-down list. Prefer radio for 2 to 4 short choices."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "options": {
+              "type": "array",
+              "description": "The choices, in display order: label shown, value stored.",
+              "items": {
+                "$ref": "#/$defs/option"
+              }
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "options",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_radio": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "radio"
+          ],
+          "description": "One choice among a few options, all visible."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "options": {
+              "type": "array",
+              "description": "The choices, in display order: label shown, value stored.",
+              "items": {
+                "$ref": "#/$defs/option"
+              }
+            },
+            "defaultValue": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The answer at the start."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "options",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_multi_select": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "multi-select"
+          ],
+          "description": "Several choices in a drop-down list."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "placeholder": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Example shown in the empty control."
+            },
+            "options": {
+              "type": "array",
+              "description": "The choices, in display order: label shown, value stored.",
+              "items": {
+                "$ref": "#/$defs/option"
+              }
+            },
+            "defaultValue": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "description": "Values ticked or chosen at the start.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "placeholder",
+            "options",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_select_boxes": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "select-boxes"
+          ],
+          "description": "Several choices, one box each, all visible."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            },
+            "options": {
+              "type": "array",
+              "description": "The choices, in display order: label shown, value stored.",
+              "items": {
+                "$ref": "#/$defs/option"
+              }
+            },
+            "defaultValue": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "description": "Values ticked or chosen at the start.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description",
+            "options",
+            "defaultValue"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_data_grid": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "data-grid"
+          ],
+          "description": "A table whose rows the person adds; children are the fields of one row."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The answer's name in the form data: letters, digits and _, unique in the form. Rules read it with var."
+            },
+            "label": {
+              "type": "string",
+              "description": "The question, as the person reads it."
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Help shown under the question."
+            }
+          },
+          "required": [
+            "key",
+            "label",
+            "description"
+          ],
+          "additionalProperties": false
+        },
+        "validations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/validation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disabledWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "description": "The fields of one row.",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "validations",
+        "hiddenWhen",
+        "disabledWhen",
+        "children"
+      ],
+      "additionalProperties": false
+    },
+    "brick_content": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "content"
+          ],
+          "description": "Fixed text shown to the person, not a question. Put it above or below a row, not in it."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The text, one paragraph per line."
+            }
+          },
+          "required": [
+            "content"
+          ],
+          "additionalProperties": false
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "hiddenWhen"
+      ],
+      "additionalProperties": false
+    },
+    "brick_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "group"
+          ],
+          "description": "A titled box around related bricks."
+        },
+        "configs": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The group's title."
+            }
+          },
+          "required": [
+            "label"
+          ],
+          "additionalProperties": false
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/brick"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "configs",
+        "hiddenWhen",
+        "children"
+      ],
+      "additionalProperties": false
+    },
+    "brick_row": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "row"
+          ],
+          "description": "Bricks side by side; they stack on narrow screens. Put in one row only questions shown together."
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "layout": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "columns": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "minimum": 1,
+                  "maximum": 12,
+                  "description": "Equal columns, so a field alone keeps its share."
+                }
+              },
+              "required": [
+                "columns"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/brick"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "hiddenWhen",
+        "layout",
+        "children"
+      ],
+      "additionalProperties": false
+    },
+    "brick_column": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "column"
+          ],
+          "description": "Bricks one under the other; the usual root of a form."
+        },
+        "hiddenWhen": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/logic"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/brick"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "hiddenWhen",
+        "children"
+      ],
+      "additionalProperties": false
+    },
+    "brick": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/brick_text"
+        },
+        {
+          "$ref": "#/$defs/brick_textarea"
+        },
+        {
+          "$ref": "#/$defs/brick_email"
+        },
+        {
+          "$ref": "#/$defs/brick_url"
+        },
+        {
+          "$ref": "#/$defs/brick_phone"
+        },
+        {
+          "$ref": "#/$defs/brick_number"
+        },
+        {
+          "$ref": "#/$defs/brick_date"
+        },
+        {
+          "$ref": "#/$defs/brick_time"
+        },
+        {
+          "$ref": "#/$defs/brick_datetime"
+        },
+        {
+          "$ref": "#/$defs/brick_checkbox"
+        },
+        {
+          "$ref": "#/$defs/brick_select"
+        },
+        {
+          "$ref": "#/$defs/brick_radio"
+        },
+        {
+          "$ref": "#/$defs/brick_multi_select"
+        },
+        {
+          "$ref": "#/$defs/brick_select_boxes"
+        },
+        {
+          "$ref": "#/$defs/brick_data_grid"
+        },
+        {
+          "$ref": "#/$defs/brick_content"
+        },
+        {
+          "$ref": "#/$defs/brick_group"
+        },
+        {
+          "$ref": "#/$defs/brick_row"
+        },
+        {
+          "$ref": "#/$defs/brick_column"
+        }
+      ]
+    },
+    "field": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/brick_text"
+        },
+        {
+          "$ref": "#/$defs/brick_textarea"
+        },
+        {
+          "$ref": "#/$defs/brick_email"
+        },
+        {
+          "$ref": "#/$defs/brick_url"
+        },
+        {
+          "$ref": "#/$defs/brick_phone"
+        },
+        {
+          "$ref": "#/$defs/brick_number"
+        },
+        {
+          "$ref": "#/$defs/brick_date"
+        },
+        {
+          "$ref": "#/$defs/brick_time"
+        },
+        {
+          "$ref": "#/$defs/brick_datetime"
+        },
+        {
+          "$ref": "#/$defs/brick_checkbox"
+        },
+        {
+          "$ref": "#/$defs/brick_select"
+        },
+        {
+          "$ref": "#/$defs/brick_radio"
+        },
+        {
+          "$ref": "#/$defs/brick_multi_select"
+        },
+        {
+          "$ref": "#/$defs/brick_select_boxes"
+        }
+      ]
+    },
+    "option": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "validator": {
+          "type": "string",
+          "enum": [
+            "required",
+            "minLength",
+            "maxLength",
+            "min",
+            "max",
+            "pattern",
+            "minItems",
+            "maxItems",
+            "email",
+            "url"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ],
+          "description": "A number for min/max and the lengths, a regular expression for pattern, null otherwise."
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Replaces the built-in message."
+        }
+      },
+      "required": [
+        "validator",
+        "value",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "logic": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "var": {
+              "type": "string",
+              "description": "The key of a field: its answer."
+            }
+          },
+          "required": [
+            "var"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "==": {
+              "type": "array",
+              "description": "equal",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "=="
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "!=": {
+              "type": "array",
+              "description": "not equal",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "!="
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "!": {
+              "type": "array",
+              "description": "not (one argument)",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "!"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            ">": {
+              "type": "array",
+              "description": "greater than",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            ">"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            ">=": {
+              "type": "array",
+              "description": "greater than or equal",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            ">="
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "<": {
+              "type": "array",
+              "description": "less than",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "<"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "<=": {
+              "type": "array",
+              "description": "less than or equal",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "<="
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "in": {
+              "type": "array",
+              "description": "the first argument is in the second, a list or a text",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "in"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "and": {
+              "type": "array",
+              "description": "all arguments true",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "and"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "or": {
+              "type": "array",
+              "description": "at least one argument true",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "or"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "+": {
+              "type": "array",
+              "description": "sum",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "+"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "if": {
+              "type": "array",
+              "description": "[condition, then, else]",
+              "items": {
+                "$ref": "#/$defs/logicArgument"
+              }
+            }
+          },
+          "required": [
+            "if"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "logicArgument": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/logic"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

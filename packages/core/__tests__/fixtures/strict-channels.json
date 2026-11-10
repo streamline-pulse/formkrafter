@@ -1,0 +1,287 @@
+{
+  "form": {
+    "id": "group",
+    "configs": {
+      "label": "Vos canaux"
+    },
+    "hiddenWhen": null,
+    "children": [
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "linkedin",
+              "label": "LinkedIn",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          },
+          {
+            "id": "select",
+            "configs": {
+              "key": "linkedin_account",
+              "label": "Page entreprise ou profil personnel ?",
+              "description": null,
+              "placeholder": null,
+              "options": [
+                {
+                  "label": "Page entreprise",
+                  "value": "page"
+                },
+                {
+                  "label": "Profil personnel",
+                  "value": "profile"
+                }
+              ],
+              "defaultValue": null
+            },
+            "validations": [
+              {
+                "validator": "required",
+                "value": null,
+                "message": null
+              }
+            ],
+            "hiddenWhen": {
+              "!": [
+                {
+                  "var": "linkedin"
+                }
+              ]
+            },
+            "disabledWhen": null
+          },
+          {
+            "id": "url",
+            "configs": {
+              "key": "linkedin_url",
+              "label": "Adresse de la page",
+              "description": null,
+              "placeholder": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": {
+              "!": [
+                {
+                  "var": "linkedin"
+                }
+              ]
+            },
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "facebook",
+              "label": "Facebook",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          },
+          {
+            "id": "select",
+            "configs": {
+              "key": "facebook_account",
+              "label": "Page entreprise ou profil personnel ?",
+              "description": null,
+              "placeholder": null,
+              "options": [
+                {
+                  "label": "Page entreprise",
+                  "value": "page"
+                },
+                {
+                  "label": "Profil personnel",
+                  "value": "profile"
+                }
+              ],
+              "defaultValue": null
+            },
+            "validations": [
+              {
+                "validator": "required",
+                "value": null,
+                "message": null
+              }
+            ],
+            "hiddenWhen": {
+              "!": [
+                {
+                  "var": "facebook"
+                }
+              ]
+            },
+            "disabledWhen": null
+          },
+          {
+            "id": "url",
+            "configs": {
+              "key": "facebook_url",
+              "label": "Adresse de la page",
+              "description": null,
+              "placeholder": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": {
+              "!": [
+                {
+                  "var": "facebook"
+                }
+              ]
+            },
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "instagram",
+              "label": "Instagram",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "blog",
+              "label": "Blog / site",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "youtube",
+              "label": "YouTube",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "tiktok",
+              "label": "TikTok",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "x",
+              "label": "X",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      },
+      {
+        "id": "row",
+        "hiddenWhen": null,
+        "layout": {
+          "columns": 3
+        },
+        "children": [
+          {
+            "id": "checkbox",
+            "configs": {
+              "key": "newsletter",
+              "label": "Newsletter",
+              "description": null,
+              "defaultValue": null
+            },
+            "validations": null,
+            "hiddenWhen": null,
+            "disabledWhen": null
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,122 @@
+---
+title: Générer des formulaires avec un LLM
+description: Laisser un modèle écrire un formulaire FormKrafter avec la sortie structurée stricte d'OpenAI, puis le rendre et le valider comme n'importe quel spec.
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+Un agent qui a besoin de plusieurs réponses d'une personne (un tableau de
+canaux, une question à choix) peut écrire le formulaire lui-même. Avec la
+**sortie structurée stricte** d'OpenAI, le modèle renvoie à coup sûr un JSON
+conforme à un schéma. FormKrafter fournit ce schéma, et une fonction qui
+transforme la sortie du modèle en un spec que `fk-form-render` et
+`validateFormData` prennent tel quel.
+
+## Le schéma strict
+
+`form-spec.schema.json` reste le schéma canonique, permissif. Le mode strict le
+refuse : il a des objets ouverts, des propriétés facultatives et des valeurs sans
+type comme le JsonLogic. À côté, `form-spec.strict.schema.json` est le
+**profil IA** :
+
+- la racine est `{ "form": brique }` ;
+- chaque brique a sa propre définition selon son `id`, avec des `configs`
+  fermées : un `select` a ses `options`, et une brique inconnue ne peut pas
+  être écrite ;
+- toutes les propriétés sont présentes : une propriété absente vaut `null` ;
+- les textes sont de simples chaînes : vous choisissez la langue avant
+  d'interroger le modèle ;
+- les propriétés propres au builder (`uid`, `styles`, `configsForm`…) en sont
+  retirées.
+
+Il est livré dans le paquet core, et servi à
+`https://formkrafter.com/schema/form-spec.strict.schema.json` :
+
+```ts
+import schema from '@streamline-pulse/formkrafter-core/schema/form-spec.strict.schema.json'
+```
+
+Le schéma est généré à partir du catalogue de briques du core
+(`BRICK_CATALOG`). Un modèle peut écrire ces briques : `text`, `textarea`,
+`email`, `url`, `phone`, `number`, `date`, `time`, `datetime`, `checkbox`,
+`select`, `radio`, `multi-select`, `select-boxes`, `data-grid`, `content`,
+`group`, `row`, `column`. Les autres (pièces d'identité, cartes, envois de
+fichiers, signatures, étapes…) dépendent de vos services ou de choix de
+conception ; `AI_EXCLUDED_BRICKS` donne la raison, brique par brique.
+
+## Les règles : `hiddenWhen` et `disabledWhen`
+
+Un modèle n'écrit pas de règles. Il écrit, sur une brique, une expression
+JsonLogic qui la masque ou la désactive tant qu'elle est vraie :
+
+```json
+{ "id": "url", "configs": { "key": "linkedin_url", "label": "Adresse de la page", … },
+  "hiddenWhen": { "!": [{ "var": "linkedin" }] } }
+```
+
+Le schéma couvre le JsonLogic dont les formulaires ont besoin, chaque opérateur
+prenant un tableau d'arguments : `var`, `==`, `!=`, `!`, `>`, `>=`, `<`, `<=`,
+`in`, `and`, `or`, `+`, `if`.
+
+## De la sortie du modèle au formulaire
+
+```ts
+import { fromStrictSpec, validateFormData } from '@streamline-pulse/formkrafter-core'
+import schema from '@streamline-pulse/formkrafter-core/schema/form-spec.strict.schema.json'
+
+const response = await fetch('https://api.openai.com/v1/responses', {
+  method: 'POST',
+  headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    model: 'gpt-6.1-sol',
+    input: prompt,
+    text: { format: { type: 'json_schema', name: 'form_spec', schema, strict: true } },
+  }),
+})
+const body = await response.json()
+const text = body.output.find((item) => item.type === 'message').content[0].text
+
+const spec = fromStrictSpec(JSON.parse(text))
+// Le rendre : <fk-form-render .spec=${spec}>
+// Vérifier les réponses côté serveur, avec le même verdict que le navigateur :
+const verdict = validateFormData(spec, answers, 'fr')
+```
+
+`fromStrictSpec` déballe `form`, retire les `null`, rétablit `type`, `dataType`
+et `name` d'après l'id de la brique, et transforme `hiddenWhen` /
+`disabledWhen` en règles. Elle lève une erreur pour un id de brique absent du
+catalogue. Elle n'ajoute pas d'`uid` : le rendu et la validation n'en ont pas
+besoin, et le builder pose les siens.
+
+## Un prompt qui marche
+
+Le schéma dit déjà au modèle à quoi sert chaque brique et chaque config. Le
+prompt dit quoi demander, et dans quelle langue :
+
+> Écris un formulaire « Vos canaux ». Pour chaque canal (LinkedIn, Facebook,
+> Instagram, Blog / site, YouTube, TikTok, X, Newsletter), une case « je publie
+> ici ». Pour LinkedIn et Facebook seulement, un choix Page entreprise ou Profil
+> personnel, et l'adresse de la page : ces deux questions ne s'affichent que
+> quand la case du canal est cochée. Libellés en français.
+
+Mettez dans une même `row` les questions qui s'affichent ensemble, et un texte
+fixe au-dessus ou au-dessous d'une ligne plutôt que dedans. Les descriptions des
+briques dans le schéma le disent aussi.
+
+## Vérifier un modèle
+
+`scripts/openai-strict-probe.ts` envoie le schéma à OpenAI avec ce prompt et
+vérifie le formulaire renvoyé : 8 cases, des questions de type de compte avec
+leurs options, des adresses, chacune masquée tant que sa case n'est pas cochée.
+Il appelle l'API payante : il se lance à la demande, depuis le workflow
+**AI profile** ou à la main :
+
+```bash
+OPENAI_API_KEY=… bun scripts/openai-strict-probe.ts gpt-6.1-sol gpt-6-luna
+```
+
+<Aside type="caution">
+Un modèle écrit le formulaire, pas les règles de votre métier. Relisez ce qu'il
+demande avant que cela n'arrive à une personne, et validez les réponses côté
+serveur avec `validateFormData`, comme pour tout spec que vous n'avez pas écrit.
+</Aside>

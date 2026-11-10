@@ -30,6 +30,11 @@ jobs:
       - name: Check the published schema is served
         run: bun run check:schema
 
+      # The AI profile is generated from the brick catalog: a brick or a config
+      # added there must reach the schema, which must stay in OpenAI's strict subset.
+      - name: Check the strict schema is generated and in the strict subset
+        run: bun run check:strict-schema
+
       - name: Build packages
         run: bun run build
 

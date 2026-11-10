@@ -20,6 +20,8 @@ export { getBrickData, wrapBrickData } from "./utils/brick-data.js";
 
 // Select option parsing, shared by every renderer
 export { SelectOption, normalizeOptions } from "./utils/options.js";
+export { BRICK_CATALOG, AI_EXCLUDED_BRICKS, CatalogBrick, CatalogConfig, CatalogDataType, catalogBrick } from "./ai/brick-catalog.js";
+export { fromStrictSpec } from "./ai/from-strict-spec.js";
 
 // Recap summarization, shared by every renderer
 export { RecapItem, collectRecapItems } from "./utils/recap.js";
