@@ -12,6 +12,9 @@ import { fkT } from '../../i18n/i18n';
 
 let selectInstanceCounter = 0;
 
+// `configs.searchable: "auto"` shows the search box above this many options.
+const SEARCH_THRESHOLD = 7;
+
 @Component({
   tag: 'fk-select-input',
   styleUrl: 'fk-select-input.css',
@@ -25,6 +28,8 @@ export class FkSelectInput {
   @Prop() disabled = false;
   @Prop() multiple = false;
   @Prop() invalid = false;
+  // A required single select has no clear button unless `configs.clearable` says so.
+  @Prop() required = false;
   @Prop() dataMap?: Record<string, unknown>;
   // The visible label lives in the brick's field wrapper, which a
   // role="combobox" div cannot be associated with — the name must be
@@ -138,8 +143,34 @@ export class FkSelectInput {
     });
   }
 
+  // `true`/`false` force the search box; `"auto"` (the default) shows it above
+  // SEARCH_THRESHOLD options, and always when the server does the search.
+  private isSearchable(options: SelectOption[]): boolean {
+    const searchable = this.configs?.searchable;
+    if (searchable === true || searchable === 'true') return true;
+    if (searchable === false || searchable === 'false') return false;
+    if (this.source() === 'remote' && this.searchParam()) return true;
+    return options.length > SEARCH_THRESHOLD;
+  }
+
+  private isClearable(): boolean {
+    const clearable = this.configs?.clearable;
+    if (clearable === true || clearable === 'true') return true;
+    if (clearable === false || clearable === 'false') return false;
+    return !this.required;
+  }
+
   private onTriggerKeyDown = (event: KeyboardEvent) => {
     if (this.disabled) return;
+
+    // Without a search box the trigger keeps the focus and drives the list.
+    if (this.open) {
+      const { options } = this.resolve();
+      if (!this.isSearchable(options)) {
+        this.onListKeyDown(event, options);
+        return;
+      }
+    }
 
     if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key)) {
       event.preventDefault();
@@ -149,6 +180,32 @@ export class FkSelectInput {
       this.close();
     }
   };
+
+  private onListKeyDown(event: KeyboardEvent, options: SelectOption[]) {
+    if (event.key === ' ') {
+      event.preventDefault();
+      const option = options[this.activeIndex];
+      if (option) this.pick(option);
+      return;
+    }
+
+    // Typing a letter moves to the next option that starts with it.
+    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      const letter = event.key.toLowerCase();
+      const count = options.length;
+      for (let step = 1; step <= count; step++) {
+        const index = (this.activeIndex + step) % count;
+        if (options[index].label.toLowerCase().startsWith(letter)) {
+          this.activeIndex = index;
+          this.scrollActiveIntoView();
+          break;
+        }
+      }
+      return;
+    }
+
+    this.onSearchKeyDown(event, options);
+  }
 
   private onSearchKeyDown(event: KeyboardEvent, filtered: SelectOption[]) {
     switch (event.key) {
@@ -339,7 +396,12 @@ export class FkSelectInput {
   render() {
     const { options, error } = this.resolve();
     const selected = this.selectedValues();
-    const filtered = this.filteredOptions(options);
+    const searchable = this.isSearchable(options);
+    const filtered = searchable ? this.filteredOptions(options) : options;
+    const activeId =
+      this.open && filtered.length
+        ? `${this.instanceId}-opt-${Math.min(this.activeIndex, filtered.length - 1)}`
+        : undefined;
 
     return (
       <div class={{ 'fk-select': true, 'fk-select--disabled': this.disabled }}>
@@ -353,6 +415,8 @@ export class FkSelectInput {
           aria-controls={`${this.instanceId}-listbox`}
           aria-disabled={this.disabled ? 'true' : undefined}
           aria-invalid={this.invalid ? 'true' : undefined}
+          aria-required={this.required ? 'true' : undefined}
+          aria-activedescendant={searchable ? undefined : activeId}
           ref={(element) => (this.triggerEl = element)}
           onKeyDown={this.onTriggerKeyDown}
           onClick={(event) => {
@@ -390,7 +454,7 @@ export class FkSelectInput {
               </span>
             )}
           </div>
-          {!this.multiple && selected.length > 0 && !this.disabled ? (
+          {!this.multiple && selected.length > 0 && !this.disabled && this.isClearable() ? (
             <button
               type="button"
               class="fk-select__clear"
@@ -410,28 +474,26 @@ export class FkSelectInput {
 
         {this.open ? (
           <div class="fk-select__dropdown">
-            <input
-              class="fk-select__search"
-              type="text"
-              placeholder={fkT('select.search')}
-              value={this.query}
-              role="combobox"
-              aria-label={this.accessibleLabel}
-              aria-expanded="true"
-              aria-autocomplete="list"
-              aria-controls={`${this.instanceId}-listbox`}
-              aria-activedescendant={
-                filtered.length
-                  ? `${this.instanceId}-opt-${Math.min(this.activeIndex, filtered.length - 1)}`
-                  : undefined
-              }
-              ref={(element) => setTimeout(() => element?.focus(), 0)}
-              onInput={(event) => {
-                this.activeIndex = 0;
-                this.onSearchInput((event.target as HTMLInputElement).value);
-              }}
-              onKeyDown={(event) => this.onSearchKeyDown(event, filtered)}
-            />
+            {searchable ? (
+              <input
+                class="fk-select__search"
+                type="text"
+                placeholder={fkT('select.search')}
+                value={this.query}
+                role="combobox"
+                aria-label={this.accessibleLabel}
+                aria-expanded="true"
+                aria-autocomplete="list"
+                aria-controls={`${this.instanceId}-listbox`}
+                aria-activedescendant={activeId}
+                ref={(element) => setTimeout(() => element?.focus(), 0)}
+                onInput={(event) => {
+                  this.activeIndex = 0;
+                  this.onSearchInput((event.target as HTMLInputElement).value);
+                }}
+                onKeyDown={(event) => this.onSearchKeyDown(event, filtered)}
+              />
+            ) : null}
             <div
               class="fk-select__options"
               role="listbox"

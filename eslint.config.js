@@ -33,7 +33,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['examples/html/serve.mjs', 'e2e/serve-fixtures.mjs'],
+    files: ['examples/html/serve.mjs', 'e2e/serve-fixtures.mjs', 'scripts/size-eager.mjs'],
     languageOptions: {
       globals: { Bun: 'readonly' },
     },

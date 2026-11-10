@@ -68,6 +68,17 @@ const spec = () => ({
       name: 'Operation',
       configs: { key: 'op', label: 'Operation', options: 'A very long operation label\nShort' },
     },
+    {
+      type: 'panel',
+      id: 'row',
+      name: 'Row',
+      configs: { uid: 'dense' },
+      layout: { columns: ['auto', '1fr', 'minmax(0, 2fr)', 'red; color: red'], labels: 'hidden' },
+      children: [
+        { type: 'input', dataType: 'boolean', id: 'checkbox', name: 'On', configs: { key: 'denseOn', label: 'LinkedIn' } },
+        text('denseUrl'),
+      ],
+    },
   ],
 });
 
@@ -135,6 +146,21 @@ describe('layout', () => {
     expect(row.style.getPropertyValue('--fk-row-columns')).toBe('3');
     expect(hostOf('first')!.style.getPropertyValue('--fk-span')).toBe('2');
     expect(hostOf('third')!.style.getPropertyValue('--fk-span')).toBe('');
+  });
+
+  test('layout.columns as track sizes sets the template; an entry outside the grammar falls back to 1fr', () => {
+    const row = hostOf('denseUrl')!.closest('.fk-row') as HTMLElement;
+    expect(row.classList.contains('fk-row--tracks')).toBe(true);
+    expect(row.classList.contains('fk-row--columns')).toBe(false);
+    expect(row.style.getPropertyValue('--fk-row-tracks')).toBe('auto 1fr minmax(0, 2fr) 1fr');
+  });
+
+  test('layout.labels hidden marks the row and keeps every label in the DOM', () => {
+    const row = hostOf('denseUrl')!.closest('.fk-row') as HTMLElement;
+    expect(row.classList.contains('fk-row--labels-hidden')).toBe(true);
+    expect(hostOf('denseUrl')!.querySelector('.fk-field__label')?.textContent).toBe('denseUrl');
+    expect(hostOf('denseOn')!.querySelector('.fk-field__label')?.textContent).toBe('LinkedIn');
+    expect(el.querySelector<HTMLElement>('.fk-row')!.classList.contains('fk-row--labels-hidden')).toBe(false);
   });
 
   test('a checkbox shows its hint and marks a required box', () => {

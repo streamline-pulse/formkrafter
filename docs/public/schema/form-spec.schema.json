@@ -70,10 +70,25 @@
         },
         "layout": {
           "type": "object",
-          "description": "Placement in a row: \"columns\" on the row itself (equal columns, a lone field keeps its share), \"span\" on one of its children (how many columns it takes). A row still stacks on narrow screens.",
+          "description": "Placement in a row: \"columns\" and \"labels\" on the row itself, \"span\" on one of its children (how many columns it takes). A row still stacks on narrow screens.",
           "properties": {
-            "columns": { "type": "integer", "minimum": 1, "maximum": 12 },
-            "span": { "type": "integer", "minimum": 1, "maximum": 12 }
+            "columns": {
+              "description": "A number of equal columns (a lone field keeps its share), or one track size per column, e.g. [\"auto\", \"1fr\", \"2fr\"], so a checkbox column takes only its content.",
+              "anyOf": [
+                { "type": "integer", "minimum": 1, "maximum": 12 },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 12,
+                  "items": { "$ref": "#/$defs/rowTrack" }
+                }
+              ]
+            },
+            "span": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "labels": {
+              "enum": ["visible", "hidden"],
+              "description": "\"hidden\" hides the labels of the row's fields from view and keeps them as accessible names, so a row of a table is one line high. A checkbox keeps its label beside the box."
+            }
           },
           "additionalProperties": false
         },
@@ -84,6 +99,12 @@
         }
       },
       "additionalProperties": false
+    },
+
+    "rowTrack": {
+      "type": "string",
+      "description": "One column of a row: auto, min-content, max-content, 0, a length in fr, px, rem, em, ch or %, or minmax(a, b) of those.",
+      "pattern": "^((auto|min-content|max-content|0|[0-9]+(\\.[0-9]+)?(fr|px|rem|em|ch|%))|minmax\\( *(auto|min-content|max-content|0|[0-9]+(\\.[0-9]+)?(fr|px|rem|em|ch|%)) *, *(auto|min-content|max-content|0|[0-9]+(\\.[0-9]+)?(fr|px|rem|em|ch|%)) *\\))$"
     },
 
     "brickType": {

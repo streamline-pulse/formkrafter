@@ -409,6 +409,7 @@ export const selectBrick = createBrick({
         value={(props.data as string) ?? ''}
         {...lock(props, false)}
         invalid={!!props.error}
+        required={isRequired(props)}
         dataMap={props.dataMap}
         onSelectValueChange={(
           event: CustomEvent<string | string[] | undefined>
@@ -442,6 +443,7 @@ export const multiSelectBrick = createBrick({
         multiple={true}
         {...lock(props, false)}
         invalid={!!props.error}
+        required={isRequired(props)}
         dataMap={props.dataMap}
         onSelectValueChange={(
           event: CustomEvent<string | string[] | undefined>
@@ -1572,6 +1574,19 @@ export const groupBrick = createBrick({
   ),
 });
 
+// `layout.columns` as track sizes: the same grammar as `$defs/rowTrack` in the
+// schema. An entry outside it falls back to `1fr` rather than reaching the CSS.
+const TRACK_SIZE = '(?:auto|min-content|max-content|0|\\d+(?:\\.\\d+)?(?:fr|px|rem|em|ch|%))';
+const ROW_TRACK = new RegExp(`^(?:${TRACK_SIZE}|minmax\\( *${TRACK_SIZE} *, *${TRACK_SIZE} *\\))$`);
+
+const rowTracks = (columns: unknown): string | undefined => {
+  if (!Array.isArray(columns) || columns.length === 0) return undefined;
+  return columns
+    .slice(0, 12)
+    .map((track) => (typeof track === 'string' && ROW_TRACK.test(track.trim()) ? track.trim() : '1fr'))
+    .join(' ');
+};
+
 export const rowBrick = createBrick({
   type: 'panel',
   dataType: 'void',
@@ -1579,14 +1594,26 @@ export const rowBrick = createBrick({
   name: 'Row',
   category: 'Layout',
   // Shown children share the width and wrap under `--fk-row-min`; with
-  // `layout.columns` the row keeps that many equal columns.
+  // `layout.columns` the row keeps that many equal columns, or the given
+  // tracks; `layout.labels: "hidden"` keeps the labels for assistive tech only.
   render: (props) => {
-    const columns = Math.round(Number(props.brickSpec?.layout?.columns));
-    const fixed = Number.isFinite(columns) && columns > 1 ? Math.min(12, columns) : 0;
+    const layout = props.brickSpec?.layout;
+    const tracks = rowTracks(layout?.columns);
+    const columns = Math.round(Number(layout?.columns));
+    const fixed = !tracks && Number.isFinite(columns) && columns > 1 ? Math.min(12, columns) : 0;
     return (
       <div
-        class={fixed ? 'fk-row fk-row--columns' : 'fk-row'}
-        style={{ ...asInlineStyle(props.styles), ...(fixed ? { '--fk-row-columns': String(fixed) } : {}) }}
+        class={{
+          'fk-row': true,
+          'fk-row--columns': fixed > 0,
+          'fk-row--tracks': !!tracks,
+          'fk-row--labels-hidden': layout?.labels === 'hidden',
+        }}
+        style={{
+          ...asInlineStyle(props.styles),
+          ...(fixed ? { '--fk-row-columns': String(fixed) } : {}),
+          ...(tracks ? { '--fk-row-tracks': tracks } : {}),
+        }}
       >
         {props.children as VNode}
       </div>

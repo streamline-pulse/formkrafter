@@ -34,6 +34,7 @@
     "smoke:esm": "node scripts/smoke-esm.mjs",
     "smoke:pack": "node scripts/smoke-pack.mjs",
     "size": "node scripts/size-check.mjs",
+    "size:eager": "bun scripts/size-eager.mjs",
     "lint": "eslint .",
     "e2e": "bun run --cwd examples/tanstack-start build && bun run --cwd examples/vue build && bun run --cwd e2e test",
     "e2e:only": "bun run --cwd e2e test",

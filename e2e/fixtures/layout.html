@@ -9,6 +9,7 @@
       body { margin: 16px; font-family: ui-sans-serif, system-ui, sans-serif; }
       section { margin-bottom: 24px; }
       .dark-panel { padding: 8px; background: #111c24; }
+      .narrow { max-width: 560px; }
     </style>
   </head>
   <body>
@@ -22,6 +23,8 @@
     <section><fk-form-render id="long-select"></fk-form-render></section>
     <section><fk-form-render id="grid"></fk-form-render></section>
     <section class="dark-panel" data-fk-theme="dark"><fk-form-render id="dark"></fk-form-render></section>
+    <section class="narrow"><fk-form-render id="dense"></fk-form-render></section>
+    <section class="narrow"><fk-form-render id="dense-visible"></fk-form-render></section>
 
     <script type="module">
       import '/dist/formkrafter-wc.esm.js'
@@ -46,6 +49,34 @@
       const row = (children, extra = {}) => ({ type: 'panel', id: 'row', name: 'Row', children, ...extra })
       const group = (label, children) => ({ type: 'panel', id: 'group', name: label, configs: { label }, children })
       const form = (children) => ({ type: 'panel', id: 'column', name: 'Form', configs: { key: 'form' }, children })
+      const hideUnless = (key) => [
+        {
+          name: `hide until ${key} is ticked`,
+          type: 'jsonLogic',
+          logic: { '!': { var: key } },
+          effects: [{ property: { target: 'hidden', type: 'boolean' }, boolean: true }],
+        },
+      ]
+      // A channels table: tick a channel, then say which account and its address.
+      const channel = (key, name, { account = true, labels = 'hidden' } = {}) =>
+        row(
+          [
+            checkbox(key, name),
+            ...(account
+              ? [{
+                  type: 'input', dataType: 'string', id: 'select', name: `${name} account`, rules: hideUnless(key),
+                  configs: { key: `${key}_account`, label: `${name} account`, options: 'Company page\nPersonal profile\nBoth' },
+                }]
+              : []),
+            {
+              type: 'input', dataType: 'string', id: 'url', name: `${name} address`, rules: hideUnless(key),
+              ...(account ? {} : { layout: { span: 2 } }),
+              configs: { key: `${key}_url`, label: `${name} page address`, placeholder: 'https://…' },
+            },
+            checkbox(`${key}_priority`, 'Priority'),
+          ],
+          { layout: { columns: ['7rem', '1fr', '2fr', 'auto'], labels } }
+        )
 
       const forms = {
         'hidden-middle': form([
@@ -135,6 +166,14 @@
           },
         ]),
         dark: form([text('rate', 'Higher rate', { spec: { validations: [{ validator: 'required' }] } })]),
+        dense: form([
+          group('Your channels', [
+            channel('linkedin', 'LinkedIn'),
+            channel('instagram', 'Instagram', { account: false }),
+            channel('facebook', 'Facebook'),
+          ]),
+        ]),
+        'dense-visible': form([group('Your channels', [channel('linkedin', 'LinkedIn', { labels: 'visible' })])]),
       }
 
       const data = {
@@ -143,6 +182,8 @@
         'hidden-gaps': { mode: 'goods' },
         'long-select': { op: 'Liberal profession: lawyer, notary, bailiff, auctioneer, architect, chartered accountant, doctor, commission agent' },
         grid: { items: [{}] },
+        dense: { linkedin: true, linkedin_account: 'Company page', instagram: true, facebook: false },
+        'dense-visible': { linkedin: true, linkedin_account: 'Company page' },
       }
 
       for (const [id, spec] of Object.entries(forms)) {

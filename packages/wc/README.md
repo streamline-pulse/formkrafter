@@ -92,15 +92,23 @@ registerBrick(createBrick({
 
 ## Bundle size
 
-Measured on v0.5.0 — bundled from `dist/components` with `bun build --minify`, sizes before/after gzip:
+Measured on v0.34.0 with `bun run size:eager`: what an application imports, bundled with code splitting and minified, React and Vue left out. **Eager** is the entry chunk plus every chunk it imports statically — what a page downloads before the form shows. **All chunks** adds the ones behind dynamic `import()`, fetched only when a brick needs them. Gzipped:
 
-| What you ship | Minified | Gzipped |
+| What the page imports | Eager | All chunks |
 |---|---|---|
-| Builder — includes the renderer and all 30 bricks | ~675 KB | **~215 KB** |
-| Renderer only | ~632 KB | **~205 KB** |
-| `styles.css` (the only stylesheet — and it's optional) | 6 KB | ~1 KB |
+| `<fk-form-render>` only (`dist/components/fk-form-render.js`) | **~142 KB** | ~356 KB |
+| `<fk-form-builder>` (renderer included) | **~154 KB** | ~367 KB |
+| `FkFormRender` from `@streamline-pulse/formkrafter-react` | **~155 KB** | ~369 KB |
+| Every component from `@streamline-pulse/formkrafter-react` | **~156 KB** | ~370 KB |
+| `styles.css` (the only stylesheet — and it's optional) | ~3 KB | — |
 
-The code editor (CodeMirror, ~243 KB minified) is **lazy-loaded**: it never ships in the initial bundle, only when a code or rules editor actually opens. No CSS framework is required — no Bootstrap, no reset, nothing global.
+A Vite 8 production build of the `FkFormRender` import gives the same picture: ~147 KB eager, ~353 KB in all.
+
+- **Importing only the renderer saves almost nothing.** The renderer registers every brick, so it carries their code; the React and Vue wrappers import every element. About two thirds of the eager part is the core engine (validation, rules, data services).
+- **The lazy chunks are the heavy, rarely used pieces**: the code editor (CodeMirror), the map (Leaflet), and a few others. They never load unless a form uses them.
+- **To keep FormKrafter out of a page's first load**, import the form behind a dynamic `import()` (`React.lazy`, a route-level split) — the [SSR section of the React README](../react/README.md#ssr-nextjs-tanstack-start-) shows one.
+
+No CSS framework is required — no Bootstrap, no reset, nothing global.
 
 ## Theming
 

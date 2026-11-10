@@ -8,12 +8,23 @@ import type { BrickType } from "./brick-type.js";
 import type { BrickBaseConfigs } from "./common-brick-props.js";
 import type { BrickStyles } from "../utils/brick-styles.js";
 
-/** Where a brick sits in its row: `columns` on a row, `span` on one of its children. */
+/** One column of a row: `auto`, `min-content`, `max-content`, `2fr`, `12rem`, `30%`, or `minmax(a, b)` of those. */
+export type RowTrack = string;
+
+/** Where a brick sits in its row: `columns` and `labels` on a row, `span` on one of its children. */
 export interface BrickLayout {
-    /** On a row: the number of equal columns, so a lone field keeps its share instead of the whole width. */
-    columns?: number;
+    /**
+     * On a row: the number of equal columns, so a lone field keeps its share instead of the whole width;
+     * or one track size per column, e.g. `["auto", "1fr", "2fr"]`, so a checkbox column takes only its content.
+     */
+    columns?: number | RowTrack[];
     /** On a child of a row: how many of the row's columns it takes (1 by default). */
     span?: number;
+    /**
+     * On a row: `"hidden"` hides its fields' labels from view and keeps them as accessible names,
+     * so a row of a table is one line high. A checkbox keeps its label beside the box.
+     */
+    labels?: "visible" | "hidden";
 }
 
 export interface BrickSpec {

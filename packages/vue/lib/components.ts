@@ -305,6 +305,7 @@ export const FkSelectInput: StencilVueComponent<JSX.FkSelectInput> = /*@__PURE__
   'disabled',
   'multiple',
   'invalid',
+  'required',
   'dataMap',
   'accessibleLabel',
   'selectValueChange'

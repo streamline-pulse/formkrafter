@@ -73,11 +73,19 @@ aucun contrôle, et une case à cocher se pose sur la ligne des contrôles voisi
 
 Une ligne passe à la ligne quand une colonne deviendrait plus étroite que
 `--fk-row-min` (12rem), et sur un écran de moins de 36rem elle affiche un champ
-par ligne. Deux réglages `layout` l'ajustent :
+par ligne. Trois réglages `layout` l'ajustent :
 
 - `layout.columns` sur la ligne : autant de colonnes égales, si bien qu'un champ
-  seul dans sa ligne garde sa part au lieu de toute la largeur.
+  seul dans sa ligne garde sa part au lieu de toute la largeur. Il accepte aussi
+  une taille par colonne — `auto`, `min-content`, `max-content`, une longueur en
+  `fr`, `px`, `rem`, `em`, `ch` ou `%`, ou `minmax(a, b)` de celles-ci — et la
+  ligne garde alors ces colonnes jusqu'à 36rem au lieu de passer à la ligne sous
+  `--fk-row-min`.
 - `layout.span` sur l'un de ses champs : le nombre de colonnes qu'il occupe.
+- `layout.labels: "hidden"` sur la ligne : les libellés de ses champs sont
+  masqués à l'écran mais nomment toujours les champs pour les lecteurs d'écran,
+  si bien que la ligne n'a que la hauteur d'un contrôle. Une case à cocher garde
+  son libellé à côté de la case.
 
 ```json
 { "type": "panel", "id": "row", "name": "Row", "layout": { "columns": 3 },
@@ -87,6 +95,35 @@ par ligne. Deux réglages `layout` l'ajustent :
   ] }
 ```
 
+##### Tableaux denses
+
+Tailles de colonnes et libellés masqués font ensemble une ligne de tableau : une
+case à cocher, un menu et une adresse sur une seule ligne, dans un conteneur de
+560px.
+
+```json
+{ "type": "panel", "id": "row", "name": "LinkedIn",
+  "layout": { "columns": ["7rem", "1fr", "2fr", "auto"], "labels": "hidden" },
+  "children": [
+    { "type": "input", "dataType": "boolean", "id": "checkbox", "name": "LinkedIn", "configs": { "key": "linkedin", "label": "LinkedIn" } },
+    { "type": "input", "dataType": "string", "id": "select", "name": "Compte", "configs": { "key": "linkedin_account", "label": "LinkedIn : page ou profil", "options": "Page entreprise\nProfil personnel\nLes deux" } },
+    { "type": "input", "dataType": "string", "id": "url", "name": "Adresse", "configs": { "key": "linkedin_url", "label": "Adresse de la page LinkedIn", "placeholder": "https://…" } },
+    { "type": "input", "dataType": "boolean", "id": "checkbox", "name": "Prioritaire", "configs": { "key": "linkedin_priority", "label": "Prioritaire" } }
+  ] }
+```
+
+- Dans une ligne à tailles de colonnes, chaque champ garde sa colonne : un champ
+  masqué par une règle laisse sa cellule vide, et les suivants restent en place.
+  Empilée sur un écran étroit, la cellule vide disparaît.
+- Chaque ligne dimensionne ses propres colonnes. Pour des colonnes alignées
+  d'une ligne à l'autre, donnez une taille fixe (`7rem` ci-dessus) plutôt
+  qu'`auto` aux colonnes dont le contenu change d'une ligne à l'autre.
+- Une ligne qui a un champ de moins garde les mêmes colonnes et donne
+  `layout.span: 2` à un champ.
+- Sans libellé visible, l'écran n'a plus rien à lire : mettez les intitulés de
+  colonnes dans la légende du groupe ou dans une brick `content` au-dessus des
+  lignes, ou donnez un `placeholder` aux champs.
+
 Une brick `content` se place au-dessus ou au-dessous d'une ligne, pas dedans :
 elle y prendrait une colonne et se lirait comme un libellé sans champ.
 `lintSpec` la signale (`content-in-row`).
@@ -95,9 +132,15 @@ elle y prendrait une colonne et se lirait comme un libellé sans champ.
 
 ### Select et multi-select
 
-Un combobox avec recherche qui implémente le pattern WAI-ARIA complet —
-navigation clavier, gestion du focus, annonces aux lecteurs d'écran. Les options
-proviennent de cinq sources :
+Un combobox qui implémente le pattern WAI-ARIA complet — navigation clavier,
+gestion du focus, annonces aux lecteurs d'écran. Deux configs le règlent :
+
+| Config | Par défaut | Effet |
+|---|---|---|
+| `searchable` | `"auto"` | `"auto"` affiche un champ de recherche au-dessus de la liste seulement au-delà de 7 options, ou quand le serveur fait la recherche (`remote` avec `searchParam`). `true` ou `false` l'impose. Sans champ de recherche, la liste se pilote au clavier depuis le champ lui-même : flèches, Début/Fin, Entrée ou Espace pour choisir, une lettre pour aller à l'option suivante qui commence par elle. |
+| `clearable` | `true`, `false` si le champ est obligatoire | Affiche le « × » qui vide un select simple. Un champ obligatoire ne peut pas rester vide : il n'a pas de « × », sauf avec `clearable: true`. |
+
+Les options proviennent de cinq sources :
 
 | `optionsSource` | D'où viennent les options |
 |---|---|
