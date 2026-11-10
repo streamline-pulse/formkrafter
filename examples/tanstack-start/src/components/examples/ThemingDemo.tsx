@@ -100,7 +100,7 @@ function ThemeCard({
         <summary className="text-muted-foreground cursor-pointer px-4 py-2 text-xs font-semibold select-none">
           {m.theming_view_code()}
         </summary>
-        <pre className="overflow-auto rounded-b-xl bg-slate-900 p-3 text-xs leading-relaxed text-slate-100">
+        <pre className="overflow-auto rounded-b-xl bg-muted p-3 text-xs leading-relaxed text-foreground">
           {code}
         </pre>
       </details>

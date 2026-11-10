@@ -26,7 +26,7 @@ function Playground() {
   const initialSpec = template ? templates[template] : undefined
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-7xl">
       <p className="text-xs font-bold tracking-widest text-primary uppercase">
         {m.playground_kicker()}
       </p>

@@ -34,7 +34,7 @@ export default function ServerValidationDemo() {
   const verdictBlock = (label: string, verdict?: ValidationResult) => (
     <section className="space-y-2">
       <h2 className="text-sm font-semibold">{label}</h2>
-      <pre className="border-border max-h-56 overflow-auto rounded-lg border bg-slate-900 p-3 text-xs text-slate-100">
+      <pre className="border-border max-h-56 overflow-auto rounded-lg border bg-muted p-3 text-xs text-foreground">
         {verdict ? JSON.stringify(verdict, null, 2) : '—'}
       </pre>
     </section>

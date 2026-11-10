@@ -76,7 +76,7 @@ export function ExamplePage({
                 {copied ? m.ex_copied_spec() : m.ex_copy_spec()}
               </button>
             </div>
-            <pre className="max-h-96 overflow-auto rounded-lg bg-slate-900 p-3 text-xs text-slate-100">
+            <pre className="max-h-96 overflow-auto rounded-lg bg-muted p-3 text-xs text-foreground">
               {specJson}
             </pre>
           </div>
