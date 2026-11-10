@@ -32,7 +32,7 @@ from formkrafter.validate import ErrorDetail, SpecNotSupported, ValidationResult
 
 __version__ = "0.2.0"
 # The core release whose behaviour this version reproduces (python/tests/parity/expected.json).
-CORE_VERSION = "0.35.0"
+CORE_VERSION = "0.36.0"
 
 __all__ = [
     "CORE_VERSION",
