@@ -71,7 +71,7 @@
     "@stencil/vue-output-target": "^0.14.1",
     "@types/leaflet": "1.9.12",
     "@types/node": "catalog:",
-    "happy-dom": "^20.11.0"
+    "happy-dom": "^21.0.4"
   },
   "publishConfig": {
     "access": "public"
