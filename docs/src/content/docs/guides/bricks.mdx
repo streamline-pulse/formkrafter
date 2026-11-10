@@ -72,12 +72,18 @@ hint under one field moves no control, and a checkbox sits on the line of its
 neighbours' controls.
 
 A row wraps when a column would be narrower than `--fk-row-min` (12rem), and on
-screens narrower than 36rem it shows one field per line. Two `layout` settings
+screens narrower than 36rem it shows one field per line. Three `layout` settings
 adjust it:
 
 - `layout.columns` on the row: that many equal columns, so a field alone in its
-  row keeps its share instead of the whole width.
+  row keeps its share instead of the whole width. It also takes one track size
+  per column — `auto`, `min-content`, `max-content`, a length in `fr`, `px`,
+  `rem`, `em`, `ch` or `%`, or `minmax(a, b)` of those — and then the row keeps
+  those columns down to 36rem instead of wrapping under `--fk-row-min`.
 - `layout.span` on one of its fields: how many columns that field takes.
+- `layout.labels: "hidden"` on the row: its fields' labels are hidden from view
+  but still name the fields for screen readers, so the row is one control high.
+  A checkbox keeps its label beside the box.
 
 ```json
 { "type": "panel", "id": "row", "name": "Row", "layout": { "columns": 3 },
@@ -87,6 +93,34 @@ adjust it:
   ] }
 ```
 
+##### Dense tables
+
+Track sizes and hidden labels together make a row of a table: a checkbox, a
+select and an address on one line, in a 560px container.
+
+```json
+{ "type": "panel", "id": "row", "name": "LinkedIn",
+  "layout": { "columns": ["7rem", "1fr", "2fr", "auto"], "labels": "hidden" },
+  "children": [
+    { "type": "input", "dataType": "boolean", "id": "checkbox", "name": "LinkedIn", "configs": { "key": "linkedin", "label": "LinkedIn" } },
+    { "type": "input", "dataType": "string", "id": "select", "name": "Account", "configs": { "key": "linkedin_account", "label": "LinkedIn: page or profile", "options": "Company page\nPersonal profile\nBoth" } },
+    { "type": "input", "dataType": "string", "id": "url", "name": "Address", "configs": { "key": "linkedin_url", "label": "LinkedIn page address", "placeholder": "https://…" } },
+    { "type": "input", "dataType": "boolean", "id": "checkbox", "name": "Priority", "configs": { "key": "linkedin_priority", "label": "Priority" } }
+  ] }
+```
+
+- In a row with track sizes, each field keeps its column: a field hidden by a
+  rule leaves its cell empty, so the next ones stay in place. Stacked on a
+  narrow screen, the empty cell disappears.
+- Each row sizes its own tracks. For columns that line up from one row to the
+  next, give the columns that hold different content a fixed size (`7rem`
+  above) rather than `auto`.
+- A row with one field fewer keeps the same tracks and gives a field
+  `layout.span: 2`.
+- Hidden labels leave the screen with nothing to read: put the column headings
+  in the group's legend or in a `content` brick above the rows, or give the
+  fields a `placeholder`.
+
 A `content` brick belongs above or below a row, not in it: there it would take
 a column and read as a label without a field. `lintSpec` reports it as
 `content-in-row`.
@@ -95,9 +129,15 @@ a column and read as a label without a field. `lintSpec` reports it as
 
 ### Select and multi-select
 
-A searchable combobox implementing the full WAI-ARIA pattern — keyboard
-navigation, focus management, screen reader announcements. Options come from
-five sources:
+A combobox implementing the full WAI-ARIA pattern — keyboard navigation, focus
+management, screen reader announcements. Two configs shape it:
+
+| Config | Default | Effect |
+|---|---|---|
+| `searchable` | `"auto"` | `"auto"` shows a search box above the list only when there are more than 7 options, or when the server searches (`remote` with `searchParam`). `true` or `false` forces it. Without a search box the list takes the keyboard on the field itself: arrows, Home/End, Enter or Space to pick, a letter to jump to the next option starting with it. |
+| `clearable` | `true`, `false` when the field is required | Shows the « × » that empties a single select. A required field cannot be left empty, so it has no « × » unless `clearable: true`. |
+
+Options come from five sources:
 
 | `optionsSource` | Where options come from |
 |---|---|

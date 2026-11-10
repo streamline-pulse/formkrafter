@@ -27,6 +27,7 @@ const spec = () => ({
         key: 'role',
         label: 'Role',
         optionsSource: 'static',
+        searchable: true,
         options: [
           { label: 'Developer', value: 'dev' },
           { label: 'Designer', value: 'design' },

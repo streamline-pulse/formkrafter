@@ -9,6 +9,7 @@ export { BrickBaseConfigs, CommonBrickProps, WithBrickBaseConfigs } from "./util
 export {
     BrickLayout,
     BrickSpec,
+    RowTrack,
     buildValidationSchema,
     iterateBricks,
     iterateSchemaBricks,

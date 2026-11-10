@@ -120,3 +120,28 @@ describe("the schema rejects what the engine would reject", () => {
         ).toBe(true);
     });
 });
+
+describe("row layout", () => {
+    const validate = compile();
+    const row = (layout: unknown) => ({ type: "panel", id: "row", name: "Row", layout });
+
+    test("columns takes a number or one track size per column", () => {
+        expect(validate(row({ columns: 4 }))).toBe(true);
+        expect(validate(row({ columns: ["auto", "1fr", "2fr", "auto"] }))).toBe(true);
+        expect(validate(row({ columns: ["min-content", "12rem", "30%", "minmax(0, 1fr)", "1.5fr"] }))).toBe(true);
+    });
+
+    test("a track outside the grammar is refused, so no CSS reaches the page", () => {
+        expect(validate(row({ columns: ["1fr", "red"] }))).toBe(false);
+        expect(validate(row({ columns: ["1fr; color: red"] }))).toBe(false);
+        expect(validate(row({ columns: ["calc(100% - 1px)"] }))).toBe(false);
+        expect(validate(row({ columns: [] }))).toBe(false);
+        expect(validate(row({ columns: Array(13).fill("1fr") }))).toBe(false);
+    });
+
+    test("labels is visible or hidden", () => {
+        expect(validate(row({ labels: "hidden" }))).toBe(true);
+        expect(validate(row({ labels: "visible", columns: ["auto", "1fr"] }))).toBe(true);
+        expect(validate(row({ labels: "inline" }))).toBe(false);
+    });
+});

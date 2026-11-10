@@ -19,6 +19,7 @@ const spec = () => ({
         key: 'choices',
         label: 'Choices',
         optionsSource: 'static',
+        searchable: true,
         options: 'Alpha\nBeta\nGamma',
       },
     },

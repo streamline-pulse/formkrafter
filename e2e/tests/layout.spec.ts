@@ -134,6 +134,101 @@ test.describe('layout of rows', () => {
   })
 })
 
+test.describe('a dense table row (layout.labels hidden, layout.columns as tracks)', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(`${FIXTURES}/layout.html`)
+    await expect(page.locator('#dense').getByRole('combobox', { name: 'LinkedIn account' })).toBeVisible()
+  })
+
+  const rowOf = (page: Page, index: number) => page.locator('#dense .fk-row').nth(index)
+
+  test('checkbox, select and url sit on one line, one control high', async ({ page }) => {
+    const row = (await rowOf(page, 0).boundingBox())!
+    const tick = (await rowOf(page, 0).locator('.fk-field--check').first().boundingBox())!
+    const select = (await page.locator('#dense').getByRole('combobox', { name: 'LinkedIn account' }).boundingBox())!
+    const url = (await page.locator('#dense').getByRole('textbox', { name: 'LinkedIn page address' }).boundingBox())!
+
+    const middle = (found: Box) => found.y + found.height / 2
+    expect(middle(tick)).toBeCloseTo(middle(select), 0)
+    expect(middle(url)).toBeCloseTo(middle(select), 0)
+    // The row is the control and the gap under it: no label line above.
+    expect(row.height).toBeLessThanOrEqual(Math.max(select.height, url.height) + 8 + 1)
+
+    const visible = (await page.locator('#dense-visible .fk-row').boundingBox())!
+    expect(visible.height).toBeGreaterThan(row.height + 10)
+  })
+
+  test('the labels still name the fields for assistive tech', async ({ page }) => {
+    const label = page.locator('#dense .fk-row >> nth=0').locator('fk-brick-render:has(.fk-select) .fk-field__label')
+    await expect(label).toHaveText('LinkedIn account')
+    const found = (await label.boundingBox())!
+    expect(found.width).toBeLessThanOrEqual(1)
+    await expect(page.locator('#dense').getByRole('checkbox', { name: 'LinkedIn' })).toBeVisible()
+    // The checkbox keeps its label beside the box.
+    const text = (await page.locator('#dense .fk-field--check .fk-field__label').first().boundingBox())!
+    expect(text.width).toBeGreaterThan(20)
+  })
+
+  test('in a 560px container the four tracks stay on one line, sized as asked', async ({ page }) => {
+    const select = (await page.locator('#dense').getByRole('combobox', { name: 'LinkedIn account' }).boundingBox())!
+    const url = (await page.locator('#dense').getByRole('textbox', { name: 'LinkedIn page address' }).boundingBox())!
+    const tick = (await rowOf(page, 0).locator('fk-brick-render').first().boundingBox())!
+    const priority = (await rowOf(page, 0).locator('fk-brick-render').last().boundingBox())!
+
+    expect(tick.width).toBeCloseTo(7 * 16, 0)
+    expect(url.width).toBeCloseTo(select.width * 2, 0)
+    expect(priority.y).toBeCloseTo(tick.y, 0)
+    expect(priority.x).toBeGreaterThan(url.x + url.width)
+  })
+
+  test('a field hidden by a rule leaves its cell: the next ones stay in their columns', async ({ page }) => {
+    await expect(page.locator('#dense').getByRole('combobox', { name: 'Facebook account' })).toHaveCount(0)
+    const priorityX = await page
+      .locator('#dense .fk-row')
+      .evaluateAll((rows) =>
+        rows.map((row) => Math.round((row.lastElementChild as HTMLElement).getBoundingClientRect().x))
+      )
+    expect(priorityX).toHaveLength(3)
+    expect(new Set(priorityX).size).toBe(1)
+
+    // A row with one field fewer gives the url two tracks: it ends where the others do.
+    const linkedin = (await page.locator('#dense').getByRole('textbox', { name: 'LinkedIn page address' }).boundingBox())!
+    const instagram = (await page.locator('#dense').getByRole('textbox', { name: 'Instagram page address' }).boundingBox())!
+    expect(instagram.x + instagram.width).toBeCloseTo(linkedin.x + linkedin.width, 0)
+  })
+
+  test('a select of three options opens as a plain list, without a search box', async ({ page }) => {
+    const select = page.locator('#dense').getByRole('combobox', { name: 'LinkedIn account' })
+    await select.click()
+    await expect(page.locator('#dense').getByRole('listbox')).toBeVisible()
+    await expect(page.locator('#dense .fk-select__search')).toHaveCount(0)
+    await expect(select).toBeFocused()
+    await page.keyboard.press('ArrowDown')
+    await page.keyboard.press('Enter')
+    await expect(page.locator('#dense').getByRole('listbox')).toHaveCount(0)
+    await expect(select).toHaveText(/Personal profile/)
+  })
+})
+
+test.describe('a dense table row on a phone', () => {
+  test.use({ viewport: { width: 375, height: 812 } })
+
+  test('stacks one field per line, with no empty cell for a hidden field', async ({ page }) => {
+    await page.goto(`${FIXTURES}/layout.html`)
+    const row = page.locator('#dense .fk-row').nth(0)
+    await expect(row.getByRole('combobox', { name: 'LinkedIn account' })).toBeVisible()
+    const width = (await row.boundingBox())!.width
+    const url = (await row.getByRole('textbox', { name: 'LinkedIn page address' }).boundingBox())!
+    expect(url.width).toBeCloseTo(width, 0)
+
+    const facebook = page.locator('#dense .fk-row').nth(2)
+    const cells = await facebook.locator('> fk-brick-render').evaluateAll((els) =>
+      els.filter((el) => el.getBoundingClientRect().height > 0).length
+    )
+    expect(cells).toBe(2)
+  })
+})
+
 test.describe('checkbox', () => {
   test('shows its hint under the label text and marks a required box', async ({ page }) => {
     await page.goto(`${FIXTURES}/layout.html`)

@@ -76,16 +76,20 @@ const rows = (root: Node) => {
 }
 
 describe('select interactions', () => {
-  const selectProps = (onDataChange: (v: unknown) => void, data?: unknown) =>
+  const selectProps = (
+    onDataChange: (v: unknown) => void,
+    data?: unknown,
+    configs: Record<string, unknown> = {},
+  ) =>
     props({
       data,
-      configs: { label: 'Role', options: 'Engineer\nDesigner\nManager' },
+      configs: { label: 'Role', options: 'Engineer\nDesigner\nManager', ...configs },
       onDataChange,
     })
 
   test('the sheet opens, search filters, picking closes and emits', () => {
     const seen: unknown[] = []
-    const renderer = render(selectBrick, selectProps((v) => seen.push(v)))
+    const renderer = render(selectBrick, selectProps((v) => seen.push(v), undefined, { searchable: true }))
 
     expect(modal(renderer.root).props.visible).toBe(false)
     act(() => pressables(renderer.root)[0].props.onPress())
@@ -102,6 +106,26 @@ describe('select interactions', () => {
     act(() => row.props.onPress())
     expect(seen).toEqual(['Designer'])
     expect(modal(renderer.root).props.visible).toBe(false)
+  })
+
+  test('a short list has no search box unless searchable is set', () => {
+    const short = render(selectBrick, selectProps(() => {}))
+    act(() => pressables(short.root)[0].props.onPress())
+    expect(short.root.findAllByType('TextInput' as never)).toHaveLength(0)
+
+    const long = render(
+      selectBrick,
+      selectProps(() => {}, undefined, { options: 'A\nB\nC\nD\nE\nF\nG\nH' }),
+    )
+    act(() => pressables(long.root)[0].props.onPress())
+    expect(long.root.findAllByType('TextInput' as never)).toHaveLength(1)
+
+    const forced = render(
+      selectBrick,
+      selectProps(() => {}, undefined, { options: 'A\nB\nC\nD\nE\nF\nG\nH', searchable: false }),
+    )
+    act(() => pressables(forced.root)[0].props.onPress())
+    expect(forced.root.findAllByType('TextInput' as never)).toHaveLength(0)
   })
 
   test('the multi select toggles values and stays open', () => {

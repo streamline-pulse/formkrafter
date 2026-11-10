@@ -61,6 +61,8 @@ function Page() {
 }
 ```
 
+Lazy-loading the form also keeps FormKrafter out of the page's first load: importing `FkFormRender` costs about 155 KB gzipped before the form shows, the same as importing every component (measured figures in the [web components README](../wc/README.md#bundle-size)).
+
 Server-side, validate submissions with the isomorphic core instead:
 
 ```ts

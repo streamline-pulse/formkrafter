@@ -118,7 +118,17 @@ function useOptions(props: Props, query: string, open: boolean) {
         )
       : options
 
-  return { options, filtered, loading, error }
+  // As on the web: `searchable: "auto"` shows the search box above 7 options,
+  // and always when the server does the search; `true`/`false` force it.
+  const setting = props.configs.searchable
+  const searchable =
+    setting === true || setting === 'true'
+      ? true
+      : setting === false || setting === 'false'
+        ? false
+        : (source === 'remote' && !!searchParam) || options.length > 7
+
+  return { options, filtered: searchable ? filtered : options, loading, error, searchable }
 }
 
 function SelectControl(props: Props) {
@@ -126,7 +136,7 @@ function SelectControl(props: Props) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
 
-  const { options, filtered, loading, error } = useOptions(props, query, open)
+  const { options, filtered, loading, error, searchable } = useOptions(props, query, open)
 
   const values = props.multiple
     ? Array.isArray(props.data)
@@ -187,24 +197,26 @@ function SelectControl(props: Props) {
               paddingVertical: theme.spacing,
             }}
           >
-            <TextInput
-              value={query}
-              onChangeText={setQuery}
-              placeholder={fkT('select.search')}
-              placeholderTextColor={theme.colorMuted}
-              accessibilityLabel={fkT('select.search')}
-              style={{
-                marginHorizontal: theme.spacing * 2,
-                marginBottom: theme.spacing,
-                borderWidth: 1,
-                borderColor: theme.colorBorder,
-                borderRadius: theme.radius,
-                paddingHorizontal: theme.spacing * 1.5,
-                paddingVertical: theme.spacing,
-                fontSize: 15,
-                color: theme.colorText,
-              }}
-            />
+            {searchable ? (
+              <TextInput
+                value={query}
+                onChangeText={setQuery}
+                placeholder={fkT('select.search')}
+                placeholderTextColor={theme.colorMuted}
+                accessibilityLabel={fkT('select.search')}
+                style={{
+                  marginHorizontal: theme.spacing * 2,
+                  marginBottom: theme.spacing,
+                  borderWidth: 1,
+                  borderColor: theme.colorBorder,
+                  borderRadius: theme.radius,
+                  paddingHorizontal: theme.spacing * 1.5,
+                  paddingVertical: theme.spacing,
+                  fontSize: 15,
+                  color: theme.colorText,
+                }}
+              />
+            ) : null}
             {loading ? (
               <ActivityIndicator style={{ padding: theme.spacing * 2 }} />
             ) : (
