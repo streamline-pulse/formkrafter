@@ -102,7 +102,7 @@ export default function FormioImportDemo() {
           value={source}
           onChange={(event) => setSource(event.target.value)}
           spellCheck={false}
-          className="border-border h-64 w-full rounded-lg border bg-slate-900 p-3 font-mono text-xs text-slate-100"
+          className="border-border h-64 w-full rounded-lg border bg-muted p-3 font-mono text-xs text-foreground"
         />
         <div className="flex items-center gap-3">
           <button
@@ -164,7 +164,7 @@ export default function FormioImportDemo() {
             <summary className="cursor-pointer px-4 py-3 text-sm font-semibold select-none">
               {m.fio_spec()}
             </summary>
-            <pre className="max-h-96 overflow-auto border-t border-border bg-slate-900 p-3 text-xs text-slate-100">
+            <pre className="max-h-96 overflow-auto border-t border-border bg-muted p-3 text-xs text-foreground">
               {JSON.stringify(spec, null, 2)}
             </pre>
           </details>

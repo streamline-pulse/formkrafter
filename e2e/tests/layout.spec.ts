@@ -99,7 +99,7 @@ test.describe('layout of rows', () => {
     expect(narrow.width).toBeCloseTo(column, 0)
   })
 
-  test('a long select value takes two lines at most and shows the whole label on hover', async ({ page }) => {
+  test('a long select value stays on one line, cut with an ellipsis, and shows the whole label on hover', async ({ page }) => {
     const value = page.locator('#long-select .fk-select__value')
     await expect(value).toHaveAttribute('title', /commission agent$/)
     // One line measured with the same font, since `normal` line height differs between platforms.
@@ -109,10 +109,13 @@ test.describe('layout of rows', () => {
       el.after(probe)
       const line = probe.getBoundingClientRect().height
       probe.remove()
-      return { height: el.getBoundingClientRect().height, line, clipped: el.scrollHeight > el.clientHeight }
+      return { height: el.getBoundingClientRect().height, line, clipped: el.scrollWidth > el.clientWidth }
     })
-    expect(height).toBeLessThanOrEqual(line * 2 + 1)
+    expect(height).toBeLessThanOrEqual(line + 1)
     expect(clipped).toBe(true)
+    // The select keeps the height of a text input.
+    const trigger = await box(page, '#long-select .fk-select__trigger')
+    expect(trigger.height).toBeCloseTo(38, 0)
   })
 
   test('data-grid cells keep regular columns and aligned controls', async ({ page }) => {

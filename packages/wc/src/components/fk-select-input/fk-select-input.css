@@ -34,21 +34,28 @@
 
 .fk-select__values {
   display: flex;
-  flex: 1;
+  /*
+   * Width 0, then grow: the values take the room left by the chevron, and a
+   * long value on one line does not widen the select, its grid track or the page.
+   */
+  flex: 1 1 0;
+  width: 0;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
   min-width: 0;
 }
 
-/* Two lines at most in the trigger: the whole label is in the list and the tooltip. */
+/*
+ * One line in the trigger, cut with « … »: a select keeps the height of the
+ * fields beside it. The whole label is in the list and the tooltip.
+ */
 .fk-select__value {
-  display: -webkit-box;
+  min-width: 0;
+  max-width: 100%;
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .fk-select__placeholder {
