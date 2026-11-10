@@ -1,5 +1,13 @@
 # formkrafter-docs
 
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [b1c7c82]
+  - @streamline-pulse/formkrafter-core@0.35.0
+  - @streamline-pulse/formkrafter-wc@0.35.0
+
 ## 0.0.46
 
 ### Patch Changes
