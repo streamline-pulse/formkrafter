@@ -5,7 +5,7 @@
  * utils.json (identifiers, plates, registries, MRZ). pytest replays them against the Python package, so
  * a change in the core that the port does not follow fails the Python tests.
  *
- *   bun scripts/python-parity.ts          # rewrite expected.json
+ *   bun scripts/python-parity.ts          # rewrite expected.json and CORE_VERSION (run by version-packages)
  *   bun scripts/python-parity.ts --check  # fail when expected.json is stale (CI)
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -86,5 +86,7 @@ if (process.argv.includes("--check")) {
   }
 } else {
   writeFileSync(target, output);
+  const init = new URL("../python/src/formkrafter/__init__.py", import.meta.url);
+  writeFileSync(init, readFileSync(init, "utf8").replace(/^CORE_VERSION = ".*"$/m, `CORE_VERSION = "${core.version}"`));
   console.log(`wrote ${expected.cases.length} cases (core ${core.version})`);
 }
