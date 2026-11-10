@@ -16,7 +16,7 @@
     },
     "docs": {
       "name": "formkrafter-docs",
-      "version": "0.0.47",
+      "version": "0.0.48",
       "dependencies": {
         "@astrojs/starlight": "^0.41.4",
         "@streamline-pulse/formkrafter-core": "workspace:*",
@@ -39,7 +39,7 @@
     },
     "examples/expo": {
       "name": "formkrafter-example-expo",
-      "version": "0.0.43",
+      "version": "0.0.44",
       "dependencies": {
         "@react-native-community/datetimepicker": "9.1.0",
         "@streamline-pulse/formkrafter-core": "workspace:*",
@@ -124,7 +124,7 @@
     },
     "examples/vue": {
       "name": "formkrafter-example-vue",
-      "version": "0.0.46",
+      "version": "0.0.47",
       "dependencies": {
         "@streamline-pulse/formkrafter-core": "workspace:*",
         "@streamline-pulse/formkrafter-vue": "workspace:*",
@@ -141,7 +141,7 @@
     },
     "packages/core": {
       "name": "@streamline-pulse/formkrafter-core",
-      "version": "0.35.0",
+      "version": "0.36.0",
       "dependencies": {
         "acorn": "catalog:",
         "fast-json-patch": "catalog:",
@@ -157,7 +157,7 @@
     },
     "packages/react": {
       "name": "@streamline-pulse/formkrafter-react",
-      "version": "0.35.0",
+      "version": "0.36.0",
       "dependencies": {
         "@stencil/react-output-target": "^1.6.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -173,7 +173,7 @@
     },
     "packages/react-native": {
       "name": "@streamline-pulse/formkrafter-react-native",
-      "version": "0.35.0",
+      "version": "0.36.0",
       "dependencies": {
         "@streamline-pulse/formkrafter-core": "workspace:*",
       },
@@ -203,7 +203,7 @@
     },
     "packages/vue": {
       "name": "@streamline-pulse/formkrafter-vue",
-      "version": "0.35.0",
+      "version": "0.36.0",
       "dependencies": {
         "@stencil/vue-output-target": "^0.14.1",
         "@streamline-pulse/formkrafter-wc": "workspace:*",
@@ -218,7 +218,7 @@
     },
     "packages/wc": {
       "name": "@streamline-pulse/formkrafter-wc",
-      "version": "0.35.0",
+      "version": "0.36.0",
       "dependencies": {
         "@atlaskit/pragmatic-drag-and-drop": "catalog:",
         "@codemirror/autocomplete": "^6.20.3",
@@ -689,8 +689,6 @@
     "@expo/spawn-async": ["@expo/spawn-async@1.8.0", "", { "dependencies": { "cross-spawn": "^7.0.6" } }, "sha512-eb9xxd/LbuEGSdua4NumCu/McVB9EM+F/JxB9pWgnERw4HQ9XyTNH1KapG6oqLWR8TuRK2LQfzJlmNi94CVobw=="],
 
     "@expo/sudo-prompt": ["@expo/sudo-prompt@9.3.2", "", {}, "sha512-HHQigo3rQWKMDzYDLkubN5WQOYXJJE2eNqIQC2axC2iO3mHdwnIR7FgZVvHWtBwAdzBgAP0ECp8KqS8TiMKvgw=="],
-
-    "@expo/ws-tunnel": ["@expo/ws-tunnel@2.0.0", "", { "peerDependencies": { "ws": "^8.0.0" } }, "sha512-j+JfTRdCk820J9dU0sA2SqshQIKFOMo7ED84w9MJFcebfbNQgsLztEY/SABDkGnjatrW4xGqnUhVRxSBVyCkXw=="],
 
     "@expo/xcpretty": ["@expo/xcpretty@4.4.4", "", { "dependencies": { "@babel/code-frame": "^7.20.0", "chalk": "^4.1.0", "js-yaml": "^4.1.0" }, "bin": { "excpretty": "build/cli.js" } }, "sha512-4aQzz9vgxcNXFfo/iyNgDDYfsU5XGKKxWxZopw0cVotHiW+U8IJbIxMaxsINs6bHhtkG3StKNPcOrn3eBuxKPw=="],
 
@@ -3078,6 +3076,8 @@
 
     "@eslint/eslintrc/minimatch": ["minimatch@3.1.5", "", { "dependencies": { "brace-expansion": "^1.1.7" } }, "sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w=="],
 
+    "@expo/cli/@expo/ws-tunnel": ["@expo/ws-tunnel@2.0.0", "", { "peerDependencies": { "ws": "^8.0.0" } }, "sha512-j+JfTRdCk820J9dU0sA2SqshQIKFOMo7ED84w9MJFcebfbNQgsLztEY/SABDkGnjatrW4xGqnUhVRxSBVyCkXw=="],
+
     "@expo/cli/chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
 
     "@expo/cli/ci-info": ["ci-info@3.9.0", "", {}, "sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ=="],
@@ -3107,8 +3107,6 @@
     "@expo/metro-config/hermes-parser": ["hermes-parser@0.36.1", "", { "dependencies": { "hermes-estree": "0.36.1" } }, "sha512-GApNk4zLHi2UWoWZZkx7LNCOSzLSc5lB55pZ/PhK7ycFeg7u5LcF88p/WbpIi1XUDtE0MpHE3uRR3u3KB7TjSQ=="],
 
     "@expo/package-manager/chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
-
-    "@expo/ws-tunnel/ws": ["ws@8.21.0", "", { "peerDependencies": { "bufferutil": "^4.0.1", "utf-8-validate": ">=5.0.2" }, "optionalPeers": ["bufferutil", "utf-8-validate"] }, "sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g=="],
 
     "@expo/xcpretty/chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
 
