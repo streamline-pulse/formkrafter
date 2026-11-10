@@ -1,5 +1,12 @@
 # formkrafter-example-expo
 
+## 0.0.45
+
+### Patch Changes
+
+- @streamline-pulse/formkrafter-core@0.37.0
+- @streamline-pulse/formkrafter-react-native@0.37.0
+
 ## 0.0.44
 
 ### Patch Changes
