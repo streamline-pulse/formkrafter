@@ -74,9 +74,10 @@ Rules drive dynamic behavior (`hidden`, `disabled`, `required`, computed `value`
 - **`jsonLogic`** (default): serializable, declarative — `{ "!": { "in": [{ "var": "country" }, ["FR","DE"]] } }`
 - **`javaScript`**: the escape hatch — executed by a built-in **AST interpreter** (Acorn-based), not `eval`:
   - CSP-safe (no `unsafe-eval` needed anywhere)
-  - sandboxed: only `dataMap`/`value` plus whitelisted builtins (`Math`, `JSON`, `String`, …) — no `fetch`, no `globalThis`, no `constructor`/`__proto__` escapes
+  - sandboxed: only `dataMap`/`value` plus frozen facades of `Math`, `JSON`, `String`, `Number`, `Boolean`, `Array`, `Object` (`keys`/`values`/`entries`/`fromEntries` only) and `Date` (`now`/`parse`/`UTC` only). Methods are called from per-type allowlists; host functions can't be read, bound or passed around; arrays from your data are read-only (copy with `[...list]` to sort or push)
   - supports expressions, ternaries, `const`/`if`/`return`, optional chaining, arrow functions (`.filter(x => …)`)
-  - unsupported syntax is rejected, runaway code is cut by an execution budget
+  - unsupported syntax is rejected; runaway code and the work done inside native calls share one execution budget, and strings/arrays are capped (1 M characters, 100 k elements)
+  - known limit: a regex literal can still backtrack catastrophically inside the native regex engine — keep untrusted patterns server-side with a timeout
 
 ```ts
 import { runSandboxed, UnsafeEvalJsRunnerService, services } from '@streamline-pulse/formkrafter-core'

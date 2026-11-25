@@ -72,14 +72,25 @@ avec Acorn et parcourues par un interpréteur d'AST :
 - **Compatible CSP** — aucune directive `unsafe-eval` nécessaire nulle part dans
   votre application.
 - **Isolé** — uniquement `dataMap` (et `value` dans les validateurs
-  personnalisés), plus des builtins autorisés : `Math`, `JSON`, `String`,
-  `Number`, `Date`, `Array`, `Object`, `Boolean`. Pas de `fetch`, pas de
-  `globalThis`, aucune échappatoire par `constructor` ou `__proto__`.
+  personnalisés), plus des façades figées de `Math`, `JSON`, `String`,
+  `Number`, `Boolean`, `Array`, `Object` (seulement `keys`, `values`,
+  `entries`, `fromEntries`) et `Date` (seulement `now`, `parse`, `UTC`). Les
+  méthodes ne sont appelables que depuis une liste autorisée par type ; les
+  fonctions de l'hôte ne peuvent être ni lues, ni liées (`bind`), ni passées en
+  argument. Pas de `fetch`, pas de `globalThis`, pas d'accès à `constructor`,
+  `__proto__` ou `prototype`.
+- **Lecture seule sur vos données** — les tableaux reçus ne peuvent pas être
+  modifiés ; copiez-les d'abord (`[...liste].sort()`).
 - **Suffisamment expressif** — expressions, ternaires, `const`/`let`,
   `if`/`return`, littéraux de gabarit, chaînage optionnel, fonctions fléchées
   (`.filter(x => …)`).
-- **Borné** — la syntaxe non supportée est rejetée d'emblée et le code qui
-  s'emballe est coupé par un budget d'exécution.
+- **Borné** — la syntaxe non supportée est rejetée d'emblée ; le code
+  interprété et le travail des fonctions natives partagent un même budget
+  d'exécution, et chaînes et tableaux sont plafonnés (1 M caractères,
+  100 k éléments).
+- **Limite connue** — une expression régulière peut encore provoquer un
+  retour arrière catastrophique dans le moteur natif, qu'aucun budget ne peut
+  interrompre.
 
 Vous pouvez exécuter ce même bac à sable vous-même :
 

@@ -69,13 +69,20 @@ walked by an AST interpreter:
 
 - **CSP-safe** — no `unsafe-eval` directive needed anywhere in your app.
 - **Isolated** — only `dataMap` (and `value` inside custom validators), plus
-  whitelisted builtins: `Math`, `JSON`, `String`, `Number`, `Date`, `Array`,
-  `Object`, `Boolean`. No `fetch`, no `globalThis`, no `constructor` or
-  `__proto__` escape.
+  frozen facades of `Math`, `JSON`, `String`, `Number`, `Boolean`, `Array`,
+  `Object` (`keys`, `values`, `entries`, `fromEntries` only) and `Date` (`now`,
+  `parse`, `UTC` only). Methods are called from per-type allowlists; host
+  functions can't be read, bound or passed around. No `fetch`, no
+  `globalThis`, no access to `constructor`, `__proto__` or `prototype`.
+- **Read-only on your data** — arrays you receive can't be mutated; copy them
+  first (`[...list].sort()`).
 - **Expressive enough** — expressions, ternaries, `const`/`let`, `if`/`return`,
   template literals, optional chaining, arrow functions (`.filter(x => …)`).
-- **Bounded** — unsupported syntax is rejected upfront and runaway code is cut
-  by an execution budget.
+- **Bounded** — unsupported syntax is rejected upfront; interpreted code and
+  the work done inside native calls share one execution budget, and strings
+  and arrays are capped (1 M characters, 100 k elements).
+- **Known limit** — a regular expression can still backtrack catastrophically
+  inside the native regex engine, which no budget can interrupt.
 
 You can run the same sandbox yourself:
 
