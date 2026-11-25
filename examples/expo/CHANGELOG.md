@@ -1,5 +1,13 @@
 # formkrafter-example-expo
 
+## 0.0.47
+
+### Patch Changes
+
+- Updated dependencies [f062be5]
+  - @streamline-pulse/formkrafter-core@0.38.1
+  - @streamline-pulse/formkrafter-react-native@0.38.1
+
 ## 0.0.46
 
 ### Patch Changes
