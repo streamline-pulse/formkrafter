@@ -1,5 +1,11 @@
 # @streamline-pulse/formkrafter-core
 
+## 0.38.2
+
+### Patch Changes
+
+- 6df7652: Security: the `mrz` validation no longer trusts the stored `valid` flag alone. The value must carry its zone (`raw`) and the zone must read with matching check digits, so a submission forging `{ valid: true }` is rejected, including by backends running `validateFormData`. Values written by the renderers always carry `raw`, so honest data gets the same verdict.
+
 ## 0.38.1
 
 ### Patch Changes
