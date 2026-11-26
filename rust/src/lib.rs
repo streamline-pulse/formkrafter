@@ -11,7 +11,7 @@ pub mod spec;
 pub mod validate;
 
 /// The core version these fixtures were generated from.
-pub const CORE_VERSION: &str = "0.38.1";
+pub const CORE_VERSION: &str = "0.38.2";
 
 pub use identity::{
     check_company_registry, check_iban, check_identity, check_plate, format_company_registry,

@@ -1,5 +1,12 @@
 # @streamline-pulse/formkrafter-react-native
 
+## 0.38.2
+
+### Patch Changes
+
+- Updated dependencies [6df7652]
+  - @streamline-pulse/formkrafter-core@0.38.2
+
 ## 0.38.1
 
 ### Patch Changes
