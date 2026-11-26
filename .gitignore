@@ -20,3 +20,4 @@ docs/.astro/
 
 e2e/a11y-results.jsonl
 e2e/e2e/
+rust/target/

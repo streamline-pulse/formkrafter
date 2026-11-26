@@ -37,6 +37,7 @@ flowchart LR
 | [`formkrafter-react`](packages/react/README.md) | React components generated from the Web Components at build time. |
 | [`formkrafter-vue`](packages/vue/README.md) | Vue components generated the same way. |
 | [`formkrafter` (Python)](python/README.md) | Server-side validation for Python backends: the same schema, error keys and messages as the core, held to it by parity fixtures the core generates. |
+| [`formkrafter` (Rust)](rust/README.md) | Server-side validation for Rust backends, held to the same parity fixtures. |
 
 ## Quick taste
 
@@ -73,6 +74,7 @@ formkrafter/
 │   ├── react/       generated React wrappers
 │   └── vue/         generated Vue wrappers
 ├── python/          Python package (PyPI `formkrafter`): server-side validation
+├── rust/            Rust crate: server-side validation, same parity fixtures
 ├── examples/
 │   └── tanstack-start/   full app: builder + preview, en/fr, dark mode
 ├── package.json     Bun workspaces + version catalog
