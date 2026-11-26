@@ -1,0 +1,41 @@
+name: Rust release
+
+# Publishes rust/ to crates.io when an `rs-v<version>` tag is pushed (e.g. rs-v0.1.0).
+# Uses crates.io trusted publishing: the `formkrafter` crate on crates.io must list
+# this repository, this workflow and the `crates-io` environment as a trusted publisher.
+on:
+  push:
+    tags: ["rs-v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: crates-io
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: The tag matches the crate version
+        working-directory: rust
+        run: |
+          version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          if [ "rs-v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} but rust/Cargo.toml says ${version}"
+            exit 1
+          fi
+
+      - name: Test
+        working-directory: rust
+        run: cargo test
+
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+
+      - name: Publish
+        working-directory: rust
+        run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}

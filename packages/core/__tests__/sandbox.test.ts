@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { runSandboxed } from "../lib/services/sandbox_interpreter";
-import { FetchDataSourceService } from "../lib/services/data_source_service";
+import { runSandboxed } from "../lib/services/sandbox-interpreter";
+import { FetchDataSourceService } from "../lib/services/data-source-service";
 
 describe("FetchDataSourceService", () => {
   test("passes headers and caches per url+headers", async () => {

@@ -27,9 +27,10 @@ if !result.valid {
 | `register_validation_messages(locale, messages)` | `registerValidationMessages` |
 | `jsonlogic::apply(logic, data)` | `jsonLogic.apply` from `json-logic-js` 2.0.5, JavaScript coercions included |
 | `get_affected_properties(rules, data)`, `is_rule_active`, `hidden_keys(spec, data)` | `getAffectedProperties` and the hidden walk of the validator |
-| `identity::check_identity(format, value)`, `check_iban`, `format_iban` | `checkIdentity`, `checkIban`, `formatIban` (NIR, NPI, SIREN, SIRET, IFU, IBAN, `digits-<n>`) |
+| `check_identity(format, value)`, `check_iban`, `format_iban` | `checkIdentity`, `checkIban`, `formatIban` (NIR, NPI, SIREN, SIRET, IFU, IBAN, `digits-<n>`) |
 | `check_plate`, `format_plate`, `check_company_registry`, `format_company_registry` | same names (plates FR/BJ/CI/SN, RCCM OHADA, RCS) |
-| `identity::parse_mrz(text, today)` | `parseMrz`: TD3 passports and TD1 identity cards, every check digit |
+| `IDENTITY_FORMATS`, `PLATE_FORMATS`, `REGISTRY_FORMATS` | the format tables the builder lists |
+| `parse_mrz(text, today)` | `parseMrz`: TD3 passports and TD1 identity cards, every check digit |
 
 `validate_form_data` returns a `ValidationResult`:
 
@@ -37,6 +38,17 @@ if !result.valid {
   core's shape;
 - `details` (key → `ErrorDetail { validator, message, value }`), so an API can return a stable code and let the
   client word it.
+
+Errors are one enum where Python raises separate exceptions:
+
+| Python | Rust |
+|---|---|
+| `SpecNotSupported` | `ValidateError::SpecNotSupported` |
+| `SchemaInvalid` | `ValidateError::SchemaInvalid` |
+| `JavaScriptRule`, `JsonLogicError` | `ValidateError::Rule(RuleError::JavaScript \| RuleError::JsonLogic)` |
+
+Python also ships `models` (Pydantic specs) and `testing` (comparison with the core through Node); the Rust
+crate has no counterpart yet.
 
 Specs and samples are plain `serde_json::Value`; data and rule scope use `js::Js`, the port's JavaScript value
 (`Js::from_json` converts). `Js` adds `undefined` and non-finite numbers to JSON, because JsonLogic produces
@@ -88,11 +100,11 @@ instance in the tests that cover the specs a backend serves.
 
 ## Parity with the core
 
-`python/tests/parity/` holds specs, data samples and the verdicts the core gives them, shared with the Python
+`parity/` holds specs, data samples and the verdicts the core gives them, shared with the Python
 port. The core writes the fixtures:
 
 ```bash
-bun scripts/python-parity.ts      # from the repository root: rewrites python/tests/parity/expected.json
+bun scripts/parity.ts             # from the repository root: rewrites parity/expected.json
 cargo test                        # from rust/: the port must reach the same schemas, lint issues and verdicts
 ```
 

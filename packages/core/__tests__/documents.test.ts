@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { documentFillPatch, parseDocumentFields, parseDocumentFills } from "../lib/utils/documents.js";
-import { FetchDocumentReaderService, readDocumentReading } from "../lib/services/document_reader_service.js";
+import { FetchDocumentReaderService, readDocumentReading } from "../lib/services/document-reader-service.js";
 
 describe("lecture de documents", () => {
   test("les champs demandes se lisent ligne par ligne, avec ou sans libelle", () => {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { FetchDataSourceService } from "../lib/services/data_source_service";
+import { FetchDataSourceService } from "../lib/services/data-source-service";
 
 const realFetch = globalThis.fetch;
 

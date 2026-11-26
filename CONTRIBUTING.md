@@ -37,7 +37,7 @@ launch by hand.
 | `packages/react-native` | The native renderer, written by hand. |
 | `python` | Server-side validation in Python, at parity with `packages/core`. |
 | `rust` | Server-side validation in Rust, at parity with `packages/core`. |
-| `python/tests/parity` | The parity fixtures both ports test against, written by the core. |
+| `parity` | The fixtures both server ports test against, written by the core. |
 | `scripts` | Release, size, smoke and parity tooling. |
 | `e2e` | Playwright tests and fixtures. |
 | `docs` | The documentation site (Astro + Starlight). |
@@ -65,9 +65,9 @@ the real core through Node); Rust has no counterpart yet.
 A change to validation in the core lands in all three:
 
 1. change the core and its tests;
-2. regenerate the fixtures with `bun scripts/python-parity.ts` (it also updates
+2. regenerate the fixtures with `bun scripts/parity.ts` (it also updates
    `CORE_VERSION` in both ports), and add a case to
-   `python/tests/parity/cases.json` when the behaviour is new;
+   `parity/cases.json` when the behaviour is new;
 3. port the change to `python/` and `rust/` in the twin modules;
 4. run the checks of each port:
 
@@ -79,7 +79,8 @@ cd rust && cargo fmt --check && cargo clippy --all-targets -- -D warnings && car
 CI fails when the fixtures are stale or a port disagrees with them. The ports
 are deliberately stricter than the browser in one place: a schema that does not
 compile is refused (`SchemaInvalid`) instead of accepting every submission.
-Record a port change in `python/CHANGELOG.md` or `rust/CHANGELOG.md`.
+Record a port change in `python/CHANGELOG.md` or `rust/CHANGELOG.md`. The ports are versioned
+on their own and released by tag: `py-v<version>` publishes to PyPI, `rs-v<version>` to crates.io.
 
 ## Making a change
 

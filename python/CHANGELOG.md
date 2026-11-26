@@ -9,6 +9,8 @@ Follows `@streamline-pulse/formkrafter-core` 0.38.1 plus its MRZ fix.
 - Patterns follow JavaScript's `RegExp`: `.`, `\s`, `\b`, class escapes, `[]`/`[^]`, `\cX`.
 - `Number("0x+1")` and `Number("0x1_0")` are NaN; JsonLogic indexes strings by UTF-16 units.
 - An effect without target is keyed `"undefined"`, as in the core.
+- `as_spec`, `configs_of` and `JavaScriptMode` are exported, like the Rust crate.
+- The parity fixtures moved to `parity/` at the repository root, shared with the Rust port.
 
 ## 0.2.0
 

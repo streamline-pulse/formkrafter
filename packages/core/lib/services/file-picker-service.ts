@@ -1,4 +1,4 @@
-import type { FileLike } from "./file_upload_service.js";
+import type { FileLike } from "./file-upload-service.js";
 
 /**
  * Picks a file on platforms without an `<input type="file">` (React Native):

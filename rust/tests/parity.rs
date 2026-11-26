@@ -2,7 +2,7 @@
 //! every rule of parity/jsonlogic.json evaluated by both, and the identifier helpers of
 //! parity/utils.json.
 //!
-//! parity/expected.json is written by the core (`bun scripts/python-parity.ts`); CI regenerates
+//! parity/expected.json is written by the core (`bun scripts/parity.ts`); CI regenerates
 //! it and fails when it is stale, so a core change the port does not follow shows up here.
 
 use std::path::{Path, PathBuf};
@@ -18,7 +18,7 @@ use formkrafter::{jsonlogic, lint_spec, validate_form_data, ValidateError};
 use serde_json::Value;
 
 fn parity_dir() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../python/tests/parity")
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("../parity")
 }
 
 fn load(name: &str) -> Value {

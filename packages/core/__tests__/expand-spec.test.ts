@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { expandSpec, hasNestedForms } from "../lib/utils/expand-spec";
 import { validateFormData } from "../lib/validators/validator";
 import type { BrickSpec } from "../lib/utils/brick-spec";
-import type { SpecSourceService } from "../lib/services/spec_source_service";
+import type { SpecSourceService } from "../lib/services/spec-source-service";
 
 const addressSpec: BrickSpec = {
   type: "panel",

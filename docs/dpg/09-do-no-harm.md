@@ -12,7 +12,7 @@ integrator-directed. What follows is the security posture specific to *harm*.
 
 **A spec is code, and is treated as one.** A form spec can carry rules. They are
 not evaluated with `eval`: `SandboxJsRunnerService` interprets them in an AST
-interpreter ([`packages/core/lib/services/sandbox_interpreter.ts`](../../packages/core/lib/services/sandbox_interpreter.ts))
+interpreter ([`packages/core/lib/services/sandbox-interpreter.ts`](../../packages/core/lib/services/sandbox-interpreter.ts))
 that exposes no host scope, which also makes the library usable under a strict
 Content Security Policy. `UnsafeEvalJsRunnerService` exists as an explicit
 opt-in, named so that choosing it is deliberate.
@@ -68,7 +68,7 @@ Covenant 2.1, with a named enforcement contact.
 
 | Claim | Where |
 |---|---|
-| Rules run in an AST sandbox, not `eval` | [`sandbox_interpreter.ts`](../../packages/core/lib/services/sandbox_interpreter.ts) |
+| Rules run in an AST sandbox, not `eval` | [`sandbox-interpreter.ts`](../../packages/core/lib/services/sandbox-interpreter.ts) |
 | Unenforceable validation surfaces as a warning | [`packages/core/__tests__/lint-spec.test.ts`](../../packages/core/__tests__/lint-spec.test.ts) |
 | Specs can be linted before storage | [`packages/core/lib/utils/lint-spec.ts`](../../packages/core/lib/utils/lint-spec.ts) |
 | WCAG 2.1 AA enforced on every commit | [accessibility report](../govstack/accessibility-report.md) |

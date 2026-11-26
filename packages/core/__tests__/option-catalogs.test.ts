@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { FetchOptionSourceService } from '../lib/services/option_source_service';
+import { FetchOptionSourceService } from '../lib/services/option-source-service';
 
 describe('FetchOptionSourceService.listCatalogs', () => {
   test('lists the catalogs from baseUrl ({ data: [...] } or an array), once', async () => {

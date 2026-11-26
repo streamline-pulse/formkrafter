@@ -86,10 +86,10 @@ instance in the tests that cover the specs a backend serves.
 
 ## Parity with the core
 
-`tests/parity/cases.json` holds specs and data samples. The core compiles and validates them:
+`parity/cases.json`, at the repository root, holds specs and data samples. The core compiles and validates them:
 
 ```bash
-bun scripts/python-parity.ts      # from the repository root: rewrites tests/parity/expected.json
+bun scripts/parity.ts             # from the repository root: rewrites parity/expected.json
 uv run pytest                     # the port must reach the same schemas, lint issues and verdicts
 ```
 

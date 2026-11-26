@@ -19,10 +19,12 @@ from formkrafter.identity import (
 )
 from formkrafter.lint import SpecIssue, lint_spec, validation_warnings
 from formkrafter.messages import default_validation_message, register_validation_messages
-from formkrafter.rules import JavaScriptRule, get_affected_properties, hidden_keys, is_rule_active
+from formkrafter.rules import JavaScriptMode, JavaScriptRule, get_affected_properties, hidden_keys, is_rule_active
 from formkrafter.spec import (
     BrickSpec,
+    as_spec,
     build_validation_schema,
+    configs_of,
     default_form_data,
     iterate_bricks,
     iterate_schema_bricks,
@@ -38,7 +40,7 @@ from formkrafter.validate import (
 )
 
 __version__ = "0.2.0"
-# The core release whose behaviour this version reproduces (python/tests/parity/expected.json).
+# The core release whose behaviour this version reproduces (parity/expected.json).
 CORE_VERSION = "0.38.1"
 
 __all__ = [
@@ -48,18 +50,21 @@ __all__ = [
     "REGISTRY_FORMATS",
     "BrickSpec",
     "ErrorDetail",
+    "JavaScriptMode",
     "JavaScriptRule",
     "MrzResult",
     "SchemaInvalid",
     "SpecIssue",
     "SpecNotSupported",
     "ValidationResult",
+    "as_spec",
     "assert_supported",
     "build_validation_schema",
     "check_company_registry",
     "check_iban",
     "check_identity",
     "check_plate",
+    "configs_of",
     "default_form_data",
     "default_validation_message",
     "format_company_registry",

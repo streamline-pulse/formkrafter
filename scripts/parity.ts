@@ -1,12 +1,12 @@
 /**
  * Parity fixtures for the server ports (python/ and rust/): the core compiles every case of
- * python/tests/parity/cases.json and records the schema, the lint issues and the
+ * parity/cases.json and records the schema, the lint issues and the
  * verdict on each data sample; it also evaluates jsonlogic.json (rules) and
  * utils.json (identifiers, plates, registries, MRZ). pytest and cargo test replay them, so
  * a change in the core that a port does not follow fails that port's tests.
  *
- *   bun scripts/python-parity.ts          # rewrite expected.json and both CORE_VERSIONs (run by version-packages)
- *   bun scripts/python-parity.ts --check  # fail when expected.json is stale (CI)
+ *   bun scripts/parity.ts          # rewrite expected.json and both CORE_VERSIONs (run by version-packages)
+ *   bun scripts/parity.ts --check  # fail when expected.json is stale (CI)
  */
 import { readFileSync, writeFileSync } from "node:fs";
 // Modules, not the index: the index re-exports types as values, which bun cannot load from source.
@@ -21,7 +21,7 @@ import jsonLogic from "../packages/core/node_modules/json-logic-js/logic.js";
 
 type Case = { name: string; spec: BrickSpec; locales: (string | null)[]; data: unknown[] };
 
-const root = new URL("../python/tests/parity/", import.meta.url);
+const root = new URL("../parity/", import.meta.url);
 const cases = JSON.parse(readFileSync(new URL("cases.json", root), "utf8")) as Case[];
 const read = (name: string) => JSON.parse(readFileSync(new URL(name, root), "utf8"));
 const logicCases = read("jsonlogic.json") as { logic: unknown; data: unknown }[];
@@ -81,7 +81,7 @@ if (process.argv.includes("--check")) {
     // missing file: stale by definition
   }
   if (current !== output) {
-    console.error("python/tests/parity/expected.json is stale: run `bun scripts/python-parity.ts`.");
+    console.error("parity/expected.json is stale: run `bun scripts/parity.ts`.");
     process.exit(1);
   }
 } else {

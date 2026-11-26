@@ -1,4 +1,4 @@
-import type { FileLike } from "./file_upload_service.js";
+import type { FileLike } from "./file-upload-service.js";
 
 /**
  * What a document reader returns for a scanned or uploaded document: the

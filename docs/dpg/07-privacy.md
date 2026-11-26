@@ -23,7 +23,7 @@ anywhere. Two `fetch` call sites exist in the entire published surface:
 
 | File | What it calls |
 |---|---|
-| [`packages/core/lib/services/data_source_service.ts`](../../packages/core/lib/services/data_source_service.ts) | The `optionsUrl` a form spec supplies, to load select options |
+| [`packages/core/lib/services/data-source-service.ts`](../../packages/core/lib/services/data-source-service.ts) | The `optionsUrl` a form spec supplies, to load select options |
 | [`packages/react-native/lib/file.tsx`](../../packages/react-native/lib/file.tsx) | The local `file://` URI of a document the user picked, to read its bytes |
 
 File uploads go through `fileUploadService` to the `uploadUrl` the integrator

@@ -1,7 +1,7 @@
 import type { BrickSpec } from "./brick-spec.js";
 import { iterateBricks } from "./brick-spec.js";
 import { services } from "../services/index.js";
-import type { SpecSourceService } from "../services/spec_source_service.js";
+import type { SpecSourceService } from "../services/spec-source-service.js";
 
 export interface ExpandSpecOptions {
   specSourceService?: SpecSourceService;

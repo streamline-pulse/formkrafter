@@ -156,18 +156,16 @@ pub fn check_identity(format: &str, value: &str) -> bool {
     }
 }
 
-pub fn identity_formats() -> &'static [(&'static str, &'static str)] {
-    &[
-        ("fr-nir", "France · NIR (sécurité sociale)"),
-        ("bj-npi", "Bénin · NPI"),
-        ("fr-siren", "France · SIREN"),
-        ("fr-siret", "France · SIRET"),
-        ("bj-ifu", "Bénin · IFU"),
-        ("iban", "IBAN"),
-        ("digits-10", "10 chiffres"),
-        ("digits-13", "13 chiffres"),
-    ]
-}
+pub const IDENTITY_FORMATS: &[(&str, &str)] = &[
+    ("fr-nir", "France · NIR (sécurité sociale)"),
+    ("bj-npi", "Bénin · NPI"),
+    ("fr-siren", "France · SIREN"),
+    ("fr-siret", "France · SIRET"),
+    ("bj-ifu", "Bénin · IFU"),
+    ("iban", "IBAN"),
+    ("digits-10", "10 chiffres"),
+    ("digits-13", "13 chiffres"),
+];
 
 // --- vehicle plates and company registries -------------------------------------------------------
 
@@ -178,95 +176,89 @@ pub struct RegistryFormat {
     display: Option<(Regex, &'static str)>,
 }
 
-fn plate_formats() -> &'static [RegistryFormat] {
-    static FORMATS: LazyLock<Vec<RegistryFormat>> = LazyLock::new(|| {
-        vec![
-            RegistryFormat {
-                id: "fr",
-                label: "France · AA-123-AA",
-                test: full(r"[A-HJ-NP-Z]{2}[0-9]{3}[A-HJ-NP-Z]{2}"),
-                display: Some((
-                    Regex::new(r"^([A-Z]{2})([0-9]{3})([A-Z]{2})$").unwrap(),
-                    "$1-$2-$3",
-                )),
-            },
-            RegistryFormat {
-                id: "bj",
-                label: "Bénin · AB 1234 RB",
-                test: full(r"[A-Z]{1,2}[0-9]{4}[A-Z]{2}"),
-                display: Some((
-                    Regex::new(r"^([A-Z]{1,2})([0-9]{4})([A-Z]{2})$").unwrap(),
-                    "$1 $2 $3",
-                )),
-            },
-            RegistryFormat {
-                id: "ci",
-                label: "Côte d’Ivoire · 1234 AB 01",
-                test: full(r"[0-9]{4}[A-Z]{2}[0-9]{2}"),
-                display: Some((
-                    Regex::new(r"^([0-9]{4})([A-Z]{2})([0-9]{2})$").unwrap(),
-                    "$1 $2 $3",
-                )),
-            },
-            RegistryFormat {
-                id: "sn",
-                label: "Sénégal · AA 123 AA",
-                test: full(r"[A-Z]{2}[0-9]{3,4}[A-Z]{1,2}"),
-                display: Some((
-                    Regex::new(r"^([A-Z]{2})([0-9]{3,4})([A-Z]{1,2})$").unwrap(),
-                    "$1 $2 $3",
-                )),
-            },
-            RegistryFormat {
-                id: "generic",
-                label: "Libre (4 à 10 lettres ou chiffres)",
-                test: full(r"[A-Z0-9]{4,10}"),
-                display: None,
-            },
-        ]
-    });
-    &FORMATS
+pub static PLATE_FORMATS: LazyLock<Vec<RegistryFormat>> = LazyLock::new(|| {
+    vec![
+        RegistryFormat {
+            id: "fr",
+            label: "France · AA-123-AA",
+            test: full(r"[A-HJ-NP-Z]{2}[0-9]{3}[A-HJ-NP-Z]{2}"),
+            display: Some((
+                Regex::new(r"^([A-Z]{2})([0-9]{3})([A-Z]{2})$").unwrap(),
+                "$1-$2-$3",
+            )),
+        },
+        RegistryFormat {
+            id: "bj",
+            label: "Bénin · AB 1234 RB",
+            test: full(r"[A-Z]{1,2}[0-9]{4}[A-Z]{2}"),
+            display: Some((
+                Regex::new(r"^([A-Z]{1,2})([0-9]{4})([A-Z]{2})$").unwrap(),
+                "$1 $2 $3",
+            )),
+        },
+        RegistryFormat {
+            id: "ci",
+            label: "Côte d’Ivoire · 1234 AB 01",
+            test: full(r"[0-9]{4}[A-Z]{2}[0-9]{2}"),
+            display: Some((
+                Regex::new(r"^([0-9]{4})([A-Z]{2})([0-9]{2})$").unwrap(),
+                "$1 $2 $3",
+            )),
+        },
+        RegistryFormat {
+            id: "sn",
+            label: "Sénégal · AA 123 AA",
+            test: full(r"[A-Z]{2}[0-9]{3,4}[A-Z]{1,2}"),
+            display: Some((
+                Regex::new(r"^([A-Z]{2})([0-9]{3,4})([A-Z]{1,2})$").unwrap(),
+                "$1 $2 $3",
+            )),
+        },
+        RegistryFormat {
+            id: "generic",
+            label: "Libre (4 à 10 lettres ou chiffres)",
+            test: full(r"[A-Z0-9]{4,10}"),
+            display: None,
+        },
+    ]
+});
+
+pub static REGISTRY_FORMATS: LazyLock<Vec<RegistryFormat>> = LazyLock::new(|| {
+    vec![
+        // RCCM OHADA: RB/COT/01 B 1234 (country/city/year, category letter, number)
+        RegistryFormat {
+            id: "ohada-rccm",
+            label: "OHADA · RCCM (RB/COT/01 B 1234)",
+            test: full(r"[A-Z]{2}/[A-Z]{2,4}/[0-9]{2,4}[A-Z][0-9]{3,7}"),
+            display: Some((
+                Regex::new(r"^([A-Z]{2}/[A-Z]{2,4}/[0-9]{2,4})([A-Z])([0-9]{3,7})$").unwrap(),
+                "$1 $2 $3",
+            )),
+        },
+        RegistryFormat {
+            id: "fr-rcs",
+            label: "France · RCS (SIREN + ville)",
+            test: full(r"[0-9]{9}RCS[A-Z]{2,}"),
+            display: Some((
+                Regex::new(r"^([0-9]{3})([0-9]{3})([0-9]{3})RCS(.+)$").unwrap(),
+                "$1 $2 $3 RCS $4",
+            )),
+        },
+        RegistryFormat {
+            id: "generic",
+            label: "Libre (4 à 20 caractères)",
+            test: full(r"[A-Z0-9/-]{4,20}"),
+            display: None,
+        },
+    ]
+});
+
+pub(crate) fn plate_format_ids() -> Vec<&'static str> {
+    PLATE_FORMATS.iter().map(|f| f.id).collect()
 }
 
-fn registry_formats() -> &'static [RegistryFormat] {
-    static FORMATS: LazyLock<Vec<RegistryFormat>> = LazyLock::new(|| {
-        vec![
-            // RCCM OHADA: RB/COT/01 B 1234 (country/city/year, category letter, number)
-            RegistryFormat {
-                id: "ohada-rccm",
-                label: "OHADA · RCCM (RB/COT/01 B 1234)",
-                test: full(r"[A-Z]{2}/[A-Z]{2,4}/[0-9]{2,4}[A-Z][0-9]{3,7}"),
-                display: Some((
-                    Regex::new(r"^([A-Z]{2}/[A-Z]{2,4}/[0-9]{2,4})([A-Z])([0-9]{3,7})$").unwrap(),
-                    "$1 $2 $3",
-                )),
-            },
-            RegistryFormat {
-                id: "fr-rcs",
-                label: "France · RCS (SIREN + ville)",
-                test: full(r"[0-9]{9}RCS[A-Z]{2,}"),
-                display: Some((
-                    Regex::new(r"^([0-9]{3})([0-9]{3})([0-9]{3})RCS(.+)$").unwrap(),
-                    "$1 $2 $3 RCS $4",
-                )),
-            },
-            RegistryFormat {
-                id: "generic",
-                label: "Libre (4 à 20 caractères)",
-                test: full(r"[A-Z0-9/-]{4,20}"),
-                display: None,
-            },
-        ]
-    });
-    &FORMATS
-}
-
-pub fn plate_format_ids() -> Vec<&'static str> {
-    plate_formats().iter().map(|f| f.id).collect()
-}
-
-pub fn registry_format_ids() -> Vec<&'static str> {
-    registry_formats().iter().map(|f| f.id).collect()
+pub(crate) fn registry_format_ids() -> Vec<&'static str> {
+    REGISTRY_FORMATS.iter().map(|f| f.id).collect()
 }
 
 fn find<'a>(formats: &'a [RegistryFormat], id: &str) -> Option<&'a RegistryFormat> {
@@ -279,7 +271,7 @@ pub fn compact_plate(value: &str) -> String {
 }
 
 pub fn check_plate(format: &str, value: &str) -> bool {
-    let formats = plate_formats();
+    let formats: &[RegistryFormat] = &PLATE_FORMATS;
     let rule = find(formats, format).or_else(|| find(formats, "generic"));
     match rule {
         Some(rule) => rule.test.is_match(&compact(value)),
@@ -288,7 +280,7 @@ pub fn check_plate(format: &str, value: &str) -> bool {
 }
 
 pub fn format_plate(format: &str, value: &str) -> String {
-    let rule = find(plate_formats(), format);
+    let rule = find(&PLATE_FORMATS, format);
     let compacted = compact(value);
     if let Some(rule) = rule {
         if let Some((pattern, template)) = &rule.display {
@@ -306,7 +298,7 @@ fn compact_registry(value: &str) -> String {
 }
 
 pub fn check_company_registry(format: &str, value: &str) -> bool {
-    let formats = registry_formats();
+    let formats: &[RegistryFormat] = &REGISTRY_FORMATS;
     let rule = find(formats, format).or_else(|| find(formats, "generic"));
     match rule {
         Some(rule) => rule.test.is_match(&compact_registry(value)),
@@ -315,7 +307,7 @@ pub fn check_company_registry(format: &str, value: &str) -> bool {
 }
 
 pub fn format_company_registry(format: &str, value: &str) -> String {
-    let rule = find(registry_formats(), format);
+    let rule = find(&REGISTRY_FORMATS, format);
     let compacted = compact_registry(value);
     if let Some(rule) = rule {
         if let Some((pattern, template)) = &rule.display {

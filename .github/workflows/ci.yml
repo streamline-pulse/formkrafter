@@ -71,7 +71,7 @@ jobs:
       # The core writes the fixtures the port is tested against: stale ones
       # mean a core change the Python package has not followed.
       - name: Parity fixtures are up to date
-        run: bun scripts/python-parity.ts --check
+        run: bun scripts/parity.ts --check
 
       # formkrafter.testing runs the built core through Node
       - name: Build the core
@@ -102,7 +102,7 @@ jobs:
       # The core writes the fixtures the port is tested against: stale ones
       # mean a core change the Rust crate has not followed.
       - name: Parity fixtures are up to date
-        run: bun scripts/python-parity.ts --check
+        run: bun scripts/parity.ts --check
 
       - uses: dtolnay/rust-toolchain@stable
         with:

@@ -89,10 +89,10 @@ export {
     JsRunnerService,
     JsValidationResult,
     SandboxJsRunnerService
-} from "./services/js_runner_service.js";
-export { UnsafeEvalJsRunnerService } from "./services/unsafe_js_runner_service.js";
-export { runSandboxed } from "./services/sandbox_interpreter.js";
-export { DataSourceService, FetchDataSourceService } from "./services/data_source_service.js";
+} from "./services/js-runner-service.js";
+export { UnsafeEvalJsRunnerService } from "./services/unsafe-js-runner-service.js";
+export { runSandboxed } from "./services/sandbox-interpreter.js";
+export { DataSourceService, FetchDataSourceService } from "./services/data-source-service.js";
 export {
     FileLike,
     UploadedFile,
@@ -101,7 +101,7 @@ export {
     Base64FileUploadService,
     UrlFileUploadService,
     UrlFileUploadDefaults
-} from "./services/file_upload_service.js";
+} from "./services/file-upload-service.js";
 
 // Localized content
 export {
@@ -144,13 +144,13 @@ export type {
 } from "./compat/formio.js";
 export { expandSpec, hasNestedForms } from "./utils/expand-spec.js";
 export type { ExpandSpecOptions } from "./utils/expand-spec.js";
-export { FetchSpecSourceService } from "./services/spec_source_service.js";
+export { FetchSpecSourceService } from "./services/spec-source-service.js";
 export type {
     SpecSourceService,
     FetchSpecSourceDefaults
-} from "./services/spec_source_service.js";
-export { FetchOptionSourceService } from "./services/option_source_service.js";
-export { FilePickOptions, FilePickerService } from "./services/file_picker_service.js";
+} from "./services/spec-source-service.js";
+export { FetchOptionSourceService } from "./services/option-source-service.js";
+export { FilePickOptions, FilePickerService } from "./services/file-picker-service.js";
 export {
   DocumentReading,
   DocumentReadOptions,
@@ -158,9 +158,9 @@ export {
   FetchDocumentReaderDefaults,
   FetchDocumentReaderService,
   readDocumentReading,
-} from "./services/document_reader_service.js";
+} from "./services/document-reader-service.js";
 export type {
     OptionSourceService,
     OptionCatalogEntry,
     FetchOptionSourceDefaults
-} from "./services/option_source_service.js";
+} from "./services/option-source-service.js";

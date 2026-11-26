@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { UrlFileUploadService } from "../lib/services/file_upload_service";
+import { UrlFileUploadService } from "../lib/services/file-upload-service";
 
 const fakeFile = (name = "doc.pdf") =>
   new File([new Uint8Array([1, 2, 3])], name, { type: "application/pdf" });

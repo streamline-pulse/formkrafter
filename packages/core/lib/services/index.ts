@@ -1,28 +1,28 @@
 import {
   SandboxJsRunnerService,
   type JsRunnerService,
-} from "./js_runner_service.js";
+} from "./js-runner-service.js";
 import {
   FetchDataSourceService,
   type DataSourceService,
-} from "./data_source_service.js";
+} from "./data-source-service.js";
 import {
   Base64FileUploadService,
   type FileUploadService,
-} from "./file_upload_service.js";
+} from "./file-upload-service.js";
 import {
   FetchSpecSourceService,
   type SpecSourceService,
-} from "./spec_source_service.js";
+} from "./spec-source-service.js";
 import {
   FetchOptionSourceService,
   type OptionSourceService,
-} from "./option_source_service.js";
+} from "./option-source-service.js";
 import {
   FetchDocumentReaderService,
   type DocumentReaderService,
-} from "./document_reader_service.js";
-import type { FilePickerService } from "./file_picker_service.js";
+} from "./document-reader-service.js";
+import type { FilePickerService } from "./file-picker-service.js";
 
 export interface Services {
   jsRunnerService: JsRunnerService;

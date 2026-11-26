@@ -1,7 +1,7 @@
 """The port against the core: every case of parity/cases.json compiled and validated by both, every rule
 of parity/jsonlogic.json evaluated by both, and the identifier helpers of parity/utils.json.
 
-parity/expected.json is written by the core (`bun scripts/python-parity.ts`); CI regenerates it and fails
+parity/expected.json is written by the core (`bun scripts/parity.ts`); CI regenerates it and fails
 when it is stale, so a core change the port does not follow shows up here.
 """
 
@@ -25,7 +25,7 @@ from formkrafter.identity import (
 )
 from formkrafter.testing import as_json, browser_enforced_nothing
 
-PARITY = Path(__file__).parent / "parity"
+PARITY = Path(__file__).parents[2] / "parity"
 CASES = {case["name"]: case for case in json.loads((PARITY / "cases.json").read_text())}
 EXPECTED = json.loads((PARITY / "expected.json").read_text())
 LOGIC = json.loads((PARITY / "jsonlogic.json").read_text())
