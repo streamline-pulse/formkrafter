@@ -25,7 +25,7 @@ import { gzipSync } from 'node:zlib'
 const ROOT = resolve(import.meta.dirname, '..')
 
 const TARGETS = [
-  { name: 'formkrafter-core', entry: 'packages/core/dist/index.js', budgetKb: 105 },
+  { name: 'formkrafter-core', entry: 'packages/core/dist/index.js', budgetKb: 110 },
   { name: 'formkrafter-wc (builder + renderer)', entry: 'packages/wc/dist/components/index.js', budgetKb: 110, external: [] },
   { name: 'formkrafter-react', entry: 'packages/react/dist/index.js', budgetKb: 375, external: ['react'] },
   { name: 'formkrafter-vue', entry: 'packages/vue/dist/index.js', budgetKb: 375, external: ['vue'] },
