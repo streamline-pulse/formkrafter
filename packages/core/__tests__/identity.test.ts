@@ -37,7 +37,7 @@ describe("identifiants nationaux", () => {
   });
 });
 
-// La cle du NIR corse se derive du numero avec 2A -> 19 : on la calcule pour l'exemple.
+// The Corsican NIR key derives from the number with 2A -> 19: computed here for the example.
 function mrzSafe(number: string, _: number): boolean {
   const key = 97 - Number(BigInt(number) % 97n);
   return checkFrNir(`1 94 02 2A 004 012 ${String(key).padStart(2, "0")}`);

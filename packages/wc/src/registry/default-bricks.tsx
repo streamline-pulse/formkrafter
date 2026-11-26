@@ -22,8 +22,8 @@ import type { SlotRules } from '@streamline-pulse/formkrafter-core';
 import type { BrickSpec, RecapItem } from '@streamline-pulse/formkrafter-core';
 import type { WcBrickProps } from './create-brick';
 
-// Une valeur objet ou liste dans un champ texte (reglage enregistre en JSON)
-// s'affiche en JSON lisible au lieu de « [object Object] ».
+// An object or list value in a text field (a setting saved as JSON) shows
+// as readable JSON instead of "[object Object]".
 const textValue = (data: unknown, pretty = false): string => {
   if (data === null || data === undefined) return '';
   if (typeof data === 'object') return pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
@@ -175,7 +175,7 @@ const fieldNoteInner = (props: WcBrickProps): VNode | null => {
   );
 };
 
-// Aide descriptive sous le champ (`configs.description`, localisable).
+// Descriptive help under the field (`configs.description`, localizable).
 const fieldHint = (props: WcBrickProps): VNode | null => {
   const text = resolveLocalizedText(props.configs?.description as never, props.locale);
   return text ? <p class="fk-field__hint">{text}</p> : null;
@@ -219,9 +219,8 @@ const field = (props: WcBrickProps, fallback: string, control: VNode): VNode => 
   );
 };
 
-// Variables de gabarit (`{{name}}`) proposees pendant la saisie quand le
-// contexte du formulaire en fournit (`_variables`) ; `variables: false` sur
-// la brique les coupe.
+// Template variables (`{{name}}`) suggested while typing when the form context
+// provides them (`_variables`); `variables: false` on the brick turns them off.
 const withVariables = (props: WcBrickProps, control: VNode): VNode => {
   const variables = props.dataMap?.['_variables'];
   if (!Array.isArray(variables) || variables.length === 0 || props.configs?.variables === false || props.readOnly)
@@ -591,7 +590,7 @@ export const signatureBrick = createBrick({
 
 const OSM_TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
-// "lat, lng" dans les configs du builder -> [lat, lng] pour la carte.
+// "lat, lng" in the builder configs -> [lat, lng] for the map.
 const parseCenter = (raw: unknown): [number, number] | undefined => {
   if (Array.isArray(raw) && raw.length === 2 && raw.every((n) => typeof n === 'number')) return [raw[0], raw[1]];
   if (typeof raw !== 'string') return undefined;
@@ -629,7 +628,7 @@ export const geoPointBrick = createBrick({
   name: 'Map point',
   category: 'Geo',
   defaultConfigs: { label: 'Location', center: '', zoom: 6, height: 320, tileUrl: OSM_TILES, manual: true },
-  // Pas de <label> autour : un clic sur la carte activerait son premier bouton.
+  // No <label> around it: a click on the map would activate its first button.
   render: (props) => fieldBlock(props, 'Location', geoMap(props, 'point')),
 });
 
@@ -651,8 +650,8 @@ type AddressValue = {
   properties: { label: string; [key: string]: unknown };
 };
 
-// Une adresse cherchee chez un geocodeur, stockee avec son point ; la carte
-// en dessous permet d'ajuster le point sans perdre l'adresse normalisee.
+// An address looked up with a geocoder, stored with its point; the map below
+// lets the point be adjusted without losing the normalized address.
 export const geoAddressBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -701,7 +700,6 @@ export const geoAddressBrick = createBrick({
             disabled={props.editable === true || props.disabled === true}
             onGeoChange={(event: CustomEvent<unknown>) => {
               event.stopPropagation();
-              // Le point se deplace, l'adresse normalisee reste.
               props.onDataChange?.({ ...value, geometry: (event.detail ?? null) as AddressValue['geometry'] });
             }}
           ></fk-geo-map>
@@ -713,8 +711,8 @@ export const geoAddressBrick = createBrick({
 
 type ZoneValue = { code: string; name: string };
 
-// Une zone (ou plusieurs avec `multiple`) choisie sur une couche de reference
-// GeoJSON : stockee par son code et son nom, pas par sa geometrie.
+// A zone (or several with `multiple`) picked on a GeoJSON reference layer:
+// stored by its code and name, not by its geometry.
 export const geoLayerBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -768,8 +766,8 @@ export const geoLayerBrick = createBrick({
   },
 });
 
-// Identifiant national : un champ texte dont la regle de controle vient de
-// `idFormat` (fr-nir, bj-npi, digits-N), appliquee par le schema de validation.
+// National identifier: a text field whose check rule comes from `idFormat`
+// (fr-nir, bj-npi, digits-N), applied by the validation schema.
 export const nationalIdBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -797,8 +795,8 @@ export const nationalIdBrick = createBrick({
 
 type MrzValue = { raw: string; valid: boolean; errors: string[]; documentNumber?: string; nationality?: string; surname?: string; givenNames?: string; birthDate?: string | null; sex?: string; expiryDate?: string | null };
 
-// Zone MRZ : les lignes collees sont lues, les chiffres de controle verifies,
-// les champs affiches ; la valeur porte le verdict pour le schema (`mrzValid`).
+// MRZ zone: the pasted lines are read and their check digits verified for display;
+// the stored value keeps the zone (`raw`), which the schema re-reads (`mrzValid`).
 export const mrzBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -878,7 +876,7 @@ const idInput = (props: WcBrickProps, fallback: string, extra: Record<string, un
     />
   );
 
-// Identifiant fiscal : meme mecanique que l'identifiant national (idFormat).
+// Tax identifier: same mechanism as the national identifier (idFormat).
 export const taxIdBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -889,7 +887,7 @@ export const taxIdBrick = createBrick({
   render: (props) => idInput(props, 'Tax identifier', { inputmode: 'numeric' }),
 });
 
-// IBAN : controle ISO 7064 par le schema, groupe par quatre a la sortie du champ.
+// IBAN: ISO 7064 check by the schema, grouped by four when the field loses focus.
 export const ibanBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -928,7 +926,7 @@ const currenciesOf = (props: WcBrickProps): string[] => {
   return cleaned.length ? cleaned : ['XOF'];
 };
 
-// Montant avec devise : { amount, currency }, la devise parmi celles proposees.
+// Amount with currency: { amount, currency }, the currency among those offered.
 export const moneyBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -998,8 +996,8 @@ const slotRulesOf = (props: WcBrickProps): SlotRules => {
   };
 };
 
-// Rendez-vous : un creneau parmi ceux d'une URL ou des regles d'ouverture ;
-// la valeur est { id, start, end }. Les places restantes se gerent cote fournisseur.
+// Appointment: one slot among those from a URL or from opening rules; the value
+// is { id, start, end }. Remaining capacity is managed by the provider.
 export const appointmentBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -1036,9 +1034,9 @@ export const appointmentBrick = createBrick({
     ),
 });
 
-// Lecture de document : le fichier part chez le lecteur de l'hote (OCR, mise en
-// page, modele…), la valeur garde le texte lu et les champs demandes, et
-// `fills` reporte ces champs dans d'autres cles du formulaire.
+// Document reading: the file goes to the host's reader (OCR, layout, model…),
+// the value keeps the text read and the requested fields, and `fills` copies
+// those fields into other keys of the form.
 export const documentBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -1088,8 +1086,8 @@ export const documentBrick = createBrick({
 
 type MeasureStored = { value: number; unit: string; base: number };
 
-// Mesure : un nombre et son unite dans une famille (longueur, surface, masse,
-// volume, duree) ; la valeur garde l'equivalent en unite de base pour les totaux.
+// Measure: a number and its unit within a family (length, area, mass, volume,
+// duration); the value keeps the base-unit equivalent for totals.
 export const measureBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -1145,8 +1143,8 @@ export const measureBrick = createBrick({
   },
 });
 
-// Immatriculation : saisie libre, mise en forme du format a la sortie du champ,
-// controle par le schema (`plate-<format>`).
+// Vehicle plate: free input, formatted to its format when the field loses focus,
+// checked by the schema (`plate-<format>`).
 export const vehiclePlateBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -1176,7 +1174,7 @@ export const vehiclePlateBrick = createBrick({
     ),
 });
 
-// Registre d'entreprise (RCCM OHADA, RCS…) : meme principe, format `registry-<format>`.
+// Company registry (RCCM OHADA, RCS…): same principle, format `registry-<format>`.
 export const companyRegistryBrick = createBrick({
   type: 'input',
   dataType: 'string',
@@ -1208,7 +1206,7 @@ export const companyRegistryBrick = createBrick({
 
 type DateRangeValue = { from?: string; to?: string };
 
-// Plage de dates : { from, to }, la fin jamais avant le debut (schema).
+// Date range: { from, to }, the end never before the start (schema).
 export const dateRangeBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -1429,8 +1427,8 @@ export const dataGridBrick = createBrick({
     ),
 });
 
-// Cle / valeur : un objet plat edite ligne par ligne, les valeurs acceptant les
-// variables ({{…}}) comme un champ texte. Pour une liste, la grille suffit.
+// Key / value: a flat object edited line by line, the values accepting variables
+// ({{…}}) like a text field. For a list, the grid is enough.
 export const keyValueBrick = createBrick({
   type: 'input',
   dataType: 'object',
@@ -1802,10 +1800,9 @@ export const nestedFormBrick = createBrick({
  * Tracks whether the built-in bricks are in the registry, on globalThis so
  * every bundle copy agrees (same reason the registry itself lives there).
  *
- * Callers used to guard with `getBrickMolds().length === 0`, which broke as
- * soon as an app registered a custom brick at startup — the registry was no
- * longer empty, so the 30 built-ins never registered and every spec rendered
- * "Brick panel:column not found".
+ * A non-empty registry does not mean the defaults are registered: an app may
+ * register its own bricks first. Callers must not guard on the registry being
+ * empty; this function is idempotent and skips types already registered.
  */
 const DEFAULTS_KEY = Symbol.for('formkrafter.wc.defaultBricksRegistered');
 const globalFlags = globalThis as unknown as Record<symbol, boolean | undefined>;

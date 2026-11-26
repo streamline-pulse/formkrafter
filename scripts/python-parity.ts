@@ -1,11 +1,11 @@
 /**
- * Parity fixtures for the Python port (python/): the core compiles every case of
+ * Parity fixtures for the server ports (python/ and rust/): the core compiles every case of
  * python/tests/parity/cases.json and records the schema, the lint issues and the
  * verdict on each data sample; it also evaluates jsonlogic.json (rules) and
- * utils.json (identifiers, plates, registries, MRZ). pytest replays them against the Python package, so
- * a change in the core that the port does not follow fails the Python tests.
+ * utils.json (identifiers, plates, registries, MRZ). pytest and cargo test replay them, so
+ * a change in the core that a port does not follow fails that port's tests.
  *
- *   bun scripts/python-parity.ts          # rewrite expected.json and CORE_VERSION (run by version-packages)
+ *   bun scripts/python-parity.ts          # rewrite expected.json and both CORE_VERSIONs (run by version-packages)
  *   bun scripts/python-parity.ts --check  # fail when expected.json is stale (CI)
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -88,5 +88,10 @@ if (process.argv.includes("--check")) {
   writeFileSync(target, output);
   const init = new URL("../python/src/formkrafter/__init__.py", import.meta.url);
   writeFileSync(init, readFileSync(init, "utf8").replace(/^CORE_VERSION = ".*"$/m, `CORE_VERSION = "${core.version}"`));
+  const lib = new URL("../rust/src/lib.rs", import.meta.url);
+  writeFileSync(
+    lib,
+    readFileSync(lib, "utf8").replace(/^pub const CORE_VERSION: &str = ".*";$/m, `pub const CORE_VERSION: &str = "${core.version}";`)
+  );
   console.log(`wrote ${expected.cases.length} cases (core ${core.version})`);
 }

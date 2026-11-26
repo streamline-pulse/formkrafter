@@ -1,9 +1,7 @@
-// Brick requirements utils
 export { BrickType } from "./utils/brick-type.js";
 export { BrickMold } from "./utils/brick-mold.js";
 export { DropType, BrickMoldDropType, BrickSpecDropType } from "./utils/drop-type.js";
 
-// Brick configs utils
 export { BrickStyles } from "./utils/brick-styles.js";
 export { BrickBaseConfigs, CommonBrickProps, WithBrickBaseConfigs } from "./utils/common-brick-props.js";
 export {
@@ -56,11 +54,9 @@ export {
     appendSearchParam
 } from "./utils/remote.js";
 
-// Brick
 export { PanelBrickProps, InputBrickProps, CollectionBrickProps } from "./brick/types.js";
 export { Brick, BrickProps } from "./brick/brick.js";
 
-// Brick utils functions
 export {
     CommonUtils,
     PanelUtils,
@@ -72,10 +68,8 @@ export {
     evalBrickCode
 } from "./brick/utils.js";
 
-// Rules
 export { Rule } from "./rules/rule.js";
 export { Effect } from "./rules/effect.js";
-// Validators
 export {
     Validator,
     ValidationResult,
@@ -90,7 +84,6 @@ export {
 export { Validation } from "./validators/validation.js";
 export { JSONSchemaType } from "./validators/json-schema-type.js";
 
-// Services
 export { services } from "./services/index.js";
 export {
     JsRunnerService,

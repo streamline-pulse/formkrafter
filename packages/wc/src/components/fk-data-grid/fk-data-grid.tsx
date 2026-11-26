@@ -51,8 +51,8 @@ export class FkDataGrid {
     return scoped;
   }
 
-  // Grille entierement modifiable quand sa cle est listee ; sinon seules les
-  // cellules listees (`grid[i].champ`) le sont.
+  // The whole grid is editable when its key is listed; otherwise only the
+  // listed cells (`grid[i].field`) are.
   private rowEditableKeys(index: number): string[] | undefined {
     if (this.editableKeys === undefined || this.editableKeys.includes(this.gridKey())) return undefined;
     const prefix = `${this.gridKey()}[${index}].`;
@@ -63,7 +63,7 @@ export class FkDataGrid {
     return this.editableKeys !== undefined && !this.editableKeys.includes(this.gridKey());
   }
 
-  // Un signalement fait dans une ligne remonte avec la cle complete de la cellule.
+  // A report made in a row bubbles up with the cell's full key.
   @Listen('brickReviewChange')
   handleRowReviewChange(event: CustomEvent<BrickReviewChangeDetail>) {
     if (event.target === this.host) return;

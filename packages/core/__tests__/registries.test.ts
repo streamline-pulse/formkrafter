@@ -4,7 +4,7 @@ import { checkCompanyRegistry, checkPlate, formatCompanyRegistry, formatPlate } 
 describe("registres publics", () => {
   test("immatriculations par pays", () => {
     expect(checkPlate("fr", "ab-123-cd")).toBe(true);
-    expect(checkPlate("fr", "AB-123-CI")).toBe(false); // I n'est pas admis en France
+    expect(checkPlate("fr", "AB-123-CI")).toBe(false); // I is not allowed in France
     expect(formatPlate("fr", "ab123cd")).toBe("AB-123-CD");
     expect(checkPlate("bj", "AB 1234 RB")).toBe(true);
     expect(formatPlate("bj", "ab1234rb")).toBe("AB 1234 RB");

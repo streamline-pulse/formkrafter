@@ -5,7 +5,7 @@ use serde_json::{Map, Value};
 use crate::js;
 use crate::messages::default_validation_message;
 
-/// A brick spec is a plain JSON object.
+/// The spec as a JSON object; `None` when it is not one.
 pub fn as_spec(spec: &Value) -> Option<&Map<String, Value>> {
     spec.as_object()
 }

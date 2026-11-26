@@ -11,7 +11,7 @@ const required = (props: NativeBrickProps) => props.validations?.some((v) => v.v
 
 type DocumentValue = DocumentReading & { name?: string }
 
-// Sans capture native : le document lu sur le web s'affiche, ses champs se corrigent.
+// No native capture: the document read on the web is shown and its fields can be corrected.
 function DocumentControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const value = props.data as DocumentValue | undefined
@@ -24,7 +24,7 @@ function DocumentControl(props: NativeBrickProps) {
   }
   const [reading, setReading] = useState(false)
   const [error, setError] = useState<string | undefined>(undefined)
-  // Avec un selecteur installe par l'hote (camera, documents), la lecture se fait aussi ici.
+  // With a picker installed by the host (camera, documents), reading also happens here.
   const picker = services.filePickerService
   const pick = async (capture: boolean) => {
     if (!picker) return

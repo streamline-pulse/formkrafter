@@ -9,7 +9,7 @@ const required = (props: NativeBrickProps) => props.validations?.some((v) => v.v
 
 type Picked = { id: string; start: string; end: string }
 
-// Sans calendrier natif : le creneau choisi sur le web se lit.
+// No native calendar: the slot picked on the web is shown read-only.
 function AppointmentControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const value = props.data as Picked | undefined

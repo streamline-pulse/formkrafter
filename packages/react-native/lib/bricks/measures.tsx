@@ -8,7 +8,7 @@ import { Field } from './field.js'
 
 const required = (props: NativeBrickProps) => props.validations?.some((v) => v.validator === 'required')
 
-// Mesure : nombre + unite choisie parmi celles de la famille ; la valeur garde l'equivalent en unite de base.
+// Measure: number + unit picked from the family; the value keeps the base-unit equivalent.
 function MeasureControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const family = measureFamilyOf(props.configs.family)

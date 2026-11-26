@@ -160,7 +160,7 @@ export function buildValidationSchema(brickSpecs?: BrickSpec, locale?: string) {
             }
         }
 
-        // Briques identite : la regle vient de la brique, pas d'une validation a cocher.
+        // Identity bricks: the rule comes from the brick, not from a validation to tick.
         if (brick.id === "iban") {
             property.format = "identity-iban";
             messages.format = defaultValidationMessage("iban", locale);

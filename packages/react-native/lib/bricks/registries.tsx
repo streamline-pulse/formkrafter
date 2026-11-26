@@ -7,7 +7,7 @@ import { Field } from './field.js'
 
 const required = (props: NativeBrickProps) => props.validations?.some((v) => v.validator === 'required')
 
-// Immatriculation et registre d'entreprise : texte en majuscules, mis en forme a la sortie du champ.
+// Vehicle plate and company registry: upper-case text, formatted when the field loses focus.
 function RegistryControl(props: NativeBrickProps & { format: (raw: string) => string }) {
   const theme = useFkTheme()
   return (

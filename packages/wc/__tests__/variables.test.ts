@@ -91,8 +91,8 @@ describe('variable picker', () => {
 
   test('the two braces typed one after the other keep the list open', async () => {
     const input = el.querySelector('input.fk-field__input') as HTMLInputElement;
-    // Le premier `{` ferme (aucun jeton), le second ouvre : la fermeture
-    // differee du premier ne doit pas annuler l'ouverture.
+    // The first `{` closes (no token), the second opens: the deferred closing
+    // of the first must not cancel the opening.
     typeInto(input, 'Bonjour {');
     input.dispatchEvent(new KeyboardEvent('keyup', { key: '{', bubbles: true }));
     await tick(20);

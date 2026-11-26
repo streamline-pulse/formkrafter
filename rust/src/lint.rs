@@ -96,7 +96,7 @@ pub fn lint_spec(spec: &Value) -> Vec<SpecIssue> {
             }
         }
 
-        if brick_type == Some("collection") && !brick.get("children").is_some_and(python_truthy) {
+        if brick_type == Some("collection") && !brick.get("children").is_some_and(has_content) {
             issues.push(SpecIssue {
                 code: "collection-without-children",
                 path: path.clone(),
@@ -137,7 +137,7 @@ pub fn lint_spec(spec: &Value) -> Vec<SpecIssue> {
 }
 
 /// Plain truthiness for spec fields, where an empty list or object is false.
-fn python_truthy(value: &Value) -> bool {
+fn has_content(value: &Value) -> bool {
     match value {
         Value::Null => false,
         Value::Bool(b) => *b,

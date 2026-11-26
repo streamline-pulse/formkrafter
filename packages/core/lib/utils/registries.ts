@@ -46,7 +46,7 @@ export const PLATE_FORMATS: Format[] = [
 
 export const REGISTRY_FORMATS: Format[] = [
   {
-    // RCCM OHADA : RB/COT/01 B 1234 (pays/ville/annee, lettre de categorie, numero).
+    // RCCM OHADA: RB/COT/01 B 1234 (country/city/year, category letter, number)
     id: "ohada-rccm",
     label: "OHADA · RCCM (RB/COT/01 B 1234)",
     test: (v) => /^[A-Z]{2}\/[A-Z]{2,4}\/\d{2,4}[A-Z]\d{3,7}$/.test(v.replace(/[\s]/g, "")),

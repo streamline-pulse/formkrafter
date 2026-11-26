@@ -7,7 +7,6 @@ export type MeasureFamily = "length" | "area" | "mass" | "volume" | "duration";
 
 export interface MeasureUnit {
   id: string;
-  /** Symbol shown to the user. */
   symbol: string;
   /** Multiply a value in this unit by `factor` to get the family's base unit. */
   factor: number;

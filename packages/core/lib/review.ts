@@ -1,6 +1,5 @@
 /** What a reviewer said about one field, keyed by the brick `key`. */
 export interface FieldAnnotation {
-    /** The value must be corrected. */
     incorrect?: boolean;
     /** Free text shown to whoever corrects the field. */
     comment?: string;

@@ -14,13 +14,13 @@ import { evalBrickCode, getAffectedProperties } from "../brick/utils.js";
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv, ["email", "uri"]);
 ajvErrors(ajv);
-// Identifiants nationaux : un format ajv par regle (identity-fr-nir, identity-digits-10...).
+// National identifiers: one ajv format per rule (identity-fr-nir, identity-digits-10...).
 for (const format of ["fr-nir", "bj-npi", "fr-siren", "fr-siret", "bj-ifu", "iban", ...Array.from({ length: 20 }, (_, i) => `digits-${i + 1}`)])
   ajv.addFormat(`identity-${format}`, (value: string) => checkIdentity(format, value));
-// Registres publics : immatriculations et numeros d'entreprise par format.
+// Public registries: vehicle plates and company numbers, by format.
 for (const { id } of PLATE_FORMATS) ajv.addFormat(`plate-${id}`, (value: string) => checkPlate(id, value));
 for (const { id } of REGISTRY_FORMATS) ajv.addFormat(`registry-${id}`, (value: string) => checkCompanyRegistry(id, value));
-// Plage de dates : la fin ne precede pas le debut (chaines ISO comparables).
+// Date range: the end does not precede the start (ISO strings compare as text).
 ajv.addKeyword({
   keyword: "dateRange",
   type: "object",

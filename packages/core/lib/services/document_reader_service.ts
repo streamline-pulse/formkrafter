@@ -101,7 +101,7 @@ export class FetchDocumentReaderService implements DocumentReaderService {
         const payload = (await response.json()) as { message?: string };
         if (payload?.message) message = payload.message;
       } catch {
-        // Reponse sans JSON : le statut suffit.
+        // Response without JSON: the status is enough.
       }
       throw new Error(message);
     }

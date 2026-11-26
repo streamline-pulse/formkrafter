@@ -110,7 +110,7 @@ select.fk-field__input {
   color: var(--fk-color-danger);
 }
 
-/* Aide descriptive sous le champ (configs.description) : pour les integrateurs et les usagers. */
+/* Descriptive help under the field (configs.description): for integrators and end users. */
 .fk-field__hint {
   margin: 0.25rem 0 0;
   font-size: 0.75rem;
@@ -760,14 +760,12 @@ select.fk-field__input:dir(rtl) {
   cursor: default;
 }
 
-/* Suggestions de variables sous un champ texte. */
 .fk-variables {
   position: relative;
   display: block;
   width: 100%;
 }
 
-/* Zone de lecture d'un document de voyage. */
 .fk-mrz__input {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: 0.08em;
@@ -801,7 +799,6 @@ select.fk-field__input:dir(rtl) {
   margin: 0;
 }
 
-/* Montant avec devise. */
 .fk-money {
   display: flex;
   gap: 0.5rem;
@@ -818,7 +815,6 @@ select.fk-field__input:dir(rtl) {
   letter-spacing: 0.05em;
 }
 
-/* Plage de dates. */
 .fk-range {
   display: flex;
   flex-wrap: wrap;

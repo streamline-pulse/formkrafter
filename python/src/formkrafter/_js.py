@@ -214,7 +214,8 @@ def number_to_string(n: Number) -> str:
         return text.rstrip("0").rstrip(".") if "." in text else text
     sign, coefficient, exponent = digits.normalize().as_tuple()
     mantissa = "".join(map(str, coefficient))
-    exp = exponent + len(mantissa) - 1  # type: ignore[operator]
+    assert isinstance(exponent, int)
+    exp = exponent + len(mantissa) - 1
     body = mantissa[0] + ("." + mantissa[1:] if len(mantissa) > 1 else "")
     return f"{'-' if sign else ''}{body}e{'+' if exp >= 0 else '-'}{abs(exp)}"
 

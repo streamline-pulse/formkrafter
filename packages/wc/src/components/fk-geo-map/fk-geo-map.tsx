@@ -18,7 +18,7 @@ export interface GeoZone {
 type LayerFeature = { type: 'Feature'; geometry: unknown; properties?: Record<string, unknown> };
 type LayerCollection = { type: 'FeatureCollection'; features: LayerFeature[] };
 
-// Une couche de reference se charge une fois par URL pour toute la page.
+// A reference layer loads once per URL for the whole page.
 const layerCache = new Map<string, Promise<LayerCollection>>();
 const loadLayer = (url: string): Promise<LayerCollection> => {
   let pending = layerCache.get(url);
@@ -277,7 +277,7 @@ export class FkGeoMap {
     this.emit();
   }
 
-  // Les options arrivent apres le premier rendu : la valeur du select se pose a la main.
+  // The options arrive after the first render: the select's value is set by hand.
   componentDidRender() {
     if (this.selectEl && this.mode === 'layer') this.selectEl.value = this.selected[0] ?? '';
   }

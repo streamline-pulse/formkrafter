@@ -214,8 +214,6 @@ const callFunction = (ctx: Ctx, fn: unknown, args: unknown[]): unknown => {
   throw new Error("This function is not allowed");
 };
 
-// --- Allowlisted builtins ---------------------------------------------------
-
 const trust = <F extends AnyFn>(fn: F, spec: Omit<NativeSpec, "fn"> = {}): F => {
   trusted.set(fn, { fn, ...spec });
   return fn;
@@ -523,8 +521,6 @@ const methodFor = (object: unknown, prop: string | number): NativeSpec | undefin
   if (object instanceof RegExp) return REGEXP_METHODS.get(name);
   return undefined;
 };
-
-// --- Interpreter --------------------------------------------------------------
 
 const lookup = (ctx: Ctx, name: string): unknown => {
   for (let i = ctx.scopes.length - 1; i >= 0; i--) {

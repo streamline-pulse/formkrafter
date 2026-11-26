@@ -3,13 +3,13 @@ import { generateSlots, groupSlotsByDay, readSlots } from "../lib/utils/slots.js
 import { validateFormData } from "../lib/validators/validator.js";
 import type { BrickSpec } from "../lib/utils/brick-spec.js";
 
-// Mardi 20 octobre 2026, 10:00 locale.
+// Tuesday 20 October 2026, 10:00 local time.
 const now = new Date(2026, 9, 20, 10, 0);
 
 describe("creneaux de rendez-vous", () => {
   test("genere les creneaux ouverts a partir des regles", () => {
     const slots = generateSlots({ days: [2, 4], from: "09:00", to: "11:00", duration: 30, horizonDays: 7 }, now);
-    // Mardi apres 10:00 (2 creneaux), jeudi complet (4), mardi suivant hors horizon de 7 jours.
+    // Tuesday after 10:00 (2 slots), Thursday full (4), next Tuesday beyond the 7-day horizon.
     expect(slots.map((s) => s.start)).toEqual([
       "2026-10-20T10:00", "2026-10-20T10:30",
       "2026-10-22T09:00", "2026-10-22T09:30", "2026-10-22T10:00", "2026-10-22T10:30",

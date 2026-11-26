@@ -16,9 +16,7 @@ from typing import Any
 
 from formkrafter.lint import lint_spec
 from formkrafter.spec import as_spec, build_validation_schema
-from formkrafter.validate import SchemaInvalid, validate_form_data
-
-_COMPILE_FAILURE = "the validation schema failed to compile, so no rule was enforced: "
+from formkrafter.validate import COMPILE_FAILURE_PREFIX, SchemaInvalid, validate_form_data
 
 _SCRIPT = """
 import { buildValidationSchema, lintSpec, validateFormData } from "@streamline-pulse/formkrafter-core";
@@ -140,10 +138,10 @@ def without_compile_reason(result: dict[str, Any]) -> dict[str, Any]:
     warnings = result.get("warnings")
     if not warnings:
         return result
-    trimmed = [w[: len(_COMPILE_FAILURE)] if w.startswith(_COMPILE_FAILURE) else w for w in warnings]
+    trimmed = [w[: len(COMPILE_FAILURE_PREFIX)] if w.startswith(COMPILE_FAILURE_PREFIX) else w for w in warnings]
     return {**result, "warnings": trimmed}
 
 
 def browser_enforced_nothing(verdict: dict[str, Any]) -> bool:
     """The core's verdict on a schema Ajv could not compile, where the server raises `SchemaInvalid` instead."""
-    return any(w.startswith(_COMPILE_FAILURE) for w in verdict.get("warnings") or [])
+    return any(w.startswith(COMPILE_FAILURE_PREFIX) for w in verdict.get("warnings") or [])

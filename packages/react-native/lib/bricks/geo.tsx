@@ -14,8 +14,8 @@ const isPoint = (value: unknown): value is Point =>
   Array.isArray((value as Point).coordinates) &&
   (value as Point).coordinates.length === 2
 
-// Sans carte native : un point se saisit par ses coordonnees, une zone se
-// lit seulement (son dessin se fait sur le web).
+// No native map: a point is entered by its coordinates, a zone is read-only
+// (it is drawn on the web).
 function GeoPointControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const point = isPoint(props.data) ? props.data : undefined
@@ -105,8 +105,8 @@ type AddressFeature = {
   properties: { label: string; [key: string]: unknown }
 }
 
-// Pas de geocodage natif : l'adresse se saisit en texte, un point deja
-// obtenu sur le web est conserve tant que le libelle ne change pas.
+// No native geocoding: the address is typed as text; a point already obtained
+// on the web is kept as long as the label does not change.
 function GeoAddressControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const value = props.data as AddressFeature | undefined
@@ -157,7 +157,7 @@ export const geoAddressBrick: NativeBrick = createNativeBrick({
 
 type Zone = { code: string; name: string }
 
-// Pas de couche cartographique native : les zones choisies sur le web se lisent.
+// No native map layer: zones picked on the web are shown read-only.
 function GeoLayerControl(props: NativeBrickProps) {
   const theme = useFkTheme()
   const raw = props.data
