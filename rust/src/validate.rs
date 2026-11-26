@@ -31,6 +31,8 @@ impl std::error::Error for SpecNotSupported {}
 #[derive(Clone, Debug)]
 pub enum ValidateError {
     SpecNotSupported(SpecNotSupported),
+    /// The validation schema does not compile. The browser then enforces nothing; the server refuses.
+    SchemaInvalid(String),
     Rule(RuleError),
 }
 
@@ -38,6 +40,7 @@ impl fmt::Display for ValidateError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             ValidateError::SpecNotSupported(e) => e.fmt(f),
+            ValidateError::SchemaInvalid(reason) => f.write_str(reason),
             ValidateError::Rule(e) => e.fmt(f),
         }
     }
@@ -274,10 +277,10 @@ fn mrz_valid(value: &Js) -> bool {
     if value.get("valid") != &Js::Bool(true) {
         return false;
     }
-    if let Js::Str(raw) = value.get("raw") {
-        return parse_mrz(raw, None).is_some_and(|parsed| parsed.valid);
+    match value.get("raw") {
+        Js::Str(raw) => parse_mrz(raw, None).is_some_and(|parsed| parsed.valid),
+        _ => false,
     }
-    true
 }
 
 /// The checks Ajv runs when it compiles the schema (meta-schema, regular expressions); raises on
@@ -493,6 +496,23 @@ pub fn assert_supported(spec: &Value) -> Result<(), ValidateError> {
                 }
             }
         }
+        if let Some(Value::Array(validations)) = brick.get("validations") {
+            for validation in validations.iter().filter_map(Value::as_object) {
+                if validation.get("validator").and_then(Value::as_str) != Some("pattern") {
+                    continue;
+                }
+                let Some(pattern) = validation.get("value").and_then(Value::as_str) else {
+                    continue;
+                };
+                if let Err(error) = js::compile_pattern(pattern) {
+                    return Err(ValidateError::SpecNotSupported(SpecNotSupported(format!(
+                        "{} ({}): pattern /{pattern}/ cannot be checked server-side: {error}",
+                        path,
+                        brick.get("name").and_then(Value::as_str).unwrap_or("")
+                    ))));
+                }
+            }
+        }
         let js_rules = rules::javascript_hiding(brick);
         if !js_rules.is_empty() && has_key(brick) {
             return Err(ValidateError::SpecNotSupported(SpecNotSupported(format!(
@@ -516,21 +536,22 @@ fn validate_level(
     data: &[(String, Js)],
     locale: Option<&str>,
     scope: &Js,
-) -> Result<(Details, Option<String>), ValidateError> {
+) -> Result<Details, ValidateError> {
     let schema = match build_validation_schema(spec, locale) {
         Some(schema) => schema,
-        None => return Ok((Vec::new(), None)),
+        None => return Ok(Vec::new()),
     };
     let schema = match schema.as_object() {
         Some(s) => s,
-        None => return Ok((Vec::new(), None)),
+        None => return Ok(Vec::new()),
     };
     let compiled = match compile_schema(schema) {
         Ok(compiled) => compiled,
         Err(error) => {
-            // the rules still run, and may still throw
             rules::hidden_keys(&Value::Object(spec.clone()), scope, JavaScriptMode::Skip)?;
-            return Ok((Vec::new(), Some(format!("{COMPILE_FAILURE_PREFIX}{error}"))));
+            return Err(ValidateError::SchemaInvalid(format!(
+                "{COMPILE_FAILURE_PREFIX}{error}"
+            )));
         }
     };
 
@@ -595,7 +616,7 @@ fn validate_level(
     // a field the rules hide is not checked (its rows still are, as in the core)
     let hidden = rules::hidden_keys(&Value::Object(spec.clone()), scope, JavaScriptMode::Skip)?;
     details.retain(|(k, _)| !hidden.contains(k));
-    Ok((details, None))
+    Ok(details)
 }
 
 /// Validate submitted data against a spec, as `validateFormData` does in the browser.
@@ -603,7 +624,8 @@ fn validate_level(
 /// Empty strings and nulls count as missing; collections are validated row by row, their errors
 /// keyed `items[0].field`; fields hidden by rules are not checked. `rule_scope` adds variables
 /// the rules read (merged over the data, as the core does). Returns `SpecNotSupported` when the
-/// spec needs JavaScript.
+/// spec needs JavaScript or a pattern the server cannot run, and `SchemaInvalid` when the schema
+/// does not compile (the browser then accepts everything; the server must not).
 pub fn validate_form_data(
     spec: &Value,
     data: &Js,
@@ -640,7 +662,7 @@ fn validate(
         }
         None => Js::Obj(present.clone()),
     };
-    let (mut details, compile_failure) = validate_level(spec, &present, locale, &scope)?;
+    let mut details = validate_level(spec, &present, locale, &scope)?;
 
     let mut bricks = Vec::new();
     spec::iterate_schema_bricks(spec, &mut bricks);
@@ -667,10 +689,7 @@ fn validate(
         }
     }
 
-    let mut warnings = validation_warnings(&Value::Object(spec.clone()));
-    if let Some(failure) = compile_failure {
-        warnings.push(failure);
-    }
+    let warnings = validation_warnings(&Value::Object(spec.clone()));
     let errors: Vec<(String, String)> = details
         .iter()
         .map(|(k, d)| (k.clone(), d.message.clone()))

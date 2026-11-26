@@ -14,7 +14,7 @@ use formkrafter::identity::{
 };
 use formkrafter::js::Js;
 use formkrafter::{build_validation_schema, CORE_VERSION};
-use formkrafter::{jsonlogic, lint_spec, validate_form_data};
+use formkrafter::{jsonlogic, lint_spec, validate_form_data, ValidateError};
 use serde_json::Value;
 
 fn parity_dir() -> PathBuf {
@@ -57,24 +57,6 @@ fn case_data(name: &str) -> &'static Value {
 }
 
 const COMPILE_FAILURE: &str = "the validation schema failed to compile, so no rule was enforced: ";
-
-fn without_compile_reason(result: &Value) -> Value {
-    let Some(warnings) = result.get("warnings").and_then(Value::as_array) else {
-        return result.clone();
-    };
-    let trimmed: Vec<Value> = warnings
-        .iter()
-        .map(|w| match w.as_str() {
-            Some(text) if text.starts_with(COMPILE_FAILURE) => {
-                Value::String(COMPILE_FAILURE.to_string())
-            }
-            _ => w.clone(),
-        })
-        .collect();
-    let mut out = result.clone();
-    out["warnings"] = Value::Array(trimmed);
-    out
-}
 
 #[test]
 fn fixtures_come_from_the_core_this_version_follows() {
@@ -130,12 +112,26 @@ fn same_verdict() {
                     );
                     continue;
                 }
+                if browser_enforced_nothing(verdict) {
+                    let outcome = validate_form_data(spec, &sample_js, locale_name, None);
+                    assert!(
+                        matches!(
+                            outcome,
+                            Err(ValidateError::SchemaInvalid(_) | ValidateError::SpecNotSupported(_))
+                        ),
+                        "[{name}] locale {locale_name:?}: the server must refuse a schema that does not compile, got {outcome:?}"
+                    );
+                    continue;
+                }
+                if SERVER_STRICTER.contains(&(name, sample_index(data, sample))) {
+                    continue;
+                }
                 let result = validate_form_data(spec, &sample_js, locale_name, None)
                     .expect("validation runs")
                     .to_dict();
                 assert_eq!(
-                    without_compile_reason(&result),
-                    without_compile_reason(verdict),
+                    result,
+                    *verdict,
                     "verdict [{name}] locale {locale_name:?} on {}",
                     serde_json::to_string(sample).expect("sample json")
                 );
@@ -145,6 +141,31 @@ fn same_verdict() {
             }
         }
     }
+}
+
+/// Samples where the browser trusts client data that the server re-checks.
+const SERVER_STRICTER: &[(&str, usize)] = &[("identifiers", 2)];
+
+fn sample_index(data: &[Value], sample: &Value) -> usize {
+    data.iter()
+        .position(|candidate| std::ptr::eq(candidate, sample))
+        .expect("sample comes from data")
+}
+
+fn browser_enforced_nothing(verdict: &Value) -> bool {
+    verdict["warnings"].as_array().is_some_and(|w| {
+        w.iter()
+            .any(|w| w.as_str().is_some_and(|t| t.starts_with(COMPILE_FAILURE)))
+    })
+}
+
+#[test]
+fn server_refuses_a_forged_mrz_flag() {
+    let spec = &case_data("identifiers")["spec"];
+    let forged = &case_data("identifiers")["data"][2];
+    assert!(forged["passport"].get("raw").is_none());
+    let result = validate_form_data(spec, &Js::from_json(forged), Some("en"), None).expect("runs");
+    assert!(result.errors.iter().any(|(key, _)| key == "passport"));
 }
 
 fn v_key_order(map: &serde_json::Map<String, Value>) -> Vec<String> {

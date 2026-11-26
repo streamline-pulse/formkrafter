@@ -55,18 +55,22 @@ both.
   checked, as in the browser. Rules that only disable, prefill or require never change the verdict, whatever
   their language.
 
-One deliberate difference: the browser trusts the `valid` flag the `mrz` brick stores, while the server
-re-reads the zone (`raw`) it was sent. Honest data gets the same verdict; a forged flag does not pass.
+Two deliberate differences, where the browser trusts what the server must not:
+
+- the browser trusts the `valid` flag the `mrz` brick stores, while the server re-reads the zone (`raw`) it
+  was sent. Honest data gets the same verdict; a forged flag, or a zone left out, does not pass;
+- a schema Ajv refuses to compile makes the browser enforce no rule (with a warning). The server returns
+  `ValidateError::SchemaInvalid` instead of accepting everything. An `idFormat`, `plateFormat` or
+  `registryFormat` the core does not know is one such case.
 
 The details that usually make a port drift are reproduced:
 
 - Ajv's `email` and `uri` formats, copied verbatim;
-- the browser's `RegExp`: `$` never matches before a trailing newline, and `\d` is ASCII;
+- the browser's `RegExp`: `$` never matches before a trailing newline, `.` stops at every line terminator,
+  `\d`, `\w` and `\b` are ASCII, `\s` is JavaScript's whitespace, and `[`, `&`, `~` are literal in a class;
 - `String(1e-7)` is `1e-7`;
 - the core compares lengths in code points;
-- JsonLogic's `==`, `<` and `+` coerce like JavaScript (`"1" == 1`, `[2] < 10`), and `[]` is falsy;
-- a schema Ajv refuses to compile enforces no rule (with a warning). An `idFormat`, `plateFormat` or
-  `registryFormat` the core does not know is one such case.
+- JsonLogic's `==`, `<` and `+` coerce like JavaScript (`"1" == 1`, `[2] < 10`), and `[]` is falsy.
 
 ### Refused
 
@@ -74,7 +78,9 @@ JavaScript never runs server-side. `validate_form_data` returns `SpecNotSupporte
 spec where JavaScript decides the verdict:
 
 - **custom validators** (`validator: "custom"`): move the check to the server, or to a declarative validation;
-- **JavaScript rules, or `code` effects, that hide data-carrying fields**: write the condition in JsonLogic.
+- **JavaScript rules, or `code` effects, that hide data-carrying fields**: write the condition in JsonLogic;
+- **`pattern` validations Rust's `regex` cannot run** (look-around, backreferences): rewrite the pattern, or
+  split it into several `pattern` validations.
 
 JavaScript rules that hide nothing (a `disabled` effect, a note) are accepted.
 

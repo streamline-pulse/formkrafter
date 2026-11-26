@@ -74,9 +74,9 @@ fn property(value: &Js, name: &str) -> Js {
             if is_index(name) {
                 if let Ok(index) = name.parse::<usize>() {
                     return text
-                        .chars()
+                        .encode_utf16()
                         .nth(index)
-                        .map(|c| Js::Str(c.to_string()))
+                        .map(|unit| Js::Str(String::from_utf16_lossy(&[unit])))
                         .unwrap_or(Js::Undefined);
                 }
             }
@@ -408,18 +408,13 @@ pub fn apply(logic: &Js, data: &Js) -> Result<Js> {
                         Js::Arr(items) if !items.is_empty() => items,
                         _ => return Ok(Js::Bool(op == "none")),
                     };
-                    let mut any = false;
-                    let mut all = true;
+                    let stop_on = op != "all";
                     for item in &items {
-                        let holds = truthy(&apply(&rule, item)?);
-                        any = any || holds;
-                        all = all && holds;
+                        if truthy(&apply(&rule, item)?) == stop_on {
+                            return Ok(Js::Bool(op == "some"));
+                        }
                     }
-                    Ok(Js::Bool(match op.as_str() {
-                        "all" => all,
-                        "none" => !any,
-                        _ => any,
-                    }))
+                    Ok(Js::Bool(op != "some"))
                 }
             }
         }

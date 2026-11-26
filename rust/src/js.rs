@@ -115,10 +115,7 @@ pub fn to_number(value: &Js) -> f64 {
             let lowered = text.to_lowercase();
             for (prefix, base) in [("0x", 16), ("0o", 8), ("0b", 2)] {
                 if lowered.starts_with(prefix) {
-                    return match i128::from_str_radix(&text[2..], base) {
-                        Ok(n) => n as f64,
-                        Err(_) => f64::NAN,
-                    };
+                    return parse_radix(&text[2..], base);
                 }
             }
             if text == "Infinity" || text == "+Infinity" {
@@ -140,6 +137,20 @@ pub fn to_number(value: &Js) -> f64 {
         }
         Js::Arr(_) | Js::Obj(_) => to_number(&Js::Str(js_string(value))),
     }
+}
+
+fn parse_radix(digits: &str, base: u32) -> f64 {
+    if digits.is_empty() {
+        return f64::NAN;
+    }
+    let mut total = 0.0;
+    for c in digits.chars() {
+        match c.to_digit(base) {
+            Some(d) => total = total * f64::from(base) + f64::from(d),
+            None => return f64::NAN,
+        }
+    }
+    total
 }
 
 impl Js {
@@ -177,7 +188,7 @@ pub fn tidy(n: f64) -> Js {
 fn float_prefix() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
     RE.get_or_init(|| {
-        Regex::new(r"[+-]?(?:Infinity|(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)").unwrap()
+        Regex::new(r"^[+-]?(?:Infinity|(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)").unwrap()
     })
 }
 
@@ -364,8 +375,38 @@ pub fn to_string(value: &Js) -> String {
     }
 }
 
-/// `new RegExp(pattern, "u")` as a Rust pattern: `$` anchors the very end only, named groups,
-/// ASCII `\d` and `\w`. Lookarounds fail to compile, like an unsupported pattern.
+const JS_SPACE_CLASS: &str = r"\t\n\x0B\x0C\r \u{A0}\u{1680}\u{2000}-\u{200A}\u{2028}\u{2029}\u{202F}\u{205F}\u{3000}\u{FEFF}";
+
+fn class_escape(escape: char) -> Option<String> {
+    Some(match escape {
+        'd' => "0-9".to_string(),
+        'w' => "A-Za-z0-9_".to_string(),
+        's' => JS_SPACE_CLASS.to_string(),
+        'D' => "[^0-9]".to_string(),
+        'W' => "[^A-Za-z0-9_]".to_string(),
+        'S' => format!("[^{JS_SPACE_CLASS}]"),
+        'b' => r"\x08".to_string(),
+        _ => return None,
+    })
+}
+
+fn atom_escape(escape: char) -> Option<String> {
+    Some(match escape {
+        'd' => "[0-9]".to_string(),
+        'D' => "[^0-9]".to_string(),
+        'w' => "[A-Za-z0-9_]".to_string(),
+        'W' => "[^A-Za-z0-9_]".to_string(),
+        's' => format!("[{JS_SPACE_CLASS}]"),
+        'S' => format!("[^{JS_SPACE_CLASS}]"),
+        'b' => r"(?-u:\b)".to_string(),
+        'B' => r"(?-u:\B)".to_string(),
+        _ => return None,
+    })
+}
+
+/// `new RegExp(pattern, "u")` as a Rust pattern, with JavaScript's semantics: `$` anchors the very
+/// end only, `.` stops at every line terminator, `\d`, `\w`, `\b` are ASCII and `\s` is JavaScript's
+/// whitespace. Constructs Rust cannot run (look-around, backreferences) fail to compile.
 pub fn compile_pattern(pattern: &str) -> Result<Regex, regex::Error> {
     let chars: Vec<char> = pattern.chars().collect();
     let mut out = String::new();
@@ -375,45 +416,65 @@ pub fn compile_pattern(pattern: &str) -> Result<Regex, regex::Error> {
         let c = chars[i];
         if c == '\\' && i + 1 < chars.len() {
             let escape = chars[i + 1];
-            let translated = if in_class {
-                match escape {
-                    'd' => "0-9",
-                    'w' => "A-Za-z0-9_",
-                    _ => "",
-                }
-            } else {
-                match escape {
-                    'd' => "[0-9]",
-                    'D' => "[^0-9]",
-                    'w' => "[A-Za-z0-9_]",
-                    'W' => "[^A-Za-z0-9_]",
-                    _ => "",
-                }
-            };
-            if translated.is_empty() {
-                out.push(c);
-                out.push(escape);
-            } else {
-                out.push_str(translated);
-            }
             i += 2;
+            let translated = if in_class {
+                class_escape(escape)
+            } else {
+                atom_escape(escape)
+            };
+            match translated {
+                Some(text) => out.push_str(&text),
+                None if escape == '0' && !chars.get(i).is_some_and(char::is_ascii_digit) => {
+                    out.push_str(r"\x00")
+                }
+                None if escape == 'c' && chars.get(i).is_some_and(char::is_ascii_alphabetic) => {
+                    out.push_str(&format!(r"\x{{{:02X}}}", chars[i] as u32 % 32));
+                    i += 1;
+                }
+                None => {
+                    out.push('\\');
+                    out.push(escape);
+                }
+            }
             continue;
         }
         if in_class {
-            if c == ']' {
-                in_class = false;
+            match c {
+                ']' => {
+                    in_class = false;
+                    out.push(c);
+                }
+                // literal in JavaScript, nested classes and set operators in Rust
+                '[' | '&' | '~' => {
+                    out.push('\\');
+                    out.push(c);
+                }
+                '-' if chars.get(i + 1) == Some(&'-') => out.push_str(r"\-"),
+                _ => out.push(c),
             }
-            out.push(c);
         } else if c == '[' {
+            let negated = chars.get(i + 1) == Some(&'^');
+            let first = if negated { i + 2 } else { i + 1 };
+            if chars.get(first) == Some(&']') {
+                // `[]` matches nothing and `[^]` anything in JavaScript
+                out.push_str(if negated { r"[\s\S]" } else { r"[^\s\S]" });
+                i = first + 1;
+                continue;
+            }
             in_class = true;
             out.push(c);
+            if negated {
+                out.push('^');
+                i += 1;
+            }
         } else if c == '$' {
-            out.push_str("\\z");
+            out.push_str(r"\z");
+        } else if c == '.' {
+            out.push_str(r"[^\n\r\u{2028}\u{2029}]");
         } else if c == '('
-            && i + 2 < chars.len()
-            && chars[i + 1] == '?'
-            && chars[i + 2] == '<'
-            && !(i + 3 < chars.len() && (chars[i + 3] == '=' || chars[i + 3] == '!'))
+            && chars.get(i + 1) == Some(&'?')
+            && chars.get(i + 2) == Some(&'<')
+            && !matches!(chars.get(i + 3), Some('=') | Some('!'))
         {
             out.push_str("(?P<");
             i += 2;

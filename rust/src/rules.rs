@@ -158,7 +158,7 @@ pub fn get_affected_properties(
             let target = match target {
                 Some(Value::String(t)) => t.clone(),
                 Some(other) => crate::js::to_string(&Js::from_json(other)),
-                None => "None".to_string(),
+                None => "undefined".to_string(),
             };
             match properties.iter_mut().find(|(k, _)| *k == target) {
                 Some((_, slot)) => *slot = value,
@@ -271,7 +271,7 @@ pub fn javascript_hiding(brick: &Map<String, Value>) -> Vec<String> {
                         Value::String(s) => s.clone(),
                         other => crate::js::to_string(&Js::from_json(other)),
                     })
-                    .unwrap_or_else(|| "None".to_string()),
+                    .unwrap_or_else(|| "undefined".to_string()),
             );
         }
     }
