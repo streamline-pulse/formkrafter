@@ -1,4 +1,4 @@
-# formkrafter (Python)
+# formkrafter
 
 FormKrafter for Python backends. The server validates a submission with the same spec the browser renders, and
 reaches the same verdict: same error keys (`items[0].hs_code`), same messages, same warnings as
