@@ -55,13 +55,12 @@ both.
   checked, as in the browser. Rules that only disable, prefill or require never change the verdict, whatever
   their language.
 
-Two deliberate differences, where the browser trusts what the server must not:
+An `mrz` value must carry its zone (`raw`), and the zone must read with matching check digits: a bare
+`valid` flag does not pass, in the browser or on the server.
 
-- the browser trusts the `valid` flag the `mrz` brick stores, while the server re-reads the zone (`raw`) it
-  was sent. Honest data gets the same verdict; a forged flag, or a zone left out, does not pass;
-- a schema Ajv refuses to compile makes the browser enforce no rule (with a warning). The server returns
-  `ValidateError::SchemaInvalid` instead of accepting everything. An `idFormat`, `plateFormat` or
-  `registryFormat` the core does not know is one such case.
+One deliberate difference: a schema Ajv refuses to compile makes the browser enforce no rule (with a warning).
+The server returns `ValidateError::SchemaInvalid` instead of accepting everything. An `idFormat`,
+`plateFormat` or `registryFormat` the core does not know is one such case.
 
 The details that usually make a port drift are reproduced:
 

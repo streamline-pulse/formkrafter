@@ -16,7 +16,7 @@ from typing import Any
 
 from formkrafter.lint import lint_spec
 from formkrafter.spec import as_spec, build_validation_schema
-from formkrafter.validate import validate_form_data
+from formkrafter.validate import SchemaInvalid, validate_form_data
 
 _COMPILE_FAILURE = "the validation schema failed to compile, so no rule was enforced: "
 
@@ -97,8 +97,15 @@ def compare_with_core(
         if schema != expected["schema"]:
             differences.append(f"schema [{locale}]: core {json.dumps(expected['schema'])}, python {json.dumps(schema)}")
         for sample, verdict in zip(samples, expected["results"], strict=True):
+            if browser_enforced_nothing(verdict):
+                try:
+                    validate_form_data(spec, sample, locale)
+                except SchemaInvalid:
+                    continue
+                differences.append(f"verdict [{locale}] on {json.dumps(sample)}: the schema does not compile")
+                continue
             result = validate_form_data(spec, sample, locale).to_dict()
-            if without_compile_reason(result) != without_compile_reason(verdict):
+            if result != verdict:
                 differences.append(f"verdict [{locale}] on {json.dumps(sample)}: core {verdict}, python {result}")
     return differences
 
@@ -135,3 +142,8 @@ def without_compile_reason(result: dict[str, Any]) -> dict[str, Any]:
         return result
     trimmed = [w[: len(_COMPILE_FAILURE)] if w.startswith(_COMPILE_FAILURE) else w for w in warnings]
     return {**result, "warnings": trimmed}
+
+
+def browser_enforced_nothing(verdict: dict[str, Any]) -> bool:
+    """The core's verdict on a schema Ajv could not compile, where the server raises `SchemaInvalid` instead."""
+    return any(w.startswith(_COMPILE_FAILURE) for w in verdict.get("warnings") or [])

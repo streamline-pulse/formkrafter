@@ -32,9 +32,15 @@ from formkrafter.spec import (
     iterate_schema_bricks,
 )
 
+COMPILE_FAILURE_PREFIX = "the validation schema failed to compile, so no rule was enforced: "
+
 
 class SpecNotSupported(ValueError):
     """The spec relies on something the Python port does not check: refused rather than half validated."""
+
+
+class SchemaInvalid(ValueError):
+    """The validation schema does not compile. The browser then enforces nothing; the server refuses."""
 
 
 @dataclass(frozen=True)
@@ -143,14 +149,14 @@ def _failing_keywords(prop: Mapping[str, Any], value: Any, patterns: Mapping[str
 
 
 def _mrz_valid(value: Mapping[str, Any]) -> bool:
-    """The core trusts the verdict the brick stored; the server also re-reads the zone it was given."""
+    """The stored flag is client data: the zone it came from must be readable and consistent."""
     if value.get("valid") is not True:
         return False
     raw = value.get("raw")
-    if isinstance(raw, str):
-        parsed = parse_mrz(raw)
-        return parsed is not None and parsed.valid
-    return True
+    if not isinstance(raw, str):
+        return False
+    parsed = parse_mrz(raw)
+    return parsed is not None and parsed.valid
 
 
 def _compile(schema: Mapping[str, Any]) -> dict[str, Any]:
@@ -247,15 +253,15 @@ def assert_supported(spec: Any) -> None:
 
 def _validate_level(
     spec: BrickSpec, data: dict[str, Any], locale: str | None, scope: Mapping[str, Any]
-) -> tuple[dict[str, ErrorDetail], str | None]:
+) -> dict[str, ErrorDetail]:
     schema = build_validation_schema(spec, locale)
     if not schema:
-        return {}, None
+        return {}
     try:
         patterns = _compile(schema)
     except ValueError as error:
-        hidden_keys(spec, scope, javascript="skip")  # the rules still run, and may still throw
-        return {}, f"the validation schema failed to compile, so no rule was enforced: {error}"
+        hidden_keys(spec, scope, javascript="skip")
+        raise SchemaInvalid(f"{COMPILE_FAILURE_PREFIX}{error}") from error
 
     details: dict[str, ErrorDetail] = {}
     for key, prop in schema["properties"].items():
@@ -275,7 +281,7 @@ def _validate_level(
     # a field the rules hide is not checked (its rows still are, as in the core)
     for key in hidden_keys(spec, scope, javascript="skip"):
         details.pop(key, None)
-    return details, None
+    return details
 
 
 def validate_form_data(
@@ -285,7 +291,8 @@ def validate_form_data(
 
     Empty strings and nulls count as missing; collections are validated row by row, their errors keyed
     `items[0].field`; fields hidden by rules are not checked. `rule_scope` adds variables the rules read
-    (merged over the data, as the core does). Raises `SpecNotSupported` when the spec needs JavaScript.
+    (merged over the data, as the core does). Raises `SpecNotSupported` when the spec needs JavaScript, and
+    `SchemaInvalid` when the schema does not compile (the browser then accepts everything; the server must not).
     """
     spec = as_spec(spec)
     assert_supported(spec)
@@ -299,7 +306,7 @@ def _validate(
         return ValidationResult(True, {})
     present = _strip_empty(data)
     scope = {**present, **rule_scope} if rule_scope else present
-    details, compile_failure = _validate_level(spec, present, locale, scope)
+    details = _validate_level(spec, present, locale, scope)
 
     for brick in iterate_schema_bricks(spec):
         key: Any = configs_of(brick).get("key")
@@ -311,7 +318,5 @@ def _validate(
                 details.setdefault(f"{key}[{index}].{field_key}", detail)
 
     warnings = validation_warnings(spec)
-    if compile_failure:
-        warnings.append(compile_failure)
     errors = {key: detail.message for key, detail in details.items()}
     return ValidationResult(not errors, errors, details, warnings)

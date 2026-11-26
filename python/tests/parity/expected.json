@@ -2261,7 +2261,8 @@
               "valid": false,
               "errors": {
                 "nir": "Valeur invalide",
-                "iban": "Minimum 30 caractères"
+                "iban": "Minimum 30 caractères",
+                "passport": "Zone de lecture illisible ou incohérente"
               }
             },
             {
@@ -2455,7 +2456,8 @@
               "valid": false,
               "errors": {
                 "nir": "Invalid value",
-                "iban": "Must be at least 30 characters"
+                "iban": "Must be at least 30 characters",
+                "passport": "Machine-readable zone unreadable or inconsistent"
               }
             },
             {

@@ -64,7 +64,7 @@ def get_affected_properties(
                     raise JavaScriptRule(f"an effect of rule {rule.get('name')!r} is JavaScript")
             elif kind == "string":
                 value = effect.get("string", UNDEFINED)
-            properties[str(target)] = value
+            properties["undefined" if target is None else str(target)] = value
     return properties
 
 
@@ -102,4 +102,5 @@ def javascript_hiding(brick: BrickSpec) -> Iterator[str]:
         if not hides:
             continue
         if _is_js_rule(rule) or any((e.get("property") or {}).get("type") == "code" and e.get("code") for e in hides):
-            yield str(rule.get("name"))
+            name = rule.get("name")
+            yield "undefined" if name is None else str(name)

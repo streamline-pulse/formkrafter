@@ -54,18 +54,22 @@ Every function takes a plain dict or a `formkrafter.models.BrickSpec`.
   checked, as in the browser. Rules that only disable, prefill or require never change the verdict, whatever
   their language.
 
-One deliberate difference: the browser trusts the `valid` flag the `mrz` brick stores, while the server
-re-reads the zone (`raw`) it was sent. Honest data gets the same verdict; a forged flag does not pass.
+An `mrz` value must carry its zone (`raw`), and the zone must read with matching check digits: a bare
+`valid` flag does not pass, in the browser or on the server.
+
+One deliberate difference: a schema Ajv refuses to compile makes the browser enforce no rule (with a warning).
+The server raises `SchemaInvalid` instead of accepting everything. An `idFormat`, `plateFormat` or
+`registryFormat` the core does not know is one such case.
 
 The details that usually make a Python port drift are reproduced:
 
 - Ajv's `email` and `uri` formats, copied verbatim;
-- the browser's `RegExp`: `$` never matches before a trailing newline, and `\d` is ASCII;
+- the browser's `RegExp`: `$` never matches before a trailing newline, `.` stops at every line terminator,
+  `\d`, `\w` and `\b` are ASCII, `\s` is JavaScript's whitespace, and `[`, `&`, `~` are literal in a class;
 - `String(1e-7)` is `1e-7`;
 - the core compares lengths in code points;
-- JsonLogic's `==`, `<` and `+` coerce like JavaScript (`"1" == 1`, `[2] < 10`), and `[]` is falsy;
-- a schema Ajv refuses to compile enforces no rule (with a warning). An `idFormat`, `plateFormat` or
-  `registryFormat` the core does not know is one such case.
+- JsonLogic's `==`, `<` and `+` coerce like JavaScript (`"1" == 1`, `[2] < 10`), `[]` is falsy, and strings
+  are indexed by UTF-16 units.
 
 ### Refused
 

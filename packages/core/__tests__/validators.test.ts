@@ -425,3 +425,27 @@ describe("validateBrickSpecDataDetailed", () => {
     expect(validateBrickSpecDataDetailed(spec, { broken: "x" }).valid).toBe(true);
   });
 });
+
+describe("mrz validation", () => {
+    const spec = {
+        type: "panel",
+        id: "root",
+        name: "Root",
+        children: [{ type: "input", id: "mrz", name: "MRZ", dataType: "object", configs: { key: "doc" } }],
+    } as unknown as BrickSpec;
+    const zone =
+        "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO9001011F3501014ZE184226B<<<<<16";
+
+    test("a readable zone passes", () => {
+        expect(validateFormData(spec, { doc: { raw: zone, valid: true } }).errors).toEqual({});
+    });
+
+    test("a bare valid flag does not pass", () => {
+        expect(Object.keys(validateFormData(spec, { doc: { valid: true } }).errors)).toEqual(["doc"]);
+    });
+
+    test("a forged flag on a broken zone does not pass", () => {
+        const broken = zone.replace("L898902C36", "L898902C37");
+        expect(Object.keys(validateFormData(spec, { doc: { raw: broken, valid: true } }).errors)).toEqual(["doc"]);
+    });
+});

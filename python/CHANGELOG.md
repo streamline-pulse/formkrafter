@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+Follows `@streamline-pulse/formkrafter-core` 0.38.1 plus its MRZ fix.
+
+- A schema that does not compile raises `SchemaInvalid` instead of accepting every submission.
+- An `mrz` value without a readable zone (`raw`) is invalid; the core now agrees.
+- Patterns follow JavaScript's `RegExp`: `.`, `\s`, `\b`, class escapes, `[]`/`[^]`, `\cX`.
+- `Number("0x+1")` and `Number("0x1_0")` are NaN; JsonLogic indexes strings by UTF-16 units.
+- An effect without target is keyed `"undefined"`, as in the core.
+
 ## 0.2.0
 
 Follows `@streamline-pulse/formkrafter-core` 0.33.0.

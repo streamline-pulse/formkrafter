@@ -28,7 +28,14 @@ from formkrafter.spec import (
     iterate_schema_bricks,
     resolve_localized_text,
 )
-from formkrafter.validate import ErrorDetail, SpecNotSupported, ValidationResult, assert_supported, validate_form_data
+from formkrafter.validate import (
+    ErrorDetail,
+    SchemaInvalid,
+    SpecNotSupported,
+    ValidationResult,
+    assert_supported,
+    validate_form_data,
+)
 
 __version__ = "0.2.0"
 # The core release whose behaviour this version reproduces (python/tests/parity/expected.json).
@@ -43,6 +50,7 @@ __all__ = [
     "ErrorDetail",
     "JavaScriptRule",
     "MrzResult",
+    "SchemaInvalid",
     "SpecIssue",
     "SpecNotSupported",
     "ValidationResult",

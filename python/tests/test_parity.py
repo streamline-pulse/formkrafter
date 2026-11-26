@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from formkrafter import CORE_VERSION, build_validation_schema, jsonlogic, lint_spec, validate_form_data
+from formkrafter import CORE_VERSION, SchemaInvalid, build_validation_schema, jsonlogic, lint_spec, validate_form_data
 from formkrafter._js import UNDEFINED
 from formkrafter.identity import (
     check_company_registry,
@@ -23,7 +23,7 @@ from formkrafter.identity import (
     format_plate,
     parse_mrz,
 )
-from formkrafter.testing import as_json, without_compile_reason
+from formkrafter.testing import as_json, browser_enforced_nothing
 
 PARITY = Path(__file__).parent / "parity"
 CASES = {case["name"]: case for case in json.loads((PARITY / "cases.json").read_text())}
@@ -61,10 +61,12 @@ def test_same_verdict(name: str, index: int) -> None:
             with pytest.raises(jsonlogic.JsonLogicError, match=verdict["error"]):
                 validate_form_data(CASES[name]["spec"], sample, expected["locale"])
             continue
+        if browser_enforced_nothing(verdict):
+            with pytest.raises(SchemaInvalid):
+                validate_form_data(CASES[name]["spec"], sample, expected["locale"])
+            continue
         result = validate_form_data(CASES[name]["spec"], sample, expected["locale"]).to_dict()
-        assert without_compile_reason(result) == without_compile_reason(verdict), (
-            f"data: {json.dumps(sample, ensure_ascii=False)}"
-        )
+        assert result == verdict, f"data: {json.dumps(sample, ensure_ascii=False)}"
         # first error per field: the keys come out in the core's order too
         assert list(result["errors"]) == list(verdict["errors"])
 

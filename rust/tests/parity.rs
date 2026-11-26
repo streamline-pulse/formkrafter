@@ -123,9 +123,6 @@ fn same_verdict() {
                     );
                     continue;
                 }
-                if SERVER_STRICTER.contains(&(name, sample_index(data, sample))) {
-                    continue;
-                }
                 let result = validate_form_data(spec, &sample_js, locale_name, None)
                     .expect("validation runs")
                     .to_dict();
@@ -141,15 +138,6 @@ fn same_verdict() {
             }
         }
     }
-}
-
-/// Samples where the browser trusts client data that the server re-checks.
-const SERVER_STRICTER: &[(&str, usize)] = &[("identifiers", 2)];
-
-fn sample_index(data: &[Value], sample: &Value) -> usize {
-    data.iter()
-        .position(|candidate| std::ptr::eq(candidate, sample))
-        .expect("sample comes from data")
 }
 
 fn browser_enforced_nothing(verdict: &Value) -> bool {

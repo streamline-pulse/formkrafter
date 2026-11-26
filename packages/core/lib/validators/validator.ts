@@ -7,6 +7,7 @@ import { resolveLocalizedText } from "../utils/localized-text.js";
 import { validationWarnings } from "../utils/lint-spec.js";
 import { defaultValidationMessage } from "./default-messages.js";
 import { checkIdentity } from "../utils/identity.js";
+import { parseMrz } from "../utils/mrz.js";
 import { PLATE_FORMATS, REGISTRY_FORMATS, checkCompanyRegistry, checkPlate } from "../utils/registries.js";
 import { evalBrickCode, getAffectedProperties } from "../brick/utils.js";
 
@@ -19,7 +20,6 @@ for (const format of ["fr-nir", "bj-npi", "fr-siren", "fr-siret", "bj-ifu", "iba
 // Registres publics : immatriculations et numeros d'entreprise par format.
 for (const { id } of PLATE_FORMATS) ajv.addFormat(`plate-${id}`, (value: string) => checkPlate(id, value));
 for (const { id } of REGISTRY_FORMATS) ajv.addFormat(`registry-${id}`, (value: string) => checkCompanyRegistry(id, value));
-// Zone MRZ : l'objet stocke porte le verdict des chiffres de controle.
 // Plage de dates : la fin ne precede pas le debut (chaines ISO comparables).
 ajv.addKeyword({
   keyword: "dateRange",
@@ -32,7 +32,10 @@ ajv.addKeyword({
   keyword: "mrzValid",
   type: "object",
   schemaType: "boolean",
-  validate: (expected: boolean, value: { valid?: boolean }) => !expected || value?.valid === true,
+  // the stored flag is client data: re-read the zone it came from
+  validate: (expected: boolean, value: { valid?: boolean; raw?: unknown }) =>
+    !expected ||
+    (value?.valid === true && typeof value.raw === "string" && parseMrz(value.raw)?.valid === true),
 });
 
 const validatorCache = new WeakMap<BrickSpec, Map<string, ValidateFunction>>();

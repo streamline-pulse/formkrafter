@@ -63,10 +63,7 @@ def to_number(value: Any) -> Number:
         lowered = text.lower()
         for prefix, base in (("0x", 16), ("0o", 8), ("0b", 2)):
             if lowered.startswith(prefix):
-                try:
-                    return int(text[2:], base)
-                except ValueError:
-                    return math.nan
+                return _parse_radix(text[2:], base)
         if text in ("Infinity", "+Infinity"):
             return math.inf
         if text == "-Infinity":
@@ -80,6 +77,13 @@ def to_number(value: Any) -> Number:
     if isinstance(value, list):
         return to_number(js_string(value))
     return math.nan
+
+
+def _parse_radix(digits: str, base: int) -> Number:
+    allowed = "0123456789abcdefghijklmnopqrstuvwxyz"[:base]
+    if not digits or any(c not in allowed for c in digits.lower()):
+        return math.nan
+    return int(digits, base)
 
 
 _FLOAT_PREFIX = _re.compile(r"[+-]?(?:Infinity|(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)")
@@ -231,7 +235,9 @@ def to_string(value: Any) -> str:
 
 
 def compile_pattern(pattern: str) -> Any:
-    """`new RegExp(pattern, "u")` as a Python pattern: `$` anchors the end only, named groups, ASCII `\\d` and `\\w`."""
+    """`new RegExp(pattern, "u")` as a Python pattern, with JavaScript's semantics: `$` anchors the very end
+    only, `.` stops at every line terminator, `\\d`, `\\w`, `\\b` are ASCII and `\\s` is JavaScript's whitespace.
+    """
     out: list[str] = []
     in_class = False
     i = 0
@@ -239,19 +245,35 @@ def compile_pattern(pattern: str) -> Any:
         c = pattern[i]
         if c == "\\" and i + 1 < len(pattern):
             escape = pattern[i + 1]
-            if in_class:
-                out.append(_CLASS_ESCAPES.get(escape, pattern[i : i + 2]))
-            else:
-                out.append(_ESCAPES.get(escape, pattern[i : i + 2]))
             i += 2
+            translated = (_CLASS_ESCAPES if in_class else _ESCAPES).get(escape)
+            if translated is not None:
+                out.append(translated)
+            elif escape == "c" and i < len(pattern) and pattern[i].isascii() and pattern[i].isalpha():
+                out.append(f"\\x{ord(pattern[i]) % 32:02x}")
+                i += 1
+            else:
+                out.append("\\" + escape)
             continue
         if in_class:
             if c == "]":
                 in_class = False
+            elif c in "[&~|" or (c == "-" and pattern.startswith("--", i)):
+                c = "\\" + c
         elif c == "[":
+            negated = pattern.startswith("[^", i)
+            first = i + 2 if negated else i + 1
+            if pattern.startswith("]", first):
+                out.append(r"[\s\S]" if negated else "(?!)")
+                i = first + 1
+                continue
             in_class = True
+            if negated:
+                c, i = "[^", i + 1
         elif c == "$":
             c = r"\Z"
+        elif c == ".":
+            c = r"[^\n\r\u2028\u2029]"
         elif pattern.startswith("(?<", i) and not pattern.startswith(("(?<=", "(?<!"), i):
             c, i = "(?P<", i + 2
         out.append(c)
@@ -259,9 +281,33 @@ def compile_pattern(pattern: str) -> Any:
     return _re.compile("".join(out))
 
 
-# Under the `u` flag \d and \w are ASCII, while Python's are Unicode; \s stays Unicode in both.
-_ESCAPES = {"d": "[0-9]", "D": "[^0-9]", "w": "[A-Za-z0-9_]", "W": "[^A-Za-z0-9_]"}
-_CLASS_ESCAPES = {"d": "0-9", "w": "A-Za-z0-9_"}
+_JS_SPACES = r"\t\n\x0b\x0c\r \xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
+# Python cannot nest classes: negated escapes inside brackets are written as explicit ranges
+_NOT_DIGIT = r"\x00-/:-\U0010ffff"
+_NOT_WORD = r"\x00-/:-@\[-\^`{-\U0010ffff"
+_NOT_SPACE = (
+    r"\x00-\x08\x0e-\x1f!-\x9f\xa1-\u167f\u1681-\u1fff\u200b-\u2027\u202a-\u202e"
+    r"\u2030-\u205e\u2060-\u2fff\u3001-\ufefe\uff00-\U0010ffff"
+)
+_ESCAPES = {
+    "d": "[0-9]",
+    "D": "[^0-9]",
+    "w": "[A-Za-z0-9_]",
+    "W": "[^A-Za-z0-9_]",
+    "s": f"[{_JS_SPACES}]",
+    "S": f"[^{_JS_SPACES}]",
+    "b": r"(?a:\b)",
+    "B": r"(?a:\B)",
+}
+_CLASS_ESCAPES = {
+    "d": "0-9",
+    "w": "A-Za-z0-9_",
+    "s": _JS_SPACES,
+    "D": _NOT_DIGIT,
+    "W": _NOT_WORD,
+    "S": _NOT_SPACE,
+    "b": r"\x08",
+}
 
 
 # ajv-formats 3, "full" mode, verbatim (the core registers them with `addFormats(ajv, ["email", "uri"])`).

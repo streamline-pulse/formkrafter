@@ -72,7 +72,15 @@ def _property(value: Any, name: str) -> Any:
     """`value[name]` with a string key: object keys, array and string indices, `length`."""
     if isinstance(value, Mapping):
         return value[name] if name in value else UNDEFINED
-    if isinstance(value, list | str):
+    if isinstance(value, str):
+        units = value.encode("utf-16-le")
+        if name == "length":
+            return len(units) // 2
+        if name.isdigit() and (name == "0" or not name.startswith("0")) and int(name) < len(units) // 2:
+            index = 2 * int(name)
+            return units[index : index + 2].decode("utf-16-le", errors="replace")
+        return UNDEFINED
+    if isinstance(value, list):
         if name == "length":
             return len(value)
         if name.isdigit() and (name == "0" or not name.startswith("0")) and int(name) < len(value):
