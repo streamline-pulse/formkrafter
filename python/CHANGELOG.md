@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Follows `@streamline-pulse/formkrafter-core` 0.38.1 plus its MRZ fix.
+Follows `@streamline-pulse/formkrafter-core` 0.38.2.
 
 - A schema that does not compile raises `SchemaInvalid` instead of accepting every submission.
 - An `mrz` value without a readable zone (`raw`) is invalid; the core now agrees.

@@ -6,7 +6,7 @@ reaches the same verdict: same error keys (`items[0].hs_code`), same messages, s
 
 ```toml
 [dependencies]
-formkrafter = { path = "rust" }   # not on crates.io yet
+formkrafter = "0.1"
 ```
 
 ```rust

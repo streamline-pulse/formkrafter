@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.1.0
 
-Follows `@streamline-pulse/formkrafter-core` 0.38.1 plus its MRZ fix. Not published to crates.io yet.
+First release, following `@streamline-pulse/formkrafter-core` 0.38.2.
 
 - Validation schema, form data validation with error details, lint, default messages, JsonLogic rules and
   identifier checks (national and tax numbers, IBAN, plates, company registries, MRZ), at parity with the core
