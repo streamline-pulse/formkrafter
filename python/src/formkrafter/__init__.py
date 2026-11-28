@@ -40,7 +40,7 @@ from formkrafter.validate import (
     validate_form_data,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 # The core release whose behaviour this version reproduces (parity/expected.json).
 CORE_VERSION = "0.38.3"
 

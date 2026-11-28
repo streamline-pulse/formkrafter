@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
-Follows `@streamline-pulse/formkrafter-core` 0.38.2.
+Follows `@streamline-pulse/formkrafter-core` 0.38.3.
 
 - A schema that does not compile raises `SchemaInvalid` instead of accepting every submission, including the
   row template of a collection with no rows; `assert_schema_compiles` checks a spec without data.
