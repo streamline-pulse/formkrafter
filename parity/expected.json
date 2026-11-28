@@ -1726,17 +1726,21 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "This form cannot be validated: its validation rules are invalid"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: Invalid regular expression: missing terminating ] for character class"
+                "the validation schema failed to compile, so the data was refused: Invalid regular expression: missing terminating ] for character class"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "This form cannot be validated: its validation rules are invalid"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: Invalid regular expression: missing terminating ] for character class"
+                "the validation schema failed to compile, so the data was refused: Invalid regular expression: missing terminating ] for character class"
               ]
             }
           ]
@@ -1783,31 +1787,39 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minLength must be >= 0"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minLength must be >= 0"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minLength must be >= 0"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minLength must be >= 0"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minLength must be >= 0"
               ]
             }
           ]
@@ -1854,31 +1866,39 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/maxItems must be integer"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/maxItems must be integer"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/maxItems must be integer"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/maxItems must be integer"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/maxItems must be integer"
               ]
             }
           ]
@@ -1925,31 +1945,39 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minimum must be number"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minimum must be number"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minimum must be number"
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: schema is invalid: data/properties/a/minimum must be number"
+                "the validation schema failed to compile, so the data was refused: schema is invalid: data/properties/a/minimum must be number"
               ]
             }
           ]
@@ -2512,17 +2540,21 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-tg-nif\" ignored in schema at path \"#/properties/nif\""
+                "the validation schema failed to compile, so the data was refused: unknown format \"identity-tg-nif\" ignored in schema at path \"#/properties/nif\""
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-tg-nif\" ignored in schema at path \"#/properties/nif\""
+                "the validation schema failed to compile, so the data was refused: unknown format \"identity-tg-nif\" ignored in schema at path \"#/properties/nif\""
               ]
             }
           ]
@@ -2560,17 +2592,21 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "This form cannot be validated: its validation rules are invalid"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: unknown format \"plate-tg\" ignored in schema at path \"#/properties/plate\""
+                "the validation schema failed to compile, so the data was refused: unknown format \"plate-tg\" ignored in schema at path \"#/properties/plate\""
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "This form cannot be validated: its validation rules are invalid"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: unknown format \"plate-tg\" ignored in schema at path \"#/properties/plate\""
+                "the validation schema failed to compile, so the data was refused: unknown format \"plate-tg\" ignored in schema at path \"#/properties/plate\""
               ]
             }
           ]
@@ -2608,17 +2644,21 @@
           },
           "results": [
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "This form cannot be validated: its validation rules are invalid"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-digits-21\" ignored in schema at path \"#/properties/code\""
+                "the validation schema failed to compile, so the data was refused: unknown format \"identity-digits-21\" ignored in schema at path \"#/properties/code\""
               ]
             },
             {
-              "valid": true,
-              "errors": {},
+              "valid": false,
+              "errors": {
+                "$schema": "This form cannot be validated: its validation rules are invalid"
+              },
               "warnings": [
-                "the validation schema failed to compile, so no rule was enforced: unknown format \"identity-digits-21\" ignored in schema at path \"#/properties/code\""
+                "the validation schema failed to compile, so the data was refused: unknown format \"identity-digits-21\" ignored in schema at path \"#/properties/code\""
               ]
             }
           ]

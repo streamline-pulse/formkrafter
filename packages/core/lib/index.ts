@@ -73,10 +73,13 @@ export { Effect } from "./rules/effect.js";
 export {
     Validator,
     ValidationResult,
+    SCHEMA_ERROR_KEY,
     validateBrickSpecData,
     validateBrickSpecDataDetailed,
-    validateFormData
+    validateFormData,
+    validationSchemaFailure
 } from "./validators/validator.js";
+export { linearRegExp } from "./validators/linear-regexp.js";
 export {
     defaultValidationMessage,
     registerValidationMessages

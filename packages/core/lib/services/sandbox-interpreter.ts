@@ -20,6 +20,8 @@ interface AstNode {
 //   - work done inside native calls (string building, coercions, copies) is
 //     charged to the same budget as interpreted steps, and string/array results
 //     are size-capped, with worst-case checks before amplifying calls run.
+//   - `match` and `search` take a regex literal only: given a string, they
+//     would build a regex from data.
 // Known gap: a regular expression literal can still backtrack catastrophically
 // inside the native regex engine, which no budget can interrupt.
 
@@ -419,6 +421,15 @@ const replaceSpec: Omit<NativeSpec, "fn"> = {
   ),
 };
 
+const regexLiteralOnly =
+  (name: string) =>
+  (_ctx: Ctx, args: unknown[]): unknown[] => {
+    if (args[0] !== undefined && !(args[0] instanceof RegExp)) {
+      throw new Error(`${name}() takes a regular expression literal, not a string`);
+    }
+    return args;
+  };
+
 const STRING_METHODS = methodTable(
   String.prototype,
   [
@@ -430,7 +441,8 @@ const STRING_METHODS = methodTable(
     "trim", "trimStart", "trimEnd", "toString", "valueOf",
   ],
   {
-    match: { fresh: true },
+    match: { fresh: true, wrapArgs: regexLiteralOnly("match") },
+    search: { wrapArgs: regexLiteralOnly("search") },
     split: { fresh: true },
     repeat: { estimate: (self, [count]) => String(self).length * toCount(count) },
     padStart: { estimate: (_self, [target]) => toCount(target) },

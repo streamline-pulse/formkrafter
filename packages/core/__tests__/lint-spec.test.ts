@@ -139,7 +139,7 @@ describe("validateFormData warnings", () => {
 });
 
 describe("schema compile failures", () => {
-    test("a schema that cannot compile surfaces as a warning instead of passing silently", () => {
+    test("a schema that cannot compile refuses the data and says why", () => {
         const broken = spec([
             {
                 type: "input",
@@ -152,6 +152,7 @@ describe("schema compile failures", () => {
         ]);
 
         const result = validateFormData(broken, {});
+        expect(result.valid).toBe(false);
         expect(result.warnings?.some((w) => w.includes("failed to compile"))).toBe(
             true
         );

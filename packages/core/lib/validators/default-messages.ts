@@ -18,6 +18,7 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     mrz: "Machine-readable zone unreadable or inconsistent",
     plate: "Invalid registration plate for this format",
     registry: "Invalid registration number for this format",
+    schema: "This form cannot be validated: its validation rules are invalid",
   },
   fr: {
     required: "Ce champ est obligatoire",
@@ -38,6 +39,7 @@ const DEFAULT_MESSAGES: Record<string, Record<string, string>> = {
     mrz: "Zone de lecture illisible ou incohérente",
     plate: "Immatriculation invalide pour ce format",
     registry: "Numéro d’immatriculation invalide pour ce format",
+    schema: "Ce formulaire ne peut pas être validé : ses règles de validation sont invalides",
   },
 };
 

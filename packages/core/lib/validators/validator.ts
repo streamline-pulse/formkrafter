@@ -10,8 +10,9 @@ import { checkIdentity } from "../utils/identity.js";
 import { parseMrz } from "../utils/mrz.js";
 import { PLATE_FORMATS, REGISTRY_FORMATS, checkCompanyRegistry, checkPlate } from "../utils/registries.js";
 import { evalBrickCode, getAffectedProperties } from "../brick/utils.js";
+import { linearRegExp } from "./linear-regexp.js";
 
-const ajv = new Ajv({ allErrors: true });
+const ajv = new Ajv({ allErrors: true, code: { regExp: linearRegExp } });
 addFormats(ajv, ["email", "uri"]);
 ajvErrors(ajv);
 // National identifiers: one ajv format per rule (identity-fr-nir, identity-digits-10...).
@@ -38,7 +39,7 @@ ajv.addKeyword({
     (value?.valid === true && typeof value.raw === "string" && parseMrz(value.raw)?.valid === true),
 });
 
-const validatorCache = new WeakMap<BrickSpec, Map<string, ValidateFunction>>();
+const validatorCache = new WeakMap<BrickSpec, Map<string, Compiled>>();
 
 export type Validator =
     | "required"
@@ -59,20 +60,13 @@ export type ValidationResult = {
     warnings?: string[];
 };
 
-const compileFailures = new WeakMap<BrickSpec, string>();
+/** Key of the error a result carries when the spec's validation schema does not compile. */
+export const SCHEMA_ERROR_KEY = "$schema";
+export const COMPILE_FAILURE_PREFIX = "the validation schema failed to compile, so the data was refused: ";
 
-const recordCompileFailure = (brickSpec: BrickSpec, error: unknown): void => {
-    const reason = error instanceof Error ? error.message : String(error);
-    compileFailures.set(
-        brickSpec,
-        `the validation schema failed to compile, so no rule was enforced: ${reason}`
-    );
-};
+type Compiled = { validate?: ValidateFunction; failure?: string };
 
-const compiledValidator = (
-    brickSpec: BrickSpec,
-    locale?: string
-): ValidateFunction | undefined => {
+const compiledValidator = (brickSpec: BrickSpec, locale?: string): Compiled => {
     let byLocale = validatorCache.get(brickSpec);
     if (!byLocale) {
         byLocale = new Map();
@@ -80,22 +74,41 @@ const compiledValidator = (
     }
 
     const cacheKey = locale ?? "";
-    let validate = byLocale.get(cacheKey);
+    let compiled = byLocale.get(cacheKey);
 
-    if (!validate) {
+    if (!compiled) {
         const schema = buildValidationSchema(brickSpec, locale);
-        if (!schema) return undefined;
-
         try {
-            validate = ajv.compile(schema);
+            compiled = schema ? { validate: ajv.compile(schema) } : {};
         } catch (error) {
-            recordCompileFailure(brickSpec, error);
-            return undefined;
+            const reason = error instanceof Error ? error.message : String(error);
+            compiled = { failure: `${COMPILE_FAILURE_PREFIX}${reason}` };
         }
-        byLocale.set(cacheKey, validate);
+        byLocale.set(cacheKey, compiled);
     }
 
-    return validate;
+    return compiled;
+};
+
+const refused = (failure: string, locale?: string): ValidationResult => ({
+    valid: false,
+    errors: { [SCHEMA_ERROR_KEY]: defaultValidationMessage("schema", locale) },
+    warnings: [failure],
+});
+
+/** The reason the spec, or the row template of one of its collections, cannot be validated; undefined when it can. */
+export const validationSchemaFailure = (
+    brickSpec: BrickSpec,
+    locale?: string
+): string | undefined => {
+    const failure = compiledValidator(brickSpec, locale).failure;
+    if (failure) return failure;
+    for (const brick of iterateSchemaBricks(brickSpec)) {
+        if (brick.type !== "collection") continue;
+        const rowFailure = validationSchemaFailure(rowSpecOf(brick), locale);
+        if (rowFailure) return rowFailure;
+    }
+    return undefined;
 };
 
 const customErrors = (
@@ -181,9 +194,11 @@ export const validateBrickSpecDataDetailed = (
     locale?: string,
     ruleScope?: Record<string, unknown>
 ): ValidationResult => {
-    const errors: Record<string, string> = {};
-    const validate = compiledValidator(brickSpec, locale);
+    const failure = validationSchemaFailure(brickSpec, locale);
+    if (failure) return refused(failure, locale);
+    const { validate } = compiledValidator(brickSpec, locale);
 
+    const errors: Record<string, string> = {};
     if (validate && !validate(data)) {
         for (const error of validate.errors ?? []) {
             const key = keyOfError(error);
@@ -250,6 +265,9 @@ export const validateFormData = (
     locale?: string,
     ruleScope?: Record<string, unknown>
 ): ValidationResult => {
+    const failure = validationSchemaFailure(brickSpec, locale);
+    if (failure) return refused(failure, locale);
+
     const present = stripEmpty(data);
     const scope = ruleScope ? { ...present, ...ruleScope } : undefined;
     const errors = {
@@ -275,13 +293,11 @@ export const validateFormData = (
         });
     }
 
-    const warnings = [...validationWarnings(brickSpec)];
-    const compileFailure = compileFailures.get(brickSpec);
-    if (compileFailure) warnings.push(compileFailure);
+    const warnings = validationWarnings(brickSpec);
     const result: ValidationResult = {
         valid: Object.keys(errors).length === 0,
         errors,
     };
-    if (warnings.length) result.warnings = warnings;
+    if (warnings.length) result.warnings = [...warnings];
     return result;
 };

@@ -77,7 +77,7 @@ Rules drive dynamic behavior (`hidden`, `disabled`, `required`, computed `value`
   - sandboxed: only `dataMap`/`value` plus frozen facades of `Math`, `JSON`, `String`, `Number`, `Boolean`, `Array`, `Object` (`keys`/`values`/`entries`/`fromEntries` only) and `Date` (`now`/`parse`/`UTC` only). Methods are called from per-type allowlists; host functions can't be read, bound or passed around; arrays from your data are read-only (copy with `[...list]` to sort or push)
   - supports expressions, ternaries, `const`/`if`/`return`, optional chaining, arrow functions (`.filter(x => …)`)
   - unsupported syntax is rejected; runaway code and the work done inside native calls share one execution budget, and strings/arrays are capped (1 M characters, 100 k elements)
-  - known limit: a regex literal can still backtrack catastrophically inside the native regex engine — keep untrusted patterns server-side with a timeout
+  - known limit: a regex literal in rule code can still backtrack catastrophically inside the native regex engine; `match`/`search` take a regex literal only, never a string. `pattern` validations run in linear time instead
 
 ```ts
 import { runSandboxed, UnsafeEvalJsRunnerService, services } from '@streamline-pulse/formkrafter-core'

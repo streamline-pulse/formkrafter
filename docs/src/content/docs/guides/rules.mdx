@@ -81,8 +81,11 @@ walked by an AST interpreter:
 - **Bounded** — unsupported syntax is rejected upfront; interpreted code and
   the work done inside native calls share one execution budget, and strings
   and arrays are capped (1 M characters, 100 k elements).
-- **Known limit** — a regular expression can still backtrack catastrophically
-  inside the native regex engine, which no budget can interrupt.
+- **Known limit** — a regular expression literal in rule code can still
+  backtrack catastrophically inside the native regex engine, which no budget
+  can interrupt. `match` and `search` take a regex literal only, never a
+  string, so data cannot supply the pattern. `pattern` validations do not have
+  this limit: they run in linear time.
 
 You can run the same sandbox yourself:
 

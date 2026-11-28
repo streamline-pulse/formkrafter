@@ -18,7 +18,7 @@ Each brick carries a `validations` array. They compile to a JSON Schema
 |---|---|---|
 | `required` | any | — |
 | `minLength` / `maxLength` | string | number |
-| `pattern` | string | regex source |
+| `pattern` | string | regex source (no backreferences or lookbehind) |
 | `email` / `url` | string | — |
 | `min` / `max` | number | number |
 | `minItems` / `maxItems` | array | number |
@@ -32,6 +32,11 @@ Each brick carries a `validations` array. They compile to a JSON Schema
   ]
 }
 ```
+
+`pattern` runs in linear time, in the browser and in `validateFormData` alike:
+a pattern such as `^([a-z]+\s?)*$` cannot hang the server on a crafted value.
+Lookahead is supported; backreferences and lookbehind have no linear-time form
+and make the schema fail to compile.
 
 `message` is optional and may be localized — see
 [messages and locales](#messages-and-locales) below.
@@ -138,11 +143,17 @@ if (warnings) {
 }
 ```
 
-`warnings` is absent on a healthy spec, so its mere presence is the signal. It
-never changes `valid`: the verdict stands, it is just weaker than it looks. Two
-causes produce it — an input carrying `validations` but no `dataType`, which
-leaves nothing to build a schema from, and a schema that failed to compile, for
-instance a `pattern` whose regex is invalid.
+`warnings` is absent on a healthy spec, so its mere presence is the signal. An
+input carrying `validations` but no `dataType` leaves nothing to build a schema
+from: that warning does not change `valid`, the verdict is just weaker than it
+looks.
+
+A schema that does not compile is different: an invalid `pattern` regex, a
+`minLength` that is not a number, an unknown `idFormat`, in the spec or in the
+row template of a collection. Validation then fails closed — `valid: false`,
+one error under `SCHEMA_ERROR_KEY` (`"$schema"`) and a warning giving the
+reason — so a typo can never switch every rule off. `validationSchemaFailure(spec)`
+returns that reason without any data, to refuse such a spec when it is saved.
 
 <Aside type="caution">
 Log warnings somewhere you actually read. A spec that silently stops enforcing

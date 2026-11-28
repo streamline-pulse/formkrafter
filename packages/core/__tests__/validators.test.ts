@@ -404,7 +404,7 @@ describe("validateBrickSpecDataDetailed", () => {
     expect(validateBrickSpecDataDetailed(spec(false), { docs: files[0] }).valid).toBe(true);
   });
 
-  test("an invalid regex pattern does not crash validation", () => {
+  test("an invalid regex pattern refuses the data instead of crashing", () => {
     const spec: BrickSpec = {
       type: "panel",
       id: "root",
@@ -422,7 +422,7 @@ describe("validateBrickSpecDataDetailed", () => {
       ],
     };
 
-    expect(validateBrickSpecDataDetailed(spec, { broken: "x" }).valid).toBe(true);
+    expect(validateBrickSpecDataDetailed(spec, { broken: "x" }).valid).toBe(false);
   });
 });
 
