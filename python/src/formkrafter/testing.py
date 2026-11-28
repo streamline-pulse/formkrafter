@@ -143,5 +143,5 @@ def without_compile_reason(result: dict[str, Any]) -> dict[str, Any]:
 
 
 def browser_enforced_nothing(verdict: dict[str, Any]) -> bool:
-    """The core's verdict on a schema Ajv could not compile, where the server raises `SchemaInvalid` instead."""
+    """The core's verdict on a schema that does not compile (refused), where the port raises `SchemaInvalid`."""
     return any(w.startswith(COMPILE_FAILURE_PREFIX) for w in verdict.get("warnings") or [])

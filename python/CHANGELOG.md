@@ -4,7 +4,10 @@
 
 Follows `@streamline-pulse/formkrafter-core` 0.38.2.
 
-- A schema that does not compile raises `SchemaInvalid` instead of accepting every submission.
+- A schema that does not compile raises `SchemaInvalid` instead of accepting every submission, including the
+  row template of a collection with no rows; `assert_schema_compiles` checks a spec without data.
+- `pattern` validations run in linear time instead of on `re`, which backtracks: a crafted value can no longer
+  hang the server. Backreferences, lookbehind and patterns over 10 000 steps are refused.
 - An `mrz` value without a readable zone (`raw`) is invalid; the core now agrees.
 - Patterns follow JavaScript's `RegExp`: `.`, `\s`, `\b`, class escapes, `[]`/`[^]`, `\cX`.
 - `Number("0x+1")` and `Number("0x1_0")` are NaN; JsonLogic indexes strings by UTF-16 units.

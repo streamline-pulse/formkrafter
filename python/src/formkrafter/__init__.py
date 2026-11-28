@@ -35,6 +35,7 @@ from formkrafter.validate import (
     SchemaInvalid,
     SpecNotSupported,
     ValidationResult,
+    assert_schema_compiles,
     assert_supported,
     validate_form_data,
 )
@@ -58,6 +59,7 @@ __all__ = [
     "SpecNotSupported",
     "ValidationResult",
     "as_spec",
+    "assert_schema_compiles",
     "assert_supported",
     "build_validation_schema",
     "check_company_registry",

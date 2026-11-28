@@ -9,10 +9,11 @@ from __future__ import annotations
 import math
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field
-from functools import partial
+from functools import lru_cache, partial
 from typing import Any
 
 from formkrafter._js import FORMATS, UNDEFINED, compile_pattern, js_compare, js_truthy
+from formkrafter._linear import LinearPattern
 from formkrafter.identity import (
     PLATE_FORMATS,
     REGISTRY_FORMATS,
@@ -32,7 +33,7 @@ from formkrafter.spec import (
     iterate_schema_bricks,
 )
 
-COMPILE_FAILURE_PREFIX = "the validation schema failed to compile, so no rule was enforced: "
+COMPILE_FAILURE_PREFIX = "the validation schema failed to compile, so the data was refused: "
 
 
 class SpecNotSupported(ValueError):
@@ -40,7 +41,7 @@ class SpecNotSupported(ValueError):
 
 
 class SchemaInvalid(ValueError):
-    """The validation schema does not compile. The browser then enforces nothing; the server refuses."""
+    """The validation schema does not compile, in the spec or in a collection's row template: the data is refused."""
 
 
 @dataclass(frozen=True)
@@ -159,6 +160,12 @@ def _mrz_valid(value: Mapping[str, Any]) -> bool:
     return parsed is not None and parsed.valid
 
 
+@lru_cache(maxsize=256)
+def _linear_pattern(pattern: str) -> LinearPattern:
+    compile_pattern(pattern)  # the syntax check; matching never runs on the backtracking engine
+    return LinearPattern(pattern, compile_pattern)
+
+
 def _compile(schema: Mapping[str, Any]) -> dict[str, Any]:
     """The checks Ajv runs when it compiles the schema (meta-schema, regular expressions); raises on failure."""
     patterns: dict[str, Any] = {}
@@ -175,7 +182,7 @@ def _compile(schema: Mapping[str, Any]) -> dict[str, Any]:
                 raise ValueError(f"schema is invalid: data/properties/{key}/{keyword} must be number")
         if "pattern" in prop and prop["pattern"] not in patterns:
             try:
-                patterns[prop["pattern"]] = compile_pattern(prop["pattern"])
+                patterns[prop["pattern"]] = _linear_pattern(prop["pattern"])
             except Exception as error:  # re.error, or regex.error with the optional module
                 raise ValueError(f"Invalid regular expression: /{prop['pattern']}/: {error}") from error
     return patterns
@@ -251,17 +258,33 @@ def assert_supported(spec: Any) -> None:
             )
 
 
+def _compiled(spec: BrickSpec, locale: str | None) -> tuple[Mapping[str, Any] | None, dict[str, Any]]:
+    schema = build_validation_schema(spec, locale)
+    if not schema:
+        return None, {}
+    try:
+        return schema, _compile(schema)
+    except ValueError as error:
+        raise SchemaInvalid(f"{COMPILE_FAILURE_PREFIX}{error}") from error
+
+
+def assert_schema_compiles(spec: Any, locale: str | None = None) -> None:
+    """Raise `SchemaInvalid` when the schema of the spec, or of a collection's row template, does not compile.
+
+    `validate_form_data` checks it first; call it alone to refuse such a spec when it is saved.
+    """
+    spec = as_spec(spec)
+    if spec:
+        for level in _levels(spec):
+            _compiled(level, locale)
+
+
 def _validate_level(
     spec: BrickSpec, data: dict[str, Any], locale: str | None, scope: Mapping[str, Any]
 ) -> dict[str, ErrorDetail]:
-    schema = build_validation_schema(spec, locale)
+    schema, patterns = _compiled(spec, locale)
     if not schema:
         return {}
-    try:
-        patterns = _compile(schema)
-    except ValueError as error:
-        hidden_keys(spec, scope, javascript="skip")
-        raise SchemaInvalid(f"{COMPILE_FAILURE_PREFIX}{error}") from error
 
     details: dict[str, ErrorDetail] = {}
     for key, prop in schema["properties"].items():
@@ -292,10 +315,11 @@ def validate_form_data(
     Empty strings and nulls count as missing; collections are validated row by row, their errors keyed
     `items[0].field`; fields hidden by rules are not checked. `rule_scope` adds variables the rules read
     (merged over the data, as the core does). Raises `SpecNotSupported` when the spec needs JavaScript, and
-    `SchemaInvalid` when the schema does not compile (the browser then accepts everything; the server must not).
+    `SchemaInvalid` when the schema of the spec or of a collection's row template does not compile.
     """
     spec = as_spec(spec)
     assert_supported(spec)
+    assert_schema_compiles(spec, locale)
     return _validate(spec, data, locale, rule_scope)
 
 

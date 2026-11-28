@@ -57,9 +57,13 @@ Every function takes a plain dict or a `formkrafter.models.BrickSpec`.
 An `mrz` value must carry its zone (`raw`), and the zone must read with matching check digits: a bare
 `valid` flag does not pass, in the browser or on the server.
 
-One deliberate difference: a schema Ajv refuses to compile makes the browser enforce no rule (with a warning).
-The server raises `SchemaInvalid` instead of accepting everything. An `idFormat`, `plateFormat` or
-`registryFormat` the core does not know is one such case.
+A schema that does not compile, in the spec or in a collection's row template, refuses the data: the browser
+returns `valid: false`, the server raises `SchemaInvalid`. An invalid `pattern`, a `minLength` that is not a
+number, or an `idFormat`, `plateFormat` or `registryFormat` the core does not know is one such case.
+`assert_schema_compiles(spec)` checks it without data, to refuse such a spec when it is saved.
+
+`pattern` validations run in linear time, as in the core: a crafted value cannot hang the server on a
+pattern like `^([a-z]+\s?)*$`. Backreferences and lookbehind have no linear-time form and are refused.
 
 The details that usually make a Python port drift are reproduced:
 
