@@ -70,9 +70,9 @@ both.
 An `mrz` value must carry its zone (`raw`), and the zone must read with matching check digits: a bare
 `valid` flag does not pass, in the browser or on the server.
 
-One deliberate difference: a schema Ajv refuses to compile makes the browser enforce no rule (with a warning).
-The server returns `ValidateError::SchemaInvalid` instead of accepting everything. An `idFormat`,
-`plateFormat` or `registryFormat` the core does not know is one such case.
+A schema that does not compile refuses the data: the browser returns `valid: false`, the server returns
+`ValidateError::SchemaInvalid`. An `idFormat`, `plateFormat` or `registryFormat` the core does not know is
+one such case.
 
 The details that usually make a port drift are reproduced:
 

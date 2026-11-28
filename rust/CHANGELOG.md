@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- The row template of a collection is checked even when the data has no rows: a schema that does not compile
+  returns `ValidateError::SchemaInvalid` whatever the data. `assert_schema_compiles` checks a spec without data.
+
 ## 0.1.0
 
 First release, following `@streamline-pulse/formkrafter-core` 0.38.2.

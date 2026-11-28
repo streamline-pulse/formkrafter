@@ -28,6 +28,6 @@ pub use spec::{
     iterate_schema_bricks, resolve_localized_text,
 };
 pub use validate::{
-    assert_supported, validate_form_data, ErrorDetail, SpecNotSupported, ValidateError,
-    ValidationResult,
+    assert_schema_compiles, assert_supported, validate_form_data, ErrorDetail, SpecNotSupported,
+    ValidateError, ValidationResult,
 };

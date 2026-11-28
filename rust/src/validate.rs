@@ -527,7 +527,47 @@ pub fn assert_supported(spec: &Value) -> Result<(), ValidateError> {
 }
 
 pub const COMPILE_FAILURE_PREFIX: &str =
-    "the validation schema failed to compile, so no rule was enforced: ";
+    "the validation schema failed to compile, so the data was refused: ";
+
+type Level = (Map<String, Value>, Compiled);
+
+fn compiled_level(
+    spec: &Map<String, Value>,
+    locale: Option<&str>,
+) -> Result<Option<Level>, ValidateError> {
+    let schema = match build_validation_schema(spec, locale) {
+        Some(Value::Object(schema)) => schema,
+        _ => return Ok(None),
+    };
+    match compile_schema(&schema) {
+        Ok(compiled) => Ok(Some((schema, compiled))),
+        Err(error) => Err(ValidateError::SchemaInvalid(format!(
+            "{COMPILE_FAILURE_PREFIX}{error}"
+        ))),
+    }
+}
+
+fn check_levels(spec: &Map<String, Value>, locale: Option<&str>) -> Result<(), ValidateError> {
+    compiled_level(spec, locale)?;
+    let mut bricks = Vec::new();
+    spec::iterate_schema_bricks(spec, &mut bricks);
+    for brick in bricks {
+        if brick.get("type").and_then(Value::as_str) == Some("collection") {
+            check_levels(&row_spec(brick), locale)?;
+        }
+    }
+    Ok(())
+}
+
+/// Returns `SchemaInvalid` when the schema of the spec, or of a collection's row template, does
+/// not compile. `validate_form_data` checks it first; call it alone to refuse such a spec when it
+/// is saved.
+pub fn assert_schema_compiles(spec: &Value, locale: Option<&str>) -> Result<(), ValidateError> {
+    match as_spec(spec) {
+        Some(spec) if !spec.is_empty() => check_levels(spec, locale),
+        _ => Ok(()),
+    }
+}
 
 type Details = Vec<(String, ErrorDetail)>;
 
@@ -537,23 +577,11 @@ fn validate_level(
     locale: Option<&str>,
     scope: &Js,
 ) -> Result<Details, ValidateError> {
-    let schema = match build_validation_schema(spec, locale) {
-        Some(schema) => schema,
+    let (schema, compiled) = match compiled_level(spec, locale)? {
+        Some(level) => level,
         None => return Ok(Vec::new()),
     };
-    let schema = match schema.as_object() {
-        Some(s) => s,
-        None => return Ok(Vec::new()),
-    };
-    let compiled = match compile_schema(schema) {
-        Ok(compiled) => compiled,
-        Err(error) => {
-            rules::hidden_keys(&Value::Object(spec.clone()), scope, JavaScriptMode::Skip)?;
-            return Err(ValidateError::SchemaInvalid(format!(
-                "{COMPILE_FAILURE_PREFIX}{error}"
-            )));
-        }
-    };
+    let schema = &schema;
 
     let mut details: Details = Vec::new();
     let empty = Map::new();
@@ -625,7 +653,7 @@ fn validate_level(
 /// keyed `items[0].field`; fields hidden by rules are not checked. `rule_scope` adds variables
 /// the rules read (merged over the data, as the core does). Returns `SpecNotSupported` when the
 /// spec needs JavaScript or a pattern the server cannot run, and `SchemaInvalid` when the schema
-/// does not compile (the browser then accepts everything; the server must not).
+/// of the spec or of a collection's row template does not compile.
 pub fn validate_form_data(
     spec: &Value,
     data: &Js,
@@ -633,6 +661,7 @@ pub fn validate_form_data(
     rule_scope: Option<&[(String, Js)]>,
 ) -> Result<ValidationResult, ValidateError> {
     assert_supported(spec)?;
+    assert_schema_compiles(spec, locale)?;
     match as_spec(spec) {
         Some(spec) if !spec.is_empty() => validate(spec, data, locale, rule_scope),
         _ => Ok(ValidationResult {

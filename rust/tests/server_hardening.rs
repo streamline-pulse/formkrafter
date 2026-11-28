@@ -1,5 +1,8 @@
 use formkrafter::js::{self, Js};
-use formkrafter::{assert_supported, get_affected_properties, jsonlogic, validate_form_data};
+use formkrafter::{
+    assert_schema_compiles, assert_supported, get_affected_properties, jsonlogic,
+    validate_form_data,
+};
 use formkrafter::{JavaScriptMode, ValidateError};
 use serde_json::{json, Value};
 
@@ -33,6 +36,39 @@ fn a_schema_that_does_not_compile_is_refused() {
         verdict(&spec, json!({})),
         Err(ValidateError::SchemaInvalid(_))
     ));
+}
+
+#[test]
+fn a_broken_row_template_is_refused_with_or_without_rows() {
+    let spec = form(json!([{
+        "type": "collection", "id": "collection", "dataType": "array", "configs": { "key": "items" },
+        "children": [text_field("x", json!([{ "validator": "required" }, { "validator": "minLength", "value": "abc" }]))]
+    }]));
+    for data in [json!({ "items": [{}] }), json!({ "items": [] }), json!({})] {
+        assert!(matches!(
+            verdict(&spec, data),
+            Err(ValidateError::SchemaInvalid(_))
+        ));
+    }
+    assert!(matches!(
+        assert_schema_compiles(&spec, None),
+        Err(ValidateError::SchemaInvalid(_))
+    ));
+}
+
+#[test]
+fn a_crafted_value_against_a_naive_pattern_answers_at_once() {
+    let spec = form(json!([text_field(
+        "name",
+        json!([{ "validator": "pattern", "value": "^([a-zA-Z]+\\s?)*$" }])
+    )]));
+    let started = std::time::Instant::now();
+    let crafted = format!("{}!", "a".repeat(100_000));
+    assert_eq!(
+        verdict(&spec, json!({ "name": crafted })).expect("runs"),
+        ["name"]
+    );
+    assert!(started.elapsed().as_secs() < 2);
 }
 
 #[test]

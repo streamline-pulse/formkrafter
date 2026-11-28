@@ -56,7 +56,7 @@ fn case_data(name: &str) -> &'static Value {
         .expect("case exists")
 }
 
-const COMPILE_FAILURE: &str = "the validation schema failed to compile, so no rule was enforced: ";
+const COMPILE_FAILURE: &str = "the validation schema failed to compile, so the data was refused: ";
 
 #[test]
 fn fixtures_come_from_the_core_this_version_follows() {
